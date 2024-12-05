@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kati.mapper.KatiDataMapper">
+	<select id="selectImportList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT * FROM(
+			SELECT KN.NAT_NM AS NATCD
+			    , AA.NAME
+			    , SUM(AT.TOT_AMT) AS TOT_AMT
+			    , SUM(AT.TOT_WGT) AS TOT_WGT
+			    , SUBSTR(AT.BASIS_YYMM,1,4) || '-' ||SUBSTR(AT.BASIS_YYMM,5,2) AS BASIS_YYMM
+			    , '2' AS DAN
+			FROM ATST_TRADETRASS AT , ATSM_AGCODE AA ,KATI_NATIONAL KN
+			WHERE AT.AGCD = AA.AGCD
+			AND AT.HSCD = AA.HSCD
+			AND AT.NATCD = KN.NAT_CD
+			AND EXP_TY = #{gubn, jdbcType=VARCHAR}
+			<if test="hsCode != null and hsCode != ''">
+				AND AT.HSCD = #{hsCode , jdbcType=VARCHAR}
+			</if>
+			<if test="natCode != null and natCode != ''">
+			 	AND AT.NATCD = #{natCode, jdbcType=VARCHAR}
+			</if> 
+			AND AA.MID_CD ='122'
+			AND BASIS_YYMM BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+			GROUP BY KN.NAT_NM, AA.NAME, AT.BASIS_YYMM
+			) A
+			UNION ALL
+			SELECT * FROM(
+			SELECT '전체' AS NATCD
+			    , CONCAT(AA.NAME,' -계') AS NAME
+			    , SUM(AT.TOT_AMT) AS TOT_AMT
+			    , SUM(AT.TOT_WGT) AS TOT_WGT
+			    , '' AS BASIS_YYMM
+			    , '1' AS DAN
+			FROM ATST_TRADETRASS AT , ATSM_AGCODE AA 
+			WHERE AT.AGCD = AA.AGCD
+			AND AT.HSCD = AA.HSCD
+			AND EXP_TY = #{gubn, jdbcType=VARCHAR}
+			<if test="hsCode != null and hsCode != ''">
+				AND AT.HSCD = #{hsCode , jdbcType=VARCHAR}
+			</if>
+			<if test="natCode != null and natCode != ''">
+			 	AND AT.NATCD = #{natCode, jdbcType=VARCHAR}
+			</if> 
+			AND AA.MID_CD ='122'
+			AND BASIS_YYMM BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+			GROUP BY AA.NAME
+			) B
+		ORDER BY 2 DESC, 5
+	</select>
+	
+	<select id="selectImportPumList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT AA.HSCD, AA.NAME||'['||AA.HSCD||']' AS NAME 
+		FROM  ATSM_AGCODE AA  
+		WHERE  
+		AA.MID_CD ='122'
+		AND AG_GB='N'
+		AND USE_YN= 'Y'
+        GROUP BY AA.HSCD, AA.NAME
+	</select>
+	
+	<select id="selectImportNatList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT NAT_CD, NAT_NM 
+		FROM KATI_NATIONAL
+		WHERE NAT_TY = '1'
+		AND DEL_YN = 'N'
+	</select>
+</mapper>

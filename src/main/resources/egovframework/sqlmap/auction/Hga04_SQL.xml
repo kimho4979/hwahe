@@ -1,0 +1,1038 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hga04.mapper.Hga04Mapper">
+
+	<resultMap id="resultHga04Map" type="com.fpdisys.dist.hga04.domain.Hga04VO">
+		<!-- 조회조건 품목 -->
+		<result property="itemCd" 	column="ITEM_CD"/>	<!-- selectGetItem -->
+		<result property="itemNm" 	column="ITEM_NM"/>	<!-- selectGetItem -->
+		
+		<!-- 조회조건 품종 -->
+		<result property="kindCd" 	column="KIND_CD"/>	<!-- selectGetItem2 -->
+		<result property="kindNm" 	column="KIND_NM"/>	<!-- selectGetItem2 -->
+		
+		<!-- 우측상단 산지별집계(통합) -->
+		<!-- 우측상단 산지별집계(개별) -->
+		<!-- 좌측 지도유통비율(통합) -->
+		<!-- 좌측 지도유통비율(개별) -->
+		<result property="sanName" 	column="SAN_NAME"/>			<!-- selectProdSearchTot -->
+		<result property="av1" 	column="AV1"/>					<!-- selectProdSearchTot -->
+		<result property="av2" 	column="AV2"/>					<!-- selectProdSearchTot -->
+		<result property="code" 	column="CODE"/>				<!-- selectMapSearchListTot --> 
+		<result property="label" 	column="LABEL"/>			<!-- selectMapSearchListEach -->
+		<result property="rank" 	column="RANK"/> 
+		<result property="qty" 	column="QTY"/>		
+		
+		<!-- 우측하단 유통현황(통합) -->
+		<!-- 우측하단 유통현황(개별) -->
+		<result property="mth" 	column="MTH"/>			<!-- selectDistSearchTot --><!-- selectDistSearchEach -->
+		<result property="qty" 	column="QTY"/>			<!-- selectDistSearchTot --><!-- selectDistSearchEach -->
+		<result property="amt" 	column="AMT"/>
+		
+		<result property="flowerGubun" 	column="FLOWER_GUBN"/>
+		<result property="flowerCode" 	column="FLOWER_CODE"/>	
+		<result property="sanBigoSi" 	column="SAN_BIGO_SI"/> 
+		<result property="sanBigoGun" 	column="SAN_BIGO_GUN"/>		
+		<result property="saleDate" 	column="SALE_DATE"/>
+	</resultMap>
+	
+	<!-- 조회조건 품목 -->
+<!-- 	<select id="selectGetItem" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		<![CDATA[		
+		SELECT  /* 조회조건 품목*/
+				ITEM_CD
+		      , ITEM_NM
+		FROM    FLOWER.T_INT_ITEM
+		WHERE   USE_YN      = 'Y'
+		AND     FLOWER_GUBN = '1'
+		AND     FLOWER_CODE = '1'
+		ORDER BY ITEM_NM
+		]]>
+	</select>
+	 -->
+	<!-- 조회조건 개별 품목 -->
+	<select id="selectGetItemEach" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		/* 조회조건 개별 품목 */
+		SELECT DECODE(TB.PUM_NM, NULL, TA.PUM_NAME, TB.PUM_NM) AS ITEM_CD
+		  FROM (
+		  		SELECT PUM_NAME, TOT_QTY
+		  		  FROM (
+						SELECT DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME, SUM(TOT_QTY) TOT_QTY
+						  FROM T_SALE_DATE
+						 WHERE 1=1 
+						 <if test='dateType == "day"'>
+						   AND SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+						 </if>
+						 <if test='dateType == "month"'>
+						   AND SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+						 </if>
+						 <if test='dateType != "day" and dateType != "month"'>
+						   AND SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+						 </if>
+						 <if test="cmpCd2 != null and cmpCd2 != ''">
+						   AND CMP_CD = #{cmpCd2}
+						 </if>
+						 <if test="flowerCd.size != 0">
+							AND FLOWER_GUBN IN
+							<foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+				        		#{item}
+				 			</foreach>
+						 </if>
+						 GROUP BY CMP_CD, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME)
+						)
+			   ) TA,
+			   (
+				SELECT MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+				  FROM FLOWER.TB_KIND_MAP
+				 WHERE 1=1
+				 <if test="cmpCd2 != null and cmpCd2 != ''">
+		           AND CMP_CD_MAP = #{cmpCd2}
+		         </if>
+		         GROUP BY PUM_NM_MAP
+		       ) TB
+		 WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+		 GROUP BY DECODE(TB.PUM_NM,NULL,TA.PUM_NAME,TB.PUM_NM)
+		 ORDER BY SUM(TA.TOT_QTY) DESC, ITEM_CD
+	</select>
+	
+	<!-- 조회조건 통합 품목 -->
+	<select id="selectGetItemTotal" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		/* 조회조건 통합 품목 */
+		WITH V_SALE_DATA AS
+		(
+			SELECT TIS.FLOWER_GUBN
+            	 , TIS.FLOWER_CODE
+            	 , TIS.ITEM_CD
+                 , SUM(TIS.TOT_QTY) AS TOT_QTY
+              FROM T_INT_SALE TIS
+             WHERE 1 = 1
+             <if test='dateType == "day"'>
+		       AND TIS.SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+			 </if>
+			 <if test='dateType == "month"'>
+			   AND TIS.SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+			 </if>
+			 <if test='dateType != "day" and dateType != "month"'>
+			   AND TIS.SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+			 </if>
+             <if test="cmpCd.size != 0">
+               AND TIS.MARKET_CD IN
+             	<foreach item="item" collection="cmpCd" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+             </if>
+             <if test="flowerCd.size != 0">
+			   AND FLOWER_GUBN IN
+			   <foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+			     #{item}
+			   </foreach>
+			 </if>
+            GROUP BY TIS.FLOWER_GUBN, TIS.FLOWER_CODE, TIS.ITEM_CD
+        )
+	    SELECT TII.FLOWER_GUBN
+			 , TII.FLOWER_CODE
+			 , TII.ITEM_CD
+	    	 , TII.ITEM_NM
+	      FROM T_INT_ITEM TII
+	     INNER JOIN V_SALE_DATA VSD ON TII.FLOWER_GUBN = VSD.FLOWER_GUBN AND TII.FLOWER_CODE = VSD.FLOWER_CODE AND TII.ITEM_CD = VSD.ITEM_CD
+	     WHERE TII.USE_YN = 'Y'
+	       AND TII.FLOWER_GUBN||TII.ITEM_CD != '3002'  /*팔레높시스는 호접란에 묶기 위해 표시하지 않음*/
+    ORDER BY vsd.TOT_QTY DESC
+	</select>
+	
+	<!-- 조회조건 품종 -->
+	<!-- <select id="selectGetItem2" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT  /* 조회조건 품종 */
+				KIND_CD
+		      , KIND_NM
+		FROM    FLOWER.T_INT_KIND
+		WHERE   USE_YN      = 'Y'
+		AND     FLOWER_GUBN = '1'
+		AND     FLOWER_CODE = '1'
+		<if test="itemCd != null and itemCd != ''">
+		AND     ITEM_CD     = #{itemCd} /*상기 품목코드에 따라 선택적 변수적용(예:장미)*/
+		</if>
+		ORDER BY KIND_NM
+	</select> -->
+	
+	<!-- 조회조건 개별 품종 -->	
+	<select id="selectGetItem2Each" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		/* 조회조건 개별 품종 */
+		SELECT DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS KIND_CD
+			 , DECODE(JONG_NM,NULL,GOOD_NAME,JONG_NM) AS KIND_NM
+		  FROM (
+		  		SELECT PUM_NAME, GOOD_NAME, TOT_QTY
+				  FROM (
+				  		SELECT DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME, GOOD_NAME, SUM(TOT_QTY) TOT_QTY
+				  		  FROM T_SALE_DATE
+				  		 <if test='dateType == "day"'>
+						 WHERE SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+						 </if>
+						 <if test='dateType == "month"'>
+						 WHERE SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+						 </if>
+						 <if test='dateType != "day" and dateType != "month"'>
+						 WHERE SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+						 </if>
+				  		 <if test="cmpCd != null and cmpCd != ''">
+						   AND CMP_CD = #{cmpCd}
+						 </if>		
+						 <if test="flowerCd.size != 0">
+						   AND FLOWER_GUBN IN
+						   <foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+						     #{item}
+						   </foreach>
+						 </if>		
+						 GROUP BY CMP_CD, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME), GOOD_NAME
+					)
+		       )TA,
+			   (
+			    SELECT MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+			      FROM FLOWER.TB_KIND_MAP
+			     WHERE PUM_NM =#{itemCd}		    
+				 <if test="cmpCd2 != null and cmpCd2 != ''">
+				   AND CMP_CD_MAP = #{cmpCd}
+				 </if>
+				 <if test="flowerCd.size != 0">
+				   AND FLOWER_GUBN_MAP IN
+				   <foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+				     #{item}
+				   </foreach>
+				 </if>	
+		    	 GROUP BY PUM_NM_MAP
+			   ) TB,
+			   (
+			   	SELECT MAX(JONG_NM) JONG_NM,JONG_NM_MAP
+			   	  FROM FLOWER.TB_KIND_MAP
+			   	 WHERE PUM_NM =#{itemCd}		    
+				 <if test="cmpCd2 != null and cmpCd2 != ''">
+				   AND CMP_CD_MAP = #{cmpCd}
+				 </if>
+				 <if test="flowerCd.size != 0">
+				   AND FLOWER_GUBN_MAP IN
+				   <foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+				     #{item}
+				   </foreach>
+				 </if>
+			     GROUP BY JONG_NM_MAP
+			   ) TC
+		 WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+		   AND TA.GOOD_NAME=TC.JONG_NM_MAP(+)
+		   AND (
+				PUM_NM=#{itemCd}
+				OR 
+				<if test ="cmpCd2 != null and cmpCd2 =='0000000001'" >
+					<if test="itemCd!=null and itemCd!='' ">
+						<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+			  				PUM_NAME IN('호접란', '팔레높시스')
+			  			</if>
+			  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+			  				PUM_NAME = #{itemCd}
+			  			</if>
+					</if>
+				</if>
+				<if test ="cmpCd2 != null and cmpCd2 !='0000000001'" >
+					<if test="itemCd!=null and itemCd!='' ">
+						PUM_NAME = #{itemCd}
+					</if>
+				</if>
+			   )
+		 GROUP BY DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM), DECODE(JONG_NM,NULL,GOOD_NAME,JONG_NM)
+		 ORDER BY SUM(TOT_QTY) DESC
+	</select>
+	
+	<!-- 조회조건 통합 품종 --> 
+	<select id="selectGetItem2Total" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		/* 조회조건 통합 품종 */
+		WITH V_SALE_DATA AS (
+			SELECT TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD AS ITEM_CD
+			     , TIS.KIND_CD
+			  FROM T_INT_SALE TIS
+			 WHERE 1=1
+			 <if test="cmpCd.size != 0">
+			   AND tis.MARKET_CD IN
+			   <foreach item="item" collection="cmpCd" open="(" separator="," close=")">
+			   	#{item ,jdbcType=VARCHAR}
+			   </foreach>
+			 </if>
+			 <if test='dateType == "day"'>
+			   AND SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+			 </if>
+			 <if test='dateType == "month"'>
+			   AND SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+			 </if>
+			 <if test='dateType != "day" and dateType != "month"'>
+			   AND SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+			 </if>
+			 <if test="itemCd != null and itemCd != ''">
+			 <choose>
+                <when test="itemCd == '6043'">
+                    AND TIS.FLOWER_CODE || TIS.ITEM_CD IN ('6002', '6043')
+                </when>
+                <otherwise>
+                    AND TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+                </otherwise>
+             </choose>
+        	 </if>
+        	 <if test="flowerCd.size != 0">
+			   AND FLOWER_GUBN IN
+			   <foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+			     #{item}
+			   </foreach>
+			 </if>
+        GROUP BY TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD, TIS.KIND_CD
+        )
+		SELECT tik.FLOWER_GUBN
+			 , tik.FLOWER_CODE
+		     , tik.ITEM_CD
+		     , tik.KIND_CD
+		     , DECODE(vsd.ITEM_CD , '36043', '(호)', DECODE(vsd.ITEM_CD, '36002', '(팔)', '')) || tik.KIND_NM AS KIND_NM 
+		  FROM V_SALE_DATA vsd
+		  LEFT JOIN T_INT_KIND tik ON tik.FLOWER_GUBN || tik.FLOWER_CODE || tik.ITEM_CD = vsd.item_cd AND tik.KIND_CD = vsd.kind_cd AND tik.USE_YN = 'Y'
+		 ORDER BY tik.KIND_NM
+	</select>
+	
+	<!-- 우측상단 산지별집계(통합) -->
+	<select id="selectProdSearchTot" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT /* 우측상단 산지별집계(통합)*/
+				SAN_NAME, LABEL, AV1, AV2, AMT, QTY, RANK
+		  FROM (SELECT SAN_NAME, LABEL, AV1, AV2, AMT, QTY,
+		  			   <if test='type2 == "QTY"'>
+		  			   RANK() OVER(ORDER BY AV1 DESC) AS RANK
+		  			   </if>
+		  			   <if test='type2 == "AMT"'>
+		  			   RANK() OVER(ORDER BY AV2 DESC) AS RANK
+		  			   </if>		  			   
+		          FROM (SELECT A.SAN_NAME,
+		                       B.KOR_NAME AS LABEL ,
+		                       ROUND((SUM(A.QTY) OVER(PARTITION BY A.SAN_NAME ORDER BY A.SAN_NAME)/SUM(A.QTY) OVER())*100, 1) AS AV1,
+		                       ROUND((SUM(A.AMT) OVER(PARTITION BY A.SAN_NAME ORDER BY A.SAN_NAME)/SUM(A.AMT) OVER())*100, 1) AS AV2,
+		                       ROUND(A.AMT/100000000) AS AMT,
+		                       ROUND(A.QTY/10000) AS QTY
+		                  FROM (SELECT SAN_NAME,
+		                               SUM(QTY) QTY,
+		                               SUM(AMT) AMT
+		                          FROM (SELECT C.ITEM_NM ,
+		                                       D.KIND_NM ,
+		                                       E.MARKET_NAME ,
+		                                       E.MARKET_CD ,
+		                                       CASE WHEN INSTR(F.SAN_BIGO, '광주') <![CDATA[>]]> 0 THEN '1200'
+		                                            WHEN INSTR(F.SAN_BIGO, '경기') <![CDATA[>]]> 0 THEN '200'
+		                                            WHEN INSTR(F.SAN_BIGO, '부산') <![CDATA[>]]> 0 THEN '300'
+		                                            WHEN INSTR(F.SAN_BIGO, '서울') <![CDATA[>]]> 0 THEN '900'
+		                                            WHEN INSTR(F.SAN_BIGO, '인천') <![CDATA[>]]> 0 THEN '1100'
+		                                            WHEN INSTR(F.SAN_BIGO, '강원') <![CDATA[>]]> 0 THEN '100'
+		                                            WHEN INSTR(F.SAN_BIGO, '대구') <![CDATA[>]]> 0 THEN '400'
+		                                            WHEN INSTR(F.SAN_BIGO, '전라남도') <![CDATA[>]]> 0 THEN '1200'
+		                                            WHEN INSTR(F.SAN_BIGO, '전라북도') <![CDATA[>]]> 0 THEN '1300'
+		                                            WHEN INSTR(F.SAN_BIGO, '경상남도') <![CDATA[>]]> 0 THEN '300'
+		                                            WHEN INSTR(F.SAN_BIGO, '경상북도') <![CDATA[>]]> 0 THEN '400'
+		                                            WHEN INSTR(F.SAN_BIGO, '충청남도') <![CDATA[>]]> 0 THEN '1500'
+		                                            WHEN INSTR(F.SAN_BIGO, '충청북도') <![CDATA[>]]> 0 THEN '1600'
+		                                            WHEN INSTR(F.SAN_BIGO, '전북') <![CDATA[>]]> 0 THEN '1300'
+		                                            WHEN INSTR(F.SAN_BIGO, '전남') <![CDATA[>]]> 0 THEN '1200'
+		                                            WHEN INSTR(F.SAN_BIGO, '경북') <![CDATA[>]]> 0 THEN '400'
+		                                            WHEN INSTR(F.SAN_BIGO, '경남') <![CDATA[>]]> 0 THEN '300'
+		                                            WHEN INSTR(F.SAN_BIGO, '충북') <![CDATA[>]]> 0 THEN '1600'
+		                                            WHEN INSTR(F.SAN_BIGO, '충남') <![CDATA[>]]> 0 THEN '1500'
+		                                            WHEN INSTR(F.SAN_BIGO, '울산') <![CDATA[>]]> 0 THEN '1000'
+		                                            WHEN INSTR(F.SAN_BIGO, '대전') <![CDATA[>]]> 0 THEN '700'
+		                                            WHEN INSTR(F.SAN_BIGO, '세종') <![CDATA[>]]> 0 THEN '1700'
+		                                            WHEN INSTR(F.SAN_BIGO, '제주') <![CDATA[>]]> 0 THEN '1400'
+		                                            ELSE F.SAN_BIGO
+		                                       END AS SAN_NAME ,
+		                                       F.SAN_BIGO ,
+		                                       A.QTY ,
+		                                       A.TOT_AMT AS AMT
+		                                  FROM 
+											  (SELECT  MAPPING_ID, SAN_CD, SUM(QTY) QTY, SUM(TOT_AMT) TOT_AMT 
+											   FROM    FLOWER.T_INT_SALE_RAW
+		                                       <if test='dateType == "day"'>
+							                   WHERE   SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+							                   </if>
+							                   <if test='dateType == "month"'>
+							                   WHERE   SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+							                   </if>
+							                   <if test='dateType != "day" and dateType != "month"'>
+							                   WHERE   SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+							                   </if>
+										       GROUP BY MAPPING_ID, SAN_CD) A,
+		                                  
+		                                       FLOWER.T_INT_MAPPING B ,
+		                                       FLOWER.T_INT_ITEM C ,
+		                                       FLOWER.T_INT_KIND D ,
+		                                       FLOWER.T_JOINT_MARKET E ,
+		                                       FLOWER.T_LOCAL F
+		                                 WHERE A.MAPPING_ID = B.MAPPING_ID
+		                                   AND B.FLOWER_GUBN = C.FLOWER_GUBN
+		                                   AND B.FLOWER_CODE = C.FLOWER_CODE
+		                                   AND B.ITEM_CD = C.ITEM_CD
+		                                   AND B.FLOWER_GUBN = D.FLOWER_GUBN
+		                                   AND B.FLOWER_CODE = D.FLOWER_CODE
+		                                   AND B.ITEM_CD = D.ITEM_CD
+		                                   AND B.KIND_CD = D.KIND_CD
+		                                   AND B.MARKET_CD = E.MARKET_CD
+		                                   AND A.SAN_CD = F.SAN_CD
+							                <if test="itemCd != null and itemCd != ''">	
+							                <choose>
+												<when test="itemCd == '6043'">
+													AND		C.FLOWER_CODE || C.ITEM_CD IN ('6002', '6043')
+												</when>
+												<otherwise>
+													AND		C.FLOWER_CODE || C.ITEM_CD = #{itemCd}		/* 콤보에서 선택된 품목 (필수)*/
+												</otherwise>
+											</choose>							                
+							                </if>
+											<if test="kindCd != null and kindCd != ''">											
+											AND		 D.FLOWER_CODE||D.ITEM_CD||D.KIND_CD = #{kindCd}		/* 콤보에서 선택된 품종 (옵션)*/
+											</if>
+											<if test="cmpCd.size != 0">
+											AND 	 B.MARKET_CD IN									/* 공판장코드 (예: AT화훼센타)*/
+												<foreach item="item" collection="cmpCd" open="(" separator="," close=")">
+										        	#{item}
+										 		</foreach>
+											</if>
+											<if test="flowerCd.size != 0">											/* 부류 체크박스 */
+											AND		B.FLOWER_GUBN IN
+												<foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+													#{item ,jdbcType=VARCHAR}
+												</foreach>
+											</if>
+											)
+		                                 GROUP BY SAN_NAME
+		                        ) A,
+		                        TB_NRES_AREA_MAP B
+		                  WHERE A.SAN_NAME = B.AREA_CODE
+		                    AND B.GUBUN = '1'
+		               )
+		       )
+		 WHERE RANK <![CDATA[<]]> 11
+		 ORDER BY RANK		
+	</select>
+	<!-- 우측상단 산지별집계(개별) --> 
+	<select id="selectProdSearchEach" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT  /* 우측상단 산지별집계(개별)*/
+				SAN_NAME,	-- 시군
+				AV1, 		-- 점유율 물량
+				AV2,		-- 점유율 금액
+				AMT, 		-- 금액
+				QTY,		-- 총수량
+				RANK		-- 순위
+		FROM (SELECT
+				SAN_NAME, AV1, AV2, AMT, QTY, 
+				<if test='type2 == "QTY"'>
+				RANK() OVER(ORDER BY AV1 DESC) AS RANK
+				</if>
+				<if test='type2 == "AMT"'>
+				RANK() OVER(ORDER BY AV2 DESC) AS RANK
+				</if>				
+				FROM (  SELECT  REPLACE(REPLACE(REPLACE(SAN_BIGO,'남도',''),'북도',''),'도','') AS SAN_NAME, 
+						        ROUND((SUM(QTY) OVER(PARTITION BY SAN_BIGO ORDER BY SAN_BIGO)/SUM(QTY) OVER())*100,1) AS AV1,
+						        ROUND((SUM(AMT) OVER(PARTITION BY SAN_BIGO ORDER BY SAN_BIGO)/SUM(AMT) OVER())*100,1) AS AV2,
+						        ROUND(AMT/100000000) AS AMT,
+						        ROUND(QTY/10000) AS QTY
+						FROM   (SELECT  SAN_BIGO, SUM(TOT_QTY) QTY, SUM(TOT_AMT) AMT
+						        FROM   (SELECT  A.PUM_NAME
+						                      , A.GOOD_NAME
+						                      , E.MARKET_NAME
+						                      , E.MARKET_CD
+						                      , F.SAN_BIGO
+						                      , A.TOT_QTY  
+						                      , A.TOT_AMT   
+						                FROM    
+						                      ( SELECT  B.PUM_NAME,
+						                                B.GOOD_NAME,
+						                                B.CMP_CD,
+						                                B.SAN_CD,
+						                                B.TOT_QTY,
+						                                B.TOT_AMT,
+						                                B.FLOWER_GUBN,
+						                               (SELECT MAX(ITEM_CD) FROM FLOWER.T_INT_ITEM WHERE FLOWER_GUBN = '1' AND ITEM_NM = B.PUM_NAME)  PUM_CODE,
+						                               (SELECT MAX(KIND_CD) FROM FLOWER.T_INT_KIND WHERE FLOWER_GUBN = '1' AND KIND_NM = B.GOOD_NAME) KND_CODE
+						                        FROM    FLOWER.T_SALE_DATE B
+								                <if test='dateType == "day"'>
+								                WHERE   B.SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+								                </if>
+								                <if test='dateType == "month"'>
+								                WHERE   B.SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+								                </if>
+								                <if test='dateType != "day" and dateType != "month"'>
+								                WHERE   B.SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+								                </if>
+						                       ) A		                
+						                
+						                      , FLOWER.T_JOINT_MARKET E
+						                      , FLOWER.T_LOCAL        F
+						                      
+						                WHERE   A.CMP_CD      = E.MARKET_CD
+						                AND     A.SAN_CD      = F.SAN_CD
+						                <if test="itemCd != null and itemCd != ''">	
+						                AND     A.PUM_NAME = #{itemNm, jdbcType=VARCHAR} 							/* 콤보에서 선택된 품목 (필수)*/
+						                </if>
+										<if test="kindCd != null and kindCd != ''">
+										AND     A.GOOD_NAME = #{kindCd, jdbcType=VARCHAR} 						    /* 콤보에서 선택된 품종 (옵션)*/
+										</if>
+										<if test="cmpCd2 != null and cmpCd2 != ''">
+										AND 	A.CMP_CD = #{cmpCd2}								/* 공판장코드 (예: AT화훼센타)*/
+										</if>		
+										<if test="flowerCd.size != 0">											/* 부류 체크박스 */
+										AND		A.FLOWER_GUBN IN
+											<foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+												#{item ,jdbcType=VARCHAR}
+											</foreach>
+										</if>								
+						        )
+						        GROUP BY SAN_BIGO)))
+	   WHERE ROWNUM <![CDATA[<]]> 11            
+	   ORDER BY RANK
+	</select>
+	
+	<!-- 좌측 지도(통합) -->
+	<select id="selectMapSearchListTot" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">	
+			SELECT  /* 좌측 지도(통합) */
+					A.SAN_NAME AS CODE
+			      , B.KOR_NAME AS LABEL
+			      , ROUND((SUM(A.QTY) OVER(PARTITION BY A.SAN_NAME ORDER BY A.SAN_NAME)/SUM(A.QTY) OVER())*100,1) AS AV1
+			      , ROUND((SUM(A.AMT) OVER(PARTITION BY A.SAN_NAME ORDER BY A.SAN_NAME)/SUM(A.AMT) OVER())*100,1) AS AV2
+			FROM   (SELECT  SAN_NAME, SUM(QTY) QTY, SUM(TOT_AMT) AMT
+			        FROM   (SELECT  CASE WHEN INSTR(F.SAN_BIGO,'광주') <![CDATA[>]]> 0     THEN '1200' 
+			                             WHEN INSTR(F.SAN_BIGO,'경기') <![CDATA[>]]> 0     THEN '200' 
+			                             WHEN INSTR(F.SAN_BIGO,'부산') <![CDATA[>]]> 0     THEN '300' 
+			                             WHEN INSTR(F.SAN_BIGO,'서울') <![CDATA[>]]> 0     THEN '900' 
+			                             WHEN INSTR(F.SAN_BIGO,'인천') <![CDATA[>]]> 0     THEN '1100' 
+			                             WHEN INSTR(F.SAN_BIGO,'강원') <![CDATA[>]]> 0     THEN '100' 
+			                             WHEN INSTR(F.SAN_BIGO,'대구') <![CDATA[>]]> 0     THEN '400' 
+			                             WHEN INSTR(F.SAN_BIGO,'전라남도') <![CDATA[>]]> 0 THEN '1200' 
+			                             WHEN INSTR(F.SAN_BIGO,'전라북도') <![CDATA[>]]> 0 THEN '1300' 
+			                             WHEN INSTR(F.SAN_BIGO,'경상남도') <![CDATA[>]]> 0 THEN '300' 
+			                             WHEN INSTR(F.SAN_BIGO,'경상북도') <![CDATA[>]]> 0 THEN '400' 
+			                             WHEN INSTR(F.SAN_BIGO,'충청남도') <![CDATA[>]]> 0 THEN '1500' 
+			                             WHEN INSTR(F.SAN_BIGO,'충청북도') <![CDATA[>]]> 0 THEN '1600' 
+			                             WHEN INSTR(F.SAN_BIGO,'전북') <![CDATA[>]]> 0     THEN '1300' 
+			                             WHEN INSTR(F.SAN_BIGO,'전남') <![CDATA[>]]> 0     THEN '1200' 
+			                             WHEN INSTR(F.SAN_BIGO,'경북') <![CDATA[>]]> 0     THEN '400' 
+			                             WHEN INSTR(F.SAN_BIGO,'경남') <![CDATA[>]]> 0     THEN '300' 
+			                             WHEN INSTR(F.SAN_BIGO,'충북') <![CDATA[>]]> 0     THEN '1600' 
+			                             WHEN INSTR(F.SAN_BIGO,'충남') <![CDATA[>]]> 0     THEN '1500' 
+			                             WHEN INSTR(F.SAN_BIGO,'울산') <![CDATA[>]]> 0     THEN '1000' 
+			                             WHEN INSTR(F.SAN_BIGO,'대전') <![CDATA[>]]> 0     THEN '700' 
+			                             WHEN INSTR(F.SAN_BIGO,'세종') <![CDATA[>]]> 0     THEN '1700' 
+			                             WHEN INSTR(F.SAN_BIGO,'제주') <![CDATA[>]]> 0     THEN '1400' 
+			                             ELSE F.SAN_BIGO END AS SAN_NAME
+			                      , A.QTY
+			                      , A.TOT_AMT			                      
+			                FROM    FLOWER.T_INT_SALE_RAW A
+			                      , FLOWER.T_INT_MAPPING  B
+			                      , FLOWER.T_INT_ITEM     C
+			                      , FLOWER.T_INT_KIND     D
+			                      , FLOWER.T_JOINT_MARKET E
+			                      , FLOWER.T_LOCAL        F			                      
+			                WHERE   A.MAPPING_ID = B.MAPPING_ID            
+			                AND     B.FLOWER_GUBN = C.FLOWER_GUBN
+			                AND     B.FLOWER_CODE = C.FLOWER_CODE
+			                AND     B.ITEM_CD     = C.ITEM_CD
+			                AND     B.FLOWER_GUBN = D.FLOWER_GUBN
+			                AND     B.FLOWER_CODE = D.FLOWER_CODE
+			                AND     B.ITEM_CD     = D.ITEM_CD
+			                AND     B.KIND_CD     = D.KIND_CD
+			                AND     B.MARKET_CD   = E.MARKET_CD
+			                AND     A.SAN_CD      = F.SAN_CD
+			                
+			                <if test='dateType == "day"'>
+			                AND     A.SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}  /* 조회기간 (필수)*/
+			                </if>
+			                <if test='dateType == "month"'>
+			                AND     A.SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'  /* 조회기간 (필수)*/
+			                </if>
+			                <if test='dateType != "day" and dateType != "month"'>
+			                AND     A.SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'  /* 조회기간 (필수)*/
+			                </if>
+							<if test="itemCd != null and itemCd != ''">	
+			                AND     B.FLOWER_CODE || B.ITEM_CD	= #{itemCd} 						/* 콤보에서 선택된 품목 (필수)*/
+			                </if>
+							<if test="kindCd != null and kindCd != ''">
+							AND 	B.FLOWER_CODE || B.ITEM_CD || B.KIND_CD = #{kindCd} 						/* 콤보에서 선택된 품종 (옵션)*/
+							</if>
+							<if test="cmpCd.size != 0">
+							AND 	B.MARKET_CD IN									/* 공판장코드 (예: AT화훼센타)*/
+								<foreach item="item" collection="cmpCd" open="(" separator="," close=")">
+						        	#{item}
+						 		</foreach>
+							</if>
+							<if test="flowerCd.size != 0">											/* 부류 체크박스 */
+							AND		B.FLOWER_GUBN IN
+								<foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+									#{item ,jdbcType=VARCHAR}
+								</foreach>
+							</if>	
+			               )
+			        GROUP BY SAN_NAME
+			        ) A
+			       , TB_NRES_AREA_MAP B
+			WHERE A.SAN_NAME = B.AREA_CODE
+			AND B.GUBUN = '1'
+			ORDER BY A.SAN_NAME
+	</select>
+	
+	<!-- 좌측 지도(개별) -->
+	<select id="selectMapSearchListEach" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	<![CDATA[
+		SELECT  /* 좌측 지도(개별)*/
+		        A.SAN_NAME AS CODE
+		      , B.KOR_NAME AS LABEL
+		      , ROUND((SUM(A.QTY) OVER(PARTITION BY A.SAN_NAME ORDER BY A.SAN_NAME)/SUM(A.QTY) OVER())*100,1) AS AV1
+		      , ROUND((SUM(A.AMT) OVER(PARTITION BY A.SAN_NAME ORDER BY A.SAN_NAME)/SUM(A.AMT) OVER())*100,1) AS AV2
+		FROM   (SELECT  SAN_NAME, SUM(TOT_QTY) QTY, SUM(TOT_AMT) AMT
+		        FROM   (SELECT  CASE WHEN INSTR(F.SAN_BIGO,'광주') > 0     THEN '1200' 
+		                             WHEN INSTR(F.SAN_BIGO,'경기') > 0     THEN '200' 
+		                             WHEN INSTR(F.SAN_BIGO,'부산') > 0     THEN '300' 
+		                             WHEN INSTR(F.SAN_BIGO,'서울') > 0     THEN '900' 
+		                             WHEN INSTR(F.SAN_BIGO,'인천') > 0     THEN '1100' 
+		                             WHEN INSTR(F.SAN_BIGO,'강원') > 0     THEN '100' 
+		                             WHEN INSTR(F.SAN_BIGO,'대구') > 0     THEN '400' 
+		                             WHEN INSTR(F.SAN_BIGO,'전라남도') > 0 THEN '1200' 
+		                             WHEN INSTR(F.SAN_BIGO,'전라북도') > 0 THEN '1300' 
+		                             WHEN INSTR(F.SAN_BIGO,'경상남도') > 0 THEN '300' 
+		                             WHEN INSTR(F.SAN_BIGO,'경상북도') > 0 THEN '400' 
+		                             WHEN INSTR(F.SAN_BIGO,'충청남도') > 0 THEN '1500' 
+		                             WHEN INSTR(F.SAN_BIGO,'충청북도') > 0 THEN '1600' 
+		                             WHEN INSTR(F.SAN_BIGO,'전북') > 0     THEN '1300' 
+		                             WHEN INSTR(F.SAN_BIGO,'전남') > 0     THEN '1200' 
+		                             WHEN INSTR(F.SAN_BIGO,'경북') > 0     THEN '400' 
+		                             WHEN INSTR(F.SAN_BIGO,'경남') > 0     THEN '300' 
+		                             WHEN INSTR(F.SAN_BIGO,'충북') > 0     THEN '1600' 
+		                             WHEN INSTR(F.SAN_BIGO,'충남') > 0     THEN '1500' 
+		                             WHEN INSTR(F.SAN_BIGO,'울산') > 0     THEN '1000' 
+		                             WHEN INSTR(F.SAN_BIGO,'대전') > 0     THEN '700' 
+		                             WHEN INSTR(F.SAN_BIGO,'세종') > 0     THEN '1700' 
+		                             WHEN INSTR(F.SAN_BIGO,'제주') > 0     THEN '1400' 
+		                             ELSE F.SAN_BIGO END AS SAN_NAME
+		                      , A.TOT_QTY  
+		                      , A.TOT_AMT            
+		                ]]>
+		                FROM    
+		                      ( SELECT  B.PUM_NAME,
+		                                B.GOOD_NAME,
+		                                B.CMP_CD,
+		                                B.SAN_CD,
+		                                B.TOT_QTY,
+		                                B.TOT_AMT,
+		                                B.FLOWER_GUBN,
+		                               (SELECT MAX(ITEM_CD) FROM FLOWER.T_INT_ITEM WHERE FLOWER_GUBN = '1' AND ITEM_NM = B.PUM_NAME)  PUM_CODE,
+		                               (SELECT MAX(KIND_CD) FROM FLOWER.T_INT_KIND WHERE FLOWER_GUBN = '1' AND KIND_NM = B.GOOD_NAME) KIND_CODE
+		                        FROM    FLOWER.T_SALE_DATE B
+				                <if test='dateType == "day"'>
+				                WHERE   B.SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+				                </if>
+				                <if test='dateType == "month"'>
+				                WHERE   B.SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+				                </if>
+				                <if test='dateType != "day" and dateType != "month"'>
+				                WHERE   B.SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+				                </if>
+		                       ) A			                
+		                
+		                      , FLOWER.T_JOINT_MARKET E
+		                      , FLOWER.T_LOCAL        F
+		                      
+		                WHERE   A.CMP_CD      = E.MARKET_CD
+		                AND     A.SAN_CD      = F.SAN_CD
+		                <if test="itemCd != null and itemCd != ''">	
+		                AND     A.PUM_NAME = #{itemCd, jdbcType=VARCHAR} 						/* 콤보에서 선택된 품목 (필수)*/
+		                </if>
+						<if test="kindCd != null and kindCd != ''">
+						AND     A.GOOD_NAME = #{kindCd, jdbcType=VARCHAR} 						/* 콤보에서 선택된 품종 (옵션)*/
+						</if>
+						<if test="cmpCd2 != null and cmpCd2 != ''">
+						AND 	A.CMP_CD = #{cmpCd2}							/* 공판장코드 (예: AT화훼센타)*/
+						</if>	
+						<if test="flowerCd.size != 0">											/* 부류 체크박스 */
+						AND		A.FLOWER_GUBN IN
+							<foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+								#{item ,jdbcType=VARCHAR}
+							</foreach>
+						</if>			
+		               )
+		        GROUP BY SAN_NAME) A,
+			       TB_NRES_AREA_MAP B
+			 WHERE A.SAN_NAME = B.AREA_CODE
+			   AND B.GUBUN = '1'  
+			ORDER BY AV1 DESC
+	</select>
+	
+	<!-- 우측하단 유통현황(통합) -->
+	<select id="selectDistSearchTot" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		/* 우측하단 유통현황(통합) */
+		SELECT MTH||'월' AS MTH, 
+			   <if test='type2 == "QTY"'>
+			   ROUND(SUM(QTY)/10000) AS QTY
+			   </if>
+			   <if test='type2 == "AMT"'>
+			   ROUND(SUM(AMT)/10000) AS QTY
+			   </if>			   
+		FROM   (SELECT  SUBSTR(A.SALE_DATE,6,2) AS MTH
+		              , A.QTY
+		              , A.TOT_AMT AS AMT
+<![CDATA[		              
+                      , CASE WHEN INSTR(F.SAN_BIGO, '광주') > 0 THEN '1200'
+                             WHEN INSTR(F.SAN_BIGO, '경기') > 0 THEN '200'
+                             WHEN INSTR(F.SAN_BIGO, '부산') > 0 THEN '300'
+                             WHEN INSTR(F.SAN_BIGO, '서울') > 0 THEN '900'
+                             WHEN INSTR(F.SAN_BIGO, '인천') > 0 THEN '1100'
+                             WHEN INSTR(F.SAN_BIGO, '강원') > 0 THEN '100'
+                             WHEN INSTR(F.SAN_BIGO, '대구') > 0 THEN '400'
+                             WHEN INSTR(F.SAN_BIGO, '전라남도') > 0 THEN '1200'
+                             WHEN INSTR(F.SAN_BIGO, '전라북도') > 0 THEN '1300'
+                             WHEN INSTR(F.SAN_BIGO, '경상남도') > 0 THEN '300'
+                             WHEN INSTR(F.SAN_BIGO, '경상북도') > 0 THEN '400'
+                             WHEN INSTR(F.SAN_BIGO, '충청남도') > 0 THEN '1500'
+                             WHEN INSTR(F.SAN_BIGO, '충청북도') > 0 THEN '1600'
+                             WHEN INSTR(F.SAN_BIGO, '전북') > 0 THEN '1300'
+                             WHEN INSTR(F.SAN_BIGO, '전남') > 0 THEN '1200'
+                             WHEN INSTR(F.SAN_BIGO, '경북') > 0 THEN '400'
+                             WHEN INSTR(F.SAN_BIGO, '경남') > 0 THEN '300'
+                             WHEN INSTR(F.SAN_BIGO, '충북') > 0 THEN '1600'
+                             WHEN INSTR(F.SAN_BIGO, '충남') > 0 THEN '1500'
+                             WHEN INSTR(F.SAN_BIGO, '울산') > 0 THEN '1000'
+                             WHEN INSTR(F.SAN_BIGO, '대전') > 0 THEN '700'
+                             WHEN INSTR(F.SAN_BIGO, '세종') > 0 THEN '1700'
+                             WHEN INSTR(F.SAN_BIGO, '제주') > 0 THEN '1400' END AS SAN_NAME                  		              
+		        FROM    FLOWER.T_INT_SALE_RAW A
+		              , FLOWER.T_INT_MAPPING  B
+		              , FLOWER.T_INT_ITEM     C
+		              , FLOWER.T_INT_KIND     D
+                      , FLOWER.T_LOCAL        F
+		        WHERE   A.MAPPING_ID  = B.MAPPING_ID            
+		        AND     B.FLOWER_GUBN = C.FLOWER_GUBN
+		        AND     B.FLOWER_CODE = C.FLOWER_CODE
+		        AND     B.ITEM_CD     = C.ITEM_CD
+		        AND     B.FLOWER_GUBN = D.FLOWER_GUBN
+		        AND     B.FLOWER_CODE = D.FLOWER_CODE
+		        AND     B.ITEM_CD     = D.ITEM_CD
+		        AND     B.KIND_CD     = D.KIND_CD
+                AND     A.SAN_CD      = F.SAN_CD
+                ]]>                          		              
+		        <if test='dateType == "day"'>
+                AND     A.SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+                </if>
+                <if test='dateType == "month"'>
+                AND     A.SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+                </if>
+                <if test='dateType != "day" and dateType != "month"'>
+                AND     A.SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+                </if>		        
+		        <if test="itemCd != '' and itemCd != null">
+		        AND     B.FLOWER_CODE || B.ITEM_CD = #{itemCd}							/* 콤보에서 선택된 품목 (필수) */
+		        </if>
+		        <if test="kindCd != '' and kindCd != null">
+		        AND     B.FLOWER_CODE || B.ITEM_CD || B.KIND_CD = #{kindCd}							/* 콤보에서 선택된 품종 (옵션) */
+		        </if>
+		        <if test="flowerCd.size != 0">											/* 부류 체크박스 */
+				AND		B.FLOWER_GUBN IN
+					<foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+						#{item ,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+		       )        
+		<if test="sidoCode != '' and sidoCode != null">
+		WHERE 	SAN_NAME = #{sidoCode}
+		</if>                        		              
+		GROUP BY MTH
+		ORDER BY MTH
+	</select>
+	
+	<!-- 우측하단 유통현황(개별) -->
+	<select id="selectDistSearchEach" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT /* 우측하단 유통현황(개별) */
+		       MTH||'월' AS MTH, 
+		       <if test='type2 == "QTY"'>
+		       ROUND(SUM(QTY)/10000) AS QTY
+		       </if>
+		       <if test='type2 == "AMT"'>
+		       ROUND(SUM(AMT)/10000) AS QTY
+		       </if>
+		FROM   (SELECT  SUBSTR(A.SALE_DATE,6,2) AS MTH
+		              , A.TOT_QTY AS QTY
+		              , A.TOT_AMT AS AMT
+		        FROM  ( SELECT  B.PUM_NAME,
+                                B.GOOD_NAME,
+                                B.CMP_CD,
+                                B.SAN_CD,
+                                B.TOT_QTY,
+                                B.TOT_AMT,
+                                B.SALE_DATE,
+                                B.FLOWER_GUBN,	
+                                <![CDATA[	              
+                      		    CASE WHEN INSTR(F.SAN_BIGO, '광주') > 0 THEN '1200'
+		                             WHEN INSTR(F.SAN_BIGO, '경기') > 0 THEN '200'
+        		                     WHEN INSTR(F.SAN_BIGO, '부산') > 0 THEN '300'
+                		             WHEN INSTR(F.SAN_BIGO, '서울') > 0 THEN '900'
+                        		     WHEN INSTR(F.SAN_BIGO, '인천') > 0 THEN '1100'
+		                             WHEN INSTR(F.SAN_BIGO, '강원') > 0 THEN '100'
+        		                     WHEN INSTR(F.SAN_BIGO, '대구') > 0 THEN '400'
+                		             WHEN INSTR(F.SAN_BIGO, '전라남도') > 0 THEN '1200'
+                        		     WHEN INSTR(F.SAN_BIGO, '전라북도') > 0 THEN '1300'
+		                             WHEN INSTR(F.SAN_BIGO, '경상남도') > 0 THEN '300'
+        		                     WHEN INSTR(F.SAN_BIGO, '경상북도') > 0 THEN '400'
+                		             WHEN INSTR(F.SAN_BIGO, '충청남도') > 0 THEN '1500'
+                        		     WHEN INSTR(F.SAN_BIGO, '충청북도') > 0 THEN '1600'
+		                             WHEN INSTR(F.SAN_BIGO, '전북') > 0 THEN '1300'
+		                             WHEN INSTR(F.SAN_BIGO, '전남') > 0 THEN '1200'
+        		                     WHEN INSTR(F.SAN_BIGO, '경북') > 0 THEN '400'
+                		             WHEN INSTR(F.SAN_BIGO, '경남') > 0 THEN '300'
+                        		     WHEN INSTR(F.SAN_BIGO, '충북') > 0 THEN '1600'
+		                             WHEN INSTR(F.SAN_BIGO, '충남') > 0 THEN '1500'
+        		                     WHEN INSTR(F.SAN_BIGO, '울산') > 0 THEN '1000'
+		                             WHEN INSTR(F.SAN_BIGO, '대전') > 0 THEN '700'
+		                             WHEN INSTR(F.SAN_BIGO, '세종') > 0 THEN '1700'
+        		                     WHEN INSTR(F.SAN_BIGO, '제주') > 0 THEN '1400' 
+        		                END AS SAN_NAME,      
+        		                ]]>                          
+                               (SELECT MAX(ITEM_CD) FROM FLOWER.T_INT_ITEM WHERE FLOWER_GUBN = '1' AND ITEM_NM = B.PUM_NAME)  PUM_CODE,
+                               (SELECT MAX(KIND_CD) FROM FLOWER.T_INT_KIND WHERE FLOWER_GUBN = '1' AND KIND_NM = B.GOOD_NAME) KND_CODE
+                        FROM    FLOWER.T_SALE_DATE  B
+                              , FLOWER.T_LOCAL      F   
+                        WHERE 1=1
+                        <if test='dateType == "day"'>
+		                AND     B.SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+		                </if>
+		                <if test='dateType == "month"'>
+		                AND     B.SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+		                </if>
+		                <if test='dateType != "day" and dateType != "month"'>
+		                AND     B.SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+		                </if>
+		                AND     B.SAN_CD = F.SAN_CD
+                       ) A
+		        WHERE   1=1		        
+				<if test="sidoCode != '' and sidoCode != null">
+				AND 	SAN_NAME = #{sidoCode}
+				</if>
+		        <if test="itemCd != '' and itemCd != null">
+		        AND     A.PUM_NAME  = #{itemCd, jdbcType=VARCHAR}              			/* 콤보에서 선택된 품목 (필수) */
+		        </if>
+		        <if test="kindCd != '' and kindCd != null">
+		        AND     A.GOOD_NAME = #{kindCd, jdbcType=VARCHAR}          				/* 콤보에서 선택된 품종 (옵션) */
+		        </if>
+		        <if test="flowerCd.size != 0">											/* 부류 체크박스 */
+				AND		A.FLOWER_GUBN IN
+					<foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+						#{item ,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+		       )        
+		GROUP BY MTH
+		ORDER BY MTH
+	</select>
+	<!-- 엑셀다운(개별) -->
+	<select id="selectExcelSearchEach" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		/* 우측상단 산지별집계(개별) 엑셀출력*/
+		SELECT    SALE_DATE, PUM_NAME, GOOD_NAME, MARKET_NAME, MARKET_CD, SAN_BIGO_SI, SAN_BIGO_GUN, 
+		          SUM(TOT_QTY) AS TOT_QTY, SUM(TOT_AMT) AS TOT_AMT
+		  FROM    ( SELECT    A.SALE_DATE
+		                    , A.PUM_NAME
+		  				    , A.GOOD_NAME
+		  				    , E.MARKET_NAME																
+					        , E.MARKET_CD																
+						    , CASE WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '충남' THEN '충청남도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '충북' THEN '충청북도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '경남' THEN '경상남도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '경남' THEN '경상북도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '전남' THEN '전라남도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '전북' THEN '전라북도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '경기' THEN '경기도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '제주' THEN '제주도' 
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '강원' THEN '강원도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '서울' THEN '서울특별시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '인천' THEN '인천광역시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '부산' THEN '부산광역시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '울산' THEN '울산광역시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '울산' THEN '울산광역시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '광주' THEN '광주광역시' 
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '대구' THEN '대구광역시' 
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '대전' THEN '대전광역시' 
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '세종' THEN '세종광역시' 
+                                   ELSE NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) END AS SAN_BIGO_SI 
+						    , SUBSTR(SAN_NAME, INSTR(F.SAN_BIGO,' '))      AS SAN_BIGO_GUN
+					        , A.TOT_QTY  																
+					        , A.TOT_AMT
+					  FROM    ( SELECT    <if test='dateType == "day"'>														
+									      B.SALE_DATE AS SALE_DATE														
+									      </if>														
+									      <if test='dateType == "month"'>														
+									      SUBSTR(B.SALE_DATE, 1, 7) AS SALE_DATE
+									      </if>														
+									      <if test='dateType != "day" and dateType != "month"'>														
+									      SUBSTR(B.SALE_DATE, 1, 4) AS SALE_DATE
+									      </if>	
+					                    , B.PUM_NAME
+					                    , B.GOOD_NAME
+					                    , B.CMP_CD
+					                    , B.SAN_CD
+					                    , B.TOT_QTY
+					                    , B.TOT_AMT
+					                    , B.FLOWER_GUBN
+					                    , (SELECT MAX(ITEM_CD) FROM FLOWER.T_INT_ITEM WHERE FLOWER_GUBN = '1' AND ITEM_NM = B.PUM_NAME)  PUM_CODE
+					                    , (SELECT MAX(KIND_CD) FROM FLOWER.T_INT_KIND WHERE FLOWER_GUBN = '1' AND KIND_NM = B.GOOD_NAME) KND_CODE																
+		                          FROM    FLOWER.T_SALE_DATE B	
+							     <if test='dateType == "day"'>														
+							     WHERE    B.SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}														
+							     </if>														
+							     <if test='dateType == "month"'>														
+							     WHERE   B.SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'														
+							     </if>														
+							     <if test='dateType != "day" and dateType != "month"'>														
+							     WHERE   B.SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'														
+							     </if>	
+							  ) A		                                                                
+		                    , FLOWER.T_JOINT_MARKET E																
+		                    , FLOWER.T_LOCAL        F		                                                                    
+		             WHERE    A.CMP_CD = E.MARKET_CD																
+					   AND    A.SAN_CD = F.SAN_CD
+					   <if test="itemCd != null and itemCd != ''">
+					   AND    A.PUM_NAME = #{itemNm, jdbcType=VARCHAR}
+					   </if>																
+					   <if test="kindCd != null and kindCd != ''">												
+					   AND     A.GOOD_NAME = #{kindCd, jdbcType=VARCHAR}
+					   </if>												
+					   <if test="cmpCd2 != null and cmpCd2 != ''">												
+					   AND    A.CMP_CD = #{cmpCd2}
+					   </if>
+					   <if test="flowerCd.size != 0">                                        
+					   AND    A.FLOWER_GUBN IN										
+		    		   	<foreach item="item" collection="flowerCd" open="(" separator="," close=")">											
+		        	   		#{item ,jdbcType=VARCHAR}										
+		    		   	</foreach>											
+					   </if>
+			      )
+         GROUP BY SALE_DATE, PUM_NAME, GOOD_NAME, MARKET_NAME, MARKET_CD, SAN_BIGO_SI, SAN_BIGO_GUN       
+ 		 ORDER BY SALE_DATE, PUM_NAME, GOOD_NAME, MARKET_NAME, MARKET_CD, TOT_QTY 	
+	</select>
+	<!-- 엑셀다운(통합) -->
+	<select id="selectExcelSearchTot" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		/* 우측상단 산지별집계(통합) 엑셀출력 */
+		SELECT    SALE_DATE, ITEM_NM, KIND_NM, MARKET_NAME, MARKET_CD, SAN_NAME, SAN_BIGO_SI, SAN_BIGO_GUN,
+		          SUM(QTY) AS QTY, SUM(AMT) AS AMT
+		  FROM    ( SELECT    A.SALE_DATE
+		  					, C.ITEM_NM 
+		                    , D.KIND_NM 
+		                    , E.MARKET_NAME 
+		                    , E.MARKET_CD 
+		                    , CASE WHEN INSTR(F.SAN_BIGO, '광주') <![CDATA[>]]> 0 THEN '1200'																				
+						           WHEN INSTR(F.SAN_BIGO, '경기') <![CDATA[>]]> 0 THEN '200'																				
+						           WHEN INSTR(F.SAN_BIGO, '부산') <![CDATA[>]]> 0 THEN '300'																				
+						           WHEN INSTR(F.SAN_BIGO, '서울') <![CDATA[>]]> 0 THEN '900'																				
+						           WHEN INSTR(F.SAN_BIGO, '인천') <![CDATA[>]]> 0 THEN '1100'																				
+						           WHEN INSTR(F.SAN_BIGO, '강원') <![CDATA[>]]> 0 THEN '100'																				
+						           WHEN INSTR(F.SAN_BIGO, '대구') <![CDATA[>]]> 0 THEN '400'																				
+						           WHEN INSTR(F.SAN_BIGO, '전라남도') <![CDATA[>]]> 0 THEN '1200'																				
+						           WHEN INSTR(F.SAN_BIGO, '전라북도') <![CDATA[>]]> 0 THEN '1300'																				
+						           WHEN INSTR(F.SAN_BIGO, '경상남도') <![CDATA[>]]> 0 THEN '300'																				
+						           WHEN INSTR(F.SAN_BIGO, '경상북도') <![CDATA[>]]> 0 THEN '400'																				
+						           WHEN INSTR(F.SAN_BIGO, '충청남도') <![CDATA[>]]> 0 THEN '1500'																				
+						           WHEN INSTR(F.SAN_BIGO, '충청북도') <![CDATA[>]]> 0 THEN '1600'																				
+						           WHEN INSTR(F.SAN_BIGO, '전북') <![CDATA[>]]> 0 THEN '1300'																				
+						           WHEN INSTR(F.SAN_BIGO, '전남') <![CDATA[>]]> 0 THEN '1200'																				
+						           WHEN INSTR(F.SAN_BIGO, '경북') <![CDATA[>]]> 0 THEN '400'																				
+						           WHEN INSTR(F.SAN_BIGO, '경남') <![CDATA[>]]> 0 THEN '300'																				
+						           WHEN INSTR(F.SAN_BIGO, '충북') <![CDATA[>]]> 0 THEN '1600'																				
+						           WHEN INSTR(F.SAN_BIGO, '충남') <![CDATA[>]]> 0 THEN '1500'																				
+						           WHEN INSTR(F.SAN_BIGO, '울산') <![CDATA[>]]> 0 THEN '1000'																				
+						           WHEN INSTR(F.SAN_BIGO, '대전') <![CDATA[>]]> 0 THEN '700'																				
+						           WHEN INSTR(F.SAN_BIGO, '세종') <![CDATA[>]]> 0 THEN '1700'																				
+						           WHEN INSTR(F.SAN_BIGO, '제주') <![CDATA[>]]> 0 THEN '1400'																				
+						           ELSE F.SAN_BIGO																				
+						      END AS SAN_NAME
+						    , CASE WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '충남' THEN '충청남도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '충북' THEN '충청북도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '경남' THEN '경상남도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '경남' THEN '경상북도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '전남' THEN '전라남도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '전북' THEN '전라북도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '경기' THEN '경기도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '제주' THEN '제주도' 
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '강원' THEN '강원도'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '서울' THEN '서울특별시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '인천' THEN '인천광역시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '부산' THEN '부산광역시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '울산' THEN '울산광역시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '울산' THEN '울산광역시'
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '광주' THEN '광주광역시' 
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '대구' THEN '대구광역시' 
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '대전' THEN '대전광역시' 
+                                   WHEN NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) = '세종' THEN '세종광역시' 
+                                   ELSE NVL(SUBSTR(SAN_NAME, 1, INSTR(F.SAN_BIGO, ' ')-1), F.SAN_BIGO) END AS SAN_BIGO_SI 
+						    , SUBSTR(SAN_NAME, INSTR(F.SAN_BIGO,' '))      AS SAN_BIGO_GUN
+						    , A.QTY 
+						    , A.TOT_AMT AS AMT																				
+		  		      FROM    ( SELECT    <if test='dateType == "day"'>														
+									      SALE_DATE AS SALE_DATE														
+									      </if>														
+									      <if test='dateType == "month"'>														
+									      SUBSTR(SALE_DATE, 1, 7) AS SALE_DATE
+									      </if>														
+									      <if test='dateType != "day" and dateType != "month"'>														
+									      SUBSTR(SALE_DATE, 1, 4) AS SALE_DATE
+									      </if>	
+									      , MAPPING_ID
+									      , SAN_CD 
+									      , SUM(QTY) QTY
+									      , SUM(TOT_AMT) TOT_AMT
+		  		      			  FROM    FLOWER.T_INT_SALE_RAW
+		  		      			 <if test='dateType == "day"'>
+		  		      			 WHERE    SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+		  		      			 </if>
+		  		      			 <if test='dateType == "month"'>
+		  		      			 WHERE   SALE_DATE BETWEEN #{searchStrDate}||'-01' AND #{searchEndDate}||'-31'
+		  		      			 </if>
+		  		      			 <if test='dateType != "day" and dateType != "month"'>
+		  		      			 WHERE   SALE_DATE BETWEEN #{searchStrDate}||'-01-01' AND #{searchEndDate}||'-12-31'
+		  		      			 </if>
+		  		      	        GROUP BY SALE_DATE, MAPPING_ID, SAN_CD
+		  		              ) A,
+		  		  		      FLOWER.T_INT_MAPPING B ,																				
+		          			  FLOWER.T_INT_ITEM C ,																				
+		          			  FLOWER.T_INT_KIND D ,																				
+		          			  FLOWER.T_JOINT_MARKET E ,																				
+		          			  FLOWER.T_LOCAL F																				
+		 	      	 WHERE    A.MAPPING_ID = B.MAPPING_ID																				
+		   			   AND    B.FLOWER_GUBN = C.FLOWER_GUBN																				
+		   			   AND    B.FLOWER_CODE = C.FLOWER_CODE																				
+		   			   AND    B.ITEM_CD = C.ITEM_CD																				
+					   AND    B.FLOWER_GUBN = D.FLOWER_GUBN																				
+					   AND    B.FLOWER_CODE = D.FLOWER_CODE																				
+					   AND    B.ITEM_CD = D.ITEM_CD																				
+					   AND    B.KIND_CD = D.KIND_CD																				
+					   AND    B.MARKET_CD = E.MARKET_CD																				
+					   AND    A.SAN_CD = F.SAN_CD	
+		    		   <if test="itemCd != null and itemCd != ''">
+		    		  	<choose>
+			    			<when test="itemCd == '6043'">										
+		            		AND		C.FLOWER_CODE || C.ITEM_CD IN ('6002', '6043')							
+		        			</when>										
+		        		<otherwise>										
+		            		AND		C.FLOWER_CODE || C.ITEM_CD = #{itemCd}
+		        		</otherwise>										
+		    			</choose>							                				
+		    		   </if>															
+				       <if test="kindCd != null and kindCd != ''">											
+				       AND    D.FLOWER_CODE||D.ITEM_CD||D.KIND_CD = #{kindCd}
+				       </if>											
+				       <if test="cmpCd.size != 0">											
+				       AND    B.MARKET_CD IN
+					       <foreach item="item" collection="cmpCd" open="(" separator="," close=")">										
+					            #{item}											
+					       </foreach>										
+				       </if>											
+				       <if test="flowerCd.size != 0">	
+				       AND    B.FLOWER_GUBN IN									
+					       <foreach item="item" collection="flowerCd" open="(" separator="," close=")">										
+					           #{item ,jdbcType=VARCHAR}									
+					       </foreach>										
+				       </if>							
+		          )
+		 GROUP BY SALE_DATE, ITEM_NM, KIND_NM, MARKET_NAME, MARKET_CD, SAN_NAME, SAN_BIGO_SI, SAN_BIGO_GUN
+		 ORDER BY SALE_DATE, ITEM_NM, KIND_NM, MARKET_NAME, MARKET_CD, SAN_BIGO_SI, SAN_BIGO_GUN, QTY 
+	</select>
+</mapper>

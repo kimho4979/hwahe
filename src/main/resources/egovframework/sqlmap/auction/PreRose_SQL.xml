@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.preRose.mapper.PreRoseMapper">
+
+	<!-- 장미가격예측 품종 List -->
+	<select id="selectPreRosePumListByCmpCd" parameterType="HashMap"  resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT BASE_DATE, CMP_CD, PUM_NAME, GOOD_NAME, LV_CD, SUM(TOT_QTY) TOT_QTY
+		FROM
+		(
+			SELECT  A.BASE_DATE,A.CMP_CD, A.PUM_NAME, A.GOOD_NAME, A.LV_CD, TOT_QTY
+			FROM
+			(
+				SELECT A.BASE_DATE,CMP_CD, PUM_NAME, GOOD_NAME, LV_CD
+				FROM TB_PREDICTION_PRICE A,
+				(       
+					SELECT MAX(BASE_DATE) BASE_DATE
+					FROM TB_PREDICTION_PRICE
+					WHERE 1=1
+					<if test="baseDate == null">
+						AND BASE_DATE BETWEEN TO_CHAR(SYSDATE-10,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+					</if> 
+					<if test="baseDate != null">
+						<choose>
+							<when test="baseDate == ''">
+								AND BASE_DATE BETWEEN TO_CHAR(SYSDATE-10,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+							</when>
+							<otherwise>
+								AND BASE_DATE =#{baseDate}
+							</otherwise>
+						</choose>
+					</if>
+					AND CMP_CD =#{searchCmpCd}
+				) B
+				WHERE A.BASE_DATE=B.BASE_DATE
+				AND CMP_CD =#{searchCmpCd}
+				GROUP BY A.BASE_DATE, CMP_CD,PUM_NAME, GOOD_NAME, LV_CD
+			) A,
+			(
+				SELECT 
+					CMP_CD
+					, PUM_NAME
+					, GOOD_NAME
+					, LV_CD
+					, SUM(TOT_QTY) TOT_QTY
+				FROM T_SALE_DATE
+				WHERE 1=1
+				AND CMP_CD =#{searchCmpCd}
+				<if test="baseDate == null">
+						AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -6),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+					</if> 
+					<if test="baseDate != null">
+						<choose>
+							<when test="baseDate == ''">
+								AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -6),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+							</when>
+							<otherwise>
+								AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{baseDate},'YYYY-MM-DD'), -6),'YYYY-MM-DD')  AND #{baseDate} 
+							</otherwise>
+						</choose>
+					</if>
+				AND PUM_NAME LIKE '장미%'
+				GROUP BY CMP_CD, PUM_NAME, GOOD_NAME, LV_CD
+			) B
+			WHERE 1=1
+			AND A.CMP_CD=B.CMP_CD
+			AND A.GOOD_NAME=B.GOOD_NAME(+)
+			AND A.LV_CD=B.LV_CD(+)
+		)
+		GROUP BY BASE_DATE, CMP_CD, PUM_NAME, GOOD_NAME, LV_CD
+		ORDER BY TOT_QTY DESC
+	</select>
+	
+	<!-- 장미가격예측 품종 List -->
+	<select id="selectPreRosePumListEst" parameterType="HashMap"  resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT BASE_DATE, CMP_CD, PUM_NAME, GOOD_NAME, LV_CD, SUM(TOT_QTY) TOT_QTY
+		FROM
+		(
+			SELECT  A.BASE_DATE,A.CMP_CD, A.PUM_NAME, A.GOOD_NAME, A.LV_CD, TOT_QTY
+			FROM
+			(
+				SELECT A.BASE_DATE,CMP_CD, PUM_NAME, GOOD_NAME, LV_CD
+				FROM TB_PREDICTION_PRICE A,
+				(       
+					SELECT MIN(BASE_DATE) BASE_DATE
+					FROM TB_PREDICTION_PRICE
+					WHERE 1=1
+					<if test="baseDate == null">
+						AND BASE_DATE BETWEEN TO_CHAR(SYSDATE-90,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+					</if> 
+					<if test="baseDate != null">
+						<choose>
+							<when test="baseDate == ''">
+								AND BASE_DATE BETWEEN TO_CHAR(SYSDATE-90,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+							</when>
+							<otherwise>
+								AND BASE_DATE =#{baseDate}
+							</otherwise>
+						</choose>
+					</if>
+					AND CMP_CD =#{searchCmpCd}
+				) B
+				WHERE A.BASE_DATE=B.BASE_DATE
+				AND CMP_CD =#{searchCmpCd}
+				GROUP BY A.BASE_DATE, CMP_CD,PUM_NAME, GOOD_NAME, LV_CD
+			) A,
+			(
+				SELECT 
+					CMP_CD
+					, PUM_NAME
+					, GOOD_NAME
+					, LV_CD
+					, SUM(TOT_QTY) TOT_QTY
+				FROM T_SALE_DATE
+				WHERE 1=1
+				AND CMP_CD =#{searchCmpCd}
+				<if test="baseDate == null">
+						AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -6),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+					</if> 
+					<if test="baseDate != null">
+						<choose>
+							<when test="baseDate == ''">
+								AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -6),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+							</when>
+							<otherwise>
+								AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{baseDate},'YYYY-MM-DD'), -6),'YYYY-MM-DD')  AND #{baseDate} 
+							</otherwise>
+						</choose>
+					</if>
+				AND PUM_NAME LIKE '장미%'
+				GROUP BY CMP_CD, PUM_NAME, GOOD_NAME, LV_CD
+			) B
+			WHERE 1=1
+			AND A.CMP_CD=B.CMP_CD
+			AND A.GOOD_NAME=B.GOOD_NAME(+)
+			AND A.LV_CD=B.LV_CD(+)
+		)
+		GROUP BY BASE_DATE, CMP_CD, PUM_NAME, GOOD_NAME, LV_CD
+		ORDER BY TOT_QTY DESC
+	</select>
+	
+	<select id="selectPreRosePumListByLvCd" parameterType="HashMap"  resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT CMP_CD, PUM_NAME, GOOD_NAME, A.LV_CD, LV_NAME
+		FROM
+		(
+		    SELECT CMP_CD, PUM_NAME, GOOD_NAME,LV_CD
+		    FROM TB_PREDICTION_PRICE
+		    WHERE BASE_DATE =#{baseDate}
+			AND CMP_CD =#{searchCmpCd}
+			AND GOOD_NAME=#{pumName}
+		    GROUP BY CMP_CD,PUM_NAME, GOOD_NAME,LV_CD
+		    ORDER BY CMP_CD,PUM_NAME, GOOD_NAME,LV_CD
+		) A, T_LEVEL B
+		WHERE A.LV_CD=B.LV_CD
+	</select>
+	
+	<!-- 장미가격예측 List -->
+	<select id="selectPreRoseList" parameterType="HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+		TA.BASE_DATE
+		, TA.COMP_DATE
+		, REPLACE(TA.COMP_DATE,'-','.') AS REP_COMP
+		, TA.PRE_IDX
+		, TA.PUM_NAME
+		, TA.GOOD_NAME
+		, TA.LV_CD
+		, TA.REAL_PRICE
+		, TA.PRE_PRICE
+		, TA.WEEK_CNT
+		, TA.DAY_CNT
+		, TB.WEEK_CNT
+		, TB.DAY_CNT
+		, TB.SALE_DATE
+		, TB.MIN_AMT
+		, TB.MAX_AMT
+		, TB.AVG_AMT
+		, TB.TOT_QTY
+		 , DECODE(TA.DAY_CNT,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금','토') AS DAY_YOIL
+		FROM
+		(
+		     SELECT
+	        BASE_DATE
+	        , COMP_DATE
+	        , PRE_IDX
+	        , CMP_CD
+	        , PUM_NAME
+	        , GOOD_NAME
+	        , LV_CD
+	        , REAL_PRICE
+	        , CASE WHEN(RN=1)
+	        THEN  REAL_PRICE
+	        ELSE NULL 
+	        END AS PRE_PRICE
+	        , WEEK_CNT
+	        , DAY_CNT
+	    FROM
+	    (
+	        SELECT 
+	            SALE_DATE AS BASE_DATE
+	            , SALE_DATE AS COMP_DATE
+	            , 0 AS PRE_IDX
+	            , CMP_CD
+	            , PUM_NAME
+	            , GOOD_NAME
+	            , LV_CD
+	            , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS REAL_PRICE
+	            , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'WW') WEEK_CNT
+	            , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'d') DAY_CNT
+	            ,  ROW_NUMBER() OVER(ORDER BY SALE_DATE DESC)AS RN
+			    FROM T_SALE_DATE
+			   WHERE 1=1
+				AND CMP_CD =#{searchCmpCd}
+				AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), -1),'YYYY-MM-DD') AND #{baseDate}
+		        AND PUM_NAME LIKE '장미%'
+				AND GOOD_NAME=#{pumCd}
+				AND LV_CD=#{lvCd}
+			    GROUP BY CMP_CD, SALE_DATE, LV_CD, PUM_NAME, GOOD_NAME
+		    )
+		    UNION ALL
+		    SELECT 
+		    BASE_DATE
+		    , COMP_DATE
+		    , PRE_IDX
+		    , CMP_CD
+		    , PUM_NAME
+		    , GOOD_NAME
+		    , LV_CD
+		    , NULL REAL_PRICE
+    		, ROUND(PRE_PRICE) PRE_PRICE
+		    , TO_CHAR(TO_DATE(COMP_DATE,'YYYY-MM-DD'),'WW') WEEK_CNT
+		    , TO_CHAR(TO_DATE(COMP_DATE,'YYYY-MM-DD'),'d') DAY_CNT
+		    FROM
+		    (
+		        SELECT *
+		        FROM TB_PREDICTION_PRICE
+		       WHERE     BASE_DATE =#{baseDate}
+				AND CMP_CD =#{searchCmpCd}
+		        AND PUM_NAME LIKE '장미%'
+				AND GOOD_NAME=#{pumCd}
+				AND LV_CD=#{lvCd}
+		    ) A,
+		    (
+		        SELECT ROWNUM RNUM, TO_CHAR(COMP_DATE,'YYYY-MM-DD') COMP_DATE
+		        FROM
+		        (
+		            SELECT START_DTE + LEVEL COMP_DATE
+		            FROM (
+		                SELECT 
+		                    TO_DATE(#{baseDate},'YYYY-MM-DD') START_DTE,
+		                    ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), 3) END_DTE
+		                FROM DUAL
+		            )
+		            CONNECT BY LEVEL <![CDATA[<=]]> END_DTE - START_DTE
+		        )
+		        WHERE TO_CHAR(COMP_DATE,'D') IN ('2','4','6')
+		        ORDER BY COMP_DATE
+		    ) B
+		    WHERE A.PRE_IDX=RNUM
+		) TA,
+		(
+		   SELECT 
+		        CMP_CD
+		        , SALE_DATE
+		        , LV_CD
+		        , PUM_NAME
+		        , GOOD_NAME
+		        , MIN(MIN_AMT) AS MIN_AMT
+		        , MAX(MAX_AMT) AS MAX_AMT
+		        , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+		        , SUM(TOT_QTY) AS TOT_QTY
+		        , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'WW') WEEK_CNT
+		        , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'d') DAY_CNT
+		    FROM T_SALE_DATE
+		    WHERE 1=1
+			AND CMP_CD =#{searchCmpCd}
+			AND SALE_DATE BETWEEN  TO_CHAR(ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), -13),'YYYY-MM-DD') AND TO_CHAR(ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), -12+3),'YYYY-MM-DD')
+	        AND PUM_NAME LIKE '장미%'
+			AND GOOD_NAME=#{pumCd}
+			AND LV_CD=#{lvCd}
+		    GROUP BY CMP_CD, SALE_DATE, LV_CD, PUM_NAME, GOOD_NAME
+		) TB
+		WHERE TA.WEEK_CNT=TB.WEEK_CNT(+)
+		AND TA.DAY_CNT=TB.DAY_CNT(+)
+		ORDER BY COMP_DATE
+	</select>
+	
+	<!-- 장미가격예측 List -->
+	<select id="selectPreRoseGridList" parameterType="HashMap"  resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+		TA.BASE_DATE
+		, TA.COMP_DATE
+		, REPLACE(TA.COMP_DATE,'-','.') AS REP_COMP
+		, TA.PRE_IDX
+		, TA.PUM_NAME
+		, TA.GOOD_NAME
+		, TA.LV_CD
+		, TA.REAL_PRICE
+		, TA.PRE_PRICE
+		, TA.WEEK_CNT
+		, TA.DAY_CNT
+		, TB.WEEK_CNT
+		, TB.DAY_CNT
+		, TB.SALE_DATE
+		, TB.MIN_AMT
+		, TB.MAX_AMT
+		, TB.AVG_AMT
+		, TB.TOT_QTY
+		 , DECODE(TA.DAY_CNT,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금','토') AS DAY_YOIL
+		FROM
+		(
+		    SELECT 
+		    BASE_DATE
+		    , COMP_DATE
+		    , PRE_IDX
+		    , CMP_CD
+		    , PUM_NAME
+		    , GOOD_NAME
+		    , LV_CD
+		    , NULL REAL_PRICE
+    		, ROUND(PRE_PRICE) PRE_PRICE
+		    , TO_CHAR(TO_DATE(COMP_DATE,'YYYY-MM-DD'),'WW') WEEK_CNT
+		    , TO_CHAR(TO_DATE(COMP_DATE,'YYYY-MM-DD'),'d') DAY_CNT
+		    FROM
+		    (
+		        SELECT *
+		        FROM TB_PREDICTION_PRICE
+		       WHERE     BASE_DATE =#{baseDate}
+				AND CMP_CD =#{searchCmpCd}
+		        AND PUM_NAME LIKE '장미%'
+				AND GOOD_NAME=#{pumCd}
+				AND LV_CD=#{lvCd}
+		    ) A,
+		    (
+		        SELECT ROWNUM RNUM, TO_CHAR(COMP_DATE,'YYYY-MM-DD') COMP_DATE
+		        FROM
+		        (
+		            SELECT START_DTE + LEVEL COMP_DATE
+		            FROM (
+		                SELECT 
+		                    TO_DATE(#{baseDate},'YYYY-MM-DD') START_DTE,
+		                    ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), 3) END_DTE
+		                FROM DUAL
+		            )
+		            CONNECT BY LEVEL <![CDATA[<=]]> END_DTE - START_DTE
+		        )
+		        WHERE TO_CHAR(COMP_DATE,'D') IN ('2','4','6')
+		        ORDER BY COMP_DATE
+		    ) B
+		    WHERE A.PRE_IDX=RNUM
+		) TA,
+		(
+		   SELECT 
+		        CMP_CD
+		        , SALE_DATE
+		        , LV_CD
+		        , PUM_NAME
+		        , GOOD_NAME
+		        , MIN(MIN_AMT) AS MIN_AMT
+		        , MAX(MAX_AMT) AS MAX_AMT
+		        , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+		        , SUM(TOT_QTY) AS TOT_QTY
+		        , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'WW') WEEK_CNT
+		        , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'d') DAY_CNT
+		    FROM T_SALE_DATE
+		    WHERE 1=1
+			AND CMP_CD =#{searchCmpCd}
+			AND SALE_DATE BETWEEN  TO_CHAR(ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), -14),'YYYY-MM-DD') AND TO_CHAR(ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), -12+3),'YYYY-MM-DD')
+	        AND PUM_NAME LIKE '장미%'
+			AND GOOD_NAME=#{pumCd}
+			AND LV_CD=#{lvCd}
+		    GROUP BY CMP_CD, SALE_DATE, LV_CD, PUM_NAME, GOOD_NAME
+		) TB
+		WHERE TA.WEEK_CNT=TB.WEEK_CNT(+)
+		AND TA.DAY_CNT=TB.DAY_CNT(+)
+		ORDER BY COMP_DATE
+	</select>
+	
+	<!-- 장미가격예측 평가 List -->
+	<select id="selectPreEstList" parameterType="HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+			TA.BASE_DATE
+			, TA.COMP_DATE
+			, REPLACE(TA.COMP_DATE,'-','.') AS REP_COMP
+			, TA.PRE_IDX
+			, TA.PUM_NAME
+			, TA.GOOD_NAME
+			, TA.LV_CD
+			, TA.PRE_PRICE
+			, TA.WEEK_CNT
+			, TA.DAY_CNT
+			, TB.WEEK_CNT
+			, TB.DAY_CNT
+			, TB.SALE_DATE
+			, TB.MIN_AMT
+			, TB.MAX_AMT
+			, TB.AVG_AMT
+			, TB.TOT_QTY
+			 , DECODE(TA.DAY_CNT,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금','토') AS DAY_YOIL
+			FROM
+			(
+			    SELECT 
+			    A.BASE_DATE
+			    , COMP_DATE
+			    , PRE_IDX
+			    , CMP_CD
+			    , PUM_NAME
+			    , GOOD_NAME
+			    , LV_CD
+			    , ROUND(PRE_PRICE) PRE_PRICE
+			    , TO_CHAR(TO_DATE(COMP_DATE,'YYYY-MM-DD'),'WW') WEEK_CNT
+			    , TO_CHAR(TO_DATE(COMP_DATE,'YYYY-MM-DD'),'d') DAY_CNT
+			    FROM
+			    (
+			        SELECT *
+			        FROM TB_PREDICTION_PRICE
+			        WHERE  BASE_DATE BETWEEN #{baseDate} AND TO_CHAR(TO_DATE(#{baseDate},'YYYY-MM-DD')+90,'YYYY-MM-DD')
+					AND PRE_IDX=1
+					AND CMP_CD =#{searchCmpCd}
+			        AND PUM_NAME LIKE '장미%'
+					AND GOOD_NAME=#{pumCd}
+					AND LV_CD=#{lvCd}
+			    ) A,
+			    (
+			    	SELECT RNUM, BASE_DATE, COMP_DATE
+			        FROM
+			        (
+			            SELECT ROWNUM-1 RNUM, LAG(TO_CHAR(COMP_DATE,'YYYY-MM-DD')) OVER(ORDER BY ROWNUM) BASE_DATE, TO_CHAR(COMP_DATE,'YYYY-MM-DD') COMP_DATE
+			            FROM
+			            (
+			                SELECT START_DTE + LEVEL COMP_DATE
+			                FROM (
+			                    SELECT 
+			                        TO_DATE(#{baseDate},'YYYY-MM-DD')-3 START_DTE,
+			                    ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), 3) END_DTE
+			                    FROM DUAL
+			                )
+			                CONNECT BY LEVEL <![CDATA[<=]]> END_DTE - START_DTE
+			            )
+			            WHERE TO_CHAR(COMP_DATE,'D') IN ('2','4','6')
+			            ORDER BY COMP_DATE  
+			        )
+			        WHERE RNUM > 0
+			    ) B
+			    WHERE A.BASE_DATE=B.BASE_DATE
+			) TA,
+			(
+			   SELECT 
+			        CMP_CD
+			        , SALE_DATE
+			        , LV_CD
+			        , PUM_NAME
+			        , GOOD_NAME
+			        , MIN(MIN_AMT) AS MIN_AMT
+			        , MAX(MAX_AMT) AS MAX_AMT
+			        , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+			        , SUM(TOT_QTY) AS TOT_QTY
+			        , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'WW') WEEK_CNT
+			        , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'d') DAY_CNT
+			    FROM T_SALE_DATE
+			    WHERE CMP_CD=#{searchCmpCd}
+			    AND SALE_DATE BETWEEN #{baseDate} AND TO_CHAR(ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), +3),'YYYY-MM-DD')
+			    AND PUM_NAME LIKE '장미%'
+				AND GOOD_NAME=#{pumCd}
+				AND LV_CD=#{lvCd}
+			    GROUP BY CMP_CD, SALE_DATE, LV_CD, PUM_NAME, GOOD_NAME
+			) TB
+			WHERE TA.COMP_DATE=TB.SALE_DATE(+)
+			AND TA.COMP_DATE <![CDATA[<=]]> TO_CHAR(SYSDATE,'YYYY-MM-DD')
+			ORDER BY COMP_DATE
+	</select>
+	
+	<!-- 장미가격예측 평가 그리드 -->
+	<select id="selectPreEstGridList" parameterType="HashMap"  resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+			TA.BASE_DATE
+			, TA.COMP_DATE
+			, REPLACE(TA.COMP_DATE,'-','.') AS REP_COMP
+			, TA.PRE_IDX
+			, TA.PUM_NAME
+			, TA.GOOD_NAME
+			, TA.LV_CD
+			, TA.PRE_PRICE
+			, TB.SALE_DATE
+			, TB.MIN_AMT
+			, TB.MAX_AMT
+			, TB.AVG_AMT
+			, TB.TOT_QTY
+			, ABS(ROUND((TA.PRE_PRICE-TB.AVG_AMT)/TA.PRE_PRICE*100)) PER
+			, DECODE(TA.DAY_CNT,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금','토') AS DAY_YOIL
+			FROM
+			(
+			    SELECT 
+			    A.BASE_DATE
+			    , COMP_DATE
+			    , PRE_IDX
+			    , CMP_CD
+			    , PUM_NAME
+			    , GOOD_NAME
+			    , LV_CD
+			    , ROUND(PRE_PRICE) PRE_PRICE
+			    , TO_CHAR(TO_DATE(COMP_DATE,'YYYY-MM-DD'),'WW') WEEK_CNT
+			    , TO_CHAR(TO_DATE(COMP_DATE,'YYYY-MM-DD'),'d') DAY_CNT
+			    FROM
+			    (
+			        SELECT *
+			        FROM TB_PREDICTION_PRICE
+			        WHERE  BASE_DATE BETWEEN #{baseDate} AND TO_CHAR(TO_DATE(#{baseDate},'YYYY-MM-DD')+90,'YYYY-MM-DD')
+					AND PRE_IDX=1
+					AND CMP_CD =#{searchCmpCd}
+			        AND PUM_NAME LIKE '장미%'
+					AND GOOD_NAME=#{pumCd}
+					AND LV_CD=#{lvCd}
+			    ) A,
+			    (
+			    	SELECT RNUM, BASE_DATE, COMP_DATE
+			        FROM
+			        (
+			            SELECT ROWNUM-1 RNUM, LAG(TO_CHAR(COMP_DATE,'YYYY-MM-DD')) OVER(ORDER BY ROWNUM) BASE_DATE, TO_CHAR(COMP_DATE,'YYYY-MM-DD') COMP_DATE
+			            FROM
+			            (
+			                SELECT START_DTE + LEVEL COMP_DATE
+			                FROM (
+			                    SELECT 
+			                        TO_DATE(#{baseDate},'YYYY-MM-DD')-3 START_DTE,
+			                    ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), 3) END_DTE
+			                    FROM DUAL
+			                )
+			                CONNECT BY LEVEL <![CDATA[<=]]> END_DTE - START_DTE
+			            )
+			            WHERE TO_CHAR(COMP_DATE,'D') IN ('2','4','6')
+			            ORDER BY COMP_DATE  
+			        )
+			        WHERE RNUM > 0
+			    ) B
+			    WHERE A.BASE_DATE=B.BASE_DATE
+			) TA,
+			(
+			   SELECT 
+			        CMP_CD
+			        , SALE_DATE
+			        , LV_CD
+			        , PUM_NAME
+			        , GOOD_NAME
+			        , MIN(MIN_AMT) AS MIN_AMT
+			        , MAX(MAX_AMT) AS MAX_AMT
+			        , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+			        , SUM(TOT_QTY) AS TOT_QTY
+			        , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'WW') WEEK_CNT
+			        , TO_CHAR(TO_DATE(SALE_DATE,'YYYY-MM-DD'),'d') DAY_CNT
+			    FROM T_SALE_DATE
+			    WHERE CMP_CD=#{searchCmpCd}
+			    AND SALE_DATE BETWEEN #{baseDate} AND TO_CHAR(ADD_MONTHS (TO_DATE(#{baseDate},'YYYY-MM-DD'), +3),'YYYY-MM-DD')
+			    AND PUM_NAME LIKE '장미%'
+				AND GOOD_NAME=#{pumCd}
+				AND LV_CD=#{lvCd}
+			    GROUP BY CMP_CD, SALE_DATE, LV_CD, PUM_NAME, GOOD_NAME
+			) TB
+			WHERE TA.COMP_DATE=TB.SALE_DATE(+)
+			AND TA.COMP_DATE <![CDATA[<=]]> TO_CHAR(SYSDATE,'YYYY-MM-DD')
+			ORDER BY COMP_DATE
+	</select>
+	
+
+</mapper>

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mdb01.mapper.Mdb01Mapper">
+
+	<!-- 정산정보관리 모니터요원 관리 정보 조회 -->
+	<sql id="where">
+		<if test="searchWord != null and searchWord != ''">
+			AND (
+				UPPER(a.USER_ID) LIKE '%' || UPPER(#{searchWord}) || '%'	OR
+				UPPER(a.USER_NM) LIKE '%' || UPPER(#{searchWord}) || '%'	
+			)
+		</if>
+		<if test="searchCode != null and searchCode != ''">
+			AND UPPER(a.COMP_CODE) LIKE '%' || UPPER(#{searchCode}) || '%'
+		</if>
+	</sql>
+	<select id="selectUserList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT a.* FROM (
+			SELECT
+				'' || count(1) OVER() TOTAL_COUNT, 
+				ROWNUM AS rn, a.* FROM (
+				SELECT
+					a.USER_ID
+					,a.USER_ID AS USER_ID2
+					,a.USER_NM
+					,a.COMP_CODE
+					,b.MOB
+					,b.BANK_NUM
+					,CASE WHEN b.MONITOR_TYPE = 'P' THEN '생산'
+						WHEN b.MONITOR_TYPE = 'C' THEN '소비'
+						WHEN b.MONITOR_TYPE = 'A' THEN '공통'
+						ELSE '없음'
+					END AS MONITOR_TYPE
+					,BANK_CODE
+					,DECODE(USE_YN,'Y','사용','미사용') AS USE_YN
+				FROM
+				  T_USER a
+				  LEFT OUTER JOIN T_USER_AUTH b
+				  ON a.USER_ID = b.USER_ID
+				WHERE a.USER_TYPE = 'M'
+				<include refid="where"/>
+				ORDER BY a.user_id
+			) a
+			ORDER BY a.user_id
+		) a <![CDATA[	where a.rn > ( nvl(#{pageNumber , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10) and rn <= nvl(#{pageNumber , jdbcType=VARCHAR }, 1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+		ORDER BY a.user_id
+	</select>
+	
+	<!-- 정산정보관리 모니터요원 등록 전 아이디 중복 체크 -->
+	<select id="checkUserId" parameterType="java.util.HashMap" resultType="int">
+		SELECT
+			COUNT(1)
+		FROM T_USER
+		WHERE
+			USER_ID = #{userId}
+	</select>
+	
+	<!-- 정산정보관리 모니터요원 등록1-->
+	<insert id="insertUserInput" parameterType="java.util.HashMap">
+		INSERT INTO T_USER(
+			USER_ID
+			,COMP_CODE
+			,USER_TYPE
+			,LAST_LOGIN_DATE
+			,REMARK
+			,USE_YN
+			,PASS_ERR_NUM
+			,INS_DT
+			,INS_ID
+			,USER_NM
+			,BANK_CODE
+		)VALUES(
+			#{userId}
+			,#{compCode}
+			,'M'
+			,NULL
+			,NULL
+			,#{useYn}
+			,NULL
+			,SYSDATE
+			,#{SESSION_USER_ID}
+			,#{userNm}
+			,#{bankCode}
+		)
+	</insert>
+	<!-- 정산정보관리 모니터요원 등록2 -->
+	<insert id="insertUserAuthInput" parameterType="java.util.HashMap">
+		INSERT INTO T_USER_AUTH(
+			USER_ID
+			,GRP_AUTH_CODE
+			,INS_DT
+			,INS_ID
+			,USER_PASSWD
+			,EMAIL
+			,MOB
+			,BANK_NUM
+			,MONITOR_TYPE
+		)VALUES(
+			#{userId}
+			,'M001'
+			,SYSDATE
+			,#{SESSION_USER_ID}
+			,#{userPasswd}
+			,NULL
+			,#{mob}
+			,#{bankNum}
+			,#{monitorType}
+		)
+	</insert>
+
+	<!-- 정산정보관리 모니터요원 수정 정보 조회 -->
+	<select id="detailUserInput" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+			a.USER_ID
+			, a.COMP_CODE
+			, a.USER_NM
+			, b.USER_PASSWD
+			, b.MOB
+			, b.BANK_NUM
+			, NVL(b.MONITOR_TYPE, '없음') AS MONITOR_TYPE
+  			, a.BANK_CODE
+  			, a.USE_YN
+		FROM 
+			T_USER a
+			LEFT OUTER JOIN T_USER_AUTH b
+			ON a.USER_ID = b.USER_ID
+		WHERE
+			a.USER_TYPE = 'M'
+			AND a.USER_ID = #{USER_ID}
+	</select>
+	
+	<!-- 정산정보관리 모니터요원 수정 처리 -->
+	<update id="updateUserInput" parameterType="java.util.HashMap">
+		UPDATE T_USER SET
+			COMP_CODE       = #{compCode}
+			,UPT_DT          = SYSDATE
+			,UPT_ID          = #{SESSION_USER_ID}
+			,USER_NM         = #{userNm}
+			,USE_YN			= #{useYn}
+			,BANK_CODE		= #{bankCode}
+		WHERE
+			USER_ID         = #{userId}
+	</update>
+	<update id="updateUserAuthInput" parameterType="java.util.HashMap">
+		UPDATE T_USER_AUTH SET
+			UPT_DT         = SYSDATE
+			,UPT_ID         = #{SESSION_USER_ID}
+			,USER_PASSWD    = #{userPasswd}
+			,MOB            = #{mob}
+			,BANK_NUM       = #{bankNum}
+			,MONITOR_TYPE   = #{monitorType}
+		WHERE
+			USER_ID        = #{userId}
+		
+	</update>
+
+	<!-- 정산정보관리 모니터요원 삭제 처리 -->
+	<delete id="deleteUserInput" parameterType="java.util.List">
+		DELETE FROM T_USER
+		WHERE 
+			USER_ID IN 
+				<foreach collection="list" item="data" index="i" open="(" separator="," close=")">
+					#{data}
+				</foreach>
+	</delete>
+	<delete id="deleteUserAuthInput" parameterType="java.util.List">
+		DELETE FROM T_USER_AUTH
+		WHERE 
+			USER_ID IN 
+				<foreach collection="list" item="data" index="i" open="(" separator="," close=")">
+					#{data}
+				</foreach>
+	</delete>
+	
+	<!-- 정산정보관리 모니터요원 관리 변경이력 추가 -->
+	<insert id="userInputLog" parameterType="java.util.HashMap">
+		INSERT INTO T_USER_INFO_LOG(
+			USER_LOG_SEQ
+			,USER_LOG_TYPE
+			,USER_ID
+			,COMP_CODE
+			,USER_TYPE
+			,REMARK
+			,USE_YN
+			,USER_NM
+			,USER_PASSWD
+			,EMAIL
+			,MOB
+			,BANK_NUM
+			,MONITOR_TYPE
+			,INS_DT
+			,INS_ID
+		)
+		SELECT
+			(SELECT NVL(MAX(USER_LOG_SEQ),0)+1 FROM T_USER_INFO_LOG)
+			,#{userLogType}
+			,a.USER_ID
+			,a.COMP_CODE
+			,a.USER_TYPE
+			,a.REMARK
+			,a.USE_YN
+			,a.USER_NM
+			,b.USER_PASSWD
+			,b.EMAIL
+			,b.MOB
+			,b.BANK_NUM
+			,b.MONITOR_TYPE
+			,SYSDATE
+			,#{SESSION_USER_ID}
+		FROM
+			T_USER a
+			LEFT OUTER JOIN T_USER_AUTH b
+			ON a.USER_ID = b.USER_ID
+		WHERE 
+			a.USER_ID = #{userId}
+	</insert>
+	
+	
+	<!--   정산정보관리 모니터요원 사용자 정보 변경이력  -->
+	<sql id="logWhere">
+		<!-- 0 은 전체보기 -->
+		<if test="searchType == 1">AND MONITOR_TYPE = 'P'</if>
+		<if test="searchType == 2">AND MONITOR_TYPE = 'C'</if>
+		<if test="searchLogType == 1">AND USER_LOG_TYPE = 1</if>
+		<if test="searchLogType == 2">AND USER_LOG_TYPE = 2</if>
+		<if test="searchLogType == 3">AND USER_LOG_TYPE = 3</if>
+		<if test="searchWord != null and searchWord != ''">
+			AND UPPER(USER_ID) LIKE '%' || UPPER(#{searchWord}) || '%'
+		</if>
+	</sql>
+	<select id="selectUserInfoLogList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT a.* FROM (
+			SELECT
+				'' || count(1) OVER() TOTAL_COUNT, 
+				ROWNUM AS rn, a.* FROM (
+				SELECT
+					USER_LOG_SEQ
+					,CASE WHEN USER_LOG_TYPE = 1 THEN '등록'
+						WHEN USER_LOG_TYPE = 2 THEN '수정'
+						WHEN USER_LOG_TYPE = 3 THEN '삭제'
+					END AS USER_LOG_TYPE
+					,USER_ID
+					,COMP_CODE
+					,CASE WHEN USE_YN = 'Y' THEN '사용'
+						WHEN USE_YN = 'N' THEN '미사용'
+					END AS USE_YN
+					,USER_NM
+					,EMAIL
+					,MOB
+					,BANK_NUM
+					,CASE WHEN MONITOR_TYPE = 'P' THEN '생산'
+						WHEN MONITOR_TYPE = 'C' THEN '소비'
+					END AS MONITOR_TYPE
+					,TO_CHAR(INS_DT , 'yyyy-mm-dd') AS INS_DT
+					,INS_ID
+				FROM
+				  T_USER_INFO_LOG
+				WHERE USER_TYPE = 'M'
+					<include refid="logWhere"/>				
+				ORDER BY INS_DT DESC , INS_ID
+			) a
+		) a <![CDATA[	where a.rn > ( nvl(#{pageNumber , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10) and rn <= nvl(#{pageNumber , jdbcType=VARCHAR }, 1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	</select>
+	
+	
+	
+	
+</mapper>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.notice.mapper.AdminNoticeMapper">
+    <resultMap id="noticeResultMap" type="com.fpdisys.admin.notice.domain.AdminNoticeVO">
+	    <result property="seq" column="SEQ"/>
+	    <result property="bbsGubn" column="BBS_GUBN"/>
+	    <result property="title" column="TITLE"/>
+	    <result property="content" column="CONTENT"/>
+	    <result property="dispYn" column="DISP_YN"/>
+	    <result property="compCode" column="COMP_CODE"/>
+        <result property="regDt" column="INS_DT"/>
+        <result property="insId" column="INS_ID"/>
+        <result property="uptSDt" column="UPT_DT"/>
+        <result property="uptId" column="UPT_ID"/>
+        <result property="TOTAL_COUNT" column="TOTAL_COUNT"/>     
+    </resultMap>
+    <resultMap id="noticeFileResultMap" type="com.fpdisys.admin.notice.domain.AdminNoticeFileVO">
+     	<result property="seq" column="SEQ"/>
+	    <result property="fileSeq" column="FILE_SEQ"/>
+	    <result property="bbsGubn" column="BBS_GUBN"/>
+	    <result property="orginFileName" column="ORIGIN_FILE_NAME"/>
+	    <result property="storedFileName" column="STORED_FILE_NAME"/>
+	     <result property="filePath" column="FILE_PATH"/>
+	    <result property="fileSize" column="FILE_SIZE"/>
+	     <result property="fileExt" column="FILE_EXT"/>
+	    <result property="regDt" column="INS_DT"/>
+	     <result property="insId" column="INS_ID"/>
+	    <result property="uptSDt" column="UPT_DT"/>
+	     <result property="uptId" column="UPT_ID"/>    
+    </resultMap>       
+<select id="selectAdminNoticeAll" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="noticeResultMap">
+    SELECT A.SEQ,
+       A.BBS_GUBN,
+       A.TITLE,
+       A.CONTENT,
+       A.DISP_YN,
+       A.COMP_CODE,
+       TO_CHAR(A.INS_DT,'YYYY-MM-DD') AS INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_BBS A
+  AND DISP_YN='Y'
+  ORDER BY A.SEQ DESC
+</select>   
+
+ <select id="selectAdminNoticeSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="noticeResultMap">
+ select * from (
+   
+    SELECT A.SEQ,
+    COUNT(*) OVER() AS TOTAL_COUNT ,
+        ROWNUM RNUM,
+       A.BBS_GUBN,
+       A.TITLE,
+       A.CONTENT,
+       A.DISP_YN,
+       A.COMP_CODE,
+       TO_CHAR(A.INS_DT,'YYYY-MM-DD') AS INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_BBS A
+  WHERE 1=1
+  AND A.BBS_GUBN='1'
+  AND DISP_YN='Y'
+    <if  test ="searchParam!=null and searchParam!='' " >
+   					   		AND A.TITLE LIKE '%'|| #{searchParam, jdbcType=VARCHAR}||'%' OR A.CONTENT LIKE '%'|| #{searchParam, jdbcType=VARCHAR}||'%'
+  </if> 
+  
+  ORDER BY A.SEQ DESC
+  )
+ WHERE RNUM BETWEEN #{startCount} AND #{endCount} 	
+</select> 
+   
+  <select id="selectAdminNoticeSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="noticeResultMap">
+    SELECT data.* 
+	  FROM 
+	       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+	              ROWNUM ROW_NUM, 
+	              ROWNUM LINENUM, 
+	              data.* 
+	         FROM 
+	              (      
+				      SELECT A.SEQ,
+				       A.BBS_GUBN,
+				       A.TITLE,
+				       A.CONTENT,
+				       A.DISP_YN,
+				       A.COMP_CODE,
+				        TO_CHAR(A.INS_DT,'YYYY-MM-DD') AS INS_DT,
+				       A.INS_ID,
+				       A.UPT_DT,
+				       A.UPT_ID
+				  FROM T_BBS A
+				  WHERE 1=1
+				  AND A.BBS_GUBN='1'
+				  AND DISP_YN='Y'
+				   <if  test ="searchParam!=null and searchParam!='' " >
+				   		AND A.TITLE LIKE '%'|| #{searchParam, jdbcType=VARCHAR}||'%' OR A.CONTENT LIKE '%'|| #{searchParam, jdbcType=VARCHAR}||'%'
+				  </if>
+				  ORDER BY A.SEQ DESC
+				  			  
+				) data 
+       		) data 
+ 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+</select>    
+
+<select id="selectAdminNoticeFileSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="noticeFileResultMap">
+  SELECT A.SEQ,
+       A.FILE_SEQ,
+       A.BBS_GUBN,
+       A.ORIGIN_FILE_NAME,
+       A.STORED_FILE_NAME,
+       A.FILE_PATH,
+       A.FILE_SIZE,
+       A.FILE_EXT,
+        TO_CHAR(A.INS_DT,'YYYY-MM-DD') AS INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_BBS_FILE A
+  WHERE 1=1
+  AND A.SEQ =#{seq}
+</select>  
+	<select id="findNoticeOne" resultMap="noticeResultMap" parameterType="java.util.HashMap"  statementType="PREPARED">
+      SELECT A.SEQ,
+       A.BBS_GUBN,
+       A.TITLE,
+       A.CONTENT,
+       A.DISP_YN,
+       A.COMP_CODE,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_BBS A
+  WHERE A.SEQ=#{seq  , jdbcType=NUMERIC}
+  AND A.BBS_GUBN='1'
+  AND A.DISP_YN='Y'
+    </select>
+    
+	<select id="findNoticeFileOne" resultMap="noticeFileResultMap" parameterType="java.util.HashMap"  statementType="PREPARED">
+     SELECT A.SEQ,
+       A.FILE_SEQ,
+       A.BBS_GUBN,
+       A.ORIGIN_FILE_NAME,
+       A.STORED_FILE_NAME,
+       A.FILE_PATH,
+       A.FILE_SIZE,
+       A.FILE_EXT,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_BBS_FILE A
+  WHERE A.BBS_GUBN='1'
+  AND A.DISP_YN='Y'
+  AND  A.SEQ =#{seq  , jdbcType=NUMERIC}
+  AND A.FILE_SEQ=#{fileSeq,  jdbcType=NUMERIC}   
+    </select>
+  <insert id="insertAdminNotice" parameterType="java.util.HashMap"  >
+	INSERT INTO T_BBS 
+       ( 
+           SEQ, 
+           BBS_GUBN, 
+           TITLE, 
+           CONTENT, 
+           DISP_YN, 
+           COMP_CODE, 
+           INS_DT, 
+           INS_ID 
+       ) 
+       VALUES 
+       ( 
+           NOTICE_SEQ.NEXTVAL, 
+           '1', 
+           #{TITLE , jdbcType=VARCHAR}, 
+           #{CONTENT , jdbcType=VARCHAR}, 
+           'Y',
+           '0000000001', 
+           SYSDATE, 
+           'Admin' 
+       ) 
+      
+</insert>
+ <update id="updateAdminNotice"  parameterType="java.util.HashMap" >
+ UPDATE T_BBS 
+       SET TITLE = #{TITLE , jdbcType=VARCHAR}, 
+       CONTENT = #{CONTENT , jdbcType=VARCHAR}, 
+       UPT_DT = SYSDATE, 
+       UPT_ID = 'Admin' 
+ WHERE SEQ= #{SEQ  , jdbcType=NUMERIC}
+ AND BBS_GUBN ='1'  
+ 
+ </update>
+  <update id="deleteAdminNotice"  parameterType="java.util.HashMap" >
+ UPDATE T_BBS  SET DISP_YN='N'
+ WHERE SEQ= #{SEQ_NO  , jdbcType=NUMERIC}
+ AND BBS_GUBN ='1'  
+ 
+ </update>
+ 
+</mapper>

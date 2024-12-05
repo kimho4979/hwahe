@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.dailyRptSend.mapper.DailyRptSendMapper">
+	<resultMap id="DailyRptMgtResultMap" type="com.fpminput.mntr.dailyRptSend.domain.DailyRptSendVO">	
+		<result property="seq"				column="SEQ"/>
+		<result property="bbsGubn"			column="BBS_GUBN"/>
+		<result property="title"			column="TITLE"/>
+		<result property="content"			column="CONTENT"/>
+		<result property="dispYn"			column="DISP_YN"/>
+		<result property="compCode"			column="COMP_CODE"/>
+		<result property="insDt"			column="INS_DT"/>
+		<result property="insId"			column="INS_ID"/>
+		<result property="uptDt"			column="UPT_DT"/>
+		<result property="uptId"			column="UPT_ID"/>
+		<result property="fileSeq"			column="FILE_SEQ"/>
+		<result property="originFileName"	column="ORIGIN_FILE_NAME"/>
+		<result property="storedFileName"	column="STORED_FILE_NAME"/>
+		<result property="filePath"			column="FILE_PATH"/>
+		<result property="fileSize"			column="FILE_SIZE"/>
+		<result property="fileExt"			column="FILE_EXT"/>		
+
+		<result property="emailAdrs" column="EMAIL_ADRS"/>
+		<result property="sndDeptNm" column="SND_DEPT_NM"/>
+		<result property="sndOthNm" column="SND_OTH_NM"/>
+		<result property="sndTel" column="SND_TEL"/>
+		<result property="endSndDt" column="END_SND_DT"/>
+		<result property="useYn" column="USE_YN"/>
+		<result property="userNm" column="USER_NM"/>
+	
+		
+	</resultMap>
+	
+	<!--  조회 -->
+	<select id="selectGridList" parameterType="com.fpminput.mntr.dailyRptSend.domain.DailyRptSendVO" resultMap="DailyRptMgtResultMap">
+	SELECT EMAIL_ADRS
+	     , SND_DEPT_NM
+	     , SND_OTH_NM
+	     , REGEXP_REPLACE(SND_TEL, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS SND_TEL
+	     ,TO_CHAR(TO_DATE(END_SND_DT, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_SND_DT
+	     , USE_YN
+	     , USER_NM
+	  FROM T_RPT_MAIL_ADDR
+	  <if test="searchNm != null and searchNm != ''">
+	  WHERE USER_NM = #{searchNm}
+	  </if>	 
+	</select>
+	
+	<!--  조회 -->
+	<select id="selectGridAll" parameterType="com.fpminput.mntr.dailyRptMgt.domain.DailyRptMgtVO" resultMap="DailyRptMgtResultMap">
+	SELECT EMAIL_ADRS
+	     , SND_DEPT_NM
+	     , SND_OTH_NM
+	     , REGEXP_REPLACE(SND_TEL, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS SND_TEL
+	     ,TO_CHAR(TO_DATE(END_SND_DT, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_SND_DT
+	     , USE_YN
+	     , USER_NM
+	  FROM T_RPT_MAIL_ADDR
+	  <if test="searchNm != null and searchNm != ''">
+	  WHERE USER_NM = #{searchNm}
+	  </if>	 
+	</select>
+	
+	<!-- 팝업 일일 보고자료 발송 등록 -->
+	<insert id="insertDailtRptSend"  parameterType="java.util.HashMap">
+	INSERT INTO T_RPT_MAIL_ADDR
+	(
+	    EMAIL_ADRS,
+	    SND_GP,
+	    SND_DEPT_NM,
+	    SND_OTH_NM,
+	    SND_TEL,
+	    END_SND_DT,
+	    USE_YN,
+	    USER_NM,
+	    REG_DT
+	)
+	VALUES
+	(
+	    #{emailAdrs, jdbcType=VARCHAR},
+	    '1',
+	    #{sndDeptNm, jdbcType=VARCHAR},
+	    #{sndOthNm, jdbcType=VARCHAR},
+	    #{sndTel, jdbcType=VARCHAR},
+	    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS'),
+	    #{useYn, jdbcType=VARCHAR},
+	    #{userNm, jdbcType=VARCHAR},
+	    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')    
+	)
+	</insert>
+	
+	<!-- 삭제 -->	
+	<delete id="deleteDailtRptSend"  parameterType="java.util.HashMap" >
+	DELETE FROM T_RPT_MAIL_ADDR
+	 WHERE EMAIL_ADRS = #{emailAdrs, jdbcType=VARCHAR}
+	   AND SND_GP= '1'	   
+	</delete>
+	
+	<!-- 팝업 조회 -->
+	<select id="selectDailtRptSendPopup" parameterType="com.fpminput.mntr.dailyRptSend.domain.DailyRptSendVO" resultMap="DailyRptMgtResultMap">
+	SELECT EMAIL_ADRS
+	     , SND_DEPT_NM
+	     , SND_OTH_NM
+	     , REGEXP_REPLACE(SND_TEL, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS SND_TEL
+	     ,TO_CHAR(TO_DATE(END_SND_DT, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_SND_DT
+	     , USE_YN
+	     , USER_NM
+	FROM T_RPT_MAIL_ADDR
+	WHERE EMAIL_ADRS = #{emailAdrs, jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 수정 -->	
+	<update id="updateDailtRptSend"  parameterType="java.util.HashMap" >
+	UPDATE T_RPT_MAIL_ADDR
+	   SET SND_DEPT_NM = #{sndDeptNm, jdbcType=VARCHAR}
+	     , SND_OTH_NM = #{sndOthNm, jdbcType=VARCHAR}
+	     , SND_TEL = REPLACE(#{sndTel, jdbcType=VARCHAR}, '-', '')
+	     , USE_YN = #{useYn, jdbcType=VARCHAR}
+	     , USER_NM = #{userNm, jdbcType=VARCHAR}
+	WHERE EMAIL_ADRS = #{emailAdrs, jdbcType=VARCHAR}
+	</update>
+</mapper>

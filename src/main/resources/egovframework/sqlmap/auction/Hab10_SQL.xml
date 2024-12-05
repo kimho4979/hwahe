@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hab10.mapper.Hab10Mapper">
+    <resultMap id="resultHab10Map" type="com.fpdisys.dist.hab10.domain.Hab10VO">
+	<result property="cmpCd" column="CMP_CD"/>
+	<result property="cmpCdNm" column="CMP_CD_NM"/>
+	<result property="saleMonth" column="SALE_MONTH"/>
+	<result property="saleYear" column="SALE_YEAR"/>
+	<result property="flowerGubn" column="FLOWER_GUBN"/>
+	<result property="flowerGubnNm" column="FLOWER_GUBN_NM"/>
+	<result property="pumName" column="PUM_NAME"/>
+	<result property="goodName" column="GOOD_NAME"/>
+	<result property="mmCd" column="MM_CD"/>
+	<result property="mmCdNm" column="MM_CD_NM"/>
+	<result property="danCd" column="DAN_CD"/>
+	<result property="danCdNm" column="DAN_CD_NM"/>
+	<result property="pojCd" column="POJ_CD"/>
+	<result property="pojCdNm" column="POJ_CD_NM"/>
+	<result property="lvCd" column="LV_CD"/>
+	<result property="lvCdNm" column="LV_CD_NM"/>
+    <result property="danQ" column="DANQ"/>
+    <result property="sizeCd" column="SIZE_CD"/>
+	<result property="sizeCdNm" column="SIZE_CD_NM"/>
+	<result property="sanCd" column="SAN_CD"/>
+	<result property="sanCdNm" column="SAN_CD_NM"/>
+	<result property="maxAmt" column="MAX_AMT"/>
+	<result property="minAmt" column="MIN_AMT"/>
+	<result property="avgAmt" column="AVG_AMT"/>
+	<result property="totAmt" column="TOT_AMT"/>
+	<result property="totQty" column="TOT_QTY"/>
+	<result property="oldMaxAmt" column="OLD_MAX_AMT"/>
+	<result property="oldMinAmt" column="OLD_MIN_AMT"/>
+	<result property="oldAvgAmt" column="OLD_AVG_AMT"/>
+	<result property="oldTotAmt" column="OLD_TOT_AMT"/>
+	<result property="oldTotQty" column="OLD_TOT_QTY"/>
+	<result property="perTotAmt" column="PER_TOT_AMT"/>
+	<result property="perAmtCol" column="PER_AMT_COL"/>
+	<result property="perTotQty" column="PER_TOT_QTY"/>
+	<result property="perQtyCol" column="PER_QTY_COL"/>
+	</resultMap>
+
+
+
+	<select id="selectHab10" parameterType="com.fpdisys.dist.hab10.domain.Hab10VO" resultMap="resultHab10Map">
+		<![CDATA[
+		  SELECT /* com.fpdisys.dist.hab10.mapper.Hab10Mapper.selectHab10 */
+			   SUBSTR(A.SALE_DATE, 1, 4)             AS SALE_YEAR
+             , A.FLOWER_GUBN                         AS FLOWER_GUBN
+             , A.CMP_CD                              AS CMP_CD
+             , ROUND(SUM(A.TOT_QTY) / 10000, 0)      AS TOT_QTY
+             , ROUND(SUM(A.TOT_AMT) / 1000000, 0)    AS TOT_AMT
+             , ROUND(SUM(A.MIN_AMT) / 1000000, 0)    AS MIN_AMT
+             , ROUND(SUM(A.MAX_AMT) / 1000000, 0)    AS MAX_AMT
+             , ROUND(SUM(A.AVG_AMT) / 1000000, 0)    AS AVG_AMT
+            FROM T_SALE_DATE A
+           WHERE A.TOT_AMT <> 0
+             AND SUBSTR(A.SALE_DATE, 1, 4)
+             	BETWEEN TO_CHAR(TO_DATE(#{searchYear, jdbcType=VARCHAR}, 'YYYY') - (INTERVAL '9' YEAR), 'YYYY')
+             		AND #{searchYear, jdbcType=VARCHAR}
+             AND SUBSTR(A.SALE_DATE, 1, 4) > (#{searchYear, jdbcType=VARCHAR}-10)
+		]]>
+		<if test='searchProductGubun != null and searchProductGubun != ""'>
+             AND A.FLOWER_GUBN = #{searchProductGubun}
+		</if>
+		<if test='searchCmpCd != null and searchCmpCd != ""'>
+             AND A.CMP_CD = #{searchCmpCd}
+		</if>
+
+		<![CDATA[
+           GROUP BY A.CMP_CD, SUBSTR(A.SALE_DATE, 1, 4), A.FLOWER_GUBN
+           ORDER BY SALE_YEAR
+		]]>
+	</select>
+
+
+	<select id="selectHab10Chart" parameterType="com.fpdisys.dist.hab10.domain.Hab10VO" resultMap="resultHab10Map">
+		<![CDATA[
+		  SELECT /* com.fpdisys.dist.hab10.mapper.Hab10Mapper.selectHab10Chart */
+			   SUBSTR(A.SALE_DATE, 1, 4)             AS SALE_YEAR
+             , A.FLOWER_GUBN                         AS FLOWER_GUBN
+             , A.CMP_CD                              AS CMP_CD
+             , ROUND(SUM(A.TOT_QTY) / 10000, 0)      AS TOT_QTY
+             , ROUND(SUM(A.TOT_AMT) / 1000000, 0)    AS TOT_AMT
+             , ROUND(SUM(A.MIN_AMT) / 1000000, 0)    AS MIN_AMT
+             , ROUND(SUM(A.MAX_AMT) / 1000000, 0)    AS MAX_AMT
+             , ROUND(SUM(A.AVG_AMT) / 1000000, 0)    AS AVG_AMT
+            FROM T_SALE_DATE A
+           WHERE A.TOT_AMT <> 0
+             AND SUBSTR(A.SALE_DATE, 1, 4)
+             	BETWEEN TO_CHAR(TO_DATE(#{searchYear, jdbcType=VARCHAR}, 'YYYY') - (INTERVAL '9' YEAR), 'YYYY')
+             		AND #{searchYear, jdbcType=VARCHAR}
+           	 AND SUBSTR(A.SALE_DATE, 1, 4) > (#{searchYear, jdbcType=VARCHAR}-10)
+		]]>
+		<if test='searchProductGubun != null and searchProductGubun != ""'>
+             AND A.FLOWER_GUBN = #{searchProductGubun}
+		</if>
+		<if test='searchCmpCd != null and searchCmpCd != ""'>
+             AND A.CMP_CD = #{searchCmpCd}
+		</if>
+
+		<![CDATA[
+           GROUP BY A.CMP_CD, SUBSTR(A.SALE_DATE, 1, 4), A.FLOWER_GUBN
+           ORDER BY SALE_YEAR
+		]]>
+	</select>
+
+</mapper>

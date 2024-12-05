@@ -1,0 +1,730 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="ChartBase,kor.charts.chartClasses.ChartBase" name="keywords">
+<title>kor.charts.chartClasses.ChartBase</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'ChartBase - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?kor/charts/chartClasses/ChartBase.html&amp;kor/charts/chartClasses/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;ChartBase</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class ChartBase"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor.charts.chartClasses</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class ChartBase</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Subclasses</td><td><a href="../chartClasses/CartesianChart.html">CartesianChart</a>, <a href="../../charts/OverlayBubbleChart.html">OverlayBubbleChart</a>, <a href="../../charts/Pie2DChart.html">Pie2DChart</a>, <a href="../../charts/Pie3DChart.html">Pie3DChart</a>, <a href="../../charts/RadarChart.html">RadarChart</a>, <a href="../../charts/WindRoseChart.html">WindRoseChart</a></td>
+</tr>
+</table>
+<p></p>
+  ChartBase 클래스는 모든 차트들의 기본 클래스입니다.
+    <p>모든 차트들은 ChartBase 클래스를 상속받기 때문에 사용자는 이를 레이아웃에 설정하지 않아도 됩니다.</p>
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<table id="summaryTableStyle" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:axisDataTipBorderColor"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">axisDataTipBorderColor</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>축 데이터 팁 테두리선의 색상을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:axisDataTipBorderRadius"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">axisDataTipBorderRadius</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>축 데이터 팁 테두리 모서리선의 둥근정도를 설정합니다.</p>
+     기본값(default) :  <code>NaN</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:axisDataTipBorderStyle"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">axisDataTipBorderStyle</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>축 데이터 팁 테두리선의 스타일을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:axisDataTipBorderWidth"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">axisDataTipBorderWidth</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>축 데이터 팁 테두리선의 굵기를 설정합니다.</p>
+     기본값(default) :  <code>NaN</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:axisMouseSensitivity"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">axisMouseSensitivity</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>>축 데이터 팁 출력 시 출력되는 마우스 반경을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:buttonMode"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">buttonMode</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+   <p>차트상의 데이터 포인트에 마우스 오버 시 손모양 커서 사용 여부를 나타냅니다.</p>
+       기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:chartClickJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">chartClickJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트 영역을 마우스 클릭하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart chartClickJsFunction="chartClickHandler"&gt;
+    <p><code>chartClickJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(id){ ... }
+  </pre>
+  <code>eventName</code> : 해당 자바스크립트를 실행한 이벤트 명입니다.<br/>
+  <code>id</code> : chartClickJsFunction 을 실행한 차트의 식별자(Identifier) 입니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:chartDoubleClickJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">chartDoubleClickJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트 영역을 마우스 더블클릭하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart chartDoubleClickJsFunction="chartDoubleClickHandler"&gt;
+    <p><code>chartDoubleClickJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+  <pre>
+   <i>function_name</i>(id){ ... }
+  </pre>
+  <code>eventName</code> : 해당 자바스크립트를 실행한 이벤트 명입니다.<br/>
+  <code>id</code> : chartDoubleClickJsFunction 을 실행한 차트의 식별자(Identifier) 입니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:chartOutJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">chartOutJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트 영역에서 마우스 아웃하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart chartOutJsFunction="chartOutHandler"&gt;
+    <p><code>chartOutJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(id){ ... }
+  </pre>
+  <code>eventName</code> : 해당 자바스크립트를 실행한 이벤트 명입니다.<br/>
+  <code>id</code> : chartOutJsFunction 을 실행한 차트의 식별자(Identifier) 입니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:chartOverJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">chartOverJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트 영역을 마우스 오버하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart chartOverJsFunction="chartOverHandler"&gt;
+    <p><code>chartOverJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(id){ ... }
+  </pre>
+  <code>eventName</code> : 해당 자바스크립트를 실행한 이벤트 명입니다.<br/>
+  <code>id</code> : chartOverJsFunction 을 실행한 차트의 식별자(Identifier) 입니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipBackgroundColorOnSeries"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipBackgroundColorOnSeries</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>데이터 팁의 배경색을 시리즈의 기본 색상으로 설정할 지 여부를 지정합니다.</p>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipBorderColor"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipBorderColor</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Uint<br>
+  <p>데이터 팁이 표시되는 div 의 테두리 선의 색상을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipBorderColor"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipBorderColor</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁 테두리선의 색상을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipBorderColorOnSeries"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipBorderColorOnSeries</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>데이터 팁의 테두리 색상을 시리즈 색상과 동일할게 할지 여부를 설정합니다.</p>
+     기본값(default) :  <code>true</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipBorderRadius"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipBorderRadius</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>데이터 팁 테두리 모서리선의 둥근정도를 설정합니다.</p>
+     기본값(default) :  <code>NaN</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipBorderStyle"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipBorderStyle</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁이 표시되는 div 의 테두리 스타일을 설정합니다.</p>
+    <p>유효값은 none, solid, inset, outset 입니다.</p>
+    <ul>
+   <li>none - 테두리 선을 그리지 않도록 설정합니다.</li>
+   <li>solid - 테두리를 기준으로 테두리 자체에 선을 그리도록 설정합니다.</li>
+   <li>inset - 테두리를 기준으로 테두리 안쪽에 선을 그리도록 설정합니다.</li>
+   <li>outset - 테두리를 기준으로 테두리 바깥쪽에 선을 그리도록 설정합니다.</li>
+  </ul>
+     기본값(default) :  <code>solid</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipBorderStyle"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipBorderStyle</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁 테두리선의 스타일을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipBorderWidth"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipBorderWidth</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>데이터 팁이 표시되는 div 의 테두리 선의 굵기를 설정합니다.</p>
+     기본값(default) :  <code>1</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipBorderWidth"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipBorderWidth</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>데이터 팁 테두리선의 굵기를 설정합니다.</p>
+     기본값(default) :  <code>NaN</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipDisplayMode"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipDisplayMode</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁의 출력형태를 설정합니다.</p>
+    유효값은 아래와 같습니다.
+    <ul>
+   <li>none : 차트상의 데이터 포인트에 마우스 오버 시 데이터 포인트 위치에 데이터 팁이 표시됩니다.</li>
+   <li>mouse : 차트상의 데이터 포인트에 마우스 오버 시 데이터 팁이 마우스를 따라 움직입니다.</li>
+   <li>axis : 동일한 X 좌표(바 차트는 Y 좌표) 선상에 있는 데이터 포인트들의 위치에 데이터 팁이 표시됩니다.</li>
+  </ul>
+     기본값(default) :  <code>none</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipFontColorOnSeries"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipFontColorOnSeries</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>데이터 팁의 폰트 색상을 시리즈 색상과 동일할게 할지 여부를 설정합니다.</p>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipFormatter"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipFormatter</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>데이터 팁에 적용되는 포맷터를 설정합니다.</p>
+    <p>유효값은 아래와 같습니다.</p>
+    <ul>
+   <li>NumberFormatter</li>
+   <li>CurrencyFormatter</li>
+   <li>DateFormatter</li>
+  </ul>
+     기본값(default) :  <code>NumberFormatter</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트상의 데이터 포인트에 마우스 오버 시 표시되는 데이터 팁의 내용을 작성하는 자바스크립트 함수명을 지정합니다.<br/>
+  차트 레이아웃 설정시 dataTipJsFunction 속성값을 자바스크립트 함수명으로 지정합니다.</p>
+    예) &lt;...Chart showDataTips="true" dataTipJsFunction="myDataTip"&gt;
+    <p><code>dataTipJsFunction</code> 함수 시그너쳐(signature)는 아래와 같습니다.</p>
+    <pre>
+  <i>function_name</i>(seriesId, seriesName, index, xName, yName, data, values) { ... }
+  </pre>
+    <code>seriesId</code> : 레이아웃에서 부여한 시리즈의 식별자(Identifier)가 있을 경우 해당 식별자를 나타냅니다.<br/>
+  <code>seriesName</code> : 시리즈의 displayName 속성값으로 지정한 시리즈 이름을 나타냅니다.<br/>
+  <code>xName</code> : X축에 displayName 을 정의하였다면 X축의 displayName 을 나타냅니다.<br/>
+  <code>yName</code> : Y축에 displayName 을 정의하였다면 Y축의 displayName 을 나타냅니다.<br/>
+  <code>data</code> : 해당 아이템의 값을 표현하기 위해 입력된 데이터. (데이터의 종류에 따라서 XML의 내용 또는 배열이 됩니다.)<br/>
+  <code>values</code> : 해당 아이템의 값입니다. 배열로 전달되며 차트의 종류에 따라 아래와 같습니다.<br/>
+    <ul>
+   <li>바 시리즈(Bar2DSeries, Bar3DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>칼럼 시리즈(Column2DSeries, Column3DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>영역 시리즈(Area2DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>버블 시리즈(Bubble3DSeries) 0 : x축 값, 1 : y축 값, 2 : radius 값</li>
+   <li>라인 시리즈(Line2DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>파이 시리즈(Pie2DSeries, Pie3DSeries) 0 : 값, 1 : 퍼센티지, 2 : nameField 값</li>
+   <li>캔들 시리즈(Candlestick2DSeries) 0 : x축 값, 1 : openField 값, 2 : closeField 값, 3 : highField 값, 4 : lowField 값</li>
+   <li>윙 시리즈(Column2DWingSeries, Bar2DWingSeries) 0 : x축 값, 1 : y축 값, 2 : xOpp 값, 3 : yOpp 값</li>
+  <li>히스토그램 시리즈(Histogram2D, Histogram3DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>트리맵 시리즈(TreeMapSeries) 0 : weight 값, 1 : text 값</li>
+   <li>박스플롯 시리즈(BoxPlotSeries) 0 : upper 값, 1 : median 값, 2 : lower 값, 3 : min 값, 4 : hidden 값</li>
+   <li>벡터 시리즈(Vector2DSeries) 0 : degree 값, 1 : velocity 값, 2 : meter 값</li>
+   <li>워드클라우드 시리즈(WordCloudSeries) 0 : text 값, 1 : weight 값</li>
+   <li>피라미드, 퓨넬 시리즈(Pyramid2DSeries) 0 : weight 값, 1 : nameField 값</li>
+   <li>오버레이버블 시리즈(OverlayBubbleSeries) 0 : field 값, 1 : nameField 값</li>
+   <li>이미지매트릭스 시리즈(ImageMatrixSeries) 0 : value 값</li>
+   <li>윈드로즈 시리즈(WindRoseSeries) 0 : field 값</li>
+  </ul>
+    자바스크립트 함수가 반환하는 스트링이 곧 데이터 팁의 내용이 됩니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipMode"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipMode</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>showDataTips 값이 true 인 경우, 데이터 팁의 표현 방식을 정의합니다.</p>
+    유효값은 다음과 같습니다.
+    <ul>
+   <li><code>"single"</code> : 마우스 오버 시 해당 지점에서 가장 가까운 데이터 포인트의 데이터 팁 하나가 표시됩니다.</li>
+   <li><code>"multiple"</code> : 마우스 오버 시 해당 지점에서 가까운 다수의 데이터 팁이 표시됩니다.</li>
+  </ul>
+     기본값(default) :  <code>multiple</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipOrder"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipOrder</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>dataTipDisplayMode가 axis일 경우 출력되는 데이터 팁의 순서를 변경합니다.<br/>
+  유효값은 "normal", "reverse" 입니다.</p>
+     기본값(default) :  <code>normal</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataTipStyleName"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataTipStyleName</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁의 스타일 이름을 설정합니다.<br/>
+  &ltStyle&gt; 노드에서 정의한 이름을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:displayCompleteCallFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">displayCompleteCallFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트의 생성이 완료되었을 때 실행될 자바스크립트 함수명을 지정합니다.<br/>
+  차트의 생성이 완료되면 설정된 자바스크립트 함수를 실행하게 됩니다. 파라메터로는 차트에 설정된 식별자(Identifier)가 넘어갑니다.</p>
+    예) &lt;...Chart displayCompleteCallFunction="displayCompleteFunc"&gt;
+    <p><code>displayCompleteCallFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(id){ ... }
+  </pre>
+  <code>id</code> : displayCompleteCallFunction 을 실행한 차트의 식별자(Identifier) 입니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:doubleClickEnabled"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">doubleClickEnabled</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트 영역에 대하여 마우스 더블클릭을 활성화 할지 여부를 설정합니다.</p>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:enableDataEffect"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">enableDataEffect</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>이펙트를 적용할지 여부를 설정합니다.</p>
+     기본값(default) :  <code>true</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:enablePattern"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">enablePattern</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>시각 장애 사용자를 위한 패턴 적용 여부를 설정합니다.<br/>
+  차트를 생성하는 HTML 내에 차트 설정 변수, chartVars 값이 "&usePattern=true" 으로 설정되고<br/>
+  이 속성값이 true 일 경우 차트에 패턴이 적용됩니다.</p>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:hideToolTipAtTouchEnd"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">hideToolTipAtTouchEnd</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>모바일에서 touch end 이벤트가 발생할 경우 툴팁을 삭제 할지 여부를 설정합니다.<br/>
+  유효값은 다음과 같습니다.</p>
+    <ul>
+   <li><code>true</code> : touch end 이벤트 발생 시에 출력된 툴팁을 삭제합니다.</li>
+   <li><code>false</code> : 차트 영역 이외의 부분에 touch 시 출력된 툴팁을 삭제합니다.</li>
+  </ul>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:id"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">id</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>식별자(Identifier)를 설정합니다. 식별자(Identifier)는 사용자에 의해 정의된 임의의 고유값입니다.<br/>
+  설정된 식별자(Identifier)를 통해 해당 객체에 접근이 가능합니다.</p>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:itemClickJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">itemClickJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트상에서 데이터 아이템을 마우스 클릭하면 호출할 자바스크립트 함수명을 지정합니다.<br/>
+  차트 레이아웃 설정시 itemClickJsFunction 속성값을 자바스크립트 함수명으로 지정합니다.</p>
+    예) &lt;Column2DChart showDataTips="true" itemClickJsFunction="chartClick"&gt;
+    <p><code>itemClickJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+  <i>function_name</i>(seriesId, displayText, index, data, values) { ... }
+  </pre>
+    <code>seriesId</code> : 레이아웃에서 부여한 시리즈의 식별자(Identifier)가 있을 경우 해당 식별자를 나타냅니다.<br/>
+  <code>displayText</code> : 차트에 표시되는 데이터 팁의 내용입니다.<br/>
+  <code>index</code> : 클릭된 데이터 아이템(막대, 파이 조각 등)의 인덱스 번호 - 가장 왼쪽 또는 가장 위쪽의 인덱스 번호는 0 입니다.<br/>
+  <code>data</code> : 해당 아니템의 값을 표현하기 위해 입력된 데이터. (데이터의 종류에 따라서 XML의 내용 또는 배열이 됩니다.)<br/>
+  <code>values</code> : 해당 아이템의 값입니다. 배열로 전달되며 차트의 종류에 따라 아래와 같습니다.<br/>
+  <ul>
+   <li>바 시리즈(Bar2DSeries, Bar3DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>칼럼 시리즈(Column2DSeries, Column3DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>영역 시리즈(Area2DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>버블 시리즈(Bubble3DSeries) 0 : x축 값, 1 : y축 값, 2 : radius 값</li>
+   <li>라인 시리즈(Line2DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>파이 시리즈(Pie2DSeries, Pie3DSeries) 0 : 값, 1 : 퍼센티지, 2 : nameField 값</li>
+   <li>캔들 시리즈(Candlestick2DSeries) 0 : x축 값, 1 : openField 값, 2 : closeField 값, 3 : highField 값, 4 : lowField 값</li>
+   <li>윙 시리즈(Column2DWingSeries, Bar2DWingSeries) 0 : x축 값, 1 : y축 값, 2 : xOpp 값, 3 : yOpp 값</li>
+  <li>히스토그램 시리즈(Histogram2D, Histogram3DSeries) 0 : x축 값, 1 : y축 값</li>
+   <li>트리맵 시리즈(TreeMapSeries) 0 : weight 값, 1 : text 값</li>
+   <li>박스플롯 시리즈(BoxPlotSeries) 0 : upper 값, 1 : median 값, 2 : lower 값, 3 : min 값, 4 : hidden 값</li>
+   <li>벡터 시리즈(Vector2DSeries) 0 : degree 값, 1 : velocity 값, 2 : meter 값</li>
+   <li>워드클라우드 시리즈(WordCloudSeries) 0 : text 값, 1 : weight 값</li>
+   <li>피라미드, 퓨넬 시리즈(Pyramid2DSeries) 0 : weight 값, 1 : nameField 값</li>
+   <li>오버레이버블 시리즈(OverlayBubbleSeries) 0 : field 값, 1 : nameField 값</li>
+   <li>이미지매트릭스 시리즈(ImageMatrixSeries) 0 : value 값</li>
+   <li>윈드로즈 시리즈(WindRoseSeries) 0 : field 값</li>
+  </ul>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:itemDoubleClickJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">itemDoubleClickJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템을 마우스 더블클릭하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemDoubleClickJsFunction="itemDoubleClickHandler"&gt;
+    <p><code>itemDoubleClickJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(seriesId, displayName, index, data, values){ ... }
+  </pre>
+  <code>seriesId</code> : 마우스 더블클릭 되어진 시리즈 객체의 식별자(Identifier) 입니다.<br/>
+  <code>displayName</code> : 해당 시리즈의 displayName 값 입니다.<br/>
+  <code>index</code> : 해당 아이템의 인덱스 값 입니다.<br/>
+  <code>data</code> : 해당 아이템의 값을 표현하기 위해 입력된 데이터. (데이터의 종류에 따라서 XML의 내용 또는 배열이 됩니다.)<br/>
+  <code>values</code> : 해당 아이템의 값입니다. 배열로 전달되며 차트의 종류에 따라 아래와 같습니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:itemDownJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">itemDownJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템을 마우스 다운하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemDownJsFunction="itemDownHandler"&gt;
+    <p><code>itemDownJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(seriesId, displayName, index, data, values){ ... }
+  </pre>
+  <code>seriesId</code> : 마우스 다운 되어진 시리즈 객체의 식별자(Identifier) 입니다.<br/>
+  <code>displayName</code> : 해당 시리즈의 displayName 값 입니다.<br/>
+  <code>index</code> : 해당 아이템의 인덱스 값 입니다.<br/>
+  <code>data</code> : 해당 아이템의 값을 표현하기 위해 입력된 데이터. (데이터의 종류에 따라서 XML의 내용 또는 배열이 됩니다.)<br/>
+  <code>values</code> : 해당 아이템의 값입니다. 배열로 전달되며 차트의 종류에 따라 아래와 같습니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:itemMoveJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">itemMoveJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템에서 마우스 무브하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemMoveJsFunction="itemMoveHandler"&gt;
+    <p><code>itemMoveJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(eventName, items){ ... }
+  </pre>
+  <code>eventName</code> : 해당 자바스크립트를 실행한 이벤트 명입니다.<br/>
+  <code>items</code> : mouseMove 되어지는 아이템들의 배열 값입니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:itemOutJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">itemOutJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템에서 마우스 아웃하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemOutJsFunction="itemOutHandler"&gt;
+    <p><code>itemOutJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(eventName, items){ ... }
+  </pre>
+  <code>eventName</code> : 해당 자바스크립트를 실행한 이벤트 명입니다..<br/>
+  <code>items</code> : mouseOut 되어지는 아이템들의 배열 값입니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:itemOverJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">itemOverJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템을 마우스 오버하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemOverJsFunction="itemOverHandler"&gt;
+    <p><code>itemOverJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(eventName, items){ ... }
+  </pre>
+  <code>eventName</code> : 해당 자바스크립트를 실행한 이벤트 명입니다.<br/>
+  <code>items</code> : mouseOver 되어지는 아이템들의 배열 값입니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:itemUpJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">itemUpJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템에서 마우스 업하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemUpJsFunction="itemUpHandler"&gt;
+    <p><code>itemUpJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(seriesId, displayName, index, data, values){ ... }
+  </pre>
+  <code>seriesId</code> : 마우스 업 되어진 시리즈 객체의 식별자(Identifier) 입니다.<br/>
+  <code>displayName</code> : 해당 시리즈의 displayName 값 입니다.<br/>
+  <code>index</code> : 해당 아이템의 인덱스 값 입니다.<br/>
+  <code>data</code> : 해당 아이템의 값을 표현하기 위해 입력된 데이터. (데이터의 종류에 따라서 XML의 내용 또는 배열이 됩니다.)<br/>
+  <code>values</code> : 해당 아이템의 값입니다. 배열로 전달되며 차트의 종류에 따라 아래와 같습니다.
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:maximumDataTipCount"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">maximumDataTipCount</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>dataTipMode가 multiple일 경우의 최대 출력되는 데이터 팁의 개수를 설정합니다.</p>
+     기본값(default) :  <code>NaN</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:mouseSensitivity"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">mouseSensitivity</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>데이터 팁 출력 시 출력되는 데이터 포인트들의 마우스 반경을 설정합니다.<br/>
+  설정한 값이 클수록 더 많은 데이터 팁(더 큰 마우스 반경에 포함되는 데이터 포인트들)이 출력됩니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:paddingBottom"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">paddingBottom</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>하단 여백 크기를 픽셀 단위로 지정합니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:paddingLeft"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">paddingLeft</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>왼쪽 여백 크기를 픽셀 단위로 지정합니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:paddingRight"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">paddingRight</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>오른쪽 여백 크기를 픽셀 단위로 지정합니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:paddingTop"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">paddingTop</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>상단 여백 크기를 픽셀 단위로 지정합니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:selectionMode"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">selectionMode</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트상의 데이터 포인트에 마우스 오버 혹은 클릭 시 해당 아이템의 강조 표시 방식을 설정합니다.<br/>
+  유효값은 "none", "single", "multiple" 입니다.</p>
+     기본값(default) :  <code>single</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:series"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">series</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>차트상에 표시되는 데이터의 시리즈를 정의합니다.<br/>
+  유효값은 Column2DSeries, Area2DSet, Column3DSet, Bar3DSeries, 등등.</p>
+  </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showDataTipMarker"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showDataTipMarker</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>데이터 팁 내에 각 시리즈의 색상과 같은 색상의 마커의 표시 여부를 설정합니다.</p>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showDataTips"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showDataTips</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트상의 데이터 포인트에 마우스 오버 시 데이터 팁의 출력 여부를 지정합니다.</p>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showDataTipTargets"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showDataTipTargets</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트상에 데이터 팁이 표시될 때 마우스 오버된 데이터 포인트에 원을 표시할 지 여부를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showDataTipTargetsLine"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showDataTipTargetsLine</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>dataTipMode가 multiple이고 여러개의 데이터팁이 출력될 경우 데이터 팁을 선으로 연결할지 여부를 설정합니다.</p>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:touchMoveEnable"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">touchMoveEnable</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>모바일 기기에서 손가락으로 차트 영역을 이동할 경우, touchMove 이벤트를 브라우저에 넘길지 여부를 설정합니다.<br/>
+  touchMove 이벤트를 브라우저에 넘기면 차트 영역에서 touchMove 이벤트 발생 시 브라우저 스크롤이 일어나며,<br/>
+  touchMove 이벤트를 브라우저에 넘기지 않으면 차트 영역 내에서 브라우저 스크롤이 일어나지 않습니다.<br/>
+  이는 차트를 touchMove 할 때 브라우저 스크롤이 발생하면, tooltips 을 확인하기 어려운 문제가 있으므로, 이를 사용자가 선택할 수 있도록 하기 위한 속성입니다.</p>
+     기본값(default) :  <code>true</code>.</td><td class="summaryTableOwnerCol">ChartBase</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

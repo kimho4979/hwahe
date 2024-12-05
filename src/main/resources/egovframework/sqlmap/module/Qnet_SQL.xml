@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.module.recv.mapper.QnetMapper">
+
+	<!-- 국가전문자격일정 INSERT -->
+	<insert id="insertExamPlan" parameterType="com.fpdisys.module.recv.domain.ExamPlanMVO">
+		<![CDATA[
+			MERGE /* com.fpdisys.module.recv.mapper.QnetMapper.insertExamPlan */
+			    INTO T_NPRAC_SCH A
+			    USING (
+			        SELECT
+			              #{description, jdbcType=VARCHAR}		AS DES_CRIPTION
+						, #{desSeq, jdbcType=VARCHAR}			AS DES_SEQ
+						, #{docRegStartDt, jdbcType=VARCHAR}	AS DOC_REG_START_DT
+						, #{docRegEndDt, jdbcType=VARCHAR}		AS DOC_REG_END_DT
+						, #{docExamDt, jdbcType=VARCHAR}		AS DOC_EXAM_DT
+						, #{docPassDt, jdbcType=VARCHAR}		AS DOC_PASS_DT
+						, #{docSubmitStartDt, jdbcType=VARCHAR}	AS DOC_SUBMIT_START_DT
+						, #{docSubmitEntDt, jdbcType=VARCHAR}	AS DOC_SUBMIT_ENT_DT
+						, #{pracRegStartDt, jdbcType=VARCHAR}	AS PRAC_REG_START_DT
+						, #{pracRegEndDt, jdbcType=VARCHAR}		AS PRAC_REG_END_DT
+						, #{pracExamStartDt, jdbcType=VARCHAR}	AS PRAC_EXAM_START_DT
+						, #{pracExamEndDt, jdbcType=VARCHAR}	AS PRAC_EXAM_END_DT
+						, #{pracPassDt, jdbcType=VARCHAR}		AS PRAC_PASS_DT
+			          FROM DUAL
+			    ) B
+			      ON (
+			            A.DES_CRIPTION = B.DES_CRIPTION
+			            AND
+			            A.DES_SEQ = B.DES_SEQ
+			        )
+			    WHEN MATCHED THEN
+			        UPDATE SET
+						  DOC_REG_START_DT		= B.DOC_REG_START_DT
+						, DOC_REG_END_DT		= B.DOC_REG_END_DT
+						, DOC_EXAM_DT			= B.DOC_EXAM_DT
+						, DOC_PASS_DT			= B.DOC_PASS_DT
+						, DOC_SUBMIT_START_DT	= B.DOC_SUBMIT_START_DT
+						, DOC_SUBMIT_ENT_DT		= B.DOC_SUBMIT_ENT_DT
+						, PRAC_REG_START_DT		= B.PRAC_REG_START_DT
+						, PRAC_REG_END_DT		= B.PRAC_REG_END_DT
+						, PRAC_EXAM_START_DT	= B.PRAC_EXAM_START_DT
+						, PRAC_EXAM_END_DT		= B.PRAC_EXAM_END_DT
+						, PRAC_PASS_DT			= B.PRAC_PASS_DT
+			    WHEN NOT MATCHED THEN
+			        INSERT (
+			              DES_CRIPTION
+						, DES_SEQ
+						, DOC_REG_START_DT
+						, DOC_REG_END_DT
+						, DOC_EXAM_DT
+						, DOC_PASS_DT
+						, DOC_SUBMIT_START_DT
+						, DOC_SUBMIT_ENT_DT
+						, PRAC_REG_START_DT
+						, PRAC_REG_END_DT
+						, PRAC_EXAM_START_DT
+						, PRAC_EXAM_END_DT
+						, PRAC_PASS_DT
+			        ) VALUES (
+			        	  B.DES_CRIPTION
+						, B.DES_SEQ
+						, B.DOC_REG_START_DT
+						, B.DOC_REG_END_DT
+						, B.DOC_EXAM_DT
+						, B.DOC_PASS_DT
+						, B.DOC_SUBMIT_START_DT
+						, B.DOC_SUBMIT_ENT_DT
+						, B.PRAC_REG_START_DT
+						, B.PRAC_REG_END_DT
+						, B.PRAC_EXAM_START_DT
+						, B.PRAC_EXAM_END_DT
+						, B.PRAC_PASS_DT
+			        )
+		]]>
+	</insert>
+
+	<!-- 국가자격일정 INSERT -->
+	<insert id="insertQualExamSchd" parameterType="com.fpdisys.module.recv.domain.QualExamSchdMVO">
+		<![CDATA[
+			MERGE /* com.fpdisys.module.recv.mapper.QnetMapper.insertQualExamSchd */
+			    INTO T_PRAC_SCH A
+			    USING (
+			        SELECT
+			              #{implYy, jdbcType=VARCHAR}			AS IMPL_YY
+						, #{implSeq, jdbcType=VARCHAR}			AS IMPL_SEQ
+						, #{qualgbCd, jdbcType=VARCHAR}			AS QUALGB_CD
+						, NVL(#{jmCd, jdbcType=VARCHAR}, '*')	AS JM_CD
+						, #{jmNm, jdbcType=VARCHAR}				AS JM_NM
+						, #{qualgbNm, jdbcType=VARCHAR}			AS QUALGB_NM
+						, #{description, jdbcType=VARCHAR}		AS DESCRIPTION
+						, #{docRegStartDt, jdbcType=VARCHAR}	AS DOC_REG_START_DT
+						, #{docRegEndDt, jdbcType=VARCHAR}		AS DOC_REG_END_DT
+						, #{docExamStartDt, jdbcType=VARCHAR}	AS DOC_EXAM_START_DT
+						, #{docExamEndDt, jdbcType=VARCHAR}		AS DOC_EXAM_END_DT
+						, #{docPassDt, jdbcType=VARCHAR}		AS DOC_PASS_DT
+						, #{pracRegStartDt, jdbcType=VARCHAR}	AS PRAC_REG_START_DT
+						, #{pracRegEndDt, jdbcType=VARCHAR}		AS PRAC_REG_END_DT
+						, #{pracExamStartDt, jdbcType=VARCHAR}	AS PRAC_EXAM_START_DT
+						, #{pracExamEndDt, jdbcType=VARCHAR}	AS PRAC_EXAM_END_DT
+						, #{pracPassDt, jdbcType=VARCHAR}		AS PRAC_PASS_DT
+			          FROM DUAL
+			    ) B
+			      ON (
+			            A.IMPL_YY = B.IMPL_YY
+			            AND A.IMPL_SEQ = B.IMPL_SEQ
+			            AND A.QUALGB_CD = B.QUALGB_CD
+						AND A.JM_CD = B.JM_CD
+			        )
+			    WHEN MATCHED THEN
+			        UPDATE SET
+			              QUALGB_NM				= B.QUALGB_NM
+						, DESCRIPTION			= B.DESCRIPTION
+						, DOC_REG_START_DT		= B.DOC_REG_START_DT
+						, DOC_REG_END_DT		= B.DOC_REG_END_DT
+						, DOC_EXAM_START_DT		= B.DOC_EXAM_START_DT
+						, DOC_EXAM_END_DT		= B.DOC_EXAM_END_DT
+						, DOC_PASS_DT			= B.DOC_PASS_DT
+						, PRAC_REG_START_DT		= B.PRAC_REG_START_DT
+						, PRAC_REG_END_DT		= B.PRAC_REG_END_DT
+						, PRAC_EXAM_START_DT	= B.PRAC_EXAM_START_DT
+						, PRAC_EXAM_END_DT		= B.PRAC_EXAM_END_DT
+						, PRAC_PASS_DT			= B.PRAC_PASS_DT
+			    WHEN NOT MATCHED THEN
+			        INSERT (
+			              IMPL_YY
+						, IMPL_SEQ
+						, QUALGB_CD
+						, QUALGB_NM
+						, DESCRIPTION
+						, DOC_REG_START_DT
+						, DOC_REG_END_DT
+						, DOC_EXAM_START_DT
+						, DOC_EXAM_END_DT
+						, DOC_PASS_DT
+						, PRAC_REG_START_DT
+						, PRAC_REG_END_DT
+						, PRAC_EXAM_START_DT
+						, PRAC_EXAM_END_DT
+						, PRAC_PASS_DT
+						, JM_CD
+						, JM_NM
+		
+			        ) VALUES (
+						  B.IMPL_YY
+						, B.IMPL_SEQ
+						, B.QUALGB_CD
+						, B.QUALGB_NM
+						, B.DESCRIPTION
+						, B.DOC_REG_START_DT
+						, B.DOC_REG_END_DT
+						, B.DOC_EXAM_START_DT
+						, B.DOC_EXAM_END_DT
+						, B.DOC_PASS_DT
+						, B.PRAC_REG_START_DT
+						, B.PRAC_REG_END_DT
+						, B.PRAC_EXAM_START_DT
+						, B.PRAC_EXAM_END_DT
+						, B.PRAC_PASS_DT
+						, B.JM_CD
+						, B.JM_NM		
+			        )
+		]]>
+	</insert>
+
+	<!-- 학사일정 스케쥴 적용 -->
+	<insert id="insertSchInfo" parameterType="java.util.HashMap">
+		<![CDATA[
+			{CALL
+				SP_SCH_INFO_REG (
+					  #{eventGp}
+					, #{eventYmd}
+				)
+			}
+		]]>
+	</insert>
+	
+</mapper>

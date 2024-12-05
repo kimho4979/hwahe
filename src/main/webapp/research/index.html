@@ -1,0 +1,109 @@
+<!DCTYPE html> 
+<head>
+	<title>슈퍼관리자 worklist</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=10,chrome=1" />
+	<meta name="keywords" content="" />
+	<meta name="description" Content="">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="">
+	<meta property="og:description" content="">
+	<script src="./js/jquery-1.11.3.min.js" type="text/javascript"></script>
+
+	<style type="text/css">
+	html{}
+	h1{margin:10px 0; width:100%; text-align:center; color:gray; font-size:25px; position:relative; }
+	.workwrap{width:100%; margin:0 auto; padding-bottom: 50px;}
+	.workwrap .issue { margin-top: 10px; }
+	.workwrap .issue h4 { margin: 0; }
+	.workwrap .issue ol { margin: 5px 0; }
+	.workwrap table.worktable{width:100%; font-size:14px; letter-spacing:-1px;}
+	.workwrap table.worktable th{border-bottom:1px solid #000; border-top:1px solid #000; border-left:1px solid #000; border-right:1px solid #000; background:#000; color:#fff; padding:15px 0;}
+	.workwrap table.worktable td{border-bottom:1px solid #000; border-top:1px solid #000; border-left:1px solid #000; border-right:1px solid #000; background:#fff; text-align:center; font-size:13px; padding:8px 5px;}
+	.workwrap table.worktable td:nth-of-type(2){/* font-weight:bold; */}
+	.workwrap table.worktable td a { text-decoration: none; color: #171C61; }
+	.workwrap table.worktable td a:visited,
+	.workwrap table.worktable td a:active,
+	.workwrap table.worktable td a:focus { text-decoration: none;  }
+	.finish_page{background-color:yellow!important;}
+	.ing_page{background-color:red!important;}
+	</style>
+	 
+
+<script type="text/javascript">
+	jQuery(function(){
+		jQuery(".worktable tr").each(function(){ 
+			
+			var trindex = jQuery(this).index();			
+			jQuery(this).find("td:first-child").text(trindex);
+		});
+	});
+</script>
+
+<head>
+
+<style>
+	table tr td:nth-child(2){text-align:left;}
+</style>
+</head>
+<html>
+<body>
+	<h1 style="margin-top:50px;"><p style="font-size:20px; color:#222; padding:10px 0;letter-spacing:-2px; margin-top:-35px; margin-bottom:50px;">화훼유통절화류생산조사시각화서비스</p>
+	</h1>	
+	<p style="font-weight:bold;">작업내용</p>
+	
+	<div class="workwrap">
+		<table class="worktable">
+			<colgroup>
+				<col style="width:5%">
+				<col style="width:35%">
+				<col style="width:15%">
+				<col style="width:15%">
+				<col style="width:5%">
+				<col style="width:10%">
+				<col style="width:10%">
+			</colgroup>
+			<tr>
+				<th>No.</th>
+				<th>페이지명</th>
+				<th>파일명</th>
+				<th>완료여부</th>
+				<th>완료날짜</th>
+				<th>비고</th>
+			</tr>
+			<tr>
+				<td>number</td>
+				<td class="finish_page">01_절화류생산조사</td>
+				<td><a href="./html/01_절화류생산조사.html" target="_blank">01_절화류생산조사html</a></td>
+				<td>완료</td>
+				<td>2020.12.18</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>number</td>
+				<td class="finish_page">02_전국절화농가현황</td>
+				<td><a href="./html/02_전국절화농가현황.html" target="_blank">02_전국절화농가현황.html</a></td>
+				<td>완료</td>
+				<td>2020.12.18</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>number</td>
+				<td class="finish_page">03_재배현황</td>
+				<td><a href="./html/03_재배현황.html" target="_blank">03_재배현황.html</a></td>
+				<td>완료</td>
+				<td>2020.12.18</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>number</td>
+				<td class="finish_page">04_데이터관리</td>
+				<td><a href="./html/04_데이터관리.html" target="_blank">04_데이터관리.html</a></td>
+				<td>완료</td>
+				<td>2020.12.18</td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

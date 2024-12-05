@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hfc02.mapper.Hfc02Mapper">
+
+	<!-- 주요행사일정 달력조회 -->
+	<select id="selectEventCalendarList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		<![CDATA[
+			SELECT /* com.fpdisys.dist.hfc02.mapper.Hfc02Mapper.selectEventCalendarList */
+				  A.EVENT_GP
+				, A.EVENT_GP_NM
+				, A.EVENT_YMD
+				, A.EVENT_NM
+				, A.EVENT_CNT
+				, A.EVENT_GP_NM || ' : ' || A.EVENT_CNT	AS "title"
+				, A.FMT_YMD		AS "start"
+				, A.FMT_YMD		AS "end"
+				, CASE A.EVENT_GP
+					WHEN '10' THEN '#FF4F6D'		-- 졸업식
+					WHEN '11' THEN '#FFB80D'		-- 화훼행사
+					WHEN '50' THEN '#1E2F68'		-- 시험
+					ELSE NULL
+				  END	AS	"color"
+				, CASE A.EVENT_GP
+					WHEN '10' THEN '#FFFFFF'
+					WHEN '11' THEN '#000000'
+					WHEN '50' THEN '#FFFFFF'
+					ELSE NULL
+				  END	AS	"textColor"
+
+			  FROM (
+				SELECT
+				      SI.EVENT_GP						AS EVENT_GP
+				    , (SELECT X.CD_NM FROM TB_GEN_CODE X WHERE X.GP_ID = 'EVENT_GP' AND X.CD_ID = SI.EVENT_GP) AS EVENT_GP_NM
+				    , SI.EVENT_YMD						AS EVENT_YMD
+				    , SUBSTR(MAX(SI.EVENT_NM), 1, 10) 	AS EVENT_NM
+				    , COUNT(SI.EVENT_NM) 				AS EVENT_CNT
+				    , TO_CHAR(TO_DATE(SI.EVENT_YMD, 'YYYYMMDD'), 'YYYY-MM-DD') AS FMT_YMD
+				  FROM T_SCH_INFO SI
+				 WHERE 1=1
+		]]>
+				<if test='eventGp != null and eventGp != ""'>
+				   AND SI.EVENT_GP = #{eventGp}
+				</if>
+				<if test='eventYmd != null and eventYmd != ""'>
+				   AND (
+				   		SUBSTR(SI.EVENT_YMD, 1, 6) = REPLACE(#{eventYmd}, '-', '')
+				   		OR
+				   		SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(SI.EVENT_YMD, 'YYYYMMDD'),-1), 'YYYYMMDD'), 1, 6) = REPLACE(#{eventYmd}, '-', '')
+				   		OR
+				   		SUBSTR(TO_CHAR(ADD_MONTHS(TO_DATE(SI.EVENT_YMD, 'YYYYMMDD'),1), 'YYYYMMDD'), 1, 6) = REPLACE(#{eventYmd}, '-', '')
+				   )
+				</if>
+				<if test='siNm != null and siNm != ""'>
+				   AND SI.SI_NM = #{siNm}
+				</if>
+		<![CDATA[
+			 	 GROUP BY SI.EVENT_GP, SI.EVENT_YMD
+			 	 ORDER BY EVENT_YMD
+			  ) A
+		]]>
+	</select>
+
+	<!-- 주요행사일정 목록조회 -->
+	<select id="selectEventList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		<![CDATA[
+			SELECT /* com.fpdisys.dist.hfc02.mapper.Hfc02Mapper.selectEventList */
+				  ROW_NUMBER() OVER (ORDER BY SI.EVENT_YMD, SI.EVENT_GP) AS SEQ
+			    , SI.EVENT_GP		AS EVENT_GP
+			    , (SELECT X.CD_NM FROM TB_GEN_CODE X WHERE X.GP_ID = 'EVENT_GP' AND X.CD_ID = SI.EVENT_GP) AS EVENT_GP_NM
+			    , SI.EVENT_YMD		AS EVENT_YMD
+			    , SI.EVENT_NM		AS EVENT_NM
+			    , SI.SI_NM			AS SI_NM
+				, SI.ADDR			AS ADDR
+				, SI.EVENT_PLS 		AS EVENT_PLS
+			  FROM T_SCH_INFO SI
+			 WHERE 1=1
+		]]>
+			<if test='eventGp != null and eventGp != ""'>
+			   AND SI.EVENT_GP = #{eventGp}
+			</if>
+			<if test='eventYmd != null and eventYmd != ""'>
+			   AND SUBSTR(SI.EVENT_YMD, 1, 6) = REPLACE(#{eventYmd}, '-', '')
+			</if>
+			<if test='siNm != null and siNm != "" and siNm != "전체"'>
+			   AND SI.SI_NM = #{siNm}
+			</if>
+			<if test='eventYmd2 != null and eventYmd2 != ""'>
+			   AND SI.EVENT_YMD = REPLACE(#{eventYmd2}, '-', '')
+			</if>
+		<![CDATA[
+			 ORDER BY EVENT_YMD
+		]]>
+	</select>
+</mapper>

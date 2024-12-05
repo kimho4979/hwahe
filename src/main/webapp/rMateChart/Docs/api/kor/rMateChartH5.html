@@ -1,0 +1,847 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../print.css" type="text/css" media="print">
+<meta content="rMateChartH5,kor.rMateChartH5" name="keywords">
+<title>kor.rMateChartH5</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../asdoc.js"></script><script type="text/javascript" language="javascript" src="../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'rMateChartH5 - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../all-classes.html')" href="../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../all-classes.html')" href="../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../index-list.html')" href="../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../index.html?kor/rMateChartH5.html&amp;kor/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;rMateChartH5</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class rMateChartH5"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class rMateChartH5</td>
+</tr>
+</table>
+<p></p>
+  사용자 자바스크립트를 통해서 접근 가능한 알메이트 차트(rMateChartH5) 객체가 제공하는 함수, 변수 목록입니다.
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<table id="summaryTableStyle" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:accessibilityPattern"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">accessibilityPattern</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트에 패턴 이미지 적용을 설정/해제 합니다.</p>
+    유효값은  true, false 입니다.
+    <p>document.getElementById(chart ID).accessibilityPattern(값);</p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:changeScrollBarSize"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">changeScrollBarSize</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>스크롤 차트에서 스크롤 바의 크기를 설정합니다.</p>
+    유효값은 arrowSize, scrollHeight, thumbHeight, thumbMinSize 입니다.
+    <p>
+  <pre>
+  <code>
+  var size = {
+   arrowSize : 10,  // 상, 하, 좌, 우 버튼의 크기
+   scrollHeight : 10,  // 스크롤 높이
+   thumbHeight : 10,  // thumb 의 높이
+   thumbMinSize : 10  // thumb 의 최소 크기
+  };
+    document.getElementById(chart ID).changeScrollBarSize(size);
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:clear"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">clear</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>rMateChartH5.create 로 생성하였던 차트의 Root를 제외한 나머지를 모두 삭제합니다.</p>
+    <p>
+  <code>document.getElementById(chart ID).clear();
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:create"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">create</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트를 생성합니다.<br/>
+  rMateChartH5.create 함수가 호출되면 차트가 즉시 생성되는 것은 아닙니다.<br/>
+  차트 생성을 위해서 필요한 모든 DOM 요소가 존재하는 지 먼저 검사를 한 후,<br/>
+  DOM 요소가 완전히 만들어졌다고 판단되었을 때 차트 생성을 진행하게 됩니다.</p>
+    <p>1. rMateChartH5.create 실행<br/>
+  2. HTML DOM 요소가 존재하는 지 확인<br/>
+  3. chartVars, layotURL, dataURL 이 존재할 경우 차트의 레이아웃과 데이터를 설정.<br/>
+  4. 차트 출력</p>
+    만약 2번 단계에서 DOM 요소가 만들어지지 않았다면, DOM 요소의 생성이 완료되기를 기다린 후 생성이 완료되면 3번 단계로 진행하게 됩니다.<br/>
+    <ul>
+   <li>id</li> : 차트 <div> 식별자(Identifier)
+   <li>chartHolderId</li> : 차트의 부모 <div> 식별자(Identifier)
+   <li>chartVars</li> : 차트 설정값
+   <li>width</li> : 차트 가로 크기 (기본값 : 100%)
+   <li>height</li> : 차트 세로 크기 (기본값 : 100%)
+       <li>onLoadCallFunction</li> : DOM 요소 검사 후 실행될 함수명
+  </ul>
+    <p>
+  <pre>
+  <code>
+  rMateChartH5.create(chartId, chartHolderId, chartVars, "100%", "100%", onLoadCallFunction);
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataEditorUrl"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataEditorUrl</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 에디터 생성을 위해 필요한 자바스크립트 파일의 경로를 지정합니다.</p>
+    기본값(default)은 제품 설치 후 /rMateChartH5/JS/ 폴더입니다.
+    <p>
+  <pre>
+  <code>
+   chartVars = "useDataEditor=true";
+     rMateChartH5.dataEditorUrl = "../rMateChartH5/JS/editablegrid-2.0.1.js";
+     rMateChartH5.create(...);
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:dataRestoreCallFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">dataRestoreCallFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트가 드릴다운되어 있을 경우 Back 버튼 클릭 시 실행될 자바스크립트 함수명을 지정합니다.<p>
+    <p>
+  <pre>
+  <code>
+   &lt;...Chart ... dataRestoreCallFunction="<i>function_name</i>" ... &gt;
+     ...
+     function <i>function_name</i>(depth){
+    ...
+   }
+  <code>
+  <code>depth</code> : Back 버튼 클릭 시 차트에 삽입되는 데이터의 depth
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:destroy"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">destroy</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>rMateChartH5.create 로 생성하였던 차트의 Root까지 모두 삭제합니다.</p>
+    <p>
+  <code>document.getElementById(chart ID).destory();
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:displayCompleteCallFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">displayCompleteCallFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트의 생성이 완료되었을 때 실행될 자바스크립트 함수명을 지정합니다.</p>
+    <p>
+  <pre>
+  <code>&lt;....Chart ... displayCompleteCallFunction="<i>function_name</i>" ... &gt;</code>
+    <code>
+  function <i>function_name</i>(id){
+   ...
+  }
+  </code>
+    <code>id</code> : 차트 <div> 식별자(Identifier)
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:getChartData"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">getChartData</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트가 출력하고 있는 데이터를 반환합니다.</p>
+    <code>document.getElementById(chart ID).getChartData();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:getCSVData"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">getCSVData</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트가 출력하고 있는 데이터를 CSV 형태로 반환합니다.</p>
+    <code>document.getElementById(chart ID).getCSVData();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:getDrillDownDepth"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">getDrillDownDepth</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>현재 차트가 출력하고 있는 드릴다운 데이터의 depth 를 반환합니다.<p>
+    <code>document.getElementById(chart ID).getDrillDownDepth();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:getSelectedChartItem"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">getSelectedChartItem</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>selectionMode 속성값이 single 혹은 multiple 일 경우 선택되어져 있는 item 을 반환합니다.</p>
+    <p>
+  <code>document.getElementById(chart ID).getSelectedChartItem();</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:getSelectedChartItems"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">getSelectedChartItems</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>selectionMode 속성값이 single 혹은 multiple 일 경우 선택되어져 있는 item 들을 반환합니다.</p>
+    <p>
+  <code>document.getElementById(chart ID).getSelectedChartItems();</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:getSnapshot"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">getSnapshot</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>출력된 차트의 스냅샷 이미지에 대한 base64 인코딩 값을 생성합니다. (차트 이미지 데이터를 서버로 전송할 수 있습니다.)</p>
+    <code>var base64 = document.getElementById(chart ID).getSnapshot();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:hasNoData"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">hasNoData</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트에 데이터가 존재하지 않음을 표시하는 창을 실행합니다.</p>
+    <code>document.getElementById(chart ID).hasNoData();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:hideDataEditor"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">hideDataEditor</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>데이터 에디터를 숨기도록 설정합니다.</p>
+    <code>document.getElementById(chart ID).hideDataEditor();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:legendAllCheck"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">legendAllCheck</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>범례의 전체 항목에 대한 visible 속성을 제어합니다.</p>
+    유효값은 true, false 입니다.
+    <p>
+  <code>document.getElementById(chart ID).legendAllCheck(value);</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:legendCheck"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">legendCheck</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>범례의 특정 항목에 대한 visible 속성을 제어합니다.</p>
+    유효값은 true, false 입니다.
+    <p>
+  <pre>
+  <code>document.getElementById(chart ID).legendCheck(index, value);</code>
+    <code>index</code> : 변경하려는 범례 항목의 인덱스
+  <code>value</code> : 변경하려는 값
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:patternImageBaseUrl"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">patternImageBaseUrl</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>패턴 이미지 파일이 존재하는 경로를 지정합니다.</p>
+    기본값(default)은 제품 설치 후 /rMateChartH5/Assets/Patterns/ 폴더입니다.
+    <p>
+  <pre>
+  <code>
+  chartVars = "usePattern=true";
+    rMateChartH5.patternImagesBaseUrl = "../rMateChartH5/Assets/Patterns/"
+    rMateChartH5.create(...);
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:patternImagesUrl"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">patternImagesUrl</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>각 패턴 이미지 파일을 patternImagesUrl 속성에 설정합니다.</p>
+      <p>
+  <pre>
+  <code>
+  chartVars = "usePattern=true";
+    rMateChartH5.patternImagesBaseUrl = "../rMateChartH5/Assets/Patterns/"
+  rMateChartH5.patternImagesUrl = [
+   "diagonal_ltr.png",
+   "diagonal_rtl.png",
+   "diagonal.png",
+   ....
+  ];
+    rMateChartH5.create(...);
+  <code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:registerTheme"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">registerTheme</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트에 설정하려는 테마(theme) 데이터를 알메이트 차트(rMateChartH5)에 등록합니다.</p>
+    HTML 문서에 테마(theme)을 설정하는 자바스크립트 파일(theme.js)이 include 되어있어야 합니다.
+    <p>
+  <code>rMateChartH5.registerTheme(theme);</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:removeAdditionalPreloader"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">removeAdditionalPreloader</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>프리로더를 제거합니다.</p>
+    사용자가 차트 내에 프리로더를 실행/제거 할 수 있습니다.
+    <p>
+  <code>document.getElementById(chart ID).removeAdditionalPreloader();</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:removeTheme"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">removeTheme</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트(rMateChartH5)에 설정(등록)되어 있는 테마(theme)을 삭제합니다.</p>
+    테마(theme) 삭제 시 해당 테마(theme)가 적용된 차트들에는 차트의 기본(default) 테마(theme)가 재적용됩니다.
+    <p>
+  <code>rMateChartH5.removeTheme(theme);</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:resize"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">resize</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트의 크기를 변경합니다.</p>
+    최초에 설정된 차트의 부모 &lt;div&gt; 의 크기를 변경한 후, 함수를 실행하여 차트의 크기를 변경합니다.
+    <p>
+  <pre>
+  <code>
+  chartHolder.style.width = "500px";
+  chartHolder.style.height = "500px";
+    document.getElementById(chart ID).resize();
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:rMateOnLoadCallFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">rMateOnLoadCallFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>DOM 요소 검사 후 준비가 완료되면 실행될 함수명을 지정합니다.</p>
+    rMateChartH5.create 함수의 세번째 인자인 chartVars 변수에 설정됩니다.
+    <p>
+  <pre>
+  <code>
+  chartVars = "rMateOnLoadCallFunction=<i>function_name</i>";
+  rMateChartH5.create(chart ID, chartHolder ID, chartVars);
+    ...
+  function <i>function_name</i>(id){
+   ...
+  }
+  </code>
+    <code>id</code> : rMateChartH5.create 함수의 첫번째 인자인 차트 <div> 식별자(Identifier)
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:saveAsImage"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">saveAsImage</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>출력된 차트에 대한 스냅샷 이미지를 생성합니다.</p>
+    <code>var snapshot = document.getElementById(chart ID).saveAsImage();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setChartMenu"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setChartMenu</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트 메뉴를 chartVars 의 파라메터가 아닌 함수를 통하여 설정합니다.</p>
+    <p>
+  <code>document.getElementbById(chart ID).setChartMenu(menus);
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setData"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setData</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트 생성시 적용될 데이터를 설정합니다.</p>
+    데이터의 형태는 setDataType 에 의해서 설정된 형태와 같아야 합니다.
+    <p>
+  <code>document.getElementById(chart ID).setData(값);</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setDataDrillDown"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setDataDrillDown</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트에 드릴다운 데이터를 설정합니다.</p>
+    <code>document.getElementById(chart ID).setDataDrillDown(값);</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setDataDrillDownURL"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setDataDrillDownURL</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>드릴다운 데이터의 경로를 설정합니다.</p>
+    해당 경로에서 반환되는 데이터의 형태는 setDataType 속성에 설정가능한 데이터 형태여야 합니다.
+    <p>
+  <code>document.getElementById(chart ID).setDataDrillDownURL(경로 값);</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setDataType"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setDataType</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트 생성시 적용될 데이터의 형태를 설정합니다.</p>
+    <code>document.getElementById(chart ID).setDataType(값);</code>
+  <ul>
+   <li>json</li>
+   <li>csv</li>
+   <li>xml</li>
+  </ul>
+     기본값(default) :  <code>xml</code>.</td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setDataURL"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setDataURL</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트 생성시 적용될 데이터에 대한 경로(URL)를 설정합니다.<p>
+    해당 경로에 의해서 읽혀지는 데이터의 형태는 setDataType 에 의해서 설정된 형태와 같아야 합니다.
+    <p>
+  <code>document.getElementById(chart ID).setDataURL(경로값);</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setDefaultColors"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setDefaultColors</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트의 기본(default) 색상들을 설정합니다.</p>
+    <p>알메이트 차트 제품에 설정된 기본 색상들을 변경하여 레이아웃 작성시 항상 변경된 기본 색상들을 적용할 수 있습니다.<br/>
+  rMateChartH5.setDefaultColors 함수를 호출하여 차트의 기본 색상들을 변경할 수 있습니다.</p>
+    <p>
+  <pre>
+  <code>
+  colors = ["#ff0000", "#ff00ff", "#eeff00", ... ];
+  rMateChartH5.setDefaultColors(colors);
+  ...
+  rMateChartH5.create(...);
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setLayout"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setLayout</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트 생성시 적용될 레이아웃을 설정합니다.</p>
+    XML 형태의 스트링(String) 값을 설정합니다.
+    <p>
+  <code>document.getElementById(chart ID).setLayout(값);</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setLayoutURL"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setLayoutURL</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트 생성시 적용될 레이아웃에 대한 경로(URL)를 설정합니다.</p>
+    <p>
+  <code>document.getElementById(chart ID).setLayoutURL(경로값);</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setOnLoadCallFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setOnLoadCallFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+     <p>rMateOnLoadCallFunction 함수를 설정합니다.</p>
+          <p>
+     <pre>
+     <code>
+     rMateChartH5.setOnLoadCallFunction(chart ID, onLoadCallFunction);
+     </code>
+     <code>chartId</code> : 차트 <div> 식별자(Identifier)
+     <code>onLoadCallFunction</code> : 설정할 함수명
+     </pre>
+     </p>
+     </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setSelectedIndex"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setSelectedIndex</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>selectionMode 속성값이 single 혹은 multiple 일 경우 출력되어져 있는 아이템 중 index 에 맞는 아이템을 강조합니다.</p>
+    <p>
+  <code>document.getElementById(chart ID).setSelectedIndex(series Index, item Index);</code>
+  </p>
+    <ul>
+   <li>series index - 몇 번째 시리즈를 선택할지 index 값</li>
+   <li>item index - 몇 번째 아이템을 선택할지 index 값</li>
+  </ul>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setSelectedIndices"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setSelectedIndices</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>selectionMode 속성값이 single 혹은 multiple 일 경우 출력되어져 있는 아이템 중 indices 에 맞는 아이템을 강조합니다.</p>
+    <p>유효값은 아래 형태로 설정합니다.</p>
+    Array일 경우 -
+    <p>
+  <code>document.getElementById(chart ID).setSelectedIndices([{index : 0, items : [0, 1, 2]}, ..]);</code>
+  </p>
+    <pre>
+  [
+   {index : 0, items : [0, 1, 2]},
+   {index : 2, items : [2, 3, 4]}
+  ]
+  </pre>
+    <ul>
+   <li>index - 몇 번째 시리즈를 선택할지 index 값</li>
+   <li>items - 몇 번째 아이템들을 선택할지의 배열 값</li>
+  </ul>
+    Object일 경우 -
+    <p>
+  <code>document.getElementById(chart ID).setSelectedIndices({index : 0, length : 2, items : [0, 1, 2]});</code>
+  </p>
+    <pre>
+  {index : 0, length : 3, items : [0, 1, 2]}
+  </pre>
+    <ul>
+   <li>index - 몇 번째 시리즈부터 선택할 지 index 값</li>
+   <li>length - index부터 몇 번째 시리즈까지 선택할 지 개수</li>
+   <li>items - 해당 시리즈안에서 선택할 item 들의 배열 값</li>
+  </ul>
+    index가 0 length가 2일 경우 0번째 시리즈부터 시작하여 1번째 시리즈까지 설정합니다.
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setSlideDataSet"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setSlideDataSet</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>슬라이드 차트에 적용될 데이터 세트를 배열로 설정합니다.</p>
+    <p>
+  <pre>
+  <code>
+  var slideDatas = [data1, data2, data3];
+  document.getElementById(chart ID).setSlideDataSet(slideDatas);
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setSlideLayoutSet"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setSlideLayoutSet</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>슬라이드 차트에 적용될 레이아웃 세트를 배열로 설정합니다.</p>
+    <p>
+  <pre>
+  <code>
+  var slideLayouts = [layout1, layout2, layout3];
+  document.getElementById(chart ID).setSlideDataSet(slideLayouts);
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:setTheme"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">setTheme</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>차트(rMateChartH5)에 등록되어 있는 테마(theme)들 중에서 특정 테마(theme)를 차트에 적용합니다.</p>
+    rMateChartH5.registerTheme 에 의해서 등록된 테마(theme)들 중에서 하나를 적용할 수 있습니다.
+    <p>
+  <code>document.getElementById(chart ID).setTheme(theme);</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showAdditionalPreloader"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showAdditionalPreloader</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>프리로더를 실행합니다.</p>
+    사용자가 차트 내에 프리로더를 실행/제거 할 수 있습니다.
+    <p>
+  <code>document.getElementById(chart ID).showAdditionalPreloader();</code>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showDataEditor"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showDataEditor</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>데이터 에디터를 보이도록 설정합니다.</p>
+    <code>document.getElementById(chart ID).showDataEditor();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:sliderPause"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">sliderPause</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>모션 차트에서 슬라이드를 중단하도록 설정합니다.<p>
+    <code>document.getElementById(chart ID).slidePause();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:sliderPlay"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">sliderPlay</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>모션 차트에서 슬라이드를 실행하도록 설정합니다.<p>
+    <code>document.getElementById(chart ID).slidePlay();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:sliderReset"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">sliderReset</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>모션 차트에서 슬라이드를 초기화하도록 설정합니다.<p>
+    <code>document.getElementById(chart ID).slideReset();</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:tableToArray"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">tableToArray</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>HTML 의 &lt;table&gt; 데이터를 배열 데이터로 변환합니다.</p>
+    <p>
+  <pre>
+  <code>var chartData = rMateChartH5.tableToArray(table ID, categoryField, direction);</code>
+    <code>tableId</code> : 배열로 변환하려는 &lt;table&gt; 식별자(Identifier)
+  <code>categoryField</code> : 차트 레이아웃에서 CategoryAxis 클래스 인스턴스가 참조하는 데이터 필드명
+  <code>direction</code> : categoryField 에 적용될 데이터의 방향(테이블의 가로/세로)을 설정
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:updateCrossRange"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">updateCrossRange</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>다른 차트들과 십자선(CrossRangeZoomer)의 위치를 동기화하기 위한 함수입니다.</p>
+    CrossRangeZoomer 클래스 인스턴스의 rangeUpdateJsFunction 속성값에 사용자 정의 자바스크립트 함수가 설정되어 있을 경우,<br/>
+  해당 함수의 인자들을 다른 차트의 십자선(CrossRangeZoomer) 위치값으로 전달합니다.<br/>
+  만약 이 기능을 사용할 경우, rangeUpdateJsFunction 속성에 설정된 자바스크립트 함수의 인자가 그대로 updateCrossRange 함수의 인자로 전달됩니다.</p>
+    <p>
+  <code>document.getElementById(chart ID).updateCrossRange(type, x, y);</code>
+  <code>type</code> : 마우스 이벤트의 타입명
+  <code>x</code> : 십자선의 X 위치 비율값
+  <code>y</code> : 십자선의 Y 위치 비율값
+  <code>y</code> : 현재 차트의 크기에서 십자선의 y좌표 비율 값
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:useDataEditor"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">useDataEditor</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트와 함께 데이터 에디터에 대한 사용이 필요한 경우 설정합니다.</p>
+    <p>rMateChartH5.create 함수의 세번째 인자인 chartVars 변수에 설정됩니다.<br/>
+  useDataEditor 속성이 설정되면 데이터 에디터 생성을 위해 필요한 자바스크립트가 실행됩니다.</p>
+    <p>
+  <pre>
+  <code>
+   chartVars = "useDataEditor=true";
+   ...
+   rMateChartH5.create(chart ID, chartHolder ID, chartVars);
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:usePattern"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">usePattern</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>시각 장애인을 위한 패턴 이미지를 차트에 적용할 지 여부를 설정합니다.</p>
+    <p>rMateChartH5.create 함수의 세번째 인자인 chartVars 변수에 설정됩니다.<br/>
+  usePattern 속성이 설정되면 해당 패턴 이미지가 적용됩니다.</p>
+    <p>
+  <pre>
+  <code>
+  chartVars = "usePatter=true";
+  ...
+  rMateChartH5.create(chart ID, chartHolder ID, chartVars);
+  </code>
+  </pre>
+  </p>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:visibleItemSize"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">visibleItemSize</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Function<br>
+  <p>스크롤 차트에서 화면에 보여지는 아이템의 개수를 설정합니다.</p>
+    <code>document.getElementById(chart ID).visibleItemSize(개수);</code>
+  </td><td class="summaryTableOwnerCol">rMateChartH5</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

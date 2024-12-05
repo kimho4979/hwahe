@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rMateChart backgroundColor="0xFFFFFF" borderStyle="none">
+	<Options>
+		<Caption text="Rainfall"/>
+	</Options>
+	<Line2DChart showDataTips="true">
+		<horizontalAxis>
+			<CategoryAxis categoryField="Month" padding="0"/>
+		</horizontalAxis>
+		<series>
+			<Line2DSeries yField="Vancouver" form="segment">
+			<!-- form의 기본값은 segement입니다 -->
+				<showDataEffect>
+					<SeriesInterpolate/> 
+				</showDataEffect>
+			</Line2DSeries>
+		</series>
+	</Line2DChart>
+</rMateChart>

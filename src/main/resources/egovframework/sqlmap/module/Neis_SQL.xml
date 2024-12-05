@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.module.recv.mapper.NeisMapper">
+
+	<resultMap id="schoolInfoMap" type="egovframework.rte.psl.dataaccess.util.EgovMap">
+		<result property="atptOfcdcScCode" column="ATPT_OFCDC_SC_CODE"/>
+		<result property="sdSchulCode" column="SD_SCHUL_CODE"/>
+	</resultMap>
+
+	<select id="selectSchoolList" parameterType="java.util.HashMap" resultMap="schoolInfoMap">
+		<![CDATA[
+			SELECT /* com.fpdisys.module.recv.mapper.NeisMapper.selectSchoolList */
+			      ATPT_OFCDC_SC_CODE
+			    , SD_SCHUL_CODE
+			  FROM T_SCHUL
+		]]>
+	</select>
+
+	<!-- 학교정보 INSERT -->
+	<insert id="insertSchoolInfo" parameterType="com.fpdisys.module.recv.domain.SchoolInfoMVO">
+		<![CDATA[
+		MERGE /* com.fpdisys.module.recv.mapper.NeisMapper.insertSchoolInfo */
+		    INTO T_SCHUL A
+		    USING (
+		        SELECT
+		              #{atptOfcdcScCode}    AS ATPT_OFCDC_SC_CODE
+		            , #{atptOfcdcScNm}  AS ATPT_OFCDC_SC_NM
+		            , #{sdSchulCode}    AS SD_SCHUL_CODE
+		            , #{schulNm}    AS SCHUL_NM
+		            , #{engSchulNm} AS ENG_SCHUL_NM
+		            , #{schulKndScNm}   AS SCHUL_KND_SC_NM
+		            , #{lctnScNm}   AS LCTN_SC_NM
+		            , #{juOrgNm}    AS JU_ORG_NM
+		            , #{fondScNm}   AS FOND_SC_NM
+		            , #{orgRdnzc}   AS ORG_RDNZC
+		            , #{orgRdnma}   AS ORG_RDNMA
+		            , #{orgRdnda}   AS ORG_RDNDA
+		            , #{orgTelno}   AS ORG_TELNO
+		            , #{hmpgAdres}  AS HMPG_ADRES
+		            , #{coeduScNm}  AS COEDU_SC_NM
+		            , #{orgFaxno}   AS ORG_FAXNO
+		            , #{hsScNm} AS HS_SC_NM
+		            , #{indstSpeclCccclExstYn}  AS INDST_SPECL_CCCCL_EXST_YN
+		            , #{hsGnrlBusnsScNm}    AS HS_GNRL_BUSNS_SC_NM
+		            , #{spclyPurpsHsOrdNm}  AS SPCLY_PURPS_HS_ORD_NM
+		            , #{eneBfeSehfScNm} AS ENE_BFE_SEHF_SC_NM
+		            , #{dghtScNm}   AS DGHT_SC_NM
+		            , #{fondYmd}    AS FOND_YMD
+		            , #{foasMemrd}  AS FOAS_MEMRD
+		            , #{loadDtm}    AS LOAD_DTM
+		          FROM DUAL
+		    ) B
+		      ON (
+		            A.ATPT_OFCDC_SC_CODE = B.ATPT_OFCDC_SC_CODE
+		            AND
+		            A.SD_SCHUL_CODE = B.SD_SCHUL_CODE
+		        )
+		    WHEN MATCHED THEN
+		        UPDATE SET
+		              ATPT_OFCDC_SC_NM = B.ATPT_OFCDC_SC_NM
+		            , SCHUL_NM = B.SCHUL_NM
+		            , ENG_SCHUL_NM = B.ENG_SCHUL_NM
+		            , SCHUL_KND_SC_NM = B.SCHUL_KND_SC_NM
+		            , LCTN_SC_NM = B.LCTN_SC_NM
+		            , JU_ORG_NM = B.JU_ORG_NM
+		            , FOND_SC_NM = B.FOND_SC_NM
+		            , ORG_RDNZC = B.ORG_RDNZC
+		            , ORG_RDNMA = B.ORG_RDNMA
+		            , ORG_RDNDA = B.ORG_RDNDA
+		            , ORG_TELNO = B.ORG_TELNO
+		            , HMPG_ADRES = B.HMPG_ADRES
+		            , COEDU_SC_NM = B.COEDU_SC_NM
+		            , ORG_FAXNO = B.ORG_FAXNO
+		            , HS_SC_NM = B.HS_SC_NM
+		            , INDST_SPECL_CCCCL_EXST_YN = B.INDST_SPECL_CCCCL_EXST_YN
+		            , HS_GNRL_BUSNS_SC_NM = B.HS_GNRL_BUSNS_SC_NM
+		            , SPCLY_PURPS_HS_ORD_NM = B.SPCLY_PURPS_HS_ORD_NM
+		            , ENE_BFE_SEHF_SC_NM = B.ENE_BFE_SEHF_SC_NM
+		            , DGHT_SC_NM = B.DGHT_SC_NM
+		            , FOND_YMD = B.FOND_YMD
+		            , FOAS_MEMRD = B.FOAS_MEMRD
+		            , LOAD_DTM = B.LOAD_DTM
+		    WHEN NOT MATCHED THEN
+		        INSERT (
+		              ATPT_OFCDC_SC_CODE
+		            , ATPT_OFCDC_SC_NM
+		            , SD_SCHUL_CODE
+		            , SCHUL_NM
+		            , ENG_SCHUL_NM
+		            , SCHUL_KND_SC_NM
+		            , LCTN_SC_NM
+		            , JU_ORG_NM
+		            , FOND_SC_NM
+		            , ORG_RDNZC
+		            , ORG_RDNMA
+		            , ORG_RDNDA
+		            , ORG_TELNO
+		            , HMPG_ADRES
+		            , COEDU_SC_NM
+		            , ORG_FAXNO
+		            , HS_SC_NM
+		            , INDST_SPECL_CCCCL_EXST_YN
+		            , HS_GNRL_BUSNS_SC_NM
+		            , SPCLY_PURPS_HS_ORD_NM
+		            , ENE_BFE_SEHF_SC_NM
+		            , DGHT_SC_NM
+		            , FOND_YMD
+		            , FOAS_MEMRD
+		            , LOAD_DTM
+		        ) VALUES (
+		              B.ATPT_OFCDC_SC_CODE
+		            , B.ATPT_OFCDC_SC_NM
+		            , B.SD_SCHUL_CODE
+		            , B.SCHUL_NM
+		            , B.ENG_SCHUL_NM
+		            , B.SCHUL_KND_SC_NM
+		            , B.LCTN_SC_NM
+		            , B.JU_ORG_NM
+		            , B.FOND_SC_NM
+		            , B.ORG_RDNZC
+		            , B.ORG_RDNMA
+		            , B.ORG_RDNDA
+		            , B.ORG_TELNO
+		            , B.HMPG_ADRES
+		            , B.COEDU_SC_NM
+		            , B.ORG_FAXNO
+		            , B.HS_SC_NM
+		            , B.INDST_SPECL_CCCCL_EXST_YN
+		            , B.HS_GNRL_BUSNS_SC_NM
+		            , B.SPCLY_PURPS_HS_ORD_NM
+		            , B.ENE_BFE_SEHF_SC_NM
+		            , B.DGHT_SC_NM
+		            , B.FOND_YMD
+		            , B.FOAS_MEMRD
+		            , B.LOAD_DTM
+		        )
+		]]>
+	</insert>
+
+	<!-- 학사일정 INSERT -->
+	<insert id="insertSchoolEventInfo" parameterType="com.fpdisys.module.recv.domain.SchoolEventMVO">
+		<![CDATA[
+		MERGE /* com.fpdisys.module.recv.domain.SchoolEventMVO */
+		    INTO T_EVENT_SCH A
+		    USING (
+		        SELECT
+		              #{atptOfcdcScCode} AS ATPT_OFCDC_SC_CODE
+		            , #{atptOfcdcScNm} AS ATPT_OFCDC_SC_NM
+		            , #{sdSchulCode} AS SD_SCHUL_CODE
+		            , #{schulNm} AS SCHUL_NM
+		            , #{ay} AS AY
+		            , #{dghtCrseScNm} AS DGHT_CRSE_SC_NM
+		            , #{schulCrseScNm} AS SCHUL_CRSE_SC_NM
+		            , #{sbtrDdScNm} AS SBTR_DD_SC_NM
+		            , #{aaYmd} AS AA_YMD
+		            , SUBSTRB(#{eventNm}, 1, 50) AS EVENT_NM
+		            , #{eventCntnt} AS EVENT_CNTNT
+		            , #{oneGradeEventYn} AS ONE_GRADE_EVENT_YN
+		            , #{twGradeEventYn} AS TW_GRADE_EVENT_YN
+		            , #{threeGradeEventYn} AS THREE_GRADE_EVENT_YN
+		            , #{frGradeEventYn} AS FR_GRADE_EVENT_YN
+		            , #{fivGradeEventYn} AS FIV_GRADE_EVENT_YN
+		            , #{sixGradeEventYn} AS SIX_GRADE_EVENT_YN
+		            , #{loadDtm} AS LOAD_DTM
+		          FROM DUAL
+		    ) B
+		      ON (      A.ATPT_OFCDC_SC_CODE = B.ATPT_OFCDC_SC_CODE
+		            AND A.SD_SCHUL_CODE = B.SD_SCHUL_CODE
+		            AND A.AY = B.AY
+		            AND A.AA_YMD = B.AA_YMD
+		            AND A.EVENT_NM = B.EVENT_NM
+		        )
+		    WHEN MATCHED THEN
+		        UPDATE SET
+		              ATPT_OFCDC_SC_NM = B.ATPT_OFCDC_SC_NM
+		            , SCHUL_NM = B.SCHUL_NM
+		            , DGHT_CRSE_SC_NM = B.DGHT_CRSE_SC_NM
+		            , SCHUL_CRSE_SC_NM = B.SCHUL_CRSE_SC_NM
+		            , SBTR_DD_SC_NM = B.SBTR_DD_SC_NM
+		            , EVENT_CNTNT = B.EVENT_CNTNT
+		            , ONE_GRADE_EVENT_YN = B.ONE_GRADE_EVENT_YN
+		            , TW_GRADE_EVENT_YN = B.TW_GRADE_EVENT_YN
+		            , THREE_GRADE_EVENT_YN = B.THREE_GRADE_EVENT_YN
+		            , FR_GRADE_EVENT_YN = B.FR_GRADE_EVENT_YN
+		            , FIV_GRADE_EVENT_YN = B.FIV_GRADE_EVENT_YN
+		            , SIX_GRADE_EVENT_YN = B.SIX_GRADE_EVENT_YN
+		            , LOAD_DTM = B.LOAD_DTM
+		    WHEN NOT MATCHED THEN
+		        INSERT (
+		              ATPT_OFCDC_SC_CODE
+		            , ATPT_OFCDC_SC_NM
+		            , SD_SCHUL_CODE
+		            , SCHUL_NM
+		            , AY
+		            , DGHT_CRSE_SC_NM
+		            , SCHUL_CRSE_SC_NM
+		            , SBTR_DD_SC_NM
+		            , AA_YMD
+		            , EVENT_NM
+		            , EVENT_CNTNT
+		            , ONE_GRADE_EVENT_YN
+		            , TW_GRADE_EVENT_YN
+		            , THREE_GRADE_EVENT_YN
+		            , FR_GRADE_EVENT_YN
+		            , FIV_GRADE_EVENT_YN
+		            , SIX_GRADE_EVENT_YN
+		            , LOAD_DTM
+					, SEQ
+		        ) VALUES (
+		              B.ATPT_OFCDC_SC_CODE
+		            , B.ATPT_OFCDC_SC_NM
+		            , B.SD_SCHUL_CODE
+		            , B.SCHUL_NM
+		            , B.AY
+		            , B.DGHT_CRSE_SC_NM
+		            , B.SCHUL_CRSE_SC_NM
+		            , B.SBTR_DD_SC_NM
+		            , B.AA_YMD
+		            , B.EVENT_NM
+		            , B.EVENT_CNTNT
+		            , B.ONE_GRADE_EVENT_YN
+		            , B.TW_GRADE_EVENT_YN
+		            , B.THREE_GRADE_EVENT_YN
+		            , B.FR_GRADE_EVENT_YN
+		            , B.FIV_GRADE_EVENT_YN
+		            , B.SIX_GRADE_EVENT_YN
+		            , B.LOAD_DTM
+					, NVL((
+						SELECT MAX(X.SEQ)
+						  FROM T_EVENT_SCH X
+						 WHERE X.ATPT_OFCDC_SC_CODE = B.ATPT_OFCDC_SC_CODE
+						   AND X.SD_SCHUL_CODE = B.SD_SCHUL_CODE
+					), 0) + 1		
+		        )
+		]]>
+	</insert>
+	<!-- EVENT TABLE 데이터 정리 -->
+	<delete id="deleteEvent" parameterType="com.fpdisys.module.recv.domain.SchoolEventMVO">
+    DELETE FROM T_EVENT_SCH EVT
+    WHERE EXISTS (
+        SELECT 1
+        FROM DUAL
+        WHERE EVT.ATPT_OFCDC_SC_CODE = #{atptOfcdcScCode}
+        AND EVT.SD_SCHUL_CODE = #{sdSchulCode}
+        AND EVT.AY = #{ay}
+        AND (EVT.AA_YMD != #{aaYmd} OR EVT.EVENT_NM != #{eventNm})
+    )
+	</delete>
+	
+	<!-- 학사일정 스케쥴 적용 -->
+	<insert id="insertSchInfo" parameterType="java.util.HashMap">
+		<![CDATA[
+			{CALL
+				SP_SCH_INFO_REG (
+					  #{eventGp}
+					, #{eventYmd}
+				)	
+			}
+		]]>
+	</insert>
+	
+	<!-- 학사일정 스케쥴 적용 -->
+	<delete id="deleteEventList" parameterType="java.util.HashMap">
+		DELETE
+		FROM FLOWER.T_SCH_INFO
+		WHERE SEQ = #{SEQ}
+	</delete>
+	
+</mapper>

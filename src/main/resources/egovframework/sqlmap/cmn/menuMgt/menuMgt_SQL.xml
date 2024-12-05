@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.menumgt.mapper.MenuMgtMapper">
+
+	<!-- 메뉴관리 조회 -->
+	<select id="selectMenuMgtList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		<!-- SELECT
+			'demo_root_'||MENU_CD AS ID
+			(CASE WHEN MENU_UP_CD IS NULL THEN '#' END) AS ID
+			NVL(TO_CHAR(MENU_UP_CD), '#') AS ID
+			, MENU_NM AS TEXT
+			, 'true' AS CHILDREN
+			, (CASE WHEN MENU_UP_CD IS NULL THEN 'root' end) AS TYPE
+		FROM TB_MENU
+		WHERE 1=1
+		AND MENU_DEPTH = '0' -->
+		SELECT MENU_CD AS ID
+            , MENU_NM AS TEXT
+            , NVL(TO_CHAR(MENU_UP_CD), '#') AS PARENT
+            , DECODE(MENU_DEPTH,'0','root','3','file','default') TYPE
+            , MENU_DEPTH
+            FROM TB_MENU
+        WHERE 1=1
+        ORDER BY MENU_ORDER ASC
+	</select>
+	
+	<!-- 메뉴관리 조회 :: One Data -->
+	<select id="selectMenuMgtUseYnList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT USE_YN, TO_CHAR(UPT_DT,'YYYY-MM-DD') AS UPT_DT, UPT_ID, MENU_URL, MENU_GUBN, MENU_ORDER, MENU_DEPTH FROM TB_MENU WHERE 1=1 AND MENU_CD = #{menuCd}
+	</select>
+	
+	<!-- 메뉴관리 등록 -->
+	<insert id="insertMenuInput" parameterType="java.util.HashMap">
+		INSERT INTO TB_MENU
+		(
+			MENU_CD
+			, MENU_NM
+			, MENU_UP_CD
+			, MENU_URL
+			, MENU_GUBN
+			, MENU_ORDER
+			, MENU_DETAIL
+			, MENU_DEPTH
+			, USE_YN
+			, REG_DT
+			, REG_ID
+			, UPT_DT
+			, UPT_ID
+			, AUTH_GUBN
+		)VALUES(
+			(SELECT MAX(MENU_CD)+1 AS MENU_CD FROM TB_MENU)
+			, #{cMenuNm}
+			, #{cMenuUpCd}
+			, #{cUrl}
+			, #{cMenuGubn}
+			, (SELECT MAX(MENU_ORDER)+1 AS MENU_ORDER FROM TB_MENU WHERE 1=1 AND MENU_UP_CD = #{cMenuUpCd})
+			, #{cMenuNm}
+			, #{menuDepth}+1
+			<!-- , (SELECT MAX(MENU_DEPTH) AS MENU_DEPTH FROM TB_MENU WHERE 1=1 AND MENU_UP_CD = #{cMenuUpCd}) -->
+			, #{cUseYn}
+			, SYSDATE
+			, #{id}
+			, SYSDATE
+			, #{id}
+			, #{authGubn}
+		)
+	</insert>
+	
+	<!-- 메뉴관리 수정 -->
+	<update id="updateMenuInput" parameterType="java.util.HashMap">
+		UPDATE TB_MENU SET
+			MENU_NM = #{menuNm}
+			, USE_YN = #{useYn}
+			, UPT_DT = SYSDATE
+			, UPT_ID = #{id}
+			, MENU_GUBN = #{menuGubn}
+			, MENU_URL = #{url}
+			, MENU_ORDER = #{menuOrder}
+			, AUTH_GUBN = #{authGubn}
+		WHERE 1=1
+		AND MENU_CD = #{menuCd}
+	</update>
+	
+	<!-- 메뉴관리 삭제 :: MENU_CD -->
+	<delete id="deleteMenuCdInput" parameterType="java.util.HashMap">
+		DELETE FROM TB_MENU WHERE 1=1 AND MENU_CD = #{menuCd}
+	</delete>
+	
+	<!-- 메뉴관리 삭제 :: MENU_UP_CD -->
+	<delete id="deleteMenuUpCdInput" parameterType="java.util.HashMap">
+		DELETE FROM TB_MENU WHERE 1=1 AND MENU_UP_CD = #{menuCd}
+	</delete>
+	
+	<!-- 메뉴관리 조회 -->
+	<select id="selectMenuUnderMgtList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+			'demo_child_'||MENU_CD AS ID
+			, LPAD(' ', 2*(LEVEL-1)) || MENU_NM AS TEXT
+			, 'default' AS TYPE
+		FROM TB_MENU
+		WHERE 1=1
+		AND MENU_DEPTH = '1'
+		START WITH MENU_UP_CD IS NULL 
+		CONNECT BY PRIOR MENU_CD = MENU_UP_CD
+		UNION ALL
+		SELECT 
+			'demo_child_'||MENU_CD AS ID
+			, LPAD(' ', 2*(LEVEL-1)) || MENU_NM AS TEXT
+			, 'default' AS TYPE
+		FROM TB_MENU
+		WHERE 1=1
+		AND MENU_DEPTH = '2'
+		START WITH MENU_UP_CD IS NULL 
+		CONNECT BY PRIOR MENU_CD = MENU_UP_CD
+		UNION ALL
+		SELECT 
+			'demo_child_'||MENU_CD AS ID
+			, LPAD(' ', 2*(LEVEL-1)) || MENU_NM AS TEXT
+			, 'file' AS TYPE
+		FROM TB_MENU
+		WHERE 1=1
+		AND MENU_DEPTH = '3'
+		START WITH MENU_UP_CD IS NULL 
+		CONNECT BY PRIOR MENU_CD = MENU_UP_CD
+	</select>
+	
+	<!-- 그룹관리 조회 -->
+	<select id="selectGroupMgtList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+			GROUP_CD
+			, GROUP_NM
+			, (CASE WHEN USE_YN = 'Y' THEN '사용' ELSE '비사용' END) AS USE_YN
+			, TO_CHAR(REG_DT,'YYYY-MM-DD') AS REG_DT
+			, REG_ID
+			, TO_CHAR(UPT_DT, 'YYYY-MM-DD') AS UPT_DT
+			, UPT_ID
+		FROM TB_MENU_GROUP
+		WHERE 1=1
+		<if test="groupCd != null and groupCd != ''">
+    		AND GROUP_CD = #{groupCd}
+    	</if>
+    	ORDER BY GROUP_CD DESC
+	</select>
+	
+	<!-- 그룹관리 등록 -->
+	<insert id="insertGroupMenuInput" parameterType="java.util.HashMap">
+		INSERT INTO TB_MENU_GROUP
+		(
+			GROUP_CD
+			, GROUP_NM
+			, USE_YN
+			, REG_DT
+			, REG_ID
+			, UPT_DT
+			, UPT_ID
+		)VALUES(
+			TB_MENU_GROUP_CD_SEQ.NEXTVAL
+			, #{groupNm}
+			, #{useYn}
+			, SYSDATE
+			, #{id}
+			, SYSDATE
+			, #{id}
+		)
+	</insert>
+	
+	<!-- 그룹관리 수정 -->
+	<update id="updateGroupMenuInput" parameterType="java.util.HashMap">
+		UPDATE TB_MENU_GROUP SET
+			GROUP_NM = #{groupNm}
+			, USE_YN = #{useYn}
+			, UPT_DT = SYSDATE
+			, UPT_ID = #{id}
+		WHERE 1=1
+		AND GROUP_CD = #{groupCd}
+	</update>
+	
+	<!-- 그룹관리 삭제 -->
+	<delete id="deleteGroupMenuInput" parameterType="java.util.HashMap">
+		DELETE FROM TB_MENU_GROUP WHERE 1=1 AND GROUP_CD = #{groupCd}
+	</delete>
+	
+	<!-- 그룹메뉴관리 조회 -->
+	<select id="selectGroupList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			GROUP_CD
+			, GROUP_NM
+			, USE_YN
+			, REG_DT
+			, REG_ID
+			, UPT_DT
+			, UPT_ID
+		FROM TB_MENU_GROUP
+	</select>
+	
+	<!-- 그룹 & 메뉴 조회 -->
+	<select id="selectGroupMenuJoinList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			T1.GROUP_CD
+			, T2.GROUP_NM
+			, T1.MENU_CD
+			, T3.MENU_NM
+			, T1.MENU_SEQ
+			, T1.USE_YN
+			, T1.REG_DT
+			, T1.REG_ID
+			, T1.UPT_DT
+			, T1.UPT_ID
+		FROM TB_MENU_GROUP_MAP T1
+		LEFT OUTER JOIN TB_MENU_GROUP T2 ON T1.GROUP_CD = T2.GROUP_CD
+		LEFT OUTER JOIN TB_MENU T3 ON T1.MENU_CD = T3.MENU_CD
+		WHERE 1=1
+		AND T1.GROUP_CD = #{groupCd}
+		ORDER BY T1.MENU_SEQ ASC
+		<!-- ORDER BY T1.MENU_CD ASC -->
+	</select>
+	
+	<!-- 그룹 & 메뉴 추가 -->
+	<insert id="insertGroupMenuJoinInput" parameterType="java.util.HashMap" >
+		<selectKey resultType="string" keyProperty="boardID" order="BEFORE">
+        	(SELECT NVL(MAX(MENU_SEQ)+1,0) AS MENU_SEQ FROM TB_MENU_GROUP_MAP)
+    	</selectKey>
+		INSERT INTO TB_MENU_GROUP_MAP
+		(
+			GROUP_CD
+			, MENU_CD
+			, MENU_SEQ
+			, USE_YN
+			, REG_DT
+			, REG_ID
+			, UPT_DT
+			, UPT_ID
+		)VALUES(
+			#{groupCd}
+			, #{menuCd}
+			, #{menuSeq}
+			<!-- , (SELECT NVL(MAX(MENU_SEQ)+1,0) AS MENU_SEQ FROM TB_MENU_GROUP_MAP) -->
+			, 'Y'
+			, SYSDATE
+			, #{id}
+			, SYSDATE
+			, #{id}
+		)
+	</insert>
+	
+	<!-- 그룹 & 메뉴 삭제 -->
+	<delete id="deleteGroupMenuJoinInputGroupCd" parameterType="java.util.HashMap">
+		DELETE FROM TB_MENU_GROUP_MAP
+		WHERE 1=1
+		AND GROUP_CD = #{groupCd}
+	</delete>
+	
+	<!-- 그룹 & 메뉴 삭제 -->
+	<delete id="deleteGroupMenuJoinInput" parameterType="java.util.HashMap">
+		DELETE FROM TB_MENU_GROUP_MAP
+		WHERE 1=1
+		<if test="groupCd != null and groupCd != ''">
+			AND GROUP_CD = #{groupCd}
+		</if>
+		<if test="menuCd != null and menuCd !=''">
+			AND MENU_CD = #{menuCd}
+		</if>
+	</delete>
+	
+	<!-- 메인 메뉴 관리 4개 조회 -->
+	<select id="selectNoLoginMenuList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			T1.GROUP_CD
+			,T1.MENU_CD
+			,T2.MENU_NM
+			,T2.MENU_URL
+			,T1.MENU_SEQ
+		FROM TB_MENU_GROUP_MAP T1
+		LEFT OUTER JOIN TB_MENU T2 ON T1.MENU_CD = T2.MENU_CD
+		WHERE 1=1
+		AND GROUP_CD = '12'
+		ORDER BY MENU_SEQ ASC
+	</select>
+	
+</mapper>

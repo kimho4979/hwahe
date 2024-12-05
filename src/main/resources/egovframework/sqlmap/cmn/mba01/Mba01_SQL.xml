@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mba01.mapper.Mba01Mapper">
+	<resultMap id="Mba01ResultMap" type="com.fpminput.mntr.mba01.domain.Mba01VO">
+		<result property="seqNo"		column="SEQ_NO"/>
+		<result property="regDate"		column="REG_DATE"/>
+		<result property="pumName"		column="PUM_NAME"/>
+		<result property="goodName"		column="GOOD_NAME"/>
+		<result property="chulNo"		column="CHUL_NO"/>
+		<result property="flowerGubn"	column="FLOWER_GUBN"/>
+		<result property="qty"			column="QTY"/>
+		<result property="bigo"			column="BIGO"/>
+		<result property="useYn"		column="USE_YN"/>
+		<result property="sanCd"		column="SAN_CD"/>
+		<result property="regDt"		column="REG_DT"/>
+		<result property="uptDt"		column="UPT_DT"/>
+	</resultMap>
+
+	<select id="selectCnsmpTrendInput" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT REG_DATE
+			,SEQ_NO
+			,PUM_NAME
+			,GOOD_NAME
+			,CHUL_NO
+			,QTY
+			,BIGO
+			,REG_DT
+      		,UPT_DT
+		FROM T_CONSUMPTION_TREND
+		WHERE USE_YN = 'Y'
+		AND CHUL_NO=#{CHUL_NO, jdbcType=VARCHAR}
+		<if test="REG_DATE1 != null and REG_DATE1 != ''">
+			AND TO_DATE(REG_DATE, 'YYYY-MM-DD' ) <![CDATA[>=]]> TO_DATE(#{REG_DATE1} , 'yyyy-mm-dd')
+		</if>
+		<if test="REG_DATE2 != null and REG_DATE2 != ''">
+			AND TO_DATE(REG_DATE, 'YYYY-MM-DD' ) <![CDATA[<=]]> TO_DATE(#{REG_DATE2} , 'yyyy-mm-dd')
+		</if>
+		<if test="PUM_NAME != null and PUM_NAME != ''">
+			AND PUM_NAME = #{PUM_NAME}
+		</if>
+		<if test="GOOD_NAME != null and GOOD_NAME != ''">
+			AND GOOD_NAME = #{GOOD_NAME}
+		</if>
+		ORDER BY SEQ_NO DESC, REG_DATE DESC , QTY DESC
+	</select>
+	
+	<select id="selectCnsmpTrendInputAll" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT REG_DATE
+			,SEQ_NO
+			,PUM_NAME
+			,GOOD_NAME
+			,CHUL_NO
+			,QTY
+			,BIGO
+			,REG_DT
+      		,UPT_DT
+		FROM T_CONSUMPTION_TREND
+		WHERE USE_YN = 'Y'
+		ORDER BY SEQ_NO DESC, REG_DATE DESC , QTY DESC
+	</select>
+	
+	<select id="selectCnsmpTrendInputSeq" parameterType="com.fpminput.mntr.mba01.domain.Mba01VO" resultMap="Mba01ResultMap">
+		SELECT REG_DATE
+			,SEQ_NO
+			,PUM_NAME
+			,GOOD_NAME
+			,CHUL_NO
+			,QTY
+			,BIGO
+			,REG_DT
+      		,UPT_DT
+		FROM T_CONSUMPTION_TREND
+		WHERE USE_YN = 'Y'
+		AND SEQ_NO = #{seqNo}
+		ORDER BY SEQ_NO DESC, REG_DATE DESC , QTY DESC
+	</select>
+
+	<insert id="insertCnsmpTrendInput" parameterType="java.util.HashMap">
+		INSERT INTO T_CONSUMPTION_TREND
+		( 
+			SEQ_NO
+			,REG_DATE
+			,PUM_NAME
+			,GOOD_NAME
+			,CHUL_NO
+			,FLOWER_GUBN
+			,QTY
+			,BIGO
+			,SAN_CD
+			,REG_DT
+			,UPT_DT
+		)
+		VALUES
+		( 
+			CONS_SEQ.NEXTVAL
+			,#{REG_DATE, jdbcType=VARCHAR}
+			,#{PUM_NAME, jdbcType=VARCHAR}
+			,#{GOOD_NAME, jdbcType=VARCHAR}
+			,#{CHUL_NO, jdbcType=VARCHAR}
+			,'1'
+			,#{QTY, jdbcType=VARCHAR}
+			,#{BIGO, jdbcType=VARCHAR}
+			,#{SAN_CD, jdbcType=VARCHAR}
+			,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+			,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		)
+	</insert>
+
+	<update id="updateCnsmpTrendInput" parameterType="java.util.HashMap">
+		UPDATE T_CONSUMPTION_TREND SET
+			REG_DATE = #{REG_DATE, jdbcType=VARCHAR},
+			PUM_NAME =#{PUM_NAME, jdbcType=VARCHAR},
+			GOOD_NAME =#{GOOD_NAME, jdbcType=VARCHAR},
+			QTY = #{QTY, jdbcType=VARCHAR},
+			BIGO =#{BIGO, jdbcType=VARCHAR},
+			UPT_DT = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		WHERE SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR} 
+		AND CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteCnsmpTrendInput" parameterType="java.util.HashMap">
+		UPDATE T_CONSUMPTION_TREND SET
+			USE_YN='N'
+		WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+		AND PUM_NAME =#{PUM_NAME, jdbcType=VARCHAR}
+		AND GOOD_NAME =#{GOOD_NAME, jdbcType=VARCHAR}
+		AND CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR}
+		AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

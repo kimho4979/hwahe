@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hga02.mapper.Hga02Mapper">
+
+	<resultMap id="resultHga02Map" type="com.fpdisys.dist.hga02.domain.Hga02VO">
+		<result property="areaCd" 	column="AREA_CD"/>
+		<result property="fcstDate" column="FCST_DATE"/>
+		<result property="sky" 		column="SKY"/>
+		<result property="minT3h" 	column="MIN_T3H"/>
+		<result property="maxT3h" 	column="MAX_T3H"/>
+		<result property="reh" 		column="REH"/>
+		<result property="pop" 		column="POP"/>
+		<result property="pty" 		column="PTY"/>
+		<result property="r06" 		column="R06"/>
+		<result property="s06" 		column="S06"/>
+		<result property="baseDt" 	column="BASE_DT"/>
+		<result property="sidoNm" 	column="SIDO_NM"/>
+	</resultMap>
+
+	<!-- 기상 동향분석 :: 시도명 가져오기-->
+	<select id="selectGetSido" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+		    MAX(AREA_CD) AREA_CD, MAX(SIDO_NM) SIDO_NM
+		FROM TB_WEATHER_AREA
+		WHERE DEPTH=2
+		GROUP BY SIDO_NM
+		ORDER BY AREA_CD
+	</select>
+	
+	<!-- 기상 동향분석 :: 구군 가져오기-->
+	<select id="selectGetGugun" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+		    MAX(AREA_CD) AREA_CD, MAX(SIDO_NM) SIDO_NM, MAX(GUN_NM) GUN_NM, NX, NY
+		FROM TB_WEATHER_AREA
+		WHERE DEPTH=2
+		AND SIDO_NM=#{sidoNm}
+		GROUP BY NX, NY
+		ORDER BY AREA_CD
+	</select>
+	
+	<!-- 기상 동향분석 List :: After -->
+	<select id="selectGetItemList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+			T1.AREA_CD
+			, T2.SIDO_NM 
+			, TO_CHAR(TO_DATE(T1.FCST_DATE, 'YYYY-MM-DD'),'YYYY-MM-DD') AS FCST_DATE
+			, T1.SKY
+			, T1.MIN_T3H
+			, T1.MAX_T3H
+			, T1.REH
+			, T1.POP
+			, T1.PTY
+			, NVL(T1.R06,0) AS R06
+			, NVL(T1.S06,0) AS S06
+			, T1.BASE_DT
+		FROM TB_WEATHER_COM T1
+		LEFT OUTER JOIN TB_WEATHER_AREA T2
+		ON T1.AREA_CD = T2.AREA_CD
+		WHERE 1=1
+		AND FCST_DATE BETWEEN TO_CHAR(SYSDATE,'YYYYMMDD') AND TO_CHAR(SYSDATE+3,'YYYYMMDD')
+		AND T1.AREA_CD = #{sidoCd}
+		ORDER BY T1.AREA_CD ASC, T1.FCST_DATE ASC
+	</select>
+	
+	<!-- 기상 동향분석 List :: After -->
+	<select id="selectGetItemListBefore" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+			T1.AREA_CD
+			, T2.SIDO_NM 
+			, TO_CHAR(TO_DATE(T1.FCST_DATE, 'YYYY-MM-DD'),'YYYY-MM-DD') AS FCST_DATE
+			, T1.SKY
+			, T1.MIN_T3H
+			, T1.MAX_T3H
+			, T1.REH
+			, T1.POP
+			, T1.PTY
+			, NVL(T1.R06,0) AS R06
+			, NVL(T1.S06,0) AS S06
+			, T1.BASE_DT
+		FROM TB_WEATHER_COM T1
+		LEFT OUTER JOIN TB_WEATHER_AREA T2
+		ON T1.AREA_CD = T2.AREA_CD
+		WHERE 1=1
+		AND FCST_DATE BETWEEN TO_CHAR(SYSDATE-7,'YYYYMMDD') AND TO_CHAR(SYSDATE+3,'YYYYMMDD')
+		AND T1.AREA_CD = #{sidoCd}
+		ORDER BY T1.AREA_CD ASC, T1.FCST_DATE ASC
+	</select>
+	
+	<!-- 기상 동향분석 List :: Before -->
+	<!-- <select id="selectGetItemListBefore" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			T1.AREA_CD
+			, T2.SIDO_NM
+			, T1.FCST_DATE
+			, T1.SKY
+			, (CASE WHEN T1.SKY = '1' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'SKY' AND DTL_CD = '1')
+					WHEN T1.SKY = '2' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'SKY' AND DTL_CD = '2')
+					WHEN T1.SKY = '3' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'SKY' AND DTL_CD = '3')
+					WHEN T1.SKY = '4' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'SKY' AND DTL_CD = '4')
+					ELSE '-'
+			END) AS SKY_NM
+			, T1.MIN_T3H
+			, (T1.MIN_T3H||(SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'T3H')) AS MIN_T3H_NM
+			, T1.MAX_T3H
+			, (T1.MAX_T3H||(SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'T3H')) AS MAX_T3H_NM
+			, T1.REH
+			, (T1.REH||(SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'REH')) AS REH_NM
+			, T1.POP
+			, (T1.POP||(SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'POP')) AS POP_NM
+			, T1.PTY
+			, (CASE WHEN T1.PTY = '0' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'PTY' AND DTL_CD = '0')
+					WHEN T1.PTY = '1' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'PTY' AND DTL_CD = '1')
+					WHEN T1.PTY = '2' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'PTY' AND DTL_CD = '2')
+					WHEN T1.PTY = '3' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'PTY' AND DTL_CD = '3')
+			ELSE '-'
+			END) AS PTY_NM
+			, T1.R06
+			, (CASE WHEN T1.R06 = '0' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'R06' AND DTL_CD = '0')
+					WHEN T1.R06 = '1' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'R06' AND DTL_CD = '1')
+					WHEN T1.R06 = '5' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'R06' AND DTL_CD = '5')
+					WHEN T1.R06 = '10' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'R06' AND DTL_CD = '10')
+					WHEN T1.R06 = '20' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'R06' AND DTL_CD = '20')
+					WHEN T1.R06 = '40' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'R06' AND DTL_CD = '40')
+					WHEN T1.R06 = '70' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'R06' AND DTL_CD = '70')
+					WHEN T1.R06 = '100' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'R06' AND DTL_CD = '100')
+					ELSE '-'
+			END) AS R06_NM
+			, T1.S06
+			, (CASE WHEN T1.S06 = '0' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'S06' AND DTL_CD = '0')
+					WHEN T1.S06 = '1' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'S06' AND DTL_CD = '1')
+					WHEN T1.S06 = '5' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'S06' AND DTL_CD = '5')
+					WHEN T1.S06 = '10' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'S06' AND DTL_CD = '10')
+					WHEN T1.S06 = '20' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'S06' AND DTL_CD = '20')
+					WHEN T1.S06 = '100' THEN (SELECT DTL_NM FROM TB_WEATHER_CATE WHERE CATEGORY = 'S06' AND DTL_CD = '100')
+					ELSE '-'
+			END) AS S06_NM
+			,T1.BASE_DT
+		FROM TB_WEATHER_COM T1
+		LEFT OUTER JOIN TB_WEATHER_AREA T2 ON T1.AREA_CD = T2.AREA_CD
+		WHERE 1=1
+		<if test="sidoCd == null or sidoCd == ''">
+			AND T1.AREA_CD = '1100000000'
+		</if>
+		<if test="sidoCd != null and sidoCd != ''">
+			AND T1.AREA_CD = #{sidoCd}
+		</if>
+		ORDER BY T1.AREA_CD ASC, T1.FCST_DATE ASC
+	</select> -->
+	
+	<!-- 화훼 수출입 동향분석 :: 품목 List -->
+	<select id="selectGetItem" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT HS_CD, HS_NM
+		FROM
+		(
+		    SELECT SUBSTR(YYYYMM, 0,4) YYYY
+		       , SUBSTR(YYYYMM, 5,2) MM
+		       , DECODE(B.HS_CD, NULL, A.HS_CD,'-',A.HS_CD, B.HS_CD) HS_CD
+		       , DECODE(B.HS_NM, NULL, STAT_KOR,'-',STAT_KOR, B.HS_NM) HS_NM,
+		       EXP_WGT, EXP_PRC, IMP_WGT, 
+		       IMP_PRC, BAL_PAY, A.REG_DT   
+		    FROM TB_IMPEXP_RAW A, 
+		    (
+		        SELECT 
+		        HS_CD, HS_NM, USE_YN, 
+		           REG_DT, UPT_DT
+		        FROM TB_IMPEXP_HSCD
+		        WHERE USE_YN='Y'
+		    ) B
+		    WHERE YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+		    AND A.HS_CD <![CDATA[<>]]> '-'
+		    AND A.HS_CD = B.HS_CD(+)
+		)
+		GROUP BY HS_CD, HS_NM
+		ORDER BY HS_CD, HS_NM
+	</select>
+	
+	<!-- 화훼 수출입 동향분석 List -->
+	<select id="selectTrendAnalysisList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			AB.DT AS DT_NEW
+			, CD.DT AS DT_AGO
+			, AB.DTMM
+			, NVL(MAX(AB.EXP_WGT1),'0') AS EXP_WGT1
+			, NVL(MAX(AB.EXP_PRC2),'0') AS EXP_PRC2
+			, NVL(MAX(AB.IMP_WGT3),'0') AS IMP_WGT3
+			, NVL(MAX(AB.IMP_PRC4),'0') AS IMP_PRC4
+			, NVL(MAX(CD.EXP_WGT1),'0') AS EXP_WGT5
+			, NVL(MAX(CD.EXP_PRC2),'0') AS EXP_PRC6
+			, NVL(MAX(CD.IMP_WGT3),'0') AS IMP_WGT7
+			, NVL(MAX(CD.IMP_PRC4),'0') AS IMP_PRC8
+		FROM 
+		(
+			SELECT
+			B.DT
+			,B.DTMM
+			, A.*
+			FROM
+			(
+				SELECT
+					NVL(T1.YYYYMM,'-') AS YYYYMM
+					, NVL(SUBSTR(T1.YYYYMM, 0,4),'-') AS YYYY
+					, SUBSTR(T1.YYYYMM, 5,2) AS MM
+					, ROUND(SUM(T1.EXP_WGT)/1000,0) AS EXP_WGT1
+					, ROUND(SUM(T1.EXP_PRC)/1000,0) AS EXP_PRC2
+					, ROUND(SUM(T1.IMP_WGT)/1000,0) AS IMP_WGT3
+					, ROUND(SUM(T1.IMP_PRC)/1000,0) AS IMP_PRC4
+				FROM TB_IMPEXP_RAW T1
+				LEFT OUTER JOIN TB_IMPEXP_HSCD T2 ON T1.HS_CD = T2.HS_CD
+				WHERE 1=1
+				AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+				AND T1.HS_CD <![CDATA[<>]]> '-'
+				<if test="itemCd != null and itemCd != ''">
+					AND T1.HS_CD = #{itemCd}
+				</if>
+				GROUP BY T1.YYYYMM, SUBSTR(T1.YYYYMM, 0,4), SUBSTR(T1.YYYYMM, 5,2)
+			) A,
+			(
+				SELECT 
+					TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'YYYYMM') AS DT
+					, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'YYYY') AS DTYY
+					, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'MM') AS DTMM
+				FROM DUAL
+				CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),LEVEL-24))
+			) B
+			WHERE A.YYYYMM(+) = B.DT
+			) AB,
+		    (
+				SELECT 
+					D.DT
+					, D.DTMM
+					, C.*
+				FROM
+				(
+					SELECT
+						NVL(T1.YYYYMM,'-') AS YYYYMM
+						, NVL(SUBSTR(T1.YYYYMM, 0,4),'-') AS YYYY
+						, SUBSTR(T1.YYYYMM, 5,2) AS MM
+						, ROUND(SUM(T1.EXP_WGT)/1000,0) AS EXP_WGT1
+						, ROUND(SUM(T1.EXP_PRC)/1000,0) AS EXP_PRC2
+						, ROUND(SUM(T1.IMP_WGT)/1000,0) AS IMP_WGT3
+						, ROUND(SUM(T1.IMP_PRC)/1000,0) AS IMP_PRC4
+					FROM TB_IMPEXP_RAW T1
+					LEFT OUTER JOIN TB_IMPEXP_HSCD T2 ON T1.HS_CD = T2.HS_CD
+					WHERE 1=1
+					AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+					AND T1.HS_CD <![CDATA[<>]]> '-'
+					<if test="itemCd != null and itemCd != ''">
+						AND T1.HS_CD = #{itemCd}
+					</if>
+					group by T1.YYYYMM, SUBSTR(T1.YYYYMM, 0,4), SUBSTR(T1.YYYYMM, 5,2)
+				) C,
+				(
+					SELECT 
+						TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-23),'YYYYMM') AS DT
+						, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-23),'YYYY') AS DTYY
+						, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-23),'MM') AS DTMM
+					FROM DUAL
+					CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),LEVEL-24))
+				) D
+			WHERE C.YYYYMM(+) = D.DT
+			) CD
+		WHERE 1=1 
+		AND AB.DTMM(+) = CD.DTMM
+		GROUP BY AB.DT, CD.DT, AB.DTMM
+		ORDER BY AB.DT
+	</select>
+	
+	<!-- 기상 동향분석 List :: Excel -->
+	<select id="selectGetItemListExcel" resultType="com.fpdisys.dist.hga02.domain.Hga02VO" resultMap="resultHga02Map">
+		SELECT 
+			T1.AREA_CD
+			, T2.SIDO_NM 
+			, TO_CHAR(TO_DATE(T1.FCST_DATE, 'YYYY-MM-DD'),'YYYY-MM-DD') AS FCST_DATE
+			, T1.SKY
+			, T1.MIN_T3H
+			, T1.MAX_T3H
+			, T1.REH
+			, T1.POP
+			, T1.PTY
+			, NVL(T1.R06,0) AS R06
+			, NVL(T1.S06,0) AS S06
+			, T1.BASE_DT
+		FROM TB_WEATHER_COM T1
+		LEFT OUTER JOIN TB_WEATHER_AREA T2
+		ON T1.AREA_CD = T2.AREA_CD
+		WHERE 1=1
+		AND FCST_DATE BETWEEN TO_CHAR(SYSDATE-7,'YYYYMMDD') AND TO_CHAR(SYSDATE+3,'YYYYMMDD')
+		AND T1.AREA_CD = #{sidoCd}
+		ORDER BY T1.AREA_CD ASC, T1.FCST_DATE ASC
+	</select>
+	
+</mapper>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hfa01.mapper.Hfa01Mapper">
+
+<resultMap id="resultMap" type="com.fpdisys.dist.hfa01.domain.Hfa01VO">
+        <result property="TOTAL_COUNT" 	column="TOTAL_COUNT"/>
+        <result property="RNUM" 			column="RNUM"/>
+        <result property="SEQ" 			column="SEQ"/>
+        <result property="ENCRPT_SEQ" 			column="ENCRPT_SEQ"/>
+        <result property="TITLE" 		column="TITLE"/>
+        <result property="INS_ID" 		column="INS_ID"/>
+        <result property="INS_DT" 		column="INS_DT"/>
+        <result property="CONTENT" 		column="CONTENT"/>
+        <result property="BBS_GUBN" 	column="BBS_GUBN"/>
+        <result property="DISP_YN" 		column="DISP_YN"/>
+        <result property="COMP_CODE" 	column="COMP_CODE"/>
+        <result property="REG_DATE" 	column="REG_DATE"/>
+        <result property="searchMonth" 	column="searchMonth"/>
+        <result property="CLICK_CNT"	 column="CLICK_CNT"/>        
+</resultMap>
+
+<!-- 17.08.10 희준 :: 카멜케이스 형태로 ResultMap 신규 생성 -->
+<resultMap id="resultMapNew" type="com.fpdisys.dist.hfa01.domain.Hfa01VO">
+        <result property="seq1"				column="SEQ"/>
+        <result property="bbsGubn"			column="BBS_GUBN"/>
+        <result property="title1"			column="TITLE"/>
+        <result property="content1"			column="CONTENT"/>
+        <result property="dispYn"			column="DISP_YN"/>
+        <result property="compCode"			column="COMP_CODE"/>
+        <result property="insDt"			column="INS_DT"/>
+        <result property="insDt1"			column="INS_DT1"/>
+        <result property="insId"			column="INS_ID"/>
+        <result property="uptDt"			column="UPT_DT"/>
+        <result property="uptId"			column="UPT_ID"/>
+        <result property="originFileName"	column="ORIGIN_FILE_NAME"/>
+        <result property="storedFileName"	column="STORED_FILE_NAME"/>
+</resultMap>
+
+	
+	<select id="selectHfa01" parameterType="hashmap" resultMap="resultMap">	
+	/*       selectHfa01         */
+	
+	   SELECT 
+        AA.TOTAL_COUNT , 
+        AA.RNUM ,
+        AA.SEQ ,
+        FN_ENCRYPT(AA.SEQ) AS ENCRPT_SEQ,
+        AA.TITLE ,
+        AA.INS_ID ,
+        AA.INS_DT ,
+        REPLACE(AA.CONTENT,CHR(13),'<![CDATA[<]]>BR<![CDATA[>]]>') AS CONTENT,
+        AA.ORIGIN_FILE_NAME,
+        AA.STORED_FILE_NAME,
+        AA.CLICK_CNT
+        FROM 
+       (    
+         SELECT COUNT(*) OVER() AS TOTAL_COUNT,
+         A.RNUM ,
+         A.RNUM1,
+         A.SEQ ,
+         A.TITLE ,
+         A.INS_ID ,
+         A.INS_DT ,
+         A.CONTENT,
+         A.ORIGIN_FILE_NAME,
+         A.STORED_FILE_NAME,
+         A.CLICK_CNT
+         FROM(
+         <![CDATA[    
+             SELECT ROW_NUMBER () OVER (ORDER BY TB.SEQ) RNUM,
+          	RANK() OVER (ORDER BY TB.SEQ DESC) as RNUM1,    
+              TB.SEQ, 
+              TB.TITLE, 
+              TB.INS_ID, 
+              TO_CHAR(TB.INS_DT,'YYYY-MM-DD') INS_DT,
+              TB.CONTENT,
+              TF.STORED_FILE_NAME,
+              TF.ORIGIN_FILE_NAME,
+              TB.CLICK_CNT
+             FROM T_BBS TB LEFT OUTER JOIN T_BBS_FILE TF ON TB.SEQ = TF.FILE_SEQ
+             WHERE TB.BBS_GUBN = '1'
+             AND DISP_YN='Y' 
+             ]]>
+               <if test="searchType!=null and searchType=='searchTitle'">
+               <![CDATA[ 
+            	   AND TB.TITLE LIKE '%' || #{searchValue, jdbcType=VARCHAR} || '%'
+            	 ]]>
+            	</if>
+            	<if test="searchType!=null and searchType=='searchCnts'" >
+            	<![CDATA[ 
+            	  AND TB.CONTENT LIKE '%' || #{searchValue, jdbcType=VARCHAR} || '%'
+            	]]>
+            	</if>
+            	<if test="searchType!=null and searchType=='searchRegerNm'">
+            	<![CDATA[ 
+            	  AND TB.INS_ID LIKE '%' || #{searchValue, jdbcType=VARCHAR} || '%'
+            	]]>
+            	</if>  
+            <![CDATA[ 	          	
+              )
+             A
+           ) AA       
+        WHERE  AA.RNUM1 BETWEEN #{START} AND #{END}	
+	]]>
+	</select>
+	
+	<select id="selectMainGongiSeq" parameterType="String" resultMap="resultMap">
+		SELECT 
+        AA.TOTAL_COUNT , 
+        AA.RNUM ,
+        AA.RNUM1,
+        AA.SEQ ,
+        FN_ENCRYPT(AA.SEQ) AS ENCRPT_SEQ,
+        AA.TITLE ,
+        AA.INS_ID ,
+        AA.INS_DT ,
+        REPLACE(AA.CONTENT,CHR(13),'<![CDATA[<]]>BR<![CDATA[>]]>') AS CONTENT,
+        AA.ORIGIN_FILE_NAME,
+        AA.STORED_FILE_NAME,
+        AA.CLICK_CNT
+        FROM 
+       (    
+         SELECT COUNT(*) OVER() AS TOTAL_COUNT,
+         A.RNUM ,
+         A.RNUM1,
+         A.SEQ ,
+         A.TITLE ,
+         A.INS_ID ,
+         A.INS_DT ,
+         A.CONTENT,
+         A.ORIGIN_FILE_NAME,
+         A.STORED_FILE_NAME,
+         A.CLICK_CNT
+         FROM(
+             SELECT ROW_NUMBER() OVER (ORDER BY TB.SEQ DESC) RNUM, 
+             ROW_NUMBER () OVER (ORDER BY TB.SEQ) RNUM1,
+              TB.SEQ, 
+              TB.TITLE, 
+              TB.INS_ID, 
+              TO_CHAR(TB.INS_DT,'YYYY-MM-DD') INS_DT,
+              TB.CONTENT,
+              TF.STORED_FILE_NAME,
+              TF.ORIGIN_FILE_NAME,
+              TB.CLICK_CNT
+             FROM T_BBS TB LEFT OUTER JOIN T_BBS_FILE TF ON TB.SEQ = TF.FILE_SEQ
+		     WHERE 1=1
+			 AND TB.BBS_GUBN = '1'
+			 AND TB.DISP_YN  = 'Y'      	
+              )
+             A
+           ) AA       
+        WHERE AA.SEQ = FN_DECRYPT(#{seq})
+	</select>
+	
+	<insert id="insertNotice"  parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			  SELECT MAX(SEQ)+1 FROM T_BBS
+		</selectKey>
+ 	INSERT INTO T_BBS
+       (     SEQ                  
+            ,TITLE            
+            ,INS_ID    
+            ,INS_DT
+            ,BBS_GUBN
+            ,DISP_YN  
+            ,CONTENT      
+       ) 
+       VALUES 
+       (    #{IDX}   
+            ,#{TITLE, jdbcType=VARCHAR}  
+            ,'admin'           
+            ,TO_CHAR(SYSDATE,'YYYY-MM-DD') 
+            ,'1'
+            ,'Y' 
+            ,#{CONTENT, jdbcType=VARCHAR}   
+       ) 
+ </insert>
+ 
+  <insert id="insertNoticeFile"  parameterType="java.util.HashMap">
+    
+ 	INSERT INTO T_BBS_FILE
+       (     
+       		 SEQ
+       		,FILE_SEQ
+			,BBS_GUBN
+			,ORIGIN_FILE_NAME
+			,STORED_FILE_NAME
+			,FILE_SIZE
+			,INS_ID                                  
+       ) 
+       VALUES 
+       (    
+             (SELECT MAX(SEQ_NO)+1 FROM T_BBS_FILE)
+            ,#{CROP_IDX, jdbcType=VARCHAR}  
+            ,'Y'    
+            ,#{ORIGIN_FILE_NAME, jdbcType=VARCHAR}  
+            ,#{STORED_FILE_NAME, jdbcType=VARCHAR}            
+            ,#{FILE_SIZE, jdbcType=VARCHAR}           
+            ,'ADMIN'    
+       )         
+ 	</insert>
+	
+	 <update id="updateNotice"  parameterType="java.util.HashMap">
+		UPDATE T_BBS SET
+			   TITLE = #{TITLE, jdbcType=VARCHAR}
+			   ,CONTENT = #{CONTENT, jdbcType=VARCHAR} 
+	    WHERE SEQ = #{SEQ, jdbcType=VARCHAR}	
+ 	</update>
+ 
+   <update id="updateNoticeFile"  parameterType="java.util.HashMap">
+   		UPDATE T_BBS_FILE SET 
+   			 SEQ =  (SELECT MAX(SEQ)+1 FROM T_BBS_FILE)              
+            ,ORIGIN_FILE_NAME = #{ORIGIN_FILE_NAME, jdbcType=VARCHAR}             
+            ,STORED_FILE_NAME = #{STORED_FILE_NAME, jdbcType=VARCHAR} 
+            ,FILE_SIZE = #{FILE_SIZE, jdbcType=VARCHAR} 
+		WHERE FILE_SEQ = #{SEQ, jdbcType=VARCHAR}	
+
+   </update>
+	
+	
+	
+	<delete id="deleteNotice" parameterType="java.util.HashMap">
+   		DELETE FROM T_BBS
+   		WHERE SEQ = #{seqNo}	  
+   </delete>
+		
+	<delete id="deleteNoticeFile" parameterType="java.util.HashMap">
+   		DELETE FROM T_BBS_FILE
+   		WHERE FILE_SEQ = #{seqNo}	  
+   </delete>
+	
+	<update id="updateNoticeClickCnt"  parameterType="java.util.HashMap">
+		UPDATE T_BBS SET
+			   CLICK_CNT = (CLICK_CNT + 1)
+	    WHERE SEQ = FN_DECRYPT(#{SEQ, jdbcType=VARCHAR})
+ 	</update>
+
+</mapper>

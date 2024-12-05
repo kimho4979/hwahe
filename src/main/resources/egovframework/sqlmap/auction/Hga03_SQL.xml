@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hga03.mapper.Hga03Mapper">
+
+	<resultMap id="resultHga03Map" type="com.fpdisys.dist.hga03.domain.Hga03VO">
+		<result property="yyyymm" 	column="YYYYMM"/>
+		<result property="plntNm" 	column="PLNT_NM"/>
+		<result property="natNm" 	column="NAT_NM"/>
+		<result property="qumNm" 	column="QUM_NM"/>
+		<result property="insCnt" 	column="INS_CNT"/>
+		<result property="insQty" 	column="INS_QTY"/>
+		<result property="regDt" 	column="REG_DT"/>
+		<result property="hsCd" 	column="HS_CD"/>
+		<result property="matNm" 	column="MAT_NM"/>
+		<result property="antCnt" 	column="ANT_CNT"/>
+		<result property="antQty" 	column="ANT_QTY"/>
+		<result property="wasCnt" 	column="WAS_CNT"/>
+		<result property="wasQty" 	column="WAS_QTY"/>
+		<result property="realQty" 	column="REAL_QTY"/>
+	</resultMap>
+
+	<!-- 식물검역정보 최종일자 -->
+	<select id="selectGetDate" resultType="string">
+		SELECT MAX(YYYYMM) YYYYMM
+		FROM
+		(
+			SELECT YYYYMM YYYYMM
+			FROM TB_PLNT_QRT_EXP
+			WHERE YYYYMM BETWEEN TO_CHAR(SYSDATE-90,'YYYYMM') AND TO_CHAR(SYSDATE,'YYYYMM')
+			GROUP BY YYYYMM
+		)
+	</select>
+	
+	<!-- 식물검역정보 품목 -->
+	<select id="selectGetItemList" parameterType="egovframework.rte.psl.dataaccess.util.EgovMap"  resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT PLNT_NM, ORDERING
+		FROM
+		(
+		    SELECT PLNT_NM, 1 AS ORDERING
+		    FROM TB_PLNT_QRT_EXP
+		    WHERE PLNT_NM LIKE '%절화%'
+		    UNION ALL
+		    SELECT PLNT_NM, 1 AS ORDERING
+		    FROM TB_PLNT_QRT_IMP
+		    WHERE PLNT_NM LIKE '%절화%'
+		    UNION ALL
+		    SELECT PLNT_NM, 2 AS ORDERING
+		    FROM TB_PLNT_QRT_EXP
+		    WHERE PLNT_NM NOT LIKE '%절화%'
+		    UNION ALL
+		    SELECT PLNT_NM, 2 AS ORDERING
+		    FROM TB_PLNT_QRT_IMP
+		    WHERE PLNT_NM NOT LIKE '%절화%'
+		)
+		GROUP BY PLNT_NM, ORDERING
+		ORDER BY ORDERING, PLNT_NM
+	</select>
+	
+	<!-- 화훼 수출현황 -->
+	<select id="selectPlntList1" parameterType="egovframework.rte.psl.dataaccess.util.EgovMap"  resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+		YYYYMM, PLNT_NM, NAT_NM, 
+		   QUM_NM, INS_CNT, INS_QTY, 
+		   REG_DT
+		FROM TB_PLNT_QRT_EXP
+		WHERE YYYYMM=REPLACE(#{yyyymm},'-','')
+		AND PLNT_NM=#{itemCd}
+	</select>
+	
+	<!-- 화훼 수입현황 -->
+	<select id="selectPlntList2"  parameterType="egovframework.rte.psl.dataaccess.util.EgovMap"  resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+		YYYYMM, HS_CD, PLNT_NM, 
+		   MAT_NM, NAT_NM, QUM_NM, 
+		   INS_CNT, INS_QTY, ANT_CNT, 
+		   ANT_QTY, WAS_CNT, WAS_QTY, 
+		   REG_DT, INS_QTY-ANT_QTY-WAS_QTY AS REAL_QTY
+		FROM FLOWER.TB_PLNT_QRT_IMP
+		WHERE YYYYMM=REPLACE(#{yyyymm},'-','')
+		AND PLNT_NM=#{itemCd}
+	</select>
+	
+	<!-- 화훼 수출현황 :: Excel -->
+	<select id="selectPlntList1Excel" resultType="com.fpdisys.dist.hga03.domain.Hga03VO" resultMap="resultHga03Map">
+		SELECT 
+		YYYYMM, PLNT_NM, NAT_NM, 
+		   QUM_NM, INS_CNT, INS_QTY, 
+		   REG_DT
+		FROM TB_PLNT_QRT_EXP
+		WHERE YYYYMM=REPLACE(#{yyyymm},'-','')
+		AND PLNT_NM=#{itemCd}
+	</select>
+	
+	<!-- 화훼 수입현황 -->
+	<select id="selectPlntList2Excel" resultType="com.fpdisys.dist.hga03.domain.Hga03VO" resultMap="resultHga03Map">
+		SELECT 
+		YYYYMM, HS_CD, PLNT_NM, 
+		   MAT_NM, NAT_NM, QUM_NM, 
+		   INS_CNT, INS_QTY, ANT_CNT, 
+		   ANT_QTY, WAS_CNT, WAS_QTY, 
+		   REG_DT, INS_QTY-ANT_QTY-WAS_QTY AS REAL_QTY
+		FROM FLOWER.TB_PLNT_QRT_IMP
+		WHERE YYYYMM=REPLACE(#{yyyymm},'-','')
+		AND PLNT_NM=#{itemCd}
+	</select>
+	
+</mapper>

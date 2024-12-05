@@ -1,0 +1,716 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="MotionLineSeries,kor.series.MotionLineSeries" name="keywords">
+<title>kor.series.MotionLineSeries</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'MotionLineSeries - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?kor/series/MotionLineSeries.html&amp;kor/series/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MotionLineSeries</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class MotionLineSeries"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor.series</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class MotionLineSeries</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">MotionLineSeries <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../images/inherit-arrow.gif"> <a href="Line2DSeries.html">Line2DSeries</a> <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../images/inherit-arrow.gif"> <a href="CartesianSeries.html">CartesianSeries</a> <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../images/inherit-arrow.gif"> <a href="Series.html">Series</a></td>
+</tr>
+</table>
+<p></p>
+  MotionLineSeries 클래스는 MotionChart 클래스 인스턴스의 series 속성에 설정되어 데이터의 변동을 라인 차트로 표현합니다.
+    <p>차트에 설정된 데이터를 처리하고 움직이는 라인을 표현합니다.</p>
+    <p>레이아웃은 다음과 같은 형식으로 작성됩니다.</p>
+  <pre>
+  &lt;rMateChart &gt;
+   &lt;Options&gt;
+    &lt;Caption text="Annual Report"/&gt;
+  &lt;/Options&gt;
+  &lt;MotionChart showDataTips="true"&gt;
+    &lt;horizontalAxis&gt;
+     &lt;CategoryAxis categoryField="Month" /&gt;
+    &lt;/horizontalAxis&gt;
+    &lt;series&gt;
+     &lt;MotionLineSeries yField="Profit"/&gt;
+     &lt;MotionLineSeries yField="Cost" /&gt;
+    &lt;/series&gt;
+   &lt;/MotionChart&gt;
+  &lt;/rMateChart&gt;
+  </pre>
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<div class="showHideLinks">
+<div class="hideInheritedStyle" id="hideInheritedStyle">
+<a onclick="javascript:setInheritedVisible(false,'Style');" href="#styleSummary" class="showHideLink"><img src="../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Styles</a>
+</div>
+<div class="showInheritedStyle" id="showInheritedStyle">
+<a onclick="javascript:setInheritedVisible(true,'Style');" href="#styleSummary" class="showHideLink"><img src="../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Styles</a>
+</div>
+</div>
+<table id="summaryTableStyle" class="summaryTable hideInheritedStyle" cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:baseLineMode">baseLineMode</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <font color='#ff0000'>deprecated 5.0</font>
+  </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:baseValue">baseValue</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>선의 스타일이 변경되는 기준값을 지정합니다.<br/>
+  지정된 값보다 큰 값에 해당하는 영역의 선의 스타일은 stroke 속성에 설정하고,<br/>
+  지정된 값보다 작은 값에 해당하는 영역의 선의 스타일은 declineStroke 속성에 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:dashLinePattern">dashLinePattern</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>점선의 길이를 지정합니다.<br/>
+  예를 들어, 값이 5 이면, 5px 길이의 선을 표시한 후 5px 길이의 공백 후에 다시 5px 길이의 선이 표시되는 형태입니다.<br/>
+  값이 클 수록 선과 공백이 반복되는 횟수가 줄어 렌더링 속도는 빨라집니다.</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:dashLinePlacement">dashLinePlacement</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>점선과 실선을 함께 사용하고자 하는 경우 점선의 위치를 설정합니다.<br/>
+  lineStyle 속성값이 dashLine 인 경우에만 유효합니다.<br/>
+  유효값은 before, after 입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:dashLineSeperatePos">dashLineSeperatePos</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>점선과 실선의 경계 지점이 되는 데이터 포인트(데이터 아이템)의 인덱스를 지정합니다.<br/>
+  lineStyle 속성값이 dashLine 인 경우에만 유효합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:declineFill">declineFill</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>baseValue 속성값보다 작은 값에 해당하는 영역에서<br/>
+  데이터 아이템 렌더러가 아이템에 채울 색상을 설정합니다.<br/>
+  유효값은 SolidColor 클래스 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:declineStroke">declineStroke</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>baseValue 속성값보다 작은 값에 해당하는 영역에서<br/>
+  데이터 아이템 렌더러(itemRenderer)에 의해서 표현되는 도형의 선을 설정합니다.<br/>
+  유효값은 Stroke 클래스 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:displayName">displayName</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>시리즈의 이름을 지정합니다.<br/>
+  설정된 값은 기본적으로 데이터팁(툴팁)에서 보여지게 되고 범례의 항목으로 표시됩니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:downLabelField">downLabelField</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>labelPosition 속성값이 down 또는 both 인 경우 라벨로 표시될 데이터 필드명을 지정합니다.<br/>
+  downLabelJsFunction 속성이 설정되어 자바스크립트에 의한 사용자 정의 라벨이 표시될 경우 이 속성은 무시됩니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:downLabelJsFunction">downLabelJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>labelPosition 속성값이 down 또는 both 인 경우 사용자 정의 라벨을 출력할 자바스크립트 함수명을 지정합니다.</p>
+    <pre>
+  예) &lt;Line2DSeries yField="Profit" downLabelJsFunction="downLabelFunc"&gt;
+  </pre>
+    <p><code>downLabelJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+  <i>function_name</i>(seriesId, index, data, values) { ...</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:downLabelXOffset">downLabelXOffset</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>labelPosition 속성값이 down 또는 both 인 경우 가로위치(X축 값)에 대한 오프셋(Offset) 값을 지정합니다.</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:downLabelYOffset">downLabelYOffset</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>labelPosition 속성값이 down 또는 both 인 경우 세로위치(Y축 값)에 대한 오프셋(Offset) 값을 지정합니다.</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:errorBarDirection">errorBarDirection</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>오차 범위의 모양을 지정합니다.</p>
+  유효값은 both, plus, minus 입니다.<br/>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:errorBarFixedValue">errorBarFixedValue</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>오차 범위에 고정값을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:errorBarLength">errorBarLength</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>오차 범위 모양의 가로 크기를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:errorBarPercentValue">errorBarPercentValue</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>오차 범위에 퍼센트 값을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:errorBarStroke">errorBarStroke</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>오차 범위 선의 스타일을 설정합니다.<br/>
+  유효값은 Stroke 클래스 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:fill">fill</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+   <p>시리즈 아이템렌더러의 채우기 색을 지정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:fillJsFunction">fillJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>사용자 정의 색상을 설정하는 자바스크립트 함수명을 지정합니다.<br/>
+  차트 레이아웃 설정시 Series 클래스 인스턴스의 fillJsFunction 속성값에 자바스크립트 함수명을 지정합니다.</p>
+  
+  <pre>
+  예) &lt;Column2DSeries yField="Profit" fillJsFunction="fillJsFunc"&gt;
+  </pre>
+  
+  <p><code>fillJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+  
+  <pre>
+  <i>function_name</i>(seriesId, index, data, values) { ...</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:fills">fills</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+   <p>시리즈에서 각각의 아이템렌더러의 fill 컬러를 지정하는 fill 객체 배열을 정의합니다.<br/>
+   만약 시리즈의 모든 아이템렌더러에 충분한 fill 컬러를 지정하지 않았다면 지정된 색깔이 반복됩니다.<br/>
+   예를 들어, 시리즈의 아이템이 10개 인 경우 5개의 fill 컬러를 지정하였다면 5개를 칠한 후 다시 5개를 칠하게 됩니다.</p>
+  
+    <pre>
+     &lt;...2DSeries ...</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:form">form</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트상의 데이터 포인트들에 대한 연결선의 표현 방식을 지정합니다.</p>
+    유효값은 다음과 같습니다.</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:formatter">formatter</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>숫자값을 원하는 숫자(통화, 날짜) 형식으로 표현하기 위한 포맷터(NumberFormatter, CurrencyFormatter, DateFormatter)를 지정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:horizontalAxis">horizontalAxis</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>시리즈가 참조할 수평축을 설정합니다.<br/>
+  설정하지 않으면 차트의 horizontalAxis 속성에 설정된 축을 참조합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:id">id</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>식별자(Identifier)를 설정합니다.</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:interpolateValues">interpolateValues</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>데이터가 Null일 경우 앞, 뒤 선을 이어서 출력할지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:itemRenderer">itemRenderer</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>차트상의 데이터 포인트(데이터 아이템)에 표현될 도형을 렌더링하는 클래스를 지정합니다.</p>
+    유효값은 다음과 같습니다.</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:labelPosition">labelPosition</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템의 값(수치 라벨)이 표시될 데이터 포인트 상의 위치를 지정합니다.<br/>
+  유효값은 up, down, both, none 입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:lineDeclineStroke">lineDeclineStroke</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>baseValue 속성값보다 작은 값에 해당하는 영역에서 데이터 포인트들에 대한 연결선을 설정합니다.<br/>
+  유효값은 Stroke 클래스 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:lineStroke">lineStroke</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Obejct<br>
+  <p>데이터 포인트들에 대한 연결선을 설정합니다.<br/>
+  유효값은 Stroke 클래스 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:lineStyle">lineStyle</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 포인트를 연결하는 선의 유형을 설정합니다.<br/>
+  유효값은 실선에 해당하는 normal 과 점선에 해당하는 dashLine 입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:movingAveragePeriod">movingAveragePeriod</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>trendLineType 속성값이 movingAverage 인 경우 이동 평균선의 구간을 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:polynomialOrder">polynomialOrder</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>trendLineType 속성값이 polynomial 인 경우 다항식에 대한 차수를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:radius">radius</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>데이터 아이템 렌더러(itemRenderer)에 의해서 표현되는 도형의 반지름을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:rollOverRadius">rollOverRadius</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>마우스 롤 오버(rollover) 되었을 경우 데이터 아이템 렌더러(itemRenderer)에 의해서 표현되는 도형의 반지름을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:showDataEffect">showDataEffect</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>차트상에 데이터가 표현되는 모습을 보여줄 애니메이션 이펙트를 설정합니다.</p>
+     유효값은 아래와 같습니다.</td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:showErrorBar">showErrorBar</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>에러 범위에 대한 표시 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:showMaxValueLabel">showMaxValueLabel</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>labelPosition 속성에 의해서 라벨이 표시되는 경우 최대값만 표시할 지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:showMinValueLabel">showMinValueLabel</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>labelPosition 속성에 의해서 라벨이 표시되는 경우 최소값만 표시할 지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:showTrendLine">showTrendLine</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>추세선을 표시할 지 여부를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:showTrendLineEquation">showTrendLineEquation</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트상의 데이터로부터 얻어진 추세선의 표현 공식을 표시할 지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:showTrendLineRSquared">showTrendLineRSquared</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트상의 데이터로부터 얻어진 추세선의 R-squared 값을 표시할 지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:showValueLabels">showValueLabels</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+  <p>labelPosition 속성에 의해서 라벨이 표시되는 경우 지정된 데이터 아이템만 표시하도록 설정합니다.</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:sortOnXField">sortOnXField</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트에서 사용될 데이터에 대해서 X축 데이터를 기준으로 자동으로 정렬할 지 여부를 설정합니다.<br/>
+  값이 false 이면 데이터가 입력된 순서로 차트에 표현됩니다.</p>
+    <p>1.</td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:sortOnYField">sortOnYField</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트에서 사용될 데이터에 대해서 Y축 데이터를 기준으로 자동으로 정렬할 지 여부를 설정합니다.<br/>
+  값이 false 이면 데이터가 입력된 순서로 차트에 표현됩니다.</p>
+    <p>1.</td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:stroke">stroke</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>데이터 아이템 렌더러(itemRenderer)에 의해서 표현되는 도형의 선을 설정합니다.<br/>
+  유효값은 Stroke 클래스 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:styleName">styleName</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>Style 노드에서 정의한 스타일 이름을 지정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:trendLineColor">trendLineColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>추세선 공식과 R-squared 값의 텍스트 색상을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:trendLineForm">trendLineForm</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>추세선에 대한 선의 유형을 설정합니다.</p>
+    <ul>
+   <li>segment</li>
+   <li>curve</li>
+   <li>step</li>
+   <li>reverseStep</li>
+  </ul>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:trendLineLabelHorizontalAlign">trendLineLabelHorizontalAlign</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>추세선 공식과 R-squared 값 표시를 위한 수평 정렬을 지정합니다.<br/>
+  유효값은 none, left, center, right 입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:trendLineLabelOrder">trendLineLabelOrder</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>추세선 공식과 R-squared 값의 출력 순서를 지정합니다.<br/>
+  유효값은 none, reverse 입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:trendLineLabelVerticalAlign">trendLineLabelVerticalAlign</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>추세선 공식과 R-squared 값 표시를 위한 수직 정렬을 지정합니다.<br/>
+  유효값은 none, top, middle, bottom 입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:trendLineStroke">trendLineStroke</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>추세선에 대한 선의 스타일을 설정합니다.<br/>
+  유효값은 Stroke 클래스 인스턴스입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:trendLineType">trendLineType</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>추세선의 유형을 지정합니다.</p>
+    유효값은 아래와 같습니다.</td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:upLabelField">upLabelField</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>labelPosition 속성값이 up 또는 both 인 경우 라벨로 표시될 데이터 필드명을 지정합니다.<br/>
+  upLabelJsFunction 속성이 설정되어 자바스크립트에 의한 사용자 정의 라벨이 표시될 경우 이 속성은 무시됩니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:upLabelJsFunction">upLabelJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>labelPosition 속성값이 up 또는 both 인 경우 사용자 정의 라벨을 출력할 자바스크립트 함수명을 지정합니다.</p>
+    <pre>
+  예) &lt;Line2DSeries yField="Profit" upLabelJsFunction="upLabelFunc"&gt;
+  </pre>
+    <p><code>upLabelJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+  <i>function_name</i>(seriesId, index, data, values) { ...</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:upLabelXOffset">upLabelXOffset</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>labelPosition 속성값이 up 또는 both 인 경우 가로위치(X축 값)에 대한 오프셋(Offset) 값을 지정합니다.</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Line2DSeries.html#style:upLabelYOffset">upLabelYOffset</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>labelPosition 속성값이 up 또는 both 인 경우 세로위치(Y축 값)에 대한 오프셋(Offset) 값을 지정합니다.</td><td class="summaryTableOwnerCol"><a href="Line2DSeries.html">Line2DSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:userElementJsFunction">userElementJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트의 데이터 아이템들 중에서 설정된 조건을 만족하는 데이터 아이템에 대해서 실핼될 자바스크립트 함수명을 지정합니다.<br/>
+  차트 레이아웃 설정시 Series 클래스 인스턴스의 userElementJsFunction 속성값에 자바스크립트 함수명을 지정합니다.</p>
+  
+  <pre>
+  예) &lt;Column2DSeries yField="Profit" userElementJsFunction="userElementFunc"&gt;
+  </pre>
+  
+  <p><code>userElementJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+  
+  <pre>
+  <i>function_name</i>(seriesId, index, data, values) { ...</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:verticalAxis">verticalAxis</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>시리즈가 참조할 수직축을 설정합니다.<br/>
+  설정하지 않으면 차트의 verticalAxis 속성에 설정된 축을 참조합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:visible">visible</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>시리즈를 차트에 출력할 지 여부를 설정합니다.</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:xField">xField</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템의 X 좌표값(수평축에서의 위치)을 결정하는 데이터 필드명을 지정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="CartesianSeries.html#style:yField">yField</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템의 Y 좌표값(수직축에서의 위치)을 결정하는 데이터 필드명을 지정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="CartesianSeries.html">CartesianSeries</a></td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

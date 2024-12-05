@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.login.mapper.LoginMapper">
+	<resultMap id="userResultMap" type="com.fpminput.mntr.login.domain.UserVO">
+	   <result property="userId" column="USER_ID"/>
+	    <result property="compCode" column="COMP_CODE"/>
+	    <result property="userPasswd" column="USER_PASSWD"/>
+	    <result property="email" column="EMAIL"/>
+	    <result property="userType" column="USER_TYPE"/>
+	    <result property="lastLoginDate" column="LAST_LOGIN_DATE"/>
+	    <result property="passwdUpdateDate" column="PASSWD_UPDATE_DATE"/>
+	    <result property="monitorType" column="MONITOR_TYPE"/>
+	    <result property="remark" column="REMARK"/>
+	    <result property="useYn" column="USE_YN"/>
+	    <result property="passErrNum" column="PASS_ERR_NUM"/>
+	    <result property="insDt" column="INS_DT"/>
+	    <result property="insId" column="INS_ID"/>
+	    <result property="uptDt" column="UPT_DT"/>
+	    <result property="uptId" column="UPT_ID"/>
+	    <result property="grpAuthCode" column="GRP_AUTH_CODE"/>
+	    <result property="authKey" column="AUTH_KEY"/>
+	</resultMap> 
+
+	<select id="selectLogin" parameterType="java.util.HashMap" resultMap="userResultMap">
+		SELECT 
+		    A.USER_ID
+		    , COMP_CODE
+		    , USER_PASSWD
+		    , EMAIL
+		    , USER_TYPE
+		    , LAST_LOGIN_DATE
+		    , A.REMARK
+		    , A.USE_YN
+		    , PASS_ERR_NUM
+		    , A.INS_DT
+		    , A.INS_ID
+		    , A.UPT_DT
+		    , A.UPT_ID
+		    , B.MONITOR_TYPE
+		    , B.GRP_AUTH_CODE
+		    , B.AUTH_KEY
+		FROM T_USER A, T_USER_AUTH B
+		WHERE A.USER_ID = B.USER_ID
+		AND A.USER_ID=#{loginId,jdbcType=VARCHAR}
+	  	AND 1=1
+	</select>	
+	
+	<select id="checkLimitDate" parameterType="java.util.HashMap" resultType="int" >
+		SELECT COUNT(1)
+        FROM T_USER A
+        WHERE A.USER_ID=#{loginId,jdbcType=VARCHAR}
+        AND (LOGIN_LIMIT_DATE IS NULL
+        OR LOGIN_LIMIT_DATE <![CDATA[<]]>  SYSDATE 
+        )
+	</select>	
+	
+	<update id="wrongPasswd"  parameterType="java.util.HashMap">
+		UPDATE T_USER
+		SET PASS_ERR_NUM=
+		(          
+		    SELECT NVL(PASS_ERR_NUM, 0)+1 AS CNT
+		    FROM T_USER
+		    WHERE USER_ID=#{loginId,jdbcType=VARCHAR}
+		)
+		WHERE USER_ID=#{loginId,jdbcType=VARCHAR}
+	</update>
+	
+	
+	<update id="updateLimitLogin"  parameterType="java.util.HashMap">
+		UPDATE T_USER
+		SET LOGIN_LIMIT_DATE=(SYSDATE+1/144)
+		WHERE USER_ID=#{loginId,jdbcType=VARCHAR}
+	</update>
+	
+	
+	<update id="updateLastDate"  parameterType="java.util.HashMap">
+		UPDATE T_USER
+		SET LAST_LOGIN_DATE=SYSDATE
+		, PASS_ERR_NUM=0
+		WHERE USER_ID=#{loginId,jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteSso"  parameterType="java.util.HashMap">
+		DELETE FROM T_SSO_LOGIN
+	</delete>
+	
+	<insert id="insertSso"  parameterType="java.util.HashMap">
+		INSERT INTO T_SSO_LOGIN
+		VALUE
+		SELECT FN_ENCRYPT(A.USER_ID), MOB, MONITOR_TYPE
+		FROM T_USER A, T_USER_AUTH B
+		WHERE A.USER_ID = B.USER_ID 
+		AND USE_YN='Y'
+		AND USER_TYPE='M'
+		AND MONITOR_TYPE IS NOT NULL
+		AND MOB IS NOT NULL
+		AND MOB LIKE '010%'
+	</insert>
+	
+	<select id="selectSso" parameterType="java.util.HashMap" resultType="HashMap">
+		SELECT SSO_KEY, MOB, MONITOR_TYPE
+		FROM T_SSO_LOGIN
+	</select>	
+	
+	<select id="selectSsoLogin" parameterType="java.util.HashMap" resultMap="userResultMap">
+		SELECT 
+		    A.USER_ID
+		    , COMP_CODE
+		    , USER_PASSWD
+		    , EMAIL
+		    , USER_TYPE
+		    , LAST_LOGIN_DATE
+		    , A.REMARK
+		    , A.USE_YN
+		    , PASS_ERR_NUM
+		    , A.INS_DT
+		    , A.INS_ID
+		    , A.UPT_DT
+		    , A.UPT_ID
+		FROM T_USER A, T_USER_AUTH B
+		WHERE A.USER_ID = B.USER_ID
+		AND A.USER_ID=
+		TRIM((
+			SELECT FN_DECRYPT(SSO_KEY)
+			FROM T_SSO_LOGIN
+			WHERE SSO_KEY=#{sso,jdbcType=VARCHAR}
+		))
+	</select>	
+	<select id="selectIpList" resultMap="userResultMap">
+		SELECT USER_ID,COMP_CODE,USER_TYPE,USER_NM
+		FROM T_USER
+	</select>
+	
+</mapper>

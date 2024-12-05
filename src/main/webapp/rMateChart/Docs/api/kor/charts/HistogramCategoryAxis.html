@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="HistogramCategoryAxis,kor.charts.HistogramCategoryAxis" name="keywords">
+<title>kor.charts.HistogramCategoryAxis</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'HistogramCategoryAxis - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?kor/charts/HistogramCategoryAxis.html&amp;kor/charts/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;HistogramCategoryAxis</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class HistogramCategoryAxis"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor.charts</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class HistogramCategoryAxis</td>
+</tr>
+</table>
+<p></p>
+  HistogramCategoryAxis 클래스는 히스토그램 차트(Histogram2DChart)의 축 생성에 적용됩니다.
+  <pre>
+  &lt;rMateChart &gt;
+    &lt;Options&gt;
+     &lt;Caption text="Annual Report"/&gt;
+   &lt;/Options&gt;
+   &lt;Histogram2DChart showDataTips="true"&gt;
+     &lt;horizontalAxis&gt;
+      &lt;HistogramCategoryAxis categoryField="histogramXField" /&gt;
+     &lt;/horizontalAxis&gt;
+     &lt;series&gt;
+      &lt;Histogram2DSeries yField="Profit"/&gt;
+     &lt;/series&gt;
+    &lt;/Histogram2DChart&gt;
+   &lt;/rMateChart&gt;
+  </pre>
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<table id="summaryTableStyle" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:categoryField"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">categoryField</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>카테고리 축의 라벨로 표시될 데이터 필드명을 지정합니다.<br/>
+  예를 들어, 수평축(horizontalAxis)에 HistogramCategoryAxis를 설정하였다면 X축 라벨은 categoryField 속성에 지정한 데이터가 출력됩니다.</p>
+     기본값(default) :  <code>histogramXField</code>.</td><td class="summaryTableOwnerCol">HistogramCategoryAxis</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:displayName"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">displayName</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>축의 이름을 지정합니다. 설정된 값은 기본적으로 데이터팁(툴팁)에서 보여지게 됩니다.</p>
+  </td><td class="summaryTableOwnerCol">HistogramCategoryAxis</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:id"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">id</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>식별자(Identifier)를  설정합니다. 식별자(Identifier)는 사용자에 의해 정의된 임의의 고유값입니다.<br/>
+  설정된 식별자(Identifier)를 통해 해당 객체에 접근이 가능합니다.</p>
+  </td><td class="summaryTableOwnerCol">HistogramCategoryAxis</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:labelJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">labelJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+    <p>축 라벨을 사용자 정의 라벨로 표현하기 위한 자바스크립트 함수명을 지정합니다.<br/>
+  차트 레이아웃 설정시 labelJsFunction 속성값을 자바스크립트 함수명으로 지정합니다.</p>
+  <pre>
+  예) &lt;horizontalAxis&gt;
+         &lt;HistogramCategoryAxis id="hAxis" categoryField="Month" labelJsFunction="axisLabelFunc" /&gt;
+     &lt;/horizontalAxis&gt;
+  </pre>
+  <p><code>labelJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.
+    <pre>
+  <i>function_name</i>(id, value) { ... }
+    <code>id</code> : 축의 식별자(Identifier).
+  <code>value</code> : 축의 라벨값.
+   </pre>
+ </td><td class="summaryTableOwnerCol">HistogramCategoryAxis</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:padding"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">padding</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>차트의 시리즈 아이템이 출력되는 곳의 여백 크기를 설정합니다.<br/>
+  칼럼, 바 차트 계열의 기본(default) padding 값은 0.5 입니다.<br/>
+  라인, 영역 차트의 padding 값을 0으로 설정한 경우, 차트의 시리즈 아이템이 출력되는 곳의 여백은 없습니다.<br/>
+  여백의 단위는 차트의 시리즈 아이템 하나의 공간이 1 입니다.</p>
+     기본값(default) :  <code>0.5</code>.</td><td class="summaryTableOwnerCol">HistogramCategoryAxis</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:ticksBetweenLabels"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">ticksBetweenLabels</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>축 라벨을 눈금과 눈금 사이에 표시할 지 눈금과 같은 위치에 표시할 지 여부를 나타냅니다.<br/>
+  true 인 경우 눈금과 눈금 사이에 라벨을 표시합니다.</p>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">HistogramCategoryAxis</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:title"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">title</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>축의 제목을 지정합니다. 세로축인 경우 세로로 제목이 출력됩니다.</p>
+  </td><td class="summaryTableOwnerCol">HistogramCategoryAxis</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

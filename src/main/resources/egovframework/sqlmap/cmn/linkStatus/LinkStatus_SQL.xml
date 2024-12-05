@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.linkStatus.mapper.LinkStatusMapper">
+	<resultMap id="ResultMap" type="com.fpminput.mntr.linkStatus.domain.LinkStatusVO">
+		<result property="jobId"		column="JOB_ID"/>
+		<result property="jobNm"		column="JOB_NM"/>
+		<result property="jobDetil"		column="JOB_DETIL"/>
+		<result property="jobCycle"		column="JOB_CYCLE"/>
+		<result property="jobYype"		column="JOB_TYPE"/>
+		<result property="agency"		column="AGENCY"/>
+		<result property="useTbNm"		column="USE_TB_NM"/>
+		<result property="uptStat"		column="UPT_STAT"/>
+		<result property="uptDtFormat"	column="UPT_DT_FORMAT"/>
+		<result property="uptDt"		column="UPT_DT"/>
+	</resultMap>
+	
+	<!-- 연계현황 조회 -->
+	<select id="selectCheckList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			STATUS
+			, TOTAL_CNT
+			, API
+			, PRO
+			, DBL
+			, MAN
+		FROM(
+			SELECT
+				'정상' AS STATUS
+				, COUNT(1) AS TOTAL_CNT
+				, SUM(CASE WHEN JOB_TYPE = '1' THEN 1 ELSE 0 END) AS API
+				, SUM(CASE WHEN JOB_TYPE = '2' THEN 1 ELSE 0 END) AS PRO
+				, SUM(CASE WHEN JOB_TYPE = '3' THEN 1 ELSE 0 END) AS DBL
+				, SUM(CASE WHEN JOB_TYPE = '4' THEN 1 ELSE 0 END) AS MAN
+			FROM TB_JOB_LIST
+			WHERE UPT_STAT = '1'
+			GROUP BY '정상'
+			UNION ALL
+			SELECT
+				'비정상' AS STATUS
+				, COUNT(1) AS TOTAL_CNT
+				, SUM(CASE WHEN JOB_TYPE = '1' THEN 1 ELSE 0 END) AS API
+				, SUM(CASE WHEN JOB_TYPE = '2' THEN 1 ELSE 0 END) AS PRO
+				, SUM(CASE WHEN JOB_TYPE = '3' THEN 1 ELSE 0 END) AS DBL
+				, SUM(CASE WHEN JOB_TYPE = '4' THEN 1 ELSE 0 END) AS MAN
+			FROM TB_JOB_LIST
+			WHERE UPT_STAT = '2'
+			GROUP BY '비정상'
+		)ORDER BY STATUS DESC
+	</select>
+	
+	<!-- 연계현황 상세조회 :: 로그조회 -->
+	<select id="selectCheckListDetailLog" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			JOB_ID
+			, LOG_SEQ
+			,(CASE WHEN LOG_STAT = '1' THEN '성공'
+				   WHEN LOG_STAT = '2' THEN '실패'
+			END) AS LOG_STAT
+			, LOG_FAIL_RESN
+			, JOB_PRCD_NM
+			, (CASE WHEN LOG_GUBN = '1' THEN '자동'
+					WHEN LOG_GUBN = '2' THEN '수동'
+			END) AS LOG_GUBN
+			,TO_CHAR(LOG_DT, 'YYYY-MM-DD') AS LOG_DT
+		FROM TB_JOB_LOG
+		WHERE 1=1
+		<if test="jobId != null and jobId != ''">
+			AND JOB_ID = #{jobId}
+		</if>
+		<if test="logStat != null and logStat != ''">
+			AND LOG_STAT = #{logStat}
+		</if>
+		<if test="strDt != null and strDt != '' and endDt != null and endDt != ''">
+			AND LOG_DT BETWEEN TO_DATE(#{strDt}||' 000000','YYYY-MM-DD HH24MISS') AND  TO_DATE(#{endDt}|| ' 235959','YYYY-MM-DD HH24MISS')
+		</if>
+		ORDER BY LOG_SEQ DESC, LOG_DT DESC
+	</select>
+	
+	<!-- 연계현황 상세조회 :: 로그조회 -->
+	<select id="selectFailList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT FAIL_DATA, FAIL_DETAIL
+        FROM TB_JOB_FAIL
+        WHERE LOG_SEQ=#{logSeq}
+	</select>
+
+	<!-- 수동배치 실행 -->
+	<select id="selectRunManualBatchList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			JOB_ID
+			, JOB_NM
+			, JOB_DETIL
+			, JOB_CYCLE
+			, (CASE WHEN JOB_TYPE = '1' THEN 'OpenAPI'
+				WHEN JOB_TYPE = '2' THEN '프로시저'
+				WHEN JOB_TYPE = '3' THEN 'DB연계'
+				WHEN JOB_TYPE = '4' THEN '수동'
+				END) AS JOB_TYPE
+			, AGENCY
+			, USE_TB_NM
+			, (CASE WHEN UPT_STAT = '1' THEN '성공'
+				WHEN UPT_STAT = '2' THEN '실패'
+				END) AS UPT_STAT
+			, UPT_DT_FORMAT
+			, TO_CHAR(UPT_DT, 'YYYY-MM-DD') AS UPT_DT
+		FROM TB_JOB_LIST
+		WHERE 1=1
+		<if test="jobId != null and jobId != ''">
+			AND JOB_ID = #{jobId}
+		</if>
+		<if test="jobId == null or jobId == ''">
+			AND JOB_ID in ('4','5')
+		</if>
+		ORDER BY JOB_ID
+	</select>
+
+</mapper>

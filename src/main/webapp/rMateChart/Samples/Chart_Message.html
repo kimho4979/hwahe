@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>rMate Chart for HTML5 - AreaChart</title>
+
+<!-- rMateChartH5 에서 사용하는 스타일 -->
+<link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/>
+
+<script type="text/javascript">
+
+//----------------------- 차트 설정 끝 -----------------------
+</script>
+<!-- 샘플 작동을 위한 css와 js -->
+<script type="text/javascript" src="./Web/JS/common.js"></script>
+<script type="text/javascript" src="./Web/JS/sample_util.js"></script>
+<link rel="stylesheet" type="text/css" href="./Web/sample.css"/>
+
+<!-- SyntaxHighlighter -->
+<script type="text/javascript" src="./Web/syntax/shCore.js"></script>
+<script type="text/javascript" src="./Web/syntax/shBrushJScript.js"></script>
+<link type="text/css" rel="stylesheet" href="./Web/syntax/shCoreDefault.css"/>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">
+			<!--<div class="themeButtons">
+				<div class="button theme_default" onclick="rMateChartH5ChangeTheme('default')">Default</div>
+				<div class="button theme_pastel" onclick="rMateChartH5ChangeTheme('pastel')"></div>
+				<div class="button theme_simple" onclick="rMateChartH5ChangeTheme('simple')"></div>
+			</div>-->
+		</div>
+	<div id="content">
+		<div style="width:600px;height:400px;font-size:13px;font-family:'malgun gothic';color:#555555;">
+			<ul>
+				<li><b>Invalid License</b> : 정상적인 라이센스 키가 아닐 경우</font></li>
+				<li><b>This host is not autohrized</b> : 차트가 출력된 host가 라이센스 발급 시 요청한 host가 아닐 경우</li>
+				<li><b>Period has expired</b> : 라이센스 키 만료일자가 지났을 경우</li>
+				<li><b>Other versions of the license</b> : 다른 제품의 라이센스 키를 설정하고 있을 경우</li>
+				<li><b>Evaluation license</b> : 제품이 정품인데 평가판 라이센스 키를 설정하고 있는 경우</li>
+				<li><b>Trial license is required</b> : 제품이 평가판인데 라이센스 키가 평가판이 아닐 경우</li>
+				<li><b>Invalid LicenseUrl</b> : LicenseUrl이 올바르지 않을 경우</li>
+			</ul>
+			</div>
+		</div>
+	<div id="updater">
+			<div>Layout과 Data를 수정 후 적용 할 수 있습니다.</div>
+			<div id="updaterTab">
+				<ul id="updaterTabUl">
+					<li id="updaterTabUlSource" class="active_tab">Source</li>
+					<li id="updaterTabUlLayout" class="non_active_li">Layout</li>
+					<li id="updaterTabUlData" class="non_active_li">Data</li>
+					<li id="updaterTabUlBlank">
+						<span id="btn_update">수정적용</span>
+					</li>
+				</ul>
+			</div>
+			<div id="updaterTarea">
+				<pre id="updaterTareaSource" class="brush:js toolbar:false" name="updaterTareaSource"></pre>
+				<textarea id="updaterTareaLayout" class="updaterTextarea" spellcheck="false"></textarea>
+				<textarea id="updaterTareaData" class="updaterTextarea" spellcheck="false"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

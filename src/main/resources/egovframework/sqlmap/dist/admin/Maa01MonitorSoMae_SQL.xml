@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.monitor.mapper.Maa01MonitorSoMaeMapper">
+ <select id="selectMonitorSoMaeJson" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+      select * from (
+		SELECT
+		T1.COMP_CODE AS COMP_CODE
+		,ROWNUM AS RNUM
+                 ,USER_ID AS USER_ID
+                  ,COUNT(*) OVER() AS TOTAL_COUNT
+                 ,(SELECT COUNT(*) FROM T_SALEPRICE_TRAND    T     WHERE T.CHUL_NO=T1.COMP_CODE AND
+		SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND USE_YN='Y') AS JAKWANG
+              ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+              ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+                  FROM
+                  
+               		 T_USER T1
+                  
+                  WHERE
+               	    T1.USER_TYPE='M'
+               	    AND T1.USE_YN='Y'
+                  AND USER_ID NOT IN('at99999999')
+                  
+                   		)
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+</select>
+<select id="maa01MonitorSoMaeDetail" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+			SELECT 
+           B.USER_ID AS USER_ID
+      ,A.SEQ_NO AS SEQ_NO
+      , SUBSTR(A.REG_DATE ,'1','7') AS REG_DATE1
+      , REG_DATE
+      ,A.PUM_NAME AS PUM_NAME
+      ,A.GOOD_NAME AS GOOD_NAME
+      ,A.CHUL_NO AS CHUL_NO
+      ,A.SAN_CD AS SAN_CD
+      ,A.SALE_PRICE AS SALE_PRICE
+      ,A.USE_YN AS USE_YN
+      ,A.REG_DT AS REG_DT
+      ,C.SAN_NAME AS SAN_NAME
+   FROM T_SALEPRICE_TRAND A, T_USER B, T_LOCAL C
+  WHERE 1=1
+  AND A.CHUL_NO =B.COMP_CODE
+  AND A.SAN_CD=C.SAN_CD(+)
+  
+   AND B.USER_TYPE ='M'
+  AND B.USE_YN ='Y'
+  AND B.USER_ID NOT IN ('at99999999')
+  AND A.USE_YN ='Y'
+  AND SUBSTR(REPLACE(A.REG_DT,'-',''),'1','6')  =#{F_DATE}
+
+  AND B.COMP_CODE = #{COMP_CODE}
+  
+</select>
+	<update id="Maa01MonitorSoMaePopupUpdate"  parameterType="java.util.HashMap" >
+ UPDATE T_SALEPRICE_TRAND  SET 					                 
+         SALE_PRICE = #{SALE_PRICE, jdbcType=VARCHAR}        				
+			 WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+		 AND	 CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}
+		 AND	 PUM_NAME =#{PUM_NAME, jdbcType=VARCHAR} 	  
+		 AND GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR}
+		 AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+  </update>
+
+ 
+  <update id="deleteMonitorSoMaeDetail"  parameterType="java.util.HashMap" >
+		 UPDATE T_SALEPRICE_TRAND  SET 					                 
+		         USE_YN='N'				
+		 WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+		 AND	 CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}
+		 AND	 PUM_NAME =#{PUM_NAME, jdbcType=VARCHAR} 	  
+		 AND GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR}
+		 AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+  </update>  
+
+<select id="maa01MonitorSoMae_Date" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+         select * from (
+		SELECT
+		T1.COMP_CODE AS COMP_CODE
+		,ROWNUM AS RNUM
+                 ,USER_ID AS USER_ID
+                  ,COUNT(*) OVER() AS TOTAL_COUNT
+                 ,(SELECT COUNT(*) FROM T_SALEPRICE_TRAND    T     
+                 WHERE T.CHUL_NO=T1.COMP_CODE
+                 AND
+		SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND USE_YN='Y') AS JAKWANG
+              ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+              ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+                  FROM
+                  
+               		 T_USER T1
+                  
+                  WHERE
+               	    T1.USER_TYPE='M'
+               	    AND T1.USE_YN='Y'
+                  AND USER_ID NOT IN('at99999999')
+                   		)
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+</select>	
+
+<insert id="Maa01MonitorSoMaePopupInsert"  parameterType="java.util.HashMap" >
+ 	  INSERT INTO T_SALEPRICE_TRAND
+       ( 
+            SEQ_NO
+            ,REG_DATE                    
+            ,PUM_NAME            
+            ,GOOD_NAME            
+            ,CHUL_NO            
+            ,SAN_CD                        
+            ,SALE_PRICE       
+            ,REG_DT     
+       ) 
+       VALUES 
+       (   SALE_SEQ.NEXTVAL
+           , #{REG_DATE, jdbcType=VARCHAR}
+            ,#{PUM_NAME, jdbcType=VARCHAR}
+            ,#{GOOD_NAME, jdbcType=VARCHAR}           
+            ,#{COMP_CODE, jdbcType=VARCHAR}                                         
+            ,#{SAN_CD, jdbcType=VARCHAR}
+            ,#{SALE_PRICE, jdbcType=VARCHAR}  
+            ,(select to_char(sysdate,'yyyy-mm-dd') from dual)                     
+       ) 
+ </insert>
+
+</mapper>

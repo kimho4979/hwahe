@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="txManager1" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource1"/>
+	</bean>
+	
+	<bean id="txManager2" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="txManager3" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource3"/>
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="*" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<tx:advice id="txAdvice1" transaction-manager="txManager1">
+		<tx:attributes>
+			<tx:method name="*" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<tx:advice id="txAdvice2" transaction-manager="txManager2">
+		<tx:attributes>
+			<tx:method name="*" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<tx:advice id="txAdvice3" transaction-manager="txManager3">
+		<tx:attributes>
+			<tx:method name="*" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="requiredTx" expression="execution(* com..*Impl.*(..)) or
+												  execution(* egovframework.rte.fdl.excel.impl.*Impl.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="requiredTx" />
+	</aop:config>
+	
+	<aop:config>
+		<aop:pointcut id="requiredTx1" expression="execution(* com..*Impl.*(..)) or
+												  execution(* egovframework.rte.fdl.excel.impl.*Impl.*(..))"/>
+		<aop:advisor advice-ref="txAdvice1" pointcut-ref="requiredTx1" />
+	</aop:config>
+	
+	<aop:config>
+		<aop:pointcut id="requiredTx2" expression="execution(* com..*Impl.*(..)) or
+												  execution(* egovframework.rte.fdl.excel.impl.*Impl.*(..))"/>
+		<aop:advisor advice-ref="txAdvice2" pointcut-ref="requiredTx2" />
+	</aop:config>
+	
+	<aop:config>
+		<aop:pointcut id="requiredTx3" expression="execution(* com..*Impl.*(..)) or
+												  execution(* egovframework.rte.fdl.excel.impl.*Impl.*(..))"/>
+		<aop:advisor advice-ref="txAdvice3" pointcut-ref="requiredTx3" />
+	</aop:config>
+
+</beans>

@@ -1,0 +1,770 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hga06_new.mapper.Hga06_newMapper">
+
+	<resultMap id="resultHga06_newMap" type="com.fpdisys.dist.hga06_new.domain.Hga06_newVO">
+		<result property="dtNew" 	column="DT_NEW"/>
+		<result property="dtAgo" 	column="DT_AGO"/>
+		<result property="dtmm" 	column="DTMM"/>
+		<result property="expWgt1"	column="EXP_WGT1"/>		
+		<result property="impWgt3" 	column="IMP_WGT3"/>		
+		<result property="expWgt5" 	column="EXP_WGT5"/>		
+		<result property="impWgt7" 	column="IMP_WGT7"/>		
+		<result property="balPay" 	column="BAL_PAY"/>
+		<result property="yyyymm" 	column="YYYYMM"/>
+		<result property="hsCd" 	column="HS_CD"/>
+		<result property="statKor" 	column="STAT_KOR"/>
+		<result property="expQty" 	column="EXP_QTY"/>
+		<result property="expPrc" 	column="EXP_PRC"/>
+		<result property="impQty" 	column="IMP_QTY"/>
+		<result property="impPrc" 	column="IMP_PRC"/>
+		<result property="regDt" 	column="REG_DT"/>
+		<result property="natCnt"	column="NAT_CNT"/>
+		<result property="natNm"	column="NAT_NM"/>
+		<result property="yyyy" 	column="YYYY"/>
+		<result property="mm"		column="MM"/>
+		<result property="expNatNm"	column="EXP_NAT_NM"/>
+		<result property="impNatNm"	column="IMP_NAT_NM"/>
+		
+						
+	</resultMap>
+	
+	<resultMap id="resultHga06_newMap2" type="com.fpdisys.dist.hga06_new.domain.Hga06_newVO">
+		<result property="natNm"	column="NAT_NM"/>
+		<result property="expQty1"	column="EXP_QTY1"/>
+		<result property="expPrc1"	column="EXP_PRC1"/>
+		<result property="expQty2"	column="EXP_QTY2"/>
+		<result property="expPrc2" 	column="EXP_PRC2"/>
+		<result property="expQty3"	column="EXP_QTY3"/>
+		<result property="expPrc3"	column="EXP_PRC3"/>
+		<result property="expQty4"	column="EXP_QTY4"/>
+		<result property="expPrc4"	column="EXP_PRC4"/>
+		<result property="expQty5"	column="EXP_QTY5"/>
+		<result property="expPrc5"	column="EXP_PRC5"/>
+		<result property="expQty6"	column="EXP_QTY6"/>
+		<result property="expPrc6" 	column="EXP_PRC6"/>
+		<result property="expQty7"	column="EXP_QTY7"/>
+		<result property="expPrc7"	column="EXP_PRC7"/>
+		<result property="expQty8"	column="EXP_QTY8"/>
+		<result property="expPrc8"	column="EXP_PRC8"/>
+		<result property="expQty9"	column="EXP_QTY9"/>
+		<result property="expPrc9"	column="EXP_PRC9"/>
+		<result property="expQty10" column="EXP_QTY10"/>
+		<result property="expPrc10" column="EXP_PRC10"/>
+		<result property="expQty11" column="EXP_QTY11"/>
+		<result property="expPrc11" column="EXP_PRC11"/>
+		<result property="expQty12" column="EXP_QTY12"/>
+		<result property="expPrc12" column="EXP_PRC12"/>
+		<result property="impexpGubun" column="IMPEXP_GUBUN"/>
+	</resultMap>
+	
+	<resultMap id="resultHga06_newMap3" type="com.fpdisys.dist.hga06_new.domain.Hga06_newVO">
+		<result property="natCnt"	column="NAT_CNT"/>
+		<result property="yyyy" 	column="YYYY"/>
+		<result property="mm"		column="MM"/>
+		<result property="yyyymm" 	column="YYYYMM"/>
+	</resultMap>
+	
+	<resultMap id="resultHga06_newMap4" type="com.fpdisys.dist.hga06_new.domain.Hga06_newVO">
+		<result property="natNm"	column="NAT_NM"/>
+		<result property="impQty1"	column="IMP_QTY1"/> 
+		<result property="impPrc1"	column="IMP_PRC1"/>
+		<result property="impQty2"	column="IMP_QTY2"/>
+		<result property="impPrc2"	column="IMP_PRC2"/>
+		<result property="impQty3"	column="IMP_QTY3"/>
+		<result property="impPrc3"	column="IMP_PRC3"/>
+		<result property="impQty4"	column="IMP_QTY4"/>
+		<result property="impPrc4" 	column="IMP_PRC4"/>
+		<result property="impQty5"	column="IMP_QTY5"/>
+		<result property="impPrc5"	column="IMP_PRC5"/>
+		<result property="impQty6"	column="IMP_QTY6"/>
+		<result property="impPrc6"	column="IMP_PRC6"/>
+		<result property="impQty7"	column="IMP_QTY7"/>
+		<result property="impPrc7"	column="IMP_PRC7"/>
+		<result property="impQty8"	column="IMP_QTY8"/>
+		<result property="impPrc8" 	column="IMP_PRC8"/>
+		<result property="impQty9"	column="IMP_QTY9"/>
+		<result property="impPrc9"	column="IMP_PRC9"/>
+		<result property="impQty10" column="IMP_QTY10"/>
+		<result property="impPrc10" column="IMP_PRC10"/>
+		<result property="impQty11" column="IMP_QTY11"/>
+		<result property="impPrc11" column="IMP_PRC11"/>
+		<result property="impQty12" column="IMP_QTY12"/>
+		<result property="impPrc12" column="IMP_PRC12"/>
+		<result property="impexpGubun" column="IMPEXP_GUBUN"/>
+	</resultMap>
+
+	<!-- 화훼 수출입 동향분석 :: MAX 날짜 가져오기 -->
+	<select id="selectGetDate" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT MAX(TO_CHAR(TO_DATE(YYYYMM,'YYYY-MM'),'YYYY-MM')) AS YYYYMM FROM TB_IMPEXP_RAW
+	</select>
+	
+	<!-- 화훼 수출입 동향분석 :: 품목 List -->
+	<select id="selectGetItem" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT HS_CD, HS_NM, ORDERING
+		FROM
+		(
+		    SELECT SUBSTR(YYYYMM, 0,4) YYYY
+		       , SUBSTR(YYYYMM, 5,2) MM
+		       , DECODE(B.HS_CD, NULL, A.HS_CD,'-',A.HS_CD, B.HS_CD) HS_CD
+		       , DECODE(B.HS_NM, NULL, STAT_KOR,'-',STAT_KOR, B.HS_NM) HS_NM,
+		       EXP_WGT, EXP_PRC, IMP_WGT, 
+		       IMP_PRC, BAL_PAY, A.REG_DT, 1 ORDERING
+		    FROM TB_IMPEXP_RAW A, 
+		    (
+		        SELECT 
+		        HS_CD, HS_NM, USE_YN, 
+		           REG_DT, UPT_DT
+		        FROM TB_IMPEXP_HSCD
+		        WHERE USE_YN='Y'
+		    ) B
+		    WHERE 1=1
+		    AND A.HS_CD  <![CDATA[<>]]> '-'
+		    AND A.HS_CD = B.HS_CD(+)
+		)
+		WHERE HS_NM LIKE '%절화%'
+		GROUP BY HS_CD, HS_NM, ORDERING
+		UNION ALL
+		SELECT HS_CD, HS_NM, ORDERING
+		FROM
+		(
+		    SELECT SUBSTR(YYYYMM, 0,4) YYYY
+		       , SUBSTR(YYYYMM, 5,2) MM
+		       , DECODE(B.HS_CD, NULL, A.HS_CD,'-',A.HS_CD, B.HS_CD) HS_CD
+		       , DECODE(B.HS_NM, NULL, STAT_KOR,'-',STAT_KOR, B.HS_NM) HS_NM,
+		       EXP_WGT, EXP_PRC, IMP_WGT, 
+		       IMP_PRC, BAL_PAY, A.REG_DT, 2 ORDERING   
+		    FROM TB_IMPEXP_RAW A, 
+		    (
+		        SELECT 
+		        HS_CD, HS_NM, USE_YN, 
+		           REG_DT, UPT_DT
+		        FROM TB_IMPEXP_HSCD
+		        WHERE USE_YN='Y'
+		    ) B
+		    WHERE 1=1
+		    AND A.HS_CD  <![CDATA[<>]]> '-'
+		    AND A.HS_CD = B.HS_CD(+)
+		)
+		WHERE HS_NM NOT LIKE '%절화%'
+		GROUP BY HS_CD, HS_NM, ORDERING
+		ORDER BY ORDERING, HS_CD, HS_NM
+	</select>
+	
+	<!-- 화훼 수출입 동향분석 List -->
+	<select id="selectTrendAnalysisList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT SUBSTR(AB.DT, 3, 2)||'-'||SUBSTR(AB.DT, 5, 2) AS DT_NEW,       
+		       AB.DTMM ,
+		       AB.NAT_NM ,
+		       NVL(MAX(AB.EXP_WGT1), '0') AS EXP_WGT1 ,
+		       NVL(MAX(AB.EXP_PRC2), '0') AS EXP_PRC2 ,
+		       NVL(MAX(AB.IMP_WGT3), '0') AS IMP_WGT3 ,
+		       NVL(MAX(AB.IMP_PRC4), '0') AS IMP_PRC4 ,
+		       NVL (MAX (AB.EXP_PRC2), '0')-NVL (MAX (AB.IMP_PRC4), '0') AS BAL_PAY
+		  FROM (SELECT B.DT ,
+		               B.DTMM ,
+		               A.*
+		          FROM (SELECT NVL(T1.YYYYMM, '-') AS YYYYMM ,
+		                       NVL(SUBSTR(T1.YYYYMM, 0, 4), '-') AS YYYY ,
+		                       SUBSTR(T1.YYYYMM, 5, 2) AS MM ,
+		                       ROUND(SUM(T1.EXP_WGT)/1000, 0) AS EXP_WGT1 ,
+		                       ROUND(SUM(T1.EXP_PRC)/1000, 0) AS EXP_PRC2 ,
+		                       ROUND(SUM(T1.IMP_WGT)/1000, 0) AS IMP_WGT3 ,
+		                       ROUND(SUM(T1.IMP_PRC)/1000, 0) AS IMP_PRC4 ,
+		                       T3.NAT_NM 
+		                  FROM TB_IMPEXP_RAW T1 LEFT OUTER JOIN TB_IMPEXP_HSCD T2 ON T1.HS_CD = T2.HS_CD
+		                       JOIN TB_PLNT_QRT_IMP T3 ON T1.YYYYMM = T3.YYYYMM AND T1.HS_CD = T3.HS_CD
+		                 WHERE 1=1
+		                   AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDate}, '-', '')
+		                   AND T1.HS_CD <![CDATA[<>]]> '-'
+						   <if test="itemCd != null and itemCd != ''">
+						   AND T1.HS_CD = #{itemCd}
+						   </if>
+		                 GROUP BY T1.YYYYMM, SUBSTR(T1.YYYYMM, 0, 4), SUBSTR(T1.YYYYMM, 5, 2), T3.NAT_NM ) A,
+		               (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYYMM') AS DT ,
+		                       TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYY') AS DTYY ,
+		                       TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate}, '-', ''), 'YYYYMM'), LEVEL-12), 'MM') AS DTMM
+		                  FROM DUAL CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDate}, '-', ''), 'YYYYMM'), ADD_MONTHS(TO_DATE(REPLACE(#{searchDate}, '-', ''), 'YYYYMM'), LEVEL-24)) ) B
+		         WHERE A.YYYYMM(+) = B.DT ) AB
+		  GROUP BY AB.DT, AB.DTMM, AB.NAT_NM
+		 ORDER BY AB.DT, AB.NAT_NM 
+				
+	</select>
+	
+	<!-- 화훼 수출입 동향분석 List :: Excel -->
+	<select id="selectTrendAnalysisListExcel" resultType="com.fpdisys.dist.hga06_new.domain.Hga06_newVO" resultMap="resultHga06_newMap">
+		SELECT
+			SUBSTR(AB.DT,0,4)||'-'||SUBSTR(AB.DT,5,2) AS DT_NEW
+			, CD.DT AS DT_AGO
+			, AB.DTMM
+			, NVL(MAX(AB.EXP_WGT1),'0') AS EXP_WGT1
+			, NVL(MAX(AB.EXP_PRC2),'0') AS EXP_PRC2
+			, NVL(MAX(AB.IMP_WGT3),'0') AS IMP_WGT3
+			, NVL(MAX(AB.IMP_PRC4),'0') AS IMP_PRC4
+			, NVL(MAX(CD.EXP_WGT1),'0') AS EXP_WGT5
+			, NVL(MAX(CD.EXP_PRC2),'0') AS EXP_PRC6
+			, NVL(MAX(CD.IMP_WGT3),'0') AS IMP_WGT7
+			, NVL(MAX(CD.IMP_PRC4),'0') AS IMP_PRC8
+			, NVL (MAX (AB.EXP_PRC2), '0')-NVL (MAX (AB.IMP_PRC4), '0') AS BAL_PAY
+		FROM 
+		(
+			SELECT
+			B.DT
+			,B.DTMM
+			, A.*
+			FROM
+			(
+				SELECT
+					NVL(T1.YYYYMM,'-') AS YYYYMM
+					, NVL(SUBSTR(T1.YYYYMM, 0,4),'-') AS YYYY
+					, SUBSTR(T1.YYYYMM, 5,2) AS MM
+					, ROUND(SUM(T1.EXP_WGT)/1000,0) AS EXP_WGT1
+					, ROUND(SUM(T1.EXP_PRC)/1000,0) AS EXP_PRC2
+					, ROUND(SUM(T1.IMP_WGT)/1000,0) AS IMP_WGT3
+					, ROUND(SUM(T1.IMP_PRC)/1000,0) AS IMP_PRC4
+				FROM TB_IMPEXP_RAW T1
+				LEFT OUTER JOIN TB_IMPEXP_HSCD T2 ON T1.HS_CD = T2.HS_CD
+				WHERE 1=1
+				AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+				AND T1.HS_CD <![CDATA[<>]]> '-'
+				<if test="itemCd != null and itemCd != ''">
+					AND T1.HS_CD = #{itemCd}
+				</if>
+				GROUP BY T1.YYYYMM, SUBSTR(T1.YYYYMM, 0,4), SUBSTR(T1.YYYYMM, 5,2)
+			) A,
+			(
+				SELECT 
+					TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'YYYYMM') AS DT
+					, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'YYYY') AS DTYY
+					, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'MM') AS DTMM
+				FROM DUAL
+				CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),LEVEL-24))
+			) B
+			WHERE A.YYYYMM(+) = B.DT
+			) AB,
+		    (
+				SELECT 
+					D.DT
+					, D.DTMM
+					, C.*
+				FROM
+				(
+					SELECT
+						NVL(T1.YYYYMM,'-') AS YYYYMM
+						, NVL(SUBSTR(T1.YYYYMM, 0,4),'-') AS YYYY
+						, SUBSTR(T1.YYYYMM, 5,2) AS MM
+						, ROUND(SUM(T1.EXP_WGT)/1000,0) AS EXP_WGT1
+						, ROUND(SUM(T1.EXP_PRC)/1000,0) AS EXP_PRC2
+						, ROUND(SUM(T1.IMP_WGT)/1000,0) AS IMP_WGT3
+						, ROUND(SUM(T1.IMP_PRC)/1000,0) AS IMP_PRC4
+					FROM TB_IMPEXP_RAW T1
+					LEFT OUTER JOIN TB_IMPEXP_HSCD T2 ON T1.HS_CD = T2.HS_CD
+					WHERE 1=1
+					AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+					AND T1.HS_CD <![CDATA[<>]]> '-'
+					<if test="itemCd != null and itemCd != ''">
+						AND T1.HS_CD = #{itemCd}
+					</if>
+					group by T1.YYYYMM, SUBSTR(T1.YYYYMM, 0,4), SUBSTR(T1.YYYYMM, 5,2)
+				) C,
+				(
+					SELECT 
+						TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-23),'YYYYMM') AS DT
+						, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-23),'YYYY') AS DTYY
+						, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-23),'MM') AS DTMM
+					FROM DUAL
+					CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),LEVEL-24))
+				) D
+			WHERE C.YYYYMM(+) = D.DT
+			) CD
+		WHERE 1=1 
+		AND AB.DTMM(+) = CD.DTMM
+		GROUP BY AB.DT, CD.DT, AB.DTMM
+		ORDER BY AB.DT
+	</select>
+	
+	<!-- 수출 금액/물량 -->
+	<select id="selectExp" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	WITH TEMP_DATA AS (
+	    SELECT
+	          T1.YYYYMM
+	        , T1.HS_CD
+	        , T1.NAT_CD
+	        , T1.STAT_KOR
+	        , T1.EXP_WGT
+	        , T1.EXP_PRC
+	        , T1.IMP_WGT
+	        , T1.IMP_PRC
+	    FROM TB_IMPEXP_RAW T1
+	    WHERE 1=1
+	    AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDateM},'-','')
+	    <if test="itemCd != null and itemCd != ''">
+	    AND	T1.HS_CD = #{itemCd}
+	    </if>
+	)
+	SELECT NAT_NM, 
+	       '수출' AS IMPEXP_GUBUN,
+	       DECODE(NVL(MAX(DECODE(RNK, 1, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 1, EXP_QTY, NULL)), '')) AS EXP_QTY1,
+	       DECODE(NVL(MAX(DECODE(RNK, 1, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 1, EXP_PRC, NULL)), '')) AS EXP_PRC1,
+	       DECODE(NVL(MAX(DECODE(RNK, 2, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 2, EXP_QTY, NULL)), '')) AS EXP_QTY2,
+	       DECODE(NVL(MAX(DECODE(RNK, 2, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 2, EXP_PRC, NULL)), '')) AS EXP_PRC2,
+	       DECODE(NVL(MAX(DECODE(RNK, 3, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 3, EXP_QTY, NULL)), '')) AS EXP_QTY3,
+	       DECODE(NVL(MAX(DECODE(RNK, 3, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 3, EXP_PRC, NULL)), '')) AS EXP_PRC3,
+	       DECODE(NVL(MAX(DECODE(RNK, 4, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 4, EXP_QTY, NULL)), '')) AS EXP_QTY4,
+	       DECODE(NVL(MAX(DECODE(RNK, 4, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 4, EXP_PRC, NULL)), '')) AS EXP_PRC4,
+	       DECODE(NVL(MAX(DECODE(RNK, 5, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 5, EXP_QTY, NULL)), '')) AS EXP_QTY5,
+	       DECODE(NVL(MAX(DECODE(RNK, 5, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 5, EXP_PRC, NULL)), '')) AS EXP_PRC5,
+	       DECODE(NVL(MAX(DECODE(RNK, 6, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 6, EXP_QTY, NULL)), '')) AS EXP_QTY6,
+	       DECODE(NVL(MAX(DECODE(RNK, 6, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 6, EXP_PRC, NULL)), '')) AS EXP_PRC6,
+	       DECODE(NVL(MAX(DECODE(RNK, 7, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 7, EXP_QTY, NULL)), '')) AS EXP_QTY7,
+	       DECODE(NVL(MAX(DECODE(RNK, 7, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 7, EXP_PRC, NULL)), '')) AS EXP_PRC7,
+	       DECODE(NVL(MAX(DECODE(RNK, 8, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 8, EXP_QTY, NULL)), '')) AS EXP_QTY8,
+	       DECODE(NVL(MAX(DECODE(RNK, 8, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 8, EXP_PRC, NULL)), '')) AS EXP_PRC8,
+	       DECODE(NVL(MAX(DECODE(RNK, 9, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 9, EXP_QTY, NULL)), '')) AS EXP_QTY9,
+	       DECODE(NVL(MAX(DECODE(RNK, 9, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 9, EXP_PRC, NULL)), '')) AS EXP_PRC9,
+	       DECODE(NVL(MAX(DECODE(RNK, 10, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 10, EXP_QTY, NULL)), '')) AS EXP_QTY10,
+	       DECODE(NVL(MAX(DECODE(RNK, 10, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 10, EXP_PRC, NULL)), '')) AS EXP_PRC10,
+	       DECODE(NVL(MAX(DECODE(RNK, 11, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 11, EXP_QTY, NULL)), '')) AS EXP_QTY11,
+	       DECODE(NVL(MAX(DECODE(RNK, 11, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 11, EXP_PRC, NULL)), '')) AS EXP_PRC11,
+	       DECODE(NVL(MAX(DECODE(RNK, 12, EXP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 12, EXP_QTY, NULL)), '')) AS EXP_QTY12,
+	       DECODE(NVL(MAX(DECODE(RNK, 12, EXP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 12, EXP_PRC, NULL)), '')) AS EXP_PRC12
+	FROM (       
+			SELECT NVL(SUBSTR(T1.YYYYMM,3,2)||'-'||SUBSTR(T1.YYYYMM,5,2), '-') AS YYYYMM ,
+			       NVL(SUBSTR(T1.YYYYMM, 0, 4), '-') AS YYYY ,
+			       SUBSTR(T1.YYYYMM, 5, 2) AS MM ,
+			       ROUND(SUM(T1.EXP_WGT * (T3.EXP_RATE / 100))/1000, 0) AS EXP_QTY ,
+			       ROUND(SUM(T1.EXP_PRC * (T3.EXP_RATE / 100))/1000, 0) AS EXP_PRC ,
+			       T3.NAT_NM AS NAT_NM,
+			       T4.RNK,
+			       <if test= 'type2 == "sQty"'>
+			       ROW_NUMBER() OVER(PARTITION BY NVL(SUBSTR(T1.YYYYMM,3,2)||'-'||SUBSTR(T1.YYYYMM,5,2), '-') ORDER BY ROUND(SUM(T1.EXP_WGT * (T3.EXP_RATE / 100))/1000, 0) DESC) AS ROW_NUM
+			       </if>
+			       <if test= 'type2 == "sPrc"'>
+			       ROW_NUMBER() OVER(PARTITION BY NVL(SUBSTR(T1.YYYYMM,3,2)||'-'||SUBSTR(T1.YYYYMM,5,2), '-') ORDER BY ROUND(SUM(T1.EXP_PRC * (T3.EXP_RATE / 100))/1000, 0) DESC) AS ROW_NUM
+			       </if>
+			  FROM TEMP_DATA T1 
+			     , TB_IMPEXP_HSCD T2
+			     , (SELECT YYYYMM, HS_CD, NAT_NM, ROUND(NVL((QTY*100)/DECODE(SQTY, 0, NULL, SQTY), 0),1) AS EXP_RATE
+			          FROM (SELECT A.YYYYMM, A.HS_CD, A.PLNT_NM, A.NAT_NM, A.QTY, SUM(A.QTY) OVER (PARTITION BY A.YYYYMM, A.HS_CD) AS SQTY
+			                  FROM (SELECT A1.YYYYMM
+                                         , A1.HS_CD
+                                         , A1.STAT_KOR AS PLNT_NM
+                                         , (SELECT CD_NM FROM TB_CM_CODE X WHERE X.CD_ID = A1.NAT_CD) AS NAT_NM
+                                         <if test= 'type2 == "sQty"'>
+                                         , SUM(EXP_WGT) AS QTY
+                                         </if>
+                                         <if test= 'type2 == "sPrc"'>
+                                         , SUM(EXP_PRC) AS QTY
+                                         </if>
+			                          FROM TEMP_DATA A1,
+			                               TB_IMPEXP_HSCD  A2
+			                         WHERE A1.HS_CD = A2.HS_CD
+                                       AND LENGTH(A1.HS_CD) > 6
+                                       AND (
+                                            LENGTH(A1.HS_CD) > 6
+                                            OR (
+                                                LENGTH(A1.HS_CD) = 6
+                                                AND NOT EXISTS (
+                                                    SELECT 1
+                                                      FROM TEMP_DATA X
+                                                     WHERE SUBSTR(X.HS_CD, 1, 6) = A1.HS_CD
+                                                       AND X.NAT_CD = A1.NAT_CD 
+                                                       AND X.YYYYMM = A1.YYYYMM
+                                                       AND LENGTH(X.HS_CD) > 6
+                                                )
+                                            )
+                                        )
+			                           AND A1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+			                         GROUP BY A1.YYYYMM, A1.HS_CD, A1.STAT_KOR, A1.NAT_CD
+                                     ) A
+                      )
+			                       
+			       ) T3
+			     , (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYYMM') AS DT ,
+			               TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYY') AS DTYY ,
+			               TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'MM') AS DTMM,
+			               RANK() OVER(ORDER BY TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYYMM')) AS RNK
+			          FROM DUAL CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-24))
+			       ) T4
+			 WHERE T4.DT = T1.YYYYMM(+)
+			   AND T1.HS_CD = T2.HS_CD
+			   AND T1.YYYYMM = T3.YYYYMM
+			   AND T1.HS_CD = T3.HS_CD
+			   AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+			 GROUP BY T1.YYYYMM, SUBSTR(T1.YYYYMM, 0, 4), SUBSTR(T1.YYYYMM, 5, 2), T3.NAT_NM, T4.RNK
+	)
+	<if test= 'type2 == "sQty"'>
+	WHERE EXP_QTY <![CDATA[>]]> 0
+	</if>
+	<if test= 'type2 == "sPrc"'>
+	WHERE EXP_PRC <![CDATA[>]]> 0
+	</if>
+	
+	GROUP BY NAT_NM
+	ORDER BY NAT_NM		 
+	</select>
+		
+	<!-- 수출 월별 국가 수 -->
+	<select id="selectExpNatCnt" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT YYYYMM, YYYY, MM, COUNT(NAT_NM) AS NAT_CNT
+		  FROM (SELECT NVL(SUBSTR(T4.DT,3,2)||'-'||SUBSTR(T4.DT,5,2), '-') AS YYYYMM ,
+		               NVL(SUBSTR(T4.DT, 0, 4), '-') AS YYYY ,
+		               SUBSTR(T4.DT, 5, 2) AS MM ,
+		               T3.NAT_NM AS NAT_NM
+		          FROM TB_IMPEXP_RAW T1 
+		             , TB_IMPEXP_HSCD T2
+		             , (SELECT YYYYMM, HS_CD, NAT_NM, ROUND(NVL((QTY*100)/DECODE(SQTY, 0, NULL, SQTY), 0),1) AS EXP_RATE
+		                  FROM (SELECT A.YYYYMM, A.HS_CD, B.PLNT_NM, B.NAT_NM, B.QTY, SUM(B.QTY) OVER (PARTITION BY A.YYYYMM, A.HS_CD) AS SQTY
+		                          FROM (SELECT A1.YYYYMM, A1.HS_CD, MAX(A1.PLNT_NM) AS PLNT_NM
+		                                  FROM FLOWER.TB_PLNT_QRT_IMP A1,
+		                                       FLOWER.TB_IMPEXP_HSCD  A2
+		                                 WHERE A1.HS_CD = A2.HS_CD
+		                                   AND A1.HS_CD <![CDATA[<>]]> '-'
+		                                   AND A1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE('2022-07', '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE('2022-07', '-', '')
+		                                 GROUP BY A1.YYYYMM, A1.HS_CD) A,
+		                               (SELECT PLNT_NM, NAT_NM, SUM(INS_QTY) AS QTY
+		                                  FROM FLOWER.TB_PLNT_QRT_EXP
+		                                 WHERE YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE('2022-07', '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE('2022-07', '-', '')
+		                                 GROUP BY PLNT_NM, NAT_NM) B   
+		                         WHERE A.PLNT_NM = B.PLNT_NM)
+		               ) T3
+		             , (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYYMM') AS DT ,
+		                       TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYY') AS DTYY ,
+		                       TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'MM') AS DTMM
+		                  FROM DUAL CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-24))
+		               ) T4  
+		         WHERE T4.DT = T1.YYYYMM(+)
+		           AND T1.HS_CD = T2.HS_CD(+)
+		           AND T1.YYYYMM = T3.YYYYMM(+)
+		           AND T1.HS_CD = T3.HS_CD(+)
+		           AND T4.DT BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+		           AND T1.HS_CD(+) <![CDATA[<>]]> '-'
+		         GROUP BY T4.DT, T3.NAT_NM
+		       )
+		 GROUP BY YYYYMM, YYYY, MM
+		 ORDER BY YYYYMM
+	</select>
+	
+	<!-- 수입 금액/물량 -->
+	<select id="selectImp" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		WITH TEMP_DATA AS (
+		    SELECT
+		          T1.YYYYMM
+		        , T1.HS_CD
+		        , T1.NAT_CD
+		        , T1.STAT_KOR
+		        , T1.EXP_WGT
+		        , T1.EXP_PRC
+		        , T1.IMP_WGT
+		        , T1.IMP_PRC
+		    FROM TB_IMPEXP_RAW T1
+		    WHERE 1=1
+		    AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDateM},'-','')
+		    <if test="itemCd != null and itemCd != ''">
+	    	AND T1.HS_CD = #{itemCd}
+	    	</if>
+		    
+		)		
+		SELECT NAT_NM,
+			   '수입' AS IMPEXP_GUBUN,
+		       DECODE(NVL(MAX(DECODE(RNK, 1, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 1, IMP_QTY, NULL)), '')) AS IMP_QTY1,
+		       DECODE(NVL(MAX(DECODE(RNK, 1, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 1, IMP_PRC, NULL)), '')) AS IMP_PRC1,
+		       DECODE(NVL(MAX(DECODE(RNK, 2, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 2, IMP_QTY, NULL)), '')) AS IMP_QTY2,
+		       DECODE(NVL(MAX(DECODE(RNK, 2, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 2, IMP_PRC, NULL)), '')) AS IMP_PRC2,
+		       DECODE(NVL(MAX(DECODE(RNK, 3, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 3, IMP_QTY, NULL)), '')) AS IMP_QTY3,
+		       DECODE(NVL(MAX(DECODE(RNK, 3, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 3, IMP_PRC, NULL)), '')) AS IMP_PRC3,
+		       DECODE(NVL(MAX(DECODE(RNK, 4, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 4, IMP_QTY, NULL)), '')) AS IMP_QTY4,
+		       DECODE(NVL(MAX(DECODE(RNK, 4, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 4, IMP_PRC, NULL)), '')) AS IMP_PRC4,
+		       DECODE(NVL(MAX(DECODE(RNK, 5, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 5, IMP_QTY, NULL)), '')) AS IMP_QTY5,
+		       DECODE(NVL(MAX(DECODE(RNK, 5, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 5, IMP_PRC, NULL)), '')) AS IMP_PRC5,
+		       DECODE(NVL(MAX(DECODE(RNK, 6, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 6, IMP_QTY, NULL)), '')) AS IMP_QTY6,
+		       DECODE(NVL(MAX(DECODE(RNK, 6, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 6, IMP_PRC, NULL)), '')) AS IMP_PRC6,
+		       DECODE(NVL(MAX(DECODE(RNK, 7, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 7, IMP_QTY, NULL)), '')) AS IMP_QTY7,
+		       DECODE(NVL(MAX(DECODE(RNK, 7, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 7, IMP_PRC, NULL)), '')) AS IMP_PRC7,
+		       DECODE(NVL(MAX(DECODE(RNK, 8, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 8, IMP_QTY, NULL)), '')) AS IMP_QTY8,
+		       DECODE(NVL(MAX(DECODE(RNK, 8, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 8, IMP_PRC, NULL)), '')) AS IMP_PRC8,
+		       DECODE(NVL(MAX(DECODE(RNK, 9, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 9, IMP_QTY, NULL)), '')) AS IMP_QTY9,
+		       DECODE(NVL(MAX(DECODE(RNK, 9, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 9, IMP_PRC, NULL)), '')) AS IMP_PRC9,
+		       DECODE(NVL(MAX(DECODE(RNK, 10, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 10, IMP_QTY, NULL)), '')) AS IMP_QTY10,
+		       DECODE(NVL(MAX(DECODE(RNK, 10, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 10, IMP_PRC, NULL)), '')) AS IMP_PRC10,
+		       DECODE(NVL(MAX(DECODE(RNK, 11, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 11, IMP_QTY, NULL)), '')) AS IMP_QTY11,
+		       DECODE(NVL(MAX(DECODE(RNK, 11, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 11, IMP_PRC, NULL)), '')) AS IMP_PRC11,
+		       DECODE(NVL(MAX(DECODE(RNK, 12, IMP_QTY, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 12, IMP_QTY, NULL)), '')) AS IMP_QTY12,
+		       DECODE(NVL(MAX(DECODE(RNK, 12, IMP_PRC, NULL)), 0), 0, ' ', NVL(MAX(DECODE(RNK, 12, IMP_PRC, NULL)), '')) AS IMP_PRC12
+		  FROM (
+				SELECT NVL(SUBSTR(T1.YYYYMM,3,2)||'-'||SUBSTR(T1.YYYYMM,5,2), '-') AS YYYYMM ,
+				       NVL(SUBSTR(T1.YYYYMM, 0, 4), '-') AS YYYY ,
+				       SUBSTR(T1.YYYYMM, 5, 2) AS MM ,
+				       ROUND(SUM(T1.IMP_WGT * (T3.IMP_RATE / 100))/1000, 0) AS IMP_QTY ,
+				       ROUND(SUM(T1.IMP_PRC * (T3.IMP_RATE / 100))/1000, 0) AS IMP_PRC ,       
+				       T3.NAT_NM AS NAT_NM,
+				       T4.RNK,
+				       <if test= 'type2 == "sQty"'>
+				       ROW_NUMBER() OVER(PARTITION BY NVL(SUBSTR(T1.YYYYMM,3,2)||'-'||SUBSTR(T1.YYYYMM,5,2), '-') ORDER BY ROUND(SUM(T1.IMP_WGT * (T3.IMP_RATE / 100))/1000, 0) DESC) AS ROW_NUM
+				       </if>
+				       <if test= 'type2 == "sPrc"'>
+				       ROW_NUMBER() OVER(PARTITION BY NVL(SUBSTR(T1.YYYYMM,3,2)||'-'||SUBSTR(T1.YYYYMM,5,2), '-') ORDER BY ROUND(SUM(T1.IMP_PRC * (T3.IMP_RATE / 100))/1000, 0) DESC) AS ROW_NUM
+				       </if>
+				  FROM TEMP_DATA T1 
+				     , TB_IMPEXP_HSCD T2
+				     , (SELECT YYYYMM, HS_CD, NAT_NM, ROUND(NVL((QTY*100)/DECODE(SQTY, 0, NULL, SQTY), 0),1) AS IMP_RATE
+			          	FROM (SELECT A.YYYYMM, A.HS_CD, A.PLNT_NM, A.NAT_NM, A.QTY, SUM(A.QTY) OVER (PARTITION BY A.YYYYMM, A.HS_CD) AS SQTY
+			                  FROM (SELECT A1.YYYYMM
+                                         , A1.HS_CD
+                                         , A1.STAT_KOR AS PLNT_NM
+                                         , (SELECT CD_NM FROM TB_CM_CODE X WHERE X.CD_ID = A1.NAT_CD) AS NAT_NM
+                                         <if test= 'type2 == "sQty"'>
+                                         , SUM(IMP_WGT) AS QTY
+                                         </if>
+                                         <if test= 'type2 == "sPrc"'>
+                                         , SUM(IMP_PRC) AS QTY
+                                         </if>
+			                          FROM TEMP_DATA A1,
+			                               TB_IMPEXP_HSCD  A2
+			                         WHERE A1.HS_CD = A2.HS_CD
+                                       AND LENGTH(A1.HS_CD) > 6
+                                       AND (
+                                            LENGTH(A1.HS_CD) > 6
+                                            OR (
+                                                LENGTH(A1.HS_CD) = 6
+                                                AND NOT EXISTS (
+                                                    SELECT 1
+                                                      FROM TEMP_DATA X
+                                                     WHERE SUBSTR(X.HS_CD, 1, 6) = A1.HS_CD
+                                                       AND X.NAT_CD = A1.NAT_CD 
+                                                       AND X.YYYYMM = A1.YYYYMM
+                                                       AND LENGTH(X.HS_CD) > 6
+                                                )
+                                            )
+                                        )
+			                           AND A1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+			                         GROUP BY A1.YYYYMM, A1.HS_CD, A1.STAT_KOR, A1.NAT_CD
+                                    ) A
+                      		)
+			       		) T3
+				     , (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYYMM') AS DT ,
+				               TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYY') AS DTYY ,
+				               TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'MM') AS DTMM,
+				               RANK() OVER(ORDER BY TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYYMM')) AS RNK
+				          FROM DUAL CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-24))
+				       ) T4
+				 WHERE T4.DT = T1.YYYYMM(+)
+				   AND T1.HS_CD = T2.HS_CD
+				   AND T1.YYYYMM = T3.YYYYMM
+				   AND T1.HS_CD = T3.HS_CD
+				   AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+				 GROUP BY T1.YYYYMM, SUBSTR(T1.YYYYMM, 0, 4), SUBSTR(T1.YYYYMM, 5, 2), T3.NAT_NM, T4.RNK
+			   )	     
+     	<if test= 'type2 == "sQty"'>
+     	WHERE IMP_QTY <![CDATA[>]]> 0
+     	</if>
+     	<if test= 'type2 == "sPrc"'>
+     	WHERE IMP_PRC <![CDATA[>]]> 0
+     	</if>
+     	
+	     GROUP BY NAT_NM
+         ORDER BY NAT_NM
+	</select>
+	
+		
+	<!-- 수입 월별 국가 수 -->
+	<select id="selectImpNatCnt" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT YYYYMM, YYYY, MM, COUNT(NAT_NM) AS NAT_CNT
+		  FROM (SELECT NVL(SUBSTR(T4.DT,3,2)||'-'||SUBSTR(T4.DT,5,2), '-') AS YYYYMM ,
+		               NVL(SUBSTR(T4.DT, 0, 4), '-') AS YYYY ,
+		               SUBSTR(T4.DT, 5, 2) AS MM ,
+		               T3.NAT_NM AS NAT_NM      
+		          FROM TB_IMPEXP_RAW T1 
+		             , TB_IMPEXP_HSCD T2
+		             , (SELECT YYYYMM, HS_CD, NAT_NM, ROUND(NVL((QTY*100)/DECODE(SQTY, 0, NULL, SQTY), 0),1) AS IMP_RATE
+		                  FROM (SELECT YYYYMM, HS_CD, NAT_NM, QTY, SUM(QTY) OVER (PARTITION BY YYYYMM, HS_CD) AS SQTY   
+		                          FROM (SELECT A1.YYYYMM, A1.HS_CD, A1.NAT_NM
+		                                     , (SUM(A1.INS_QTY)-SUM(A1.ANT_QTY)-SUM(A1.WAS_QTY)) AS QTY 
+		                                  FROM FLOWER.TB_PLNT_QRT_IMP A1,
+		                                       FLOWER.TB_IMPEXP_HSCD  A2
+		                                 WHERE A1.HS_CD = A2.HS_CD
+		                                   AND A1.HS_CD <![CDATA[<>]]> '-'
+		                                   AND A1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+		                                 GROUP BY A1.YYYYMM, A1.HS_CD, A1.NAT_NM))
+		               ) T3
+		             , (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYYMM') AS DT ,
+		                       TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYY') AS DTYY ,
+		                       TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'MM') AS DTMM
+		                  FROM DUAL CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-24))
+		               ) T4  
+		         WHERE T4.DT = T1.YYYYMM(+)
+		           AND T1.HS_CD = T2.HS_CD(+)
+		           AND T1.YYYYMM = T3.YYYYMM(+)
+		           AND T1.HS_CD = T3.HS_CD(+)
+		           AND T4.DT BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+		           AND T1.HS_CD(+) <![CDATA[<>]]> '-'
+		         GROUP BY T4.DT, T3.NAT_NM
+		       )
+		 GROUP BY YYYYMM, YYYY, MM
+		 ORDER BY YYYYMM
+	</select>
+	
+	<!-- 수출 차트 조회 -->
+	<select id="selectExpChart" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT TO_CHAR(TO_DATE(YYYYMM, 'YYYYMM'), 'YY-MM') AS YYYYMM,
+		       '수출' AS IMPEXP_GUBUN,
+			   <if test= 'type2 == "sQty"'> 
+			   MAX(DECODE(RNK, 1, NAT_NM, '')) AS NAT_NM1,
+		       MAX(DECODE(RNK, 1, EXP_QTY, '')) AS EXP_QTY1,
+		       MAX(DECODE(RNK, 2, NAT_NM, '')) AS NAT_NM2,
+		       MAX(DECODE(RNK, 2, EXP_QTY, '')) AS EXP_QTY2,
+		       MAX(DECODE(RNK, 3, NAT_NM, '')) AS NAT_NM3,
+		       MAX(DECODE(RNK, 3, EXP_QTY, '')) AS EXP_QTY3,
+		       MAX(DECODE(RNK, 4, NAT_NM, '')) AS NAT_NM4,
+		       MAX(DECODE(RNK, 4, EXP_QTY, '')) AS EXP_QTY4,
+		       MAX(DECODE(RNK, 5, NAT_NM, '')) AS NAT_NM5,
+		       MAX(DECODE(RNK, 5, EXP_QTY, '')) AS EXP_QTY5
+		       </if>
+		       <if test= 'type2 == "sPrc"'>		       
+			   MAX(DECODE(RNK, 1, NAT_NM, '')) AS NAT_NM1,
+	           MAX(DECODE(RNK, 1, EXP_PRC, '')) AS EXP_PRC1,
+		       MAX(DECODE(RNK, 2, NAT_NM, '')) AS NAT_NM2,
+		       MAX(DECODE(RNK, 2, EXP_PRC, '')) AS EXP_PRC2,
+		       MAX(DECODE(RNK, 3, NAT_NM, '')) AS NAT_NM3,
+		       MAX(DECODE(RNK, 3, EXP_PRC, '')) AS EXP_PRC3,
+		       MAX(DECODE(RNK, 4, NAT_NM, '')) AS NAT_NM4,
+		       MAX(DECODE(RNK, 4, EXP_PRC, '')) AS EXP_PRC4,
+		       MAX(DECODE(RNK, 5, NAT_NM, '')) AS NAT_NM5,
+		       MAX(DECODE(RNK, 5, EXP_PRC, '')) AS EXP_PRC5
+			   </if>
+		  FROM (
+		  		SELECT T4.YYYYMM, T5.NAT_NM
+		  			   <if test= 'type2 == "sQty"'>
+		  			   , T5.EXP_QTY
+		  			   , ROW_NUMBER() OVER(PARTITION BY T4.YYYYMM ORDER BY T5.EXP_QTY DESC) AS RNK
+		  			   </if>
+		  			   <if test= 'type2 == "sPrc"'>
+		  			   , T5.EXP_PRC
+		  			   , ROW_NUMBER() OVER(PARTITION BY T4.YYYYMM ORDER BY T5.EXP_PRC DESC) AS RNK
+		  			   </if>
+		  		  FROM (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYYMM') AS YYYYMM
+		  		          FROM DUAL CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-24))
+		       		   ) T4,
+		       		   (SELECT T1.YYYYMM AS YYYYMM,
+		       		   		   ROUND(SUM(T1.EXP_WGT * (T3.EXP_RATE / 100))/1000, 0) AS EXP_QTY,
+		       		   		   ROUND(SUM(T1.EXP_PRC * (T3.EXP_RATE / 100))/1000, 0) AS EXP_PRC,
+		       		   		   T3.NAT_NM AS NAT_NM
+		          		  FROM TB_IMPEXP_RAW T1 
+		             		 , TB_IMPEXP_HSCD T2
+		             		 , (SELECT YYYYMM, HS_CD, NAT_NM, ROUND(NVL((QTY*100)/DECODE(SQTY, 0, NULL, SQTY), 0),1) AS EXP_RATE
+		                  		  FROM (SELECT A.YYYYMM, A.HS_CD, B.PLNT_NM, B.NAT_NM, B.QTY, SUM(B.QTY) OVER (PARTITION BY A.YYYYMM, A.HS_CD) AS SQTY
+		                          		 FROM (SELECT A1.YYYYMM, A1.HS_CD, MAX(A1.PLNT_NM) AS PLNT_NM
+		                                  		 FROM FLOWER.TB_PLNT_QRT_IMP A1,
+		                                       		  FLOWER.TB_IMPEXP_HSCD  A2
+		                                 		WHERE A1.HS_CD = A2.HS_CD
+		                                   		  AND A1.HS_CD <![CDATA[<>]]> '-'
+		                                   		  AND A1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+		                                 		GROUP BY A1.YYYYMM, A1.HS_CD) A,
+		                               		  (SELECT PLNT_NM, NAT_NM, SUM(INS_QTY) AS QTY
+		                                  		 FROM FLOWER.TB_PLNT_QRT_EXP
+		                                 		WHERE YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+		                                 		GROUP BY PLNT_NM, NAT_NM) B   
+		                         		WHERE A.PLNT_NM = B.PLNT_NM)
+		               		   ) T3     
+		         		 WHERE T1.HS_CD = T2.HS_CD
+		           		   AND T1.YYYYMM = T3.YYYYMM
+		           		   AND T1.HS_CD = T3.HS_CD
+		                   AND T1.HS_CD <![CDATA[<>]]> '-'
+		                   AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')   
+		         		 GROUP BY T1.YYYYMM, T3.NAT_NM
+		       		   ) T5
+		         WHERE T4.YYYYMM = T5.YYYYMM(+)
+		           <if test= 'type2 == "sQty"'>
+		           AND T5.EXP_QTY(+) <![CDATA[>]]> 0
+		           </if>
+		           <if test= 'type2 == "sPrc"'>
+		           AND T5.EXP_PRC(+) <![CDATA[>]]> 0
+		           </if>
+		)
+		WHERE RNK <![CDATA[<]]> 6
+		GROUP BY YYYYMM
+		ORDER BY YYYYMM
+	</select>
+	
+	<!-- 수입 차트 조회 -->
+	<select id="selectImpChart" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT TO_CHAR(TO_DATE(YYYYMM, 'YYYYMM'), 'YY-MM') AS YYYYMM,
+		       '수입' AS IMPEXP_GUBUN,
+			   <if test= 'type2 == "sQty"'>
+			   MAX(DECODE(RNK, 1, NAT_NM, '')) AS NAT_NM1,
+		       MAX(DECODE(RNK, 1, IMP_QTY, '')) AS IMP_QTY1,
+		       MAX(DECODE(RNK, 2, NAT_NM, '')) AS NAT_NM2,
+		       MAX(DECODE(RNK, 2, IMP_QTY, '')) AS IMP_QTY2,
+		       MAX(DECODE(RNK, 3, NAT_NM, '')) AS NAT_NM3,
+		       MAX(DECODE(RNK, 3, IMP_QTY, '')) AS IMP_QTY3,
+		       MAX(DECODE(RNK, 4, NAT_NM, '')) AS NAT_NM4,
+		       MAX(DECODE(RNK, 4, IMP_QTY, '')) AS IMP_QTY4,
+		       MAX(DECODE(RNK, 5, NAT_NM, '')) AS NAT_NM5,
+		       MAX(DECODE(RNK, 5, IMP_QTY, '')) AS IMP_QTY5
+		       </if>
+		       <if test= 'type2 == "sPrc"'>
+		       MAX(DECODE(RNK, 1, NAT_NM, '')) AS NAT_NM1,
+	           MAX(DECODE(RNK, 1, IMP_PRC, '')) AS IMP_PRC1,
+		       MAX(DECODE(RNK, 2, NAT_NM, '')) AS NAT_NM2,
+		       MAX(DECODE(RNK, 2, IMP_PRC, '')) AS IMP_PRC2,
+		       MAX(DECODE(RNK, 3, NAT_NM, '')) AS NAT_NM3,
+		       MAX(DECODE(RNK, 3, IMP_PRC, '')) AS IMP_PRC3,
+		       MAX(DECODE(RNK, 4, NAT_NM, '')) AS NAT_NM4,
+		       MAX(DECODE(RNK, 4, IMP_PRC, '')) AS IMP_PRC4,
+		       MAX(DECODE(RNK, 5, NAT_NM, '')) AS NAT_NM5,
+		       MAX(DECODE(RNK, 5, IMP_PRC, '')) AS IMP_PRC5
+			   </if>
+		  FROM (
+		  		SELECT T4.YYYYMM, T5.NAT_NM
+		  			   <if test= 'type2 == "sQty"'>
+		  			   , T5.IMP_QTY
+		  			   , ROW_NUMBER() OVER(PARTITION BY T4.YYYYMM ORDER BY T5.IMP_QTY DESC) AS RNK
+		  			   </if>
+		  			   <if test= 'type2 == "sPrc"'>
+		  			   , T5.IMP_PRC
+		  			   , ROW_NUMBER() OVER(PARTITION BY T4.YYYYMM ORDER BY T5.IMP_PRC DESC) AS RNK
+		  			   </if>
+		          FROM (
+		          		SELECT TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-12), 'YYYYMM') AS YYYYMM
+		          		  FROM DUAL CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYYMM'), LEVEL-24))
+		          	   ) T4,
+		       		   (
+		       		   	SELECT T1.YYYYMM AS YYYYMM,
+		       		   		   ROUND(SUM(T1.IMP_WGT * (T3.IMP_RATE / 100))/1000, 0) AS IMP_QTY,
+		       		   		   ROUND(SUM(T1.IMP_PRC * (T3.IMP_RATE / 100))/1000, 0) AS IMP_PRC,
+		       		   		   T3.NAT_NM AS NAT_NM
+		          		  FROM TB_IMPEXP_RAW T1 
+			         		 , TB_IMPEXP_HSCD T2
+			         		 , (
+			         		 	SELECT YYYYMM, HS_CD, NAT_NM, ROUND(NVL((QTY*100)/DECODE(SQTY, 0, NULL, SQTY), 0),1) AS IMP_RATE
+			         		 	  FROM (SELECT YYYYMM, HS_CD, NAT_NM, QTY, SUM(QTY) OVER (PARTITION BY YYYYMM, HS_CD) AS SQTY   
+			                      FROM (SELECT A1.YYYYMM, A1.HS_CD, A1.NAT_NM
+			                                 , (SUM(A1.INS_QTY)-SUM(A1.ANT_QTY)-SUM(A1.WAS_QTY)) AS QTY 
+			                              FROM FLOWER.TB_PLNT_QRT_IMP A1,
+			                                   FLOWER.TB_IMPEXP_HSCD  A2
+			                             WHERE A1.HS_CD = A2.HS_CD
+			                               AND A1.HS_CD <![CDATA[<>]]> '-'
+			                               AND A1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')
+			                             GROUP BY A1.YYYYMM, A1.HS_CD, A1.NAT_NM))
+			           		   ) T3     
+		                 WHERE T1.HS_CD = T2.HS_CD
+		                   AND T1.YYYYMM = T3.YYYYMM
+		                   AND T1.HS_CD = T3.HS_CD
+		                   AND T1.HS_CD <![CDATA[<>]]> '-'
+		                   AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDateM}, '-', ''), 'YYYY-MM'), -23), 'YYYYMM') AND REPLACE(#{searchDateM}, '-', '')   
+		                 GROUP BY T1.YYYYMM, T3.NAT_NM
+			       	   ) T5
+			     WHERE T4.YYYYMM = T5.YYYYMM(+)
+			       <if test= 'type2 == "sQty"'>
+			       AND T5.IMP_QTY(+) <![CDATA[>]]> 0
+			       </if>
+			       <if test= 'type2 == "sPrc"'>
+			       AND T5.IMP_PRC(+) <![CDATA[>]]> 0
+			       </if>
+			   )
+		 WHERE RNK <![CDATA[<]]> 6
+		 GROUP BY YYYYMM
+		 ORDER BY YYYYMM
+	</select>
+</mapper>

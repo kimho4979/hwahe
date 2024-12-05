@@ -1,0 +1,41 @@
+﻿
+.wrap{width:1920px;; height:915px; margin:0 auto; 
+background-image:url(../images/back.jpg); background-repeat:no-repeat; }
+.logo{margin-left:30px; padding-top:30px;}
+
+.content{width:1850px; height:750px; margin-top:30px; margin-left:30px; background-color:white;}
+/*푸터*/
+#footer{width:100%; background:#f0f0f0;  height:100px; margin:0 auto; }
+.footer_box{width:1150px; margin:0 auto; text-align:center; font-size:13px; color:gray; font-weight:700; padding-top:10px; }
+.logo_g{width:250px; float:left; background-color:bule; margin-top:15px; }
+
+.adress{width:600px; font-size:13px; float:left; margin-top:20px; color:gray;}
+
+
+li{font-size:18px; color:white; font-weight:300; margin-top:16px;}
+li a{color:white;}
+li a:hover{background-color:white; display:block; color:#005953; height:24px; text-align:center; font-weight:300;}
+
+
+.title{width:400px; height:40px; font-size:24px; font-weight:700; color:#005953; line-height:38px; padding:10px; }
+.a_input{width:1830px; height:40px; font-size:14px; font-weight:700; color:#005953; line-height:38px; padding:10px; background:#e2e2e2; }
+
+.a_jungsan{width:47.8%; height:24px; font-size:14px; font-weight:700; color:#4f4f4f; line-height:24px; padding:10px; background:white; float:left; border:8px solid #e2e2e2; }
+
+.a_jungsan_02{width:14.45%; height:24px; font-size:14px; font-weight:700; color:#4f4f4f; line-height:24px; padding:10px; background:#white; float:right; border:8px solid #e2e2e2;}
+.a_jungsan_03{width:14.45%; height:24px; font-size:14px; font-weight:700; color:#4f4f4f; line-height:24px; padding:10px; background:#white; float:right; margin-right:5px; border:8px solid #e2e2e2;}
+.a_jungsan_04{width:14.45%; height:24px; font-size:14px; font-weight:700; color:#4f4f4f; line-height:24px; padding:10px; background:#white; float:right; margin-right:5px; border:8px solid #e2e2e2;}
+
+
+.b_jungsan_02{width:14.45%; height:24px; font-size:14px; font-weight:700; color:#005953; line-height:24px; padding:10px; background:#white; float:left; border:8px solid #52b848; margin-right:5px; margin-top:5px;}
+.b_jungsan_03{width:14.45%; height:24px; font-size:14px; font-weight:700; color:#005953; line-height:24px; padding:10px; background:#white; float:left; border:8px solid #52b848; margin-right:5px; margin-top:5px;}
+.b_jungsan_04{width:14.45%; height:24px; font-size:14px; font-weight:700; color:#005953; line-height:24px; padding:10px; background:#white; float:left; border:8px solid #52b848; margin-top:5px;}
+
+
+
+.c_jungsan_02{width:14.45%; height:24px; font-size:14px; font-weight:700; color:#4f4f4f; line-height:24px; padding:10px; background:#white; float:right; border:8px solid #d65b5b; margin-top:5px;}
+.c_jungsan_03{width:14.45%; height:24px; font-size:14px; font-weight:700; color:#4f4f4f; line-height:24px; padding:10px; background:#white; float:right; margin-right:5px; border:8px solid #d65b5b; margin-top:5px;}
+.c_jungsan_04{width:14.45%; height:24px; font-size:14px; font-weight:700; color:#4f4f4f; line-height:24px; padding:10px; background:#white; float:right; margin-right:5px; border:8px solid #d65b5b; margin-top:5px;}
+
+
+.a_table{width:1830px; font-size:14px; font-weight:700; color:#005953; line-height:38px; padding:10px; background:#e2e2e2;}

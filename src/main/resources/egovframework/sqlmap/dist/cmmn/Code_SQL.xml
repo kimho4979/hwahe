@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.cmmn.integrated.mapper.IntCodeMapper">
+	
+	<resultMap id="selectIntItemListMap" type="com.fpdisys.dist.cmmn.integrated.domain.ItemVO">
+		<result property="flowerCd" column="FLOWER_GUBN" />
+		<result property="flowerCode" column="FLOWER_CODE" />
+		<result property="itemCd" column="ITEM_CD" />
+		<result property="itemNm" column="ITEM_NM" />
+		<result property="kindCd" column="KIND_CD" />
+		<result property="kindNm" column="KIND_NM" />
+	</resultMap>
+	
+	<!-- 통합품목코드목록 -->
+	<select id="selectIntItemList" parameterType="Map" resultMap="selectIntItemListMap">
+		WITH	V_SALE_DATA
+		AS		(
+				SELECT	tis.FLOWER_GUBN
+				,		tis.FLOWER_CODE
+				,		tis.ITEM_CD
+				,		SUM(tis.TOT_QTY) AS TOT_QTY
+				FROM	T_INT_SALE tis
+				WHERE	1 = 1
+			<if test="flowerCd != null and flowerCd != ''">
+				AND		tis.FLOWER_GUBN = #{flowerCd,jdbcType=VARCHAR}
+			</if>
+			<if test="cmpCd != null and cmpCd != ''">
+				AND 	tis.MARKET_CD = #{cmpCd,jdbcType=VARCHAR}
+			</if>
+			<if test="searchStrDate != null and searchStrDate != ''">
+				AND 	tis.SALE_DATE BETWEEN #{searchStrDate,jdbcType=VARCHAR} AND #{searchEndDate,jdbcType=VARCHAR}
+			</if>
+			<if test='hwahwanYn == "Y"'>
+				AND		tis.FLOWER_GUBN||tis.FLOWER_CODE||tis.ITEM_CD IN ('11051', '11001')
+			</if>
+				GROUP BY FLOWER_GUBN, FLOWER_CODE, ITEM_CD
+				)
+		SELECT	tii.FLOWER_GUBN
+		,		tii.FLOWER_CODE
+		,		tii.ITEM_CD
+		,		tii.ITEM_NM
+		FROM	T_INT_ITEM tii
+		INNER JOIN V_SALE_DATA vsd ON tii.FLOWER_GUBN = vsd.FLOWER_GUBN AND tii.FLOWER_CODE = vsd.FLOWER_CODE AND tii.ITEM_CD = vsd.ITEM_CD
+		WHERE	tii.USE_YN = 'Y'
+	<if test="flowerCd == 3">
+		AND		tii.ITEM_CD != '002'  -- 팔레높시스는 호접란에 묶기 위해 표시하지 않음
+	</if>
+		ORDER BY vsd.TOT_QTY DESC
+	</select>
+	
+	<!-- 통합품종코드목록 -->
+	<select id="selectIntKindList" parameterType="Map" resultMap="selectIntItemListMap">
+		WITH	V_SALE_DATA
+		AS		(
+				SELECT	TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD AS ITEM_CD
+				,		TIS.KIND_CD
+				FROM	T_INT_SALE TIS
+				WHERE	1=1
+			<if test="flowerCd != null and flowerCd != ''">
+				AND		FLOWER_GUBN = #{flowerCd,jdbcType=VARCHAR}
+			</if>
+			<if test="cmpCd != null and cmpCd != ''">
+				AND		MARKET_CD = #{cmpCd,jdbcType=VARCHAR}
+			</if>
+			<if test="searchStrDate != null and searchStrDate != ''">
+				AND		SALE_DATE BETWEEN #{searchStrDate,jdbcType=VARCHAR} AND #{searchEndDate,jdbcType=VARCHAR}
+			</if>
+	<if test="itemCd != null and itemCd != ''">
+		<choose>
+			<when test="itemCd == '6043'">
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD IN ('6002', '6043')
+			</when>
+			<otherwise>
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			</otherwise>
+		</choose>
+	</if>
+				GROUP BY TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD, TIS.KIND_CD
+				)
+		SELECT	tik.FLOWER_GUBN
+		,		tik.FLOWER_CODE
+		,		tik.ITEM_CD
+		,		tik.KIND_CD
+		,		DECODE(vsd.ITEM_CD , '36043', '(호)', DECODE(vsd.ITEM_CD, '36002', '(팔)', '')) || tik.KIND_NM AS kind_nm 
+		FROM	V_SALE_DATA vsd
+		LEFT JOIN T_INT_KIND tik ON tik.FLOWER_GUBN || tik.FLOWER_CODE || tik.ITEM_CD = vsd.item_cd AND tik.KIND_CD = vsd.kind_cd AND tik.USE_YN = 'Y'
+		ORDER BY tik.KIND_NM
+	</select>
+</mapper>

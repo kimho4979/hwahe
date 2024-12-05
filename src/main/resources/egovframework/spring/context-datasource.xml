@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		
+		<!-- 개발DB -->
+		<!-- <property name="url" value="jdbc:oracle:thin:@106.241.33.158:1521:orcl" /> -->
+		<property name="url" value="jdbc:oracle:thin:@192.168.0.245:1521:ORCL" />
+		<property name="username" value="FLOWER"/>
+		<property name="password" value="flower"/>
+		
+		<!-- 실DB -->
+		<!-- <property name="url" value="jdbc:oracle:thin:@192.168.100.113:1521:FLOWERDB" />
+		<property name="username" value="flower"/>
+		<property name="password" value="ghkgnp#1"/> -->
+	</bean>
+	
+	<bean id="dataSource1" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<!-- <property name="url" value="jdbc:oracle:thin:@106.241.33.158:1521:orcl" /> -->
+		<property name="url" value="jdbc:oracle:thin:@192.168.0.245:1521:ORCL" /> 
+		<property name="username" value="FLOWER"/>
+		<property name="password" value="flower"/> 
+		<!-- <property name="url" value="jdbc:oracle:thin:@192.168.12.12:1521:AMIS" />  
+		<property name="username" value="rflo"/>
+		<property name="password" value="dbxhd_1882"/>-->
+	</bean>
+	
+	<bean id="dataSource3" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@192.168.0.245:1521:ORCL" /> 
+		<property name="username" value="FLOWER"/>
+		<property name="password" value="flower"/> 
+		<!-- 
+		<property name="url" value="jdbc:oracle:thin:@192.168.10.201:1521:orcl" /> 
+		<property name="username" value="KATI"/>
+		<property name="password" value="KATI"/>-->
+		<!-- <property name="url" value="jdbc:oracle:thin:@192.168.100.81:11521:atis17" /> 
+		<property name="username" value="Flower_read"/>
+		<property name="password" value="flower1800!"/> --> 
+	</bean>
+</beans>

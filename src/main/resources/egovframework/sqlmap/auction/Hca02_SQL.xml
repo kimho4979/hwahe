@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hca02.mapper.Hca02Mapper">
+
+	<resultMap id="resultHca02Map" type="com.fpdisys.dist.hca02.domain.Hca02ExcelVO">
+		<result property="seqNo" 	column="SEQ_NO"/>
+		<result property="regDate" 	column="REG_DATE"/>
+		<result property="pumName" 	column="PUM_NAME"/>
+		<result property="goodName" column="GOOD_NAME"/>
+		<result property="cmpCd" 	column="CMP_CD"/>
+		<result property="chulNo" 	column="CHUL_NO"/>
+		<result property="area" 	column="AREA"/>
+		<result property="status" 	column="STATUS"/>
+		<result property="bigo" 	column="BIGO"/>
+		<result property="useYn" 	column="USE_YN"/>
+		<result property="sanCd" 	column="SAN_CD"/>
+		<result property="regDt" 	column="REG_DT"/>
+		<result property="uptDt" 	column="UPT_DT"/>
+		<result property="sanName" 	column="SAN_NAME"/>
+		<result property="sanBigo" 	column="SAN_BIGO"/>
+		<result property="gubn" 	column="GUBN"/>
+		<result property="sido" 	column="SIDO"/>
+	</resultMap>
+
+	<select id="selectHca02" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.hca02.domain.Hca02VO">
+		SELECT TOTAL_COUNT
+			,RNUM
+			,REG_DATE
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,CHUL_NO
+			,AREA
+			,STATUS
+			,BIGO
+			,SIDO
+		FROM
+		(
+			SELECT COUNT(*) OVER() AS TOTAL_COUNT
+				,RNUM
+				,REG_DATE
+				,PUM_NAME
+				,GOOD_NAME
+				,CMP_CD
+				,CHUL_NO
+				,AREA
+				,STATUS
+				,BIGO
+				,SIDO
+			FROM 
+			(
+				SELECT
+					ROW_NUMBER () OVER (ORDER BY REG_DATE DESC, T1.GOOD_NAME) AS RNUM,
+					T1.REG_DATE,
+					T1.PUM_NAME,
+					T1.GOOD_NAME,
+					T1.CMP_CD,
+					T1.CHUL_NO,
+					T1.AREA,
+					CASE
+					WHEN T1.STATUS = 1 THEN '증가'
+					WHEN T1.STATUS = 2 THEN '비슷'
+					ELSE '감소'
+					END
+					AS STATUS,
+					BIGO,
+					SUBSTR (T2.SAN_BIGO, 0, 2) AS SIDO
+				FROM T_CULTIVATION_TREND T1, T_LOCAL T2
+				WHERE T1.SAN_CD = T2.SAN_CD
+				<if test='initFlag!="T"'>
+					AND SUBSTR(T2.SAN_BIGO, 0, 2) IN
+					<if test='san_list==null'>
+						('')
+					</if>
+					<if test='san_list!=null'>
+						<foreach collection="san_list" item="item" index="index" separator="," open="(" close=")">
+							#{item}
+						</foreach>
+					</if>
+				</if>
+			ORDER BY REG_DATE DESC, GOOD_NAME
+			)
+		)
+		WHERE RNUM BETWEEN #{START} AND #{END}
+	</select>
+	
+	<select id="selectCropTrendList" parameterType="com.fpdisys.dist.hca02.domain.Hca02VO" statementType="PREPARED" resultType="HashMap">
+		SELECT * FROM(
+			SELECT 
+	  			ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, GOOD_NAME, STATUS) AS RNUM,
+	  			T1.REG_DATE,
+	  			T1.PUM_NAME,
+	  			T1.GOOD_NAME,
+	  			T1.BIGO
+			FROM T_CULTIVATION_TREND T1
+			WHERE 1=1
+			AND T1.USE_YN = 'Y'
+		)
+		WHERE RNUM BETWEEN #{startPageNo} AND #{endPageNo}
+	</select>
+	
+	<!-- 재배동향 :: Excel -->
+	<select id="selectHca02Excel" resultType="com.fpdisys.dist.hca02.domain.Hca02ExcelVO" resultMap="resultHca02Map">
+		SELECT TOTAL_COUNT
+			,RNUM
+			,REG_DATE
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,CHUL_NO
+			,AREA
+			,STATUS
+			,BIGO
+			,SIDO
+		FROM
+		(
+			SELECT COUNT(*) OVER() AS TOTAL_COUNT
+				,RNUM
+				,REG_DATE
+				,PUM_NAME
+				,GOOD_NAME
+				,CMP_CD
+				,CHUL_NO
+				,AREA
+				,STATUS
+				,BIGO
+				,SIDO
+			FROM 
+			(
+				SELECT
+					ROW_NUMBER () OVER (ORDER BY REG_DATE DESC, T1.GOOD_NAME) AS RNUM,
+					T1.REG_DATE,
+					T1.PUM_NAME,
+					T1.GOOD_NAME,
+					T1.CMP_CD,
+					T1.CHUL_NO,
+					T1.AREA,
+					CASE
+					WHEN T1.STATUS = 1 THEN '증가'
+					WHEN T1.STATUS = 2 THEN '비슷'
+					ELSE '감소'
+					END
+					AS STATUS,
+					BIGO,
+					SUBSTR (T2.SAN_BIGO, 0, 2) AS SIDO
+				FROM T_CULTIVATION_TREND T1, T_LOCAL T2
+				WHERE T1.SAN_CD = T2.SAN_CD
+				<if test='initFlag!="T"'>
+					AND SUBSTR(T2.SAN_BIGO, 0, 2) IN
+					<if test='san_list==null'>
+						('')
+					</if>
+					<if test='san_list!=null'>
+						<foreach collection="san_list" item="item" index="index" separator="," open="(" close=")">
+							#{item}
+						</foreach>
+					</if>
+				</if>
+			ORDER BY REG_DATE DESC, GOOD_NAME
+			)
+		)
+	</select>
+
+</mapper>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>rMate Chart for HTML5</title>
+<!-- rMateChartH5 에서 사용하는 스타일 -->
+<link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/>
+
+<!-- IE7, 8 에서 차트 생성하고자 하는 경우 -->
+<!--[if IE]><script language="javascript" type="text/javascript" src="../rMateChartH5/JS/excanvas.js"></script><![endif]-->
+
+<!-- rMateChartH5 라이센스 -->
+<script language="javascript" type="text/javascript" src="../LicenseKey/rMateChartH5License.js"></script>
+
+<!-- 실제적인 rMateChartH5 라이브러리 -->
+<script language="javascript" type="text/javascript" src="../rMateChartH5/JS/rMateHistoryChartH5.js"></script>
+
+<!-- rMateChartH5 테마 js -->
+<script type="text/javascript" src="../rMateChartH5/Assets/Theme/theme.js"></script>
+
+<script type="text/javascript">
+
+// -----------------------차트 설정 시작-----------------------
+
+// rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.
+var chartVars = "rMateOnLoadCallFunction=chartReadyHandler";
+
+// rMateChart 를 생성합니다.
+// 파라메터 (순서대로) 
+//  1. 차트의 id ( 임의로 지정하십시오. ) 
+//  2. 차트가 위치할 div 의 id (즉, 차트의 부모 div 의 id 입니다.)
+//  3. 차트 생성 시 필요한 환경 변수들의 묶음인 chartVars
+//  4. 차트의 가로 사이즈 (생략 가능, 생략 시 100%)
+//  5. 차트의 세로 사이즈 (생략 가능, 생략 시 100%)
+rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+
+// 차트의 속성인 rMateOnLoadCallFunction 으로 설정된 함수.
+// rMate 차트 준비가 완료된 경우 이 함수가 호출됩니다.
+// 이 함수를 통해 차트에 레이아웃과 데이터를 삽입합니다.
+// 파라메터 : id - rMateChartH5.create() 사용 시 사용자가 지정한 id 입니다.
+function chartReadyHandler(id) {
+	document.getElementById(id).setLayout(layoutStr);
+	document.getElementById(id).setData(chartData);
+}
+
+// 스트링 형식으로 레이아웃 정의.
+var layoutStr = 
+				'<rMateChart backgroundColor="#FFFFFF"  borderStyle="none">'
+					+'<Options>'
+						+'<Caption text="히스토리 2D 차트" fontFamily="맑은 고딕"/>'
+					+'</Options>'
+					+'<NumberFormatter id="numfmt" useThousandsSeparator="true"/>' 
+					+'<HistoryChart>'
+					/* 
+					History 차트 생성시에 필요한 HistoryChart 정의합니다 
+					History 차트는 디스플레이어(Displayer), 네비게이터(Navigator), 셀렉터(Selector)로 구성되어 있습니다 
+					*/
+						+'<displayerChart>'
+						/* 
+						디스플레이어(Displayer)
+						디스플레이어 차트는 사용자가 선택된 영역이 표시되는 차트 입니다. 실제로 사용자가 보고자 하는 부분의 데이터를 표시합니다
+						 */
+							+'<Displayer id="chart1" showDataTips="true" fontFamily="맑은 고딕">'
+								+'<horizontalAxis>'
+									+'<CategoryAxis id="mainHAxis" categoryField="Date"/>'
+								+'</horizontalAxis>'
+								+'<verticalAxis>'
+									+'<LinearAxis  formatter="{numfmt}" maximum="3000"/>'
+								+'</verticalAxis>'
+								+'<series>'
+								+'<Column2DSet type="clustered" columnWidthRatio="0.5">'
+									+'<series>'
+										+'<Column2DSeries id="columnSeries" yField="Data1" displayName="Data1">'
+											+'<fill>'
+												+'<SolidColor color="#41b2e6"/>'
+											+'</fill>'
+										/* 디스플레이어 차트로 Column2DSeries를 정의 하였습니다 */
+											+'<showDataEffect>'
+												+'<SeriesInterpolate duration="1000"/>'
+											+'</showDataEffect>'
+										+'</Column2DSeries>'
+									+'</series>'
+								+'</Column2DSet>'
+								+'</series>'
+							+'</Displayer>'
+						+'</displayerChart>'
+						+'<navigator>'
+						/* 
+						네비게이터(Navigator)
+						네비게이터는 전체 데이터를 표현하여 데이터의 흐름을 전체적으로 볼 수 잇습니다
+						 */
+							+'<Navigator id="navi" width="100%" height="80" gutterLeft="0" gutterRight="0" gutterBottom="0" paddingLeft="30" paddingRight="10">'
+								/* 수평 축 정의  */
+								+'<horizontalAxis>'
+									+'<CategoryAxis categoryField="Date" id="naviHAxis"  padding="0"/>' 
+								+'</horizontalAxis>'
+								+'<horizontalAxisRenderers>'
+									+'<Axis2DRenderer axis="{naviHAxis}" visible="false"/>'
+								+'</horizontalAxisRenderers>'
+								/* 수직 축 정의  */
+								+'<verticalAxis>'
+									+'<LinearAxis id="vAxis"/>'
+								+'</verticalAxis>'
+								+'<verticalAxisRenderers>'
+									+'<Axis2DRenderer axis="{vAxis}" visible="false"/>'
+								+'</verticalAxisRenderers>'
+								/* 배경 정의 */
+								 +'<backgroundElements>'
+									+'<Label/>'
+								+'</backgroundElements>'
+								
+								+'<series>'
+									+'<Area2DSet>'
+										+'<series>'
+											+'<Area2DSeries name="A" yField="Data1">'
+												+'<areaStroke>'
+													+'<Stroke color="#03a9f5" weight="1"/>'
+												+'</areaStroke>'
+											+'</Area2DSeries>'
+										+'</series>'
+									+'</Area2DSet>'
+									/* 네비게이터(Navigator)차트로 Area2DSeries를 정의 하였습니다 */
+								+'</series>'
+							+'</Navigator>'
+						+'</navigator>'
+						+'<selector>'
+				/* 
+				셀렉터(Selector)
+				셀렉터는 네비게이터에서 사용자가 틀정 영역을 선택하게끔 하는 역할을 합니다
+				셀렉터에서 선택된 영역이 디스플레이어(Displayer)차트에 표현 됩니다 */
+				/* 시작 시 보여지는 차트는 총 데이터의 약 30%이며 센터 영역입니다. */
+							+'<HistoryRangeSelector width="100%" startingRange="center" visibleItemSize="30"/>'
+				/* 
+				startingRange - center, left, right : 히스토리 차트가 처음 로딩 시 표시할 데이터 영역
+				visibleItemSize : 처음 로딩 시 디스플레이어 차트가 표시할 데이터의 양을 나타냅니다
+						   양은 전체 데이터의 퍼센티지 수치입니다. 유효값 1~100
+				*/
+						+'</selector>'
+					+'</HistoryChart>'
+				+'</rMateChart>';
+
+// 차트 데이터
+var chartData = [{"Date":"2008.11.12","Data1":1000},
+				{"Date":"2008.11.13","Data1":1400},
+				{"Date":"2008.11.14","Data1":1500},
+				{"Date":"2008.11.15","Data1":1900},
+				{"Date":"2008.11.16","Data1":1400},
+				{"Date":"2008.11.17","Data1":2000},
+				{"Date":"2008.11.18","Data1":1800},
+				{"Date":"2008.11.19","Data1":2500},
+				{"Date":"2008.11.20","Data1":3000},
+				{"Date":"2008.11.21","Data1":2000},
+				{"Date":"2008.11.22","Data1":2100},
+				{"Date":"2008.11.23","Data1":1700},
+				{"Date":"2008.11.24","Data1":2400},
+				{"Date":"2008.11.25","Data1":1000},
+				{"Date":"2008.11.26","Data1":1400},
+				{"Date":"2008.11.27","Data1":1000},
+				{"Date":"2008.11.28","Data1":1900},
+				{"Date":"2008.11.29","Data1":1400},
+				{"Date":"2008.11.30","Data1":2500},
+				{"Date":"2008.12.1","Data1":1800},
+				{"Date":"2008.12.2","Data1":2000},
+				{"Date":"2008.12.3","Data1":1200},
+				{"Date":"2008.12.4","Data1":1300},
+				{"Date":"2008.12.5","Data1":900},
+				{"Date":"2008.12.6","Data1":1400},
+				{"Date":"2008.12.7","Data1":1800},
+				{"Date":"2008.12.8","Data1":1000},
+				{"Date":"2008.12.9","Data1":1800},
+				{"Date":"2008.12.10","Data1":2000},
+				{"Date":"2008.12.11","Data1":1800},
+				{"Date":"2008.12.12","Data1":2500},
+				{"Date":"2008.12.13","Data1":3000},
+				{"Date":"2008.12.14","Data1":2000},
+				{"Date":"2008.12.15","Data1":2100},
+				{"Date":"2008.12.16","Data1":1700},
+				{"Date":"2008.12.17","Data1":2400},
+				{"Date":"2008.12.19","Data1":2500},
+				{"Date":"2008.12.20","Data1":3000},
+				{"Date":"2008.12.21","Data1":2000},
+				{"Date":"2008.12.22","Data1":2100},
+				{"Date":"2008.12.23","Data1":1700},
+				{"Date":"2008.12.24","Data1":2400},
+				{"Date":"2008.12.25","Data1":1000}];
+
+	// ie7,8에서는 ie7,8의 버그로 인쇄시 투명에 대한 처리가 올바르지 못하여 인쇄시 투명처리가 되지 않은 상태로 인쇄가 되어진다.
+	// 그래서 ie7,8에서 히스토리차트를 인쇄시 selector에 대한 부분이 이상하게 인쇄가 되어짐.
+	// 꼭 ie7,8에서 히스토리 차트를 인쇄해야 한다면 아래 함수를 실행시키어 selector에 대한 투명처리를 없애고 인쇄를 하면
+	// 출력된 차트와는 약간 다르지만 차트를 구분할 수 있는 수준의 인쇄가 가능하다.
+	var selectors;
+	/**
+	 * str : remove - 투명처리에 대한 필터와 색상을 삭제한다.
+	 *	     insert - remove시에 저장해두었던 필터와 색상을 다시 적용한다.
+	 */
+	function divFilterRemove(str){
+		if(str === "remove" && selectors == null){
+			selectors = {};
+			var i = 0,
+				root = document.getElementById("chart1"),
+				className = "rMateChartH5__ChartRangeSelector_";
+			root = root.getElementsByTagName("div");
+			
+			while(true){
+				if(root[i].className === className + "Left" || root[i].className === className + "Center" || root[i].className === className + "Right"){
+					selectors[root[i].className] = root[i];
+					selectors[root[i].className + "_Filter"] = root[i].style.filter;
+					selectors[root[i].className + "_BackgroundColor"] = root[i].style.backgroundColor;
+					root[i].style.filter = "";
+					root[i].style.backgroundColor = "";	}
+				if(selectors[className + "Left"] !== undefined && selectors[className + "Center"] !== undefined && selectors[className + "Right"] !== undefined)
+					break;
+				i++;
+			}
+		}else if(str == "insert" && selectors != null){
+			var filter = "_Filter",
+				bc = "_BackgroundColor";
+			for(var o in selectors){
+				if(o.indexOf(filter) > -1){
+					selectors[o.substring(0, o.length - filter.length)].style.filter = selectors[o];
+				}else if(o.indexOf(bc) > -1){
+					selectors[o.substring(0, o.length - bc.length)].style.backgroundColor = selectors[o];
+				}
+			}
+			selectors = null;
+		}
+	}
+
+/**
+ * rMateChartH5 3.0이후 버전에서 제공하고 있는 테마기능을 사용하시려면 아래 내용을 설정하여 주십시오.
+ * 테마 기능을 사용하지 않으시려면 아래 내용은 삭제 혹은 주석처리 하셔도 됩니다.
+ *
+ * -- rMateChartH5.themes에 등록되어있는 테마 목록 --
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * -------------------------------------------------
+ *
+ * rMateChartH5.themes 변수는 theme.js에서 정의하고 있습니다.
+ */
+rMateChartH5.registerTheme(rMateChartH5.themes);
+
+/**
+ * 샘플 내의 테마 버튼 클릭 시 호출되는 함수입니다.
+ * 접근하는 차트 객체의 테마를 변경합니다.
+ * 파라메터로 넘어오는 값
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * - default
+ *
+ * default : 테마를 적용하기 전 기본 형태를 출력합니다.
+ */
+function rMateChartH5ChangeTheme(theme){
+	document.getElementById("chart1").setTheme(theme);
+}
+
+// -----------------------차트 설정 끝 -----------------------
+
+</script>
+<!-- 샘플 작동을 위한 css와 js -->
+<script type="text/javascript" src="./Web/JS/common.js"></script>
+<script type="text/javascript" src="./Web/JS/sample_util.js"></script>
+<link rel="stylesheet" type="text/css" href="./Web/sample.css"/>
+
+<!-- SyntaxHighlighter -->
+<script type="text/javascript" src="./Web/syntax/shCore.js"></script>
+<script type="text/javascript" src="./Web/syntax/shBrushJScript.js"></script>
+<link type="text/css" rel="stylesheet" href="./Web/syntax/shCoreDefault.css"/>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">
+			<div class="headerTitle">History Combination Column</div>
+			<!--<div class="themeButtons">
+				<div class="button theme_default" onclick="rMateChartH5ChangeTheme('default')">Default</div>
+				<div class="button theme_pastel" onclick="rMateChartH5ChangeTheme('pastel')"></div>
+				<div class="button theme_simple" onclick="rMateChartH5ChangeTheme('simple')"></div>
+			</div>-->
+		</div>
+		<div id="content">
+			<!-- 차트가 삽입될 DIV -->
+			<div id="chartHolder"></div>
+		</div>
+		<div id="updater">
+			<div>Layout과 Data를 수정 후 적용 할 수 있습니다.</div>
+			<div id="updaterTab">
+				<ul id="updaterTabUl">
+					<li id="updaterTabUlSource" class="active_tab">Source</li>
+					<li id="updaterTabUlLayout" class="non_active_li">Layout</li>
+					<li id="updaterTabUlData" class="non_active_li">Data</li>
+					<li id="updaterTabUlBlank">
+						<span id="btn_update">수정적용</span>
+					</li>
+				</ul>
+			</div>
+			<div id="updaterTarea">
+				<pre id="updaterTareaSource" class="brush:js toolbar:false" name="updaterTareaSource"></pre>
+				<textarea id="updaterTareaLayout" class="updaterTextarea" spellcheck="false"></textarea>
+				<textarea id="updaterTareaData" class="updaterTextarea" spellcheck="false"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

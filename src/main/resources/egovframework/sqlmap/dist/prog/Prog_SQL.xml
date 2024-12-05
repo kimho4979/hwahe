@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpdisys.dist.prog.mapper.ProgMapper">
+	<resultMap id="progResultMap" type="com.fpdisys.dist.prog.domain.Program">
+          <result property="progCd" column="PROG_CD"/>
+     	  <result property="progNm" column="PROG_NM"/>
+          <result property="fileNm" column="FILE_NM"/>
+          <result property="progPh" column="PROG_PH"/>
+		  <result property="target" column="TARGET"/>
+		   <result property="schAh" column="SCH_AH"/>
+			<result property="savAh" column="SAV_AH"/>
+			<result property="exlAh" column="EXL_AH"/>
+			<result property="fn1Ah" column="FN1_AH"/>
+			<result property="fn2Ah" column="FN2_AH"/>
+			<result property="fn3Ah" column="FN3_AH"/>
+			<result property="fn4Ah" column="FN4_AH"/>
+			<result property="fn5Ah" column="FN5_AH"/>
+			<result property="remark" column="REMARK"/>
+			<result property="useYn" column="USE_YN"/>
+			<result property="insDt" column="INS_DT"/>
+            <result property="insId" column="INS_ID"/>
+            <result property="uptDt" column="UPT_DT"/>
+            <result property="uptId" column="UPT_ID"/>
+    </resultMap>
+    
+    <select id="getFindAllProg" resultMap="progResultMap"  statementType="PREPARED">
+    	SELECT A.PROG_CD,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID,
+       A.FILE_NM,
+       A.PROG_NM,
+       A.PROG_PH,
+       A.SAV_AH,
+       A.SCH_AH,
+       A.EXL_AH,
+       A.FN1_AH,
+       A.FN2_AH,
+       A.FN3_AH,
+       A.FN4_AH,
+       A.FN5_AH,
+       A.REMARK,
+       A.TARGET,
+       A.USE_YN
+  FROM T_PROG A
+    </select>
+    
+    <select id="getActiveProg" resultMap="progResultMap"  statementType="PREPARED">
+    	SELECT A.PROG_CD,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID,
+       A.FILE_NM,
+       A.PROG_NM,
+       A.PROG_PH,
+       A.SAV_AH,
+       A.SCH_AH,
+       A.EXL_AH,
+       A.FN1_AH,
+       A.FN2_AH,
+       A.FN3_AH,
+       A.FN4_AH,
+       A.FN5_AH,
+       A.REMARK,
+       A.TARGET,
+       A.USE_YN
+  FROM T_PROG A
+  WHERE A.USE_YN='Y'
+    </select>
+    <insert  id="insertProg"  parameterType="java.util.HashMap"  >
+    INSERT INTO 
+    	T_PROG ( 
+    	PROG_CD,
+    	INS_DT,
+    	INS_ID,
+    	UPT_DT,
+    	UPT_ID,
+    	PROG_NM,
+    	PROG_PH,
+    	SAV_AH,
+    	SCH_AH,
+    	EXL_AH,
+    	FN1_AH,
+    	FN2_AH,
+    	FN3_AH,
+    	FN4_AH,
+    	FN5_AH,
+    	REMARK,
+    	TARGET,
+    	USE_YN 
+    	)
+		 VALUES 
+		( 
+		#{progCd     , jdbcType=VARCHAR} ,
+		sysdate,
+		#{userId     , jdbcType=VARCHAR},
+		sysdate,
+		#{userId     , jdbcType=VARCHAR},
+		#{progNm     , jdbcType=VARCHAR},
+		#{progPh     , jdbcType=VARCHAR},
+		#{savAh     , jdbcType=VARCHAR},
+		#{schAh     , jdbcType=VARCHAR},
+		#{exlAh     , jdbcType=VARCHAR},
+		#{fn1Ah     , jdbcType=VARCHAR},
+		#{fn2Ah     , jdbcType=VARCHAR},
+		#{fn3Ah     , jdbcType=VARCHAR},
+		#{fn4Ah     , jdbcType=VARCHAR},
+		#{fn5Ah     , jdbcType=VARCHAR},
+		#{remark     , jdbcType=VARCHAR},
+		'_slef',
+		'Y'   
+		)
+    </insert>
+    <update id="updateProg"  parameterType="java.util.HashMap"  >
+    UPDATE T_PROG
+SET UPT_DT = sysdate, 
+UPT_ID = #{userId     , jdbcType=VARCHAR}, 
+ PROG_NM = #{progNm     , jdbcType=VARCHAR}, 
+ PROG_PH = #{progPh     , jdbcType=VARCHAR}, 
+ SAV_AH = #{savAh     , jdbcType=VARCHAR}, 
+ SCH_AH = #{schAh     , jdbcType=VARCHAR}, 
+ EXL_AH = #{exlAh     , jdbcType=VARCHAR}, 
+ FN1_AH = #{fn1Ah     , jdbcType=VARCHAR}, 
+ FN2_AH = #{fn2Ah     , jdbcType=VARCHAR}, 
+ FN3_AH = #{fn3Ah     , jdbcType=VARCHAR}, 
+ FN4_AH = #{fn4Ah     , jdbcType=VARCHAR}, 
+ FN5_AH = #{fn5Ah     , jdbcType=VARCHAR}, 
+ REMARK = #{remark     , jdbcType=VARCHAR}, 
+ USE_YN = #{useYn     , jdbcType=VARCHAR}
+WHERE PROG_CD = #{progCd     , jdbcType=VARCHAR}
+    </update>
+    
+  <select id="getProg" resultMap="progResultMap"  statementType="PREPARED">
+  SELECT A.PROG_CD,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID,
+       A.FILE_NM,
+       A.PROG_NM,
+       A.PROG_PH,
+       A.SAV_AH,
+       A.SCH_AH,
+       A.EXL_AH,
+       A.FN1_AH,
+       A.FN2_AH,
+       A.FN3_AH,
+       A.FN4_AH,
+       A.FN5_AH,
+       A.REMARK,
+       A.TARGET,
+       A.USE_YN
+  FROM T_PROG A
+  WHERE A.PROG_CD=#{progCd     , jdbcType=VARCHAR}
+    </select>
+        <select id="getActiveProgSearch" resultMap="progResultMap"  statementType="PREPARED">
+    	SELECT A.PROG_CD,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID,
+       A.FILE_NM,
+       A.PROG_NM,
+       A.PROG_PH,
+       A.SAV_AH,
+       A.SCH_AH,
+       A.EXL_AH,
+       A.FN1_AH,
+       A.FN2_AH,
+       A.FN3_AH,
+       A.FN4_AH,
+       A.FN5_AH,
+       A.REMARK,
+       A.TARGET,
+       A.USE_YN
+  FROM T_PROG A
+  WHERE A.USE_YN='Y'
+  <if test="searchParams!=null">
+   and  ( A.PROG_CD LIKE '%'||#{searchParams}||'%'  or  A.PROG_NM  LIKE '%'||#{searchParams}||'%'   )
+  </if>
+    </select>
+    
+      <update id="getMergeProg"  parameterType="java.util.HashMap" >
+          <![CDATA[
+          	MERGE INTO T_PROG a
+       			USING DUAL
+       			ON (
+       				a.PROG_CD=#{progCd     , jdbcType=VARCHAR}
+       				)
+       			WHEN MATCHED THEN
+       				UPDATE SET
+       					 a.UPT_DT = sysdate, 
+							a.UPT_ID = #{userId     , jdbcType=VARCHAR}, 
+							a.PROG_NM = #{progNm     , jdbcType=VARCHAR}, 
+							a.PROG_PH = #{progPh     , jdbcType=VARCHAR}, 
+							a.SAV_AH = #{savAh     , jdbcType=VARCHAR}, 
+							a.SCH_AH = #{schAh     , jdbcType=VARCHAR}, 
+							a.EXL_AH = #{exlAh     , jdbcType=VARCHAR}, 
+							a.FN1_AH = #{fn1Ah     , jdbcType=VARCHAR}, 
+							a.FN2_AH = #{fn2Ah     , jdbcType=VARCHAR}, 
+							a.FN3_AH = #{fn3Ah     , jdbcType=VARCHAR}, 
+							a.FN4_AH = #{fn4Ah     , jdbcType=VARCHAR}, 
+							a.FN5_AH = #{fn5Ah     , jdbcType=VARCHAR}, 
+							a.REMARK = #{remark     , jdbcType=VARCHAR}, 
+							a.USE_YN = #{useYn     , jdbcType=VARCHAR}      				
+       			WHEN NOT MATCHED THEN	
+          			INSERT  ( 
+				    	PROG_CD,
+				    	INS_DT,
+				    	INS_ID,
+				    	PROG_NM,
+				    	PROG_PH,
+				    	SAV_AH,
+				    	SCH_AH,
+				    	EXL_AH,
+				    	FN1_AH,
+				    	FN2_AH,
+				    	FN3_AH,
+				    	FN4_AH,
+				    	FN5_AH,
+				    	REMARK,
+				    	TARGET,
+				    	USE_YN 
+				    	)
+						 VALUES 
+						( 
+						#{progCd     , jdbcType=VARCHAR} ,
+						sysdate,
+						#{userId     , jdbcType=VARCHAR},
+						#{progNm     , jdbcType=VARCHAR},
+						#{progPh     , jdbcType=VARCHAR},
+						#{savAh     , jdbcType=VARCHAR},
+						#{schAh     , jdbcType=VARCHAR},
+						#{exlAh     , jdbcType=VARCHAR},
+						#{fn1Ah     , jdbcType=VARCHAR},
+						#{fn2Ah     , jdbcType=VARCHAR},
+						#{fn3Ah     , jdbcType=VARCHAR},
+						#{fn4Ah     , jdbcType=VARCHAR},
+						#{fn5Ah     , jdbcType=VARCHAR},
+						#{remark     , jdbcType=VARCHAR},
+						'_slef',
+						'Y'   
+						)
+          
+        	]]>
+       </update>
+</mapper>

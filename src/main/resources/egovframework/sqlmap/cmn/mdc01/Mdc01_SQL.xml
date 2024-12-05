@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mdc01.mapper.Mdc01Mapper">
+	
+	<!-- 정산정보관리 정산내역 정보 조회 -->
+	<sql id="where">
+		<if test="searchWord != null and searchWord != ''">
+				AND (
+					UPPER(a.USER_ID) LIKE '%' || UPPER(#{searchWord}) || '%'	OR
+					UPPER(a.USER_NM) LIKE '%' || UPPER(#{searchWord}) || '%'	
+				)
+		</if>
+	</sql>
+	<select id="selectMdc01List" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT a.* FROM (
+			SELECT
+				'' || count(1) OVER() TOTAL_COUNT, 
+				ROWNUM AS rn, a.* FROM (
+				SELECT 
+                     USER_ID, USER_NM, BANK_NUM 
+					 , CASE WHEN MONITOR_TYPE = 'P' THEN '생산'
+						 WHEN MONITOR_TYPE = 'C' THEN '소비'
+            			 WHEN MONITOR_TYPE = 'A' THEN '공통'
+						 ELSE '없음'
+					   END AS MONITOR_TYPE
+					 , BANK_CODE
+					 , DECODE(USE_YN,'Y','사용','미사용') AS USE_YN
+                     , SUM(CNT1) AS CNT1
+                     , SUM(CNT2) AS CNT2
+                     , SUM(SUM1) AS SUM1
+                     , SUM(SUM2) AS SUM2
+                     , SUM(TOT_SUM) AS TOT_SUM
+              FROM(
+				
+				SELECT TTTB.USER_ID, TTTB.USER_NM, TTTB.BANK_NUM, TTTB.MONITOR_TYPE, TTTB.BANK_CODE, TTTB.USE_YN
+				    , NVL(CNT1,0) AS CNT1
+				    , NVL(CNT2,0) AS CNT2
+				    , NVL(SUM1,0) AS SUM1
+				    , NVL(SUM2,0) AS SUM2
+				    , NVL(TOT_SUM,0) AS TOT_SUM
+				FROM
+				(
+				SELECT USER_ID, USER_NM,  BANK_NUM
+				, DECODE(INDICATOR_TYPE,'K', SUM(TOT_CNT), 0) AS CNT1
+				, DECODE(INDICATOR_TYPE,'N', SUM(TOT_CNT), 0) AS CNT2
+				, DECODE(INDICATOR_TYPE,'K', SUM(PRICE), 0) AS SUM1
+				, DECODE(INDICATOR_TYPE,'N', SUM(PRICE), 0) AS SUM2
+				, SUM(PRICE) AS TOT_SUM
+				FROM
+				    (
+				    SELECT KPI_SEQ, USER_NM, USER_ID, COMP_CODE, BANK_NUM, PRICE, INDICATOR_TYPE
+				    , DECODE(TYPE_CONDITION, 'A', 
+				            CASE WHEN COUNT(*) <![CDATA[>=]]> CNT THEN 1
+				            ELSE 0
+				            END 
+				        , 'O',
+				            CASE WHEN COUNT(*) <![CDATA[>=]]> 1 THEN 1
+				            ELSE 0
+				            END
+				        , 1) AS TOT_CNT
+				    FROM
+				    (
+				        SELECT REG_DATE, CHUL_NO, GUBN
+				        FROM T_SHIPMNT_INFO
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'
+				        UNION ALL
+				        SELECT REG_DATE, CHUL_NO, '3' AS GUBN
+				        FROM T_CROP_REPORT_DETAIL
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'
+				        UNION ALL 
+				        SELECT REG_DATE, CHUL_NO, '4' AS GUBN
+				        FROM T_CULTIVATION_TREND
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'
+				        UNION ALL 
+				        SELECT REG_DATE, CHUL_NO, '5' AS GUBN
+				        FROM T_CONSUMPTION_TREND
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'
+				        UNION ALL 
+				        SELECT REG_DATE, CHUL_NO, '6' AS GUBN
+				        FROM T_SALEPRICE_TRAND
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'    
+				    ) TTA,
+				    (
+				        SELECT USER_ID, COMP_CODE, USER_TYPE, USER_NM, MOB, BANK_NUM, MONITOR_TYPE -- 출하물량, 출하예정물량
+				            ,KPI_SEQ, START_DT, END_DT, KPI_GROUP, GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION, CNT
+				        FROM
+				        (
+				            SELECT A.USER_ID, COMP_CODE, USER_TYPE, USER_NM, MOB, BANK_NUM, MONITOR_TYPE
+				            FROM T_USER A, T_USER_AUTH B
+				            WHERE  A.USER_ID = B.USER_ID
+				            AND A.USE_YN='Y'
+				            AND A.USER_TYPE='M'
+				            AND B.MONITOR_TYPE IS NOT NULL
+				            <include refid="where"/>
+				        ) TA, 
+				        (
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '1' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT 
+				            FROM T_KPI
+				            WHERE TYPE_SHIPMNT_EX IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '2' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_SHIPMNT IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '3' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_CROP IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '4' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_CULT IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '5' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_CONS_TREND IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '6' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_CONS_PRICE IS NOT NULL
+				            ORDER BY KPI_SEQ
+				        )
+				        TB
+				        WHERE TA.MONITOR_TYPE=TB.KPI_GROUP
+				    ) TTB
+				    WHERE TTA.CHUL_NO=TTB.COMP_CODE
+				    AND SUBSTR(REG_DATE,9,2) BETWEEN START_DT AND END_DT
+				    AND TTA.GUBN=TTB.GUBN
+				    GROUP BY KPI_SEQ, USER_NM, USER_ID, COMP_CODE, BANK_NUM, PRICE, INDICATOR_TYPE, TYPE_CONDITION, CNT
+				)
+				GROUP BY USER_NM, USER_ID, COMP_CODE, BANK_NUM, INDICATOR_TYPE
+			) TTTA,
+			( 
+			    SELECT A.USER_ID, COMP_CODE, USER_TYPE, USER_NM, MOB, BANK_NUM, MONITOR_TYPE, BANK_CODE, USE_YN
+			    FROM T_USER A, T_USER_AUTH B
+			    WHERE  A.USER_ID = B.USER_ID
+			    AND A.USE_YN='Y'
+			    AND A.USER_TYPE='M'
+			    AND B.MONITOR_TYPE IS NOT NULL
+			    <include refid="where"/>
+			)TTTB
+			WHERE TTTA.USER_ID(+) =TTTB.USER_ID 
+			) a
+			GROUP BY USER_ID, USER_NM, BANK_NUM, MONITOR_TYPE, BANK_CODE, USE_YN
+			 ORDER BY USER_ID
+              ) A
+			ORDER BY USER_ID
+		) a <![CDATA[	where a.rn > ( nvl(#{pageNumber , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10) and rn <= nvl(#{pageNumber , jdbcType=VARCHAR }, 1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+		ORDER BY USER_ID
+	</select>
+	
+	
+	<select id="selectMdc01FullList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+			SELECT 
+                     USER_ID, USER_NM, BANK_NUM
+  					 , CASE WHEN MONITOR_TYPE = 'P' THEN '생산'
+						 WHEN MONITOR_TYPE = 'C' THEN '소비'
+            			 WHEN MONITOR_TYPE = 'A' THEN '공통'
+						 ELSE '없음'
+					   END AS MONITOR_TYPE
+					 , BANK_CODE
+					 , DECODE(USE_YN,'Y','사용','미사용') AS USE_YN
+                     , SUM(CNT1) AS CNT1
+                     , SUM(CNT2) AS CNT2
+                     , SUM(SUM1) AS SUM1
+                     , SUM(SUM2) AS SUM2
+                     , SUM(TOT_SUM) AS TOT_SUM
+              FROM(
+				
+				SELECT TTTB.USER_ID, TTTB.USER_NM, TTTB.BANK_NUM, TTTB.MONITOR_TYPE, TTTB.BANK_CODE, TTTB.USE_YN
+				    , NVL(CNT1,0) AS CNT1
+				    , NVL(CNT2,0) AS CNT2
+				    , NVL(SUM1,0) AS SUM1
+				    , NVL(SUM2,0) AS SUM2
+				    , NVL(TOT_SUM,0) AS TOT_SUM
+				FROM
+				(
+				SELECT USER_ID, USER_NM,  BANK_NUM
+				, DECODE(INDICATOR_TYPE,'K', SUM(TOT_CNT), 0) AS CNT1
+				, DECODE(INDICATOR_TYPE,'N', SUM(TOT_CNT), 0) AS CNT2
+				, DECODE(INDICATOR_TYPE,'K', SUM(PRICE), 0) AS SUM1
+				, DECODE(INDICATOR_TYPE,'N', SUM(PRICE), 0) AS SUM2
+				, SUM(PRICE) AS TOT_SUM
+				FROM
+				    (
+				    SELECT KPI_SEQ, USER_NM, USER_ID, COMP_CODE, BANK_NUM, PRICE, INDICATOR_TYPE
+				    , DECODE(TYPE_CONDITION, 'A', 
+				            CASE WHEN COUNT(*) <![CDATA[>=]]> CNT THEN 1
+				            ELSE 0
+				            END 
+				        , 'O',
+				            CASE WHEN COUNT(*) <![CDATA[>=]]> 1 THEN 1
+				            ELSE 0
+				            END
+				        , 1) AS TOT_CNT
+				    FROM
+				    (
+				        SELECT REG_DATE, CHUL_NO, GUBN
+				        FROM T_SHIPMNT_INFO
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'
+				        UNION ALL
+				        SELECT REG_DATE, CHUL_NO, '3' AS GUBN
+				        FROM T_CROP_REPORT_DETAIL
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'
+				        UNION ALL 
+				        SELECT REG_DATE, CHUL_NO, '4' AS GUBN
+				        FROM T_CULTIVATION_TREND
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'
+				        UNION ALL 
+				        SELECT REG_DATE, CHUL_NO, '5' AS GUBN
+				        FROM T_CONSUMPTION_TREND
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'
+				        UNION ALL 
+				        SELECT REG_DATE, CHUL_NO, '6' AS GUBN
+				        FROM T_SALEPRICE_TRAND
+				        WHERE SUBSTR(REG_DATE,0,7)=#{searchYear} || '-' || #{searchMonth}
+				        AND USE_YN='Y'    
+				    ) TTA,
+				    (
+				        SELECT USER_ID, COMP_CODE, USER_TYPE, USER_NM, MOB, BANK_NUM, MONITOR_TYPE -- 출하물량, 출하예정물량
+				            ,KPI_SEQ, START_DT, END_DT, KPI_GROUP, GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION, CNT
+				        FROM
+				        (
+				            SELECT A.USER_ID, COMP_CODE, USER_TYPE, USER_NM, MOB, BANK_NUM, MONITOR_TYPE
+				            FROM T_USER A, T_USER_AUTH B
+				            WHERE  A.USER_ID = B.USER_ID
+				            AND A.USE_YN='Y'
+				            AND A.USER_TYPE='M'
+				            AND B.MONITOR_TYPE IS NOT NULL
+				            <include refid="where"/>
+				        ) TA, 
+				        (
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '1' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT 
+				            FROM T_KPI
+				            WHERE TYPE_SHIPMNT_EX IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '2' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_SHIPMNT IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '3' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_CROP IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '4' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_CULT IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '5' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_CONS_TREND IS NOT NULL
+				            UNION ALL
+				            SELECT KPI_SEQ, START_DT, END_DT, KPI_GROUP, '6' AS GUBN, INDICATOR_TYPE, PRICE, TYPE_CONDITION
+				            , DECODE(TYPE_SHIPMNT_EX,'Y',1,0) + DECODE(TYPE_SHIPMNT,'Y',1,0) + DECODE(TYPE_CROP,'Y',1,0) + DECODE(TYPE_CULT,'Y',1,0) + DECODE(TYPE_CONS_TREND,'Y',1,0) + DECODE(TYPE_CONS_PRICE,'Y',1,0) AS CNT
+				            FROM T_KPI
+				            WHERE TYPE_CONS_PRICE IS NOT NULL
+				            ORDER BY KPI_SEQ
+				        )
+				        TB
+				        WHERE TA.MONITOR_TYPE=TB.KPI_GROUP
+				    ) TTB
+				    WHERE TTA.CHUL_NO=TTB.COMP_CODE
+				    AND SUBSTR(REG_DATE,9,2) BETWEEN START_DT AND END_DT
+				    AND TTA.GUBN=TTB.GUBN
+				    GROUP BY KPI_SEQ, USER_NM, USER_ID, COMP_CODE, BANK_NUM, PRICE, INDICATOR_TYPE, TYPE_CONDITION, CNT
+				)
+				GROUP BY USER_NM, USER_ID, COMP_CODE, BANK_NUM, INDICATOR_TYPE
+			) TTTA,
+			( 
+			    SELECT A.USER_ID, COMP_CODE, USER_TYPE, USER_NM, MOB, BANK_NUM, MONITOR_TYPE, BANK_CODE, USE_YN
+			    FROM T_USER A, T_USER_AUTH B
+			    WHERE  A.USER_ID = B.USER_ID
+			    AND A.USE_YN='Y'
+			    AND A.USER_TYPE='M'
+			    AND B.MONITOR_TYPE IS NOT NULL
+			    <include refid="where"/>
+			)TTTB
+			WHERE TTTA.USER_ID(+) =TTTB.USER_ID 
+			) a
+			GROUP BY USER_ID, USER_NM, BANK_NUM, MONITOR_TYPE, BANK_CODE, USE_YN
+			ORDER BY USER_ID
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 정산정보관리 정산내역 특정 사용자 정보 조회 -->
+	<select id="selectUserInfo" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+			a.USER_ID
+			,a.COMP_CODE
+			,a.USER_NM
+			,b.EMAIL
+			,b.MOB
+			,b.BANK_NUM
+			,b.MONITOR_TYPE
+		FROM
+			T_USER a
+			,T_USER_AUTH b
+		WHERE
+			a.USER_ID = b.USER_ID
+			and a.USER_ID = #{USER_ID}
+	</select>
+	
+	
+	<!-- 정산정보관리 정산내역 특정 사용자의 정산내역 조회(전체 합친형태)(사용안함 혹시 몰라서 주석) -->
+	<!-- <select id="selectMdc01ListOfUser" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT a.* FROM (
+			SELECT
+				'' || count(1) OVER() TOTAL_COUNT, 
+				ROWNUM AS rn, a.* FROM (	
+		
+					SELECT
+						REG_DATE
+						,'출하예정물량' AS TYPE_NM
+						,'1' AS TYPE
+						,PUM_NAME
+						,GOOD_NAME
+					FROM
+						T_SHIPMNT_INFO
+					WHERE GUBN = '1'
+						AND SUBSTR(REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+						<if test="searchStDt != null and searchStDt != '' and searchEdDt != null and searchEdDt != ''">
+							AND TO_NUMBER(SUBSTR(REG_DATE, 9,2))BETWEEN #{searchStDt} AND #{searchEdDt}
+						</if>
+						AND CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+					UNION
+					SELECT
+						REG_DATE
+						,'출하물량' AS TYPE_NM
+						,'2' AS TYPE
+						,PUM_NAME
+						,GOOD_NAME
+					FROM
+						T_SHIPMNT_INFO
+					WHERE GUBN = '2'
+						AND SUBSTR(REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+						<if test="searchStDt != null and searchStDt != '' and searchEdDt != null and searchEdDt != ''">
+							AND TO_NUMBER(SUBSTR(REG_DATE, 9,2))BETWEEN #{searchStDt} AND #{searchEdDt}
+						</if>
+						AND CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+					UNION
+					SELECT
+						REG_DATE
+						,'작황동향' AS TYPE_NM
+						,'3' AS TYPE
+						,PUM_NAME
+						,GOOD_NAME
+					FROM
+						T_CROP_REPORT_DETAIL
+					WHERE 1=1
+						AND SUBSTR(REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+						<if test="searchStDt != null and searchStDt != '' and searchEdDt != null and searchEdDt != ''">
+							AND TO_NUMBER(SUBSTR(REG_DATE, 9,2))BETWEEN #{searchStDt} AND #{searchEdDt}
+						</if>
+						AND CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+					UNION
+					SELECT
+						REG_DATE
+						,'재배동향' AS TYPE_NM
+						,'4' AS TYPE
+						,PUM_NAME
+						,GOOD_NAME
+					FROM
+						T_CULTIVATION_TREND
+					WHERE 1=1
+						AND SUBSTR(REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+						<if test="searchStDt != null and searchStDt != '' and searchEdDt != null and searchEdDt != ''">
+							AND TO_NUMBER(SUBSTR(REG_DATE, 9,2))BETWEEN #{searchStDt} AND #{searchEdDt}
+						</if>
+						AND CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+					UNION
+					SELECT
+						REG_DATE
+						,'소비동향' AS TYPE_NM
+						,'5' AS TYPE
+						,PUM_NAME
+						,GOOD_NAME
+					FROM
+						T_CONSUMPTION_TREND
+					WHERE 1=1
+						AND SUBSTR(REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+						<if test="searchStDt != null and searchStDt != '' and searchEdDt != null and searchEdDt != ''">
+							AND TO_NUMBER(SUBSTR(REG_DATE, 9,2))BETWEEN #{searchStDt} AND #{searchEdDt}
+						</if>
+						AND CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+					UNION
+					SELECT
+						REG_DATE
+						,'소매가격' AS TYPE_NM
+						,'6' AS TYPE
+						,PUM_NAME
+						,GOOD_NAME
+					FROM
+						T_SALEPRICE_TRAND
+					WHERE 1=1
+						AND SUBSTR(REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+						<if test="searchStDt != null and searchStDt != '' and searchEdDt != null and searchEdDt != ''">
+							AND TO_NUMBER(SUBSTR(REG_DATE, 9,2))BETWEEN #{searchStDt} AND #{searchEdDt}
+						</if>
+						AND CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+				) a
+				WHERE 1=1
+					<if test="searchType != null and searchType != ''">
+						AND TYPE = #{searchType}
+					</if>
+				
+			) a <![CDATA[	where a.rn > ( nvl(#{pageNumber , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10) and rn <= nvl(#{pageNumber , jdbcType=VARCHAR }, 1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	</select> -->
+	
+	
+	<!-- 정산내역 상세 특정사용자의 출하예정물량 정산내역 조회 -->
+	<select id="mdc01ShipmntExOfUser" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+			T1.REG_DATE
+			,T1.SEQ_NO
+			,T1.GUBN
+			,CASE WHEN T1.GUBN = 1 THEN '출하예정물량' END AS GUBN_NAME
+			,T1.PUM_NAME
+			,T1.GOOD_NAME
+			,T1.CMP_CD
+			,T2.MARKET_NAME
+			,T1.QTY
+			,T1.BIGO
+			,CHUL_NO
+			,T1.REG_DT
+			,T1.UPT_DT
+			,T1.USE_YN
+			,T1.DAYS_GUBN
+		FROM 
+			T_SHIPMNT_INFO T1
+			LEFT OUTER JOIN T_JOINT_MARKET T2
+			ON T1.CMP_CD = T2.MARKET_CD
+		WHERE
+			T1.GUBN='1'
+			AND T1.USE_YN='Y'
+			AND SUBSTR(T1.REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+			AND T1.CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+		ORDER BY T1.SEQ_NO DESC, T1.REG_DT DESC, T1.CMP_CD, T1.GOOD_NAME
+	</select>
+	<!-- 정산내역 상세 특정사용자의 출하물량 정산내역 조회 -->
+	<select id="mdc01ShipmntOfUser" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT 
+			T1.SEQ_NO
+			,T1.REG_DATE
+			,T1.GUBN
+			,CASE WHEN T1.GUBN = 2 THEN '출하물량' END AS GUBN_NAME
+			,T1.PUM_NAME
+			,T1.GOOD_NAME
+			,T1.CMP_CD
+			,T2.MARKET_NAME
+			,T1.QTY
+			,T1.BIGO
+			,T1.CHUL_NO
+			,T1.REG_DT
+   			,T1.UPT_DT
+   			,T1.USE_YN
+   			,T1.DAYS_GUBN
+		FROM 
+			T_SHIPMNT_INFO T1
+			LEFT OUTER JOIN T_JOINT_MARKET T2
+			ON T1.CMP_CD = T2.MARKET_CD
+		WHERE
+			T1.GUBN='2'
+			AND T1.USE_YN='Y'
+			AND SUBSTR(T1.REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+			AND T1.CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+		ORDER BY T1.SEQ_NO DESC, T1.REG_DT DESC, T1.CMP_CD, T1.GOOD_NAME
+	</select>
+	<!-- 정산내역 상세 특정사용자의 작황동향 정산내역 조회 -->
+	<select id="mdc01TypeCropOfUser" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+			T1.REG_DATE
+			,T1.SEQ_NO
+			,T1.PUM_NAME
+			,T1.GOOD_NAME
+			,T1.CHUL_NO
+			,T1.UNIQUE_COLOR
+		    ,T1.STATUS
+		    ,T1.STAT_SUN
+		    ,T1.STAT_SIZE
+		    ,T1.STAT_CLIMATE
+		    ,T1.STAT_DEFINITION
+		   	,NVL(STAT_TEMPER,0) AS STAT_TEMPER
+		    ,T1.STAT_COLOR
+		    ,NVL(STAT_LENGTH,0) AS STAT_LENGTH
+		    ,NVL(STAT_THICK,0) AS STAT_THICK
+		    ,T1.STAT_INSECT_YN
+		    ,T1.STAT_INSECT_KIND
+			,T1.BIGO
+			,T2.FILE_SEQ
+        	,T2.ORIGINAL_FILE_NAME AS ORIGINAL_FILE_NAME
+        	,T2.STORED_FILE_NAME AS STORED_FILE_NAME
+        	,T2.FILE_SIZE AS FILE_SIZE
+			,T1.REG_DT
+      		,T1.UPT_DT
+      		,T1.USE_YN
+		FROM 
+			T_CROP_REPORT_DETAIL T1
+			LEFT OUTER JOIN T_CROP_DETAIL_FILE T2
+			ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+		WHERE
+			T1.USE_YN = 'Y'
+			AND SUBSTR(T1.REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+			AND T1.CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+		
+		ORDER BY T1.SEQ_NO DESC, T1.REG_DATE DESC, T1.GOOD_NAME
+	</select>
+	<!-- 정산내역 상세 특정사용자의 재배동향 정산내역 조회 -->
+	<select id="mdc01TypeCultOfUser" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT 
+			REG_DATE
+			,SEQ_NO
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,CHUL_NO
+			,AREA
+			,STATUS
+			,CASE WHEN STATUS =1 THEN '증가'
+			WHEN STATUS =2 THEN '비슷'
+			ELSE '감소' END AS STATUS_NAME 
+			,NVL(BIGO, ' ') AS BIGO
+			,REG_DT
+      		,UPT_DT
+      		,USE_YN
+		FROM
+			T_CULTIVATION_TREND
+		WHERE
+			USE_YN='Y'
+			AND SUBSTR(REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+			AND CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+		ORDER BY SEQ_NO DESC, REG_DATE DESC, GOOD_NAME
+	</select>
+	<!-- 정산내역 상세 특정사용자의 소비동향 정산내역 조회 -->
+	<select id="mdc01TypeConsTrendOfUser" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT REG_DATE
+			,SEQ_NO
+			,PUM_NAME
+			,GOOD_NAME
+			,CHUL_NO
+			,QTY
+			,BIGO
+			,REG_DT
+      		,UPT_DT
+		FROM
+			T_CONSUMPTION_TREND
+		WHERE
+			USE_YN = 'Y'
+			AND SUBSTR(REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+			AND CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+		ORDER BY SEQ_NO DESC, REG_DATE DESC , QTY DESC
+	</select>
+	<!-- 정산내역 상세 특정사용자의 소매가격 정산내역 조회 -->
+	<select id="mdc01TypeConsPriceOfUser" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT T1.SEQ_NO
+			,T1.REG_DATE
+			,T1.PUM_NAME
+			,T1.GOOD_NAME
+			,T1.CHUL_NO
+			,T1.SAN_CD
+			,T1.SALE_PRICE
+			,T2.SAN_NAME
+			,T1.REG_DT
+      		,T1.UPT_DT
+      		,T1.USE_YN
+		FROM
+			T_SALEPRICE_TRAND T1
+			LEFT OUTER JOIN T_LOCAL T2
+			ON T1.SAN_CD = T2.SAN_CD
+		WHERE
+			USE_YN='Y'
+			AND SUBSTR(T1.REG_DATE, 1,7) = #{searchYear} || '-' || #{searchMonth}
+			AND T1.CHUL_NO = (SELECT COMP_CODE FROM T_USER WHERE USER_ID = #{USER_ID})
+		ORDER BY REG_DATE DESC, GOOD_NAME
+	</select>
+	
+	
+	<select id="deadLineManage" parameterType="java.util.HashMap" statementType="PREPARED" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT DEADLINE_DATE, DEADLINE_GUBN
+		FROM T_DEADLINE
+	</select>
+	
+	<update id="updateDeadLineDate"  parameterType="java.util.HashMap">
+		UPDATE T_DEADLINE SET
+		DEADLINE_DATE = #{deadlineDate, jdbcType=VARCHAR}
+		, DEADLINE_GUBN = #{deadlineGubn, jdbcType=VARCHAR}
+ 	</update>
+	
+	
+	
+	
+</mapper>

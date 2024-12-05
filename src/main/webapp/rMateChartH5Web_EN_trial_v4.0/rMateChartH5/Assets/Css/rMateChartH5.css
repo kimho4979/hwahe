@@ -1,0 +1,712 @@
+/******************************************************
+ *
+ *			rMateH5 Global
+ *
+ *****************************************************/
+
+/* root default */
+.rMateH5__Root{
+	color:#000000;
+	font-size:11px;
+	line-height:1.2;
+	font-style:normal;
+	font-weight:normal;
+	font-variant:normal;
+	font-stretch:normal;
+	font-family : "arial","verdana";
+}
+
+.rMateH5__Root *{
+	box-sizing : border-box;
+	-moz-box-sizing : border-box;
+	-webkit-box-sizing : border-box;
+	
+	/* 모바일에서 꾹 누르고 있을 경우 발생하는 회색 박스 삭제 */
+	-webkit-tap-highlight-color : rgba(0, 0, 0, 0);
+}
+
+/******************************************************
+ *
+ *			rMateChart
+ *
+ *****************************************************/
+
+.rMateH5__rMateChart{
+	color:#777777;
+	
+	/* html요소가 드래그 되거나 더블 클릭 등 셀렉트 되었다고 판단 시 나오는 파란 박스 삭제 */
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.rMateH5__rMateChart > .rMateH5__ContentPane{
+	padding:10px;
+}
+
+/******************************************************
+ *
+ *			DataTip
+ *
+ *****************************************************/
+
+.rMateH5__rMateChart canvas{
+	/* IE7에서 canvas밑의 div을 text-align시키기에 주석처리
+	text-align:center;
+	*/
+}
+
+/******************************************************
+ *
+ *			DataTip, AxisDataTip
+ *
+ *****************************************************/
+
+.rMateH5__DataTip, .rMateH5__AxisDataTip{
+	color:#000000;
+	font-size:12px;
+	font-style:normal;
+	position:absolute;
+	background-color:#FFFFFF;
+	padding:4px 10px 4px 10px;
+	visibility:hidden;
+	cursor:default;
+	opacity:0.8;
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+	border-radius:4px;
+	border-width:2px;
+	border-style:solid;
+	white-space:nowrap;
+}
+
+/******************************************************
+ *
+ *			Caption, SubCaption
+ *
+ *****************************************************/
+
+.rMateH5__Caption{
+	font-size : 14px;
+	color : #333333;
+	text-align : center;
+}
+
+.rMateH5__SubCaption{
+	font-size : 11px;
+	color : #999999;
+	text-align : center;	
+}
+
+/******************************************************
+ *
+ *			Legend
+ *
+ *****************************************************/
+
+/* Legend */
+.rMateH5__Legend, .rMateH5__SubLegend{
+	border:1px solid #ccc;
+	font-size:11px;
+	font-weight:bold;
+	color:#767676;
+	background-color:#f7f7f7;
+	cursor:default;
+}
+
+/* Legend - ContentPane */
+.rMateH5__Legend .rMateH5__ContentPane, .rMateH5__SubLegend .rMateH5__ContentPane{
+	padding:5px;
+}
+
+.rMateH5__LegendItem, .rMateH5__CheckableLegendItem{
+	padding-left:0px;
+	padding-top:0px;
+	padding-right:0px;
+	padding-bottom:0px;
+	border:0px none;
+	background-color:rgba(255, 255, 255, 0);
+	white-space:nowrap;
+}
+
+/* unchecked */
+.rMateH5__UnChecked{
+	color:#ccc;
+}
+
+/******************************************************
+ *
+ *			ColorRangeLegend
+ *
+ *****************************************************/
+
+/* ColorRangeLegend */
+.rMateH5__ColorRangeLegend{
+	position:absolute;
+	overflow:hidden;
+	font-size:11px;
+	color:#555555;
+	cursor:default;
+}
+
+/* ColorRangeLegend - Label */
+.rMateH5__ColorRangeLegend_Label{
+	position:absolute;
+}
+
+/* ColorRangeLegend - Horizontal Arrow */
+.rMateH5__ColorRangeLegend_HArrow{
+	width:5px;
+	height:5px;
+	border-top:5px solid #555555;
+	border-left:2.5px solid transparent;
+	border-right:2.5px solid transparent;
+	border-bottom:5px solid transparent;
+	position:absolute;
+	box-sizing:border-box;
+}
+
+/* ColorRangeLegend - Vertical Arrow */
+.rMateH5__ColorRangeLegend_VArrow{
+	width:5px;
+	height:5px;
+	border-top:2.5px solid transparent;
+	border-left:5px solid transparent;
+	border-right:5px solid #555555;
+	border-bottom:2.5px solid transparent;
+	position:absolute;
+	box-sizing:border-box;
+}
+
+/* for IE7 */
+*.rMateH5__ColorRangeLegend_HArrow{
+	width:2px;
+	height:2px;
+	border-top:5px solid #555555;
+	border-left:2.5px solid transparent;
+	border-right:2.5px solid transparent;
+	border-bottom:5px solid transparent;
+	position:absolute;
+}
+
+*.rMateH5__ColorRangeLegend_VArrow{
+	width:2px;
+	height:2px;
+	border-top:2.5px solid transparent;
+	border-left:6px solid transparent;
+	border-right:5px solid #555555;
+	border-bottom:2.5px solid transparent;
+	position:absolute;
+}
+/* for IE7 end */
+
+/******************************************************
+ *
+ *			Chart Menu
+ *
+ *****************************************************/
+
+/* Chart Menu */
+.rMateH5__ChartMenu{
+	top:4px;
+	right:4px;
+	width:20px;
+	height:20px;
+	font-size:12px;
+	border-radius:1px;
+	border:1px solid #ccc;
+	
+	z-index:1;
+	overflow:hidden;
+	visibility:hidden;
+	position:absolute;
+	transition:width 0.2s, height 0.2s, padding-left 0.1s, padding-top 0.1s;
+	background:url("./menu.png") #fff no-repeat 50% 50%;
+	
+	width:0px;
+	height:0px;
+	padding-left:18px;
+	padding-top:18px;
+}
+
+/* ChartMenu에 마우스 오버시 */
+.rMateH5__ExpandChartMenu{
+	width:70px;
+	height:auto;
+	padding:4px;
+	background-position:-20px -20px;
+}
+
+/* ChartMenu에 붙는 아이템 들 */
+.rMateH5__ChartMenuItem{
+	width:60px;
+	padding-left:2px;
+
+	cursor:pointer;
+	background-color:#ffffff;
+	transition:background-color 0.2s;
+}
+
+/* ChartMenuItem에 설정된 img */
+.rMateH5__ChartMenuItem_Img{
+	width:12px;
+	height:12px;
+	margin-right:4px;
+}
+
+/* ChartMenuItem 마우스 오버시 */
+.rMateH5__ChartMenuItem:hover{
+	background-color:#555555;
+	color:#ffffff;
+}
+
+/******************************************************
+ *
+ *			ScrollBar
+ *
+ *****************************************************/
+
+/* ScrollBarAxisRenderer */
+
+/* Scrollbar Div */
+.rMateH5__ScrollBar {
+}
+
+/* Horizontal scrollbar track Div */
+.rMateH5__HScrollTrack, .rMateH5__VScrollTrack {
+	background-color:#f2f2f2;
+	border:1px solid #e6e6e6;
+}
+
+/* Horizontal scrollbar thumb Div */
+.rMateH5__HScrollThumb, .rMateH5__VScrollThumb {
+	cursor:pointer;
+	background-color:#aaaaaa;
+	border:1px solid #a6a6a6;
+	border-radius:10px;
+}
+
+/* Horizontal scrollbar thumb Div - hover */
+.rMateH5__HScrollThumb:hover, .rMateH5__VScrollThumb:hover{
+/*	background:url("./h_scroll_thumb_hover.png");*/
+	background-color:#888888;
+	border-color:#888888;
+}
+
+/* Horizontal scrollbar thumb header Div  */
+.rMateH5__HScrollThumbHeader{
+}
+
+/* Horizontal scrollbar right arrow Div  */
+.rMateH5__HScrollUpArrow {
+	border:1px solid #e6e6e6;
+	border-right:none;
+	background:#eaeaea url("./left_arrow.png") no-repeat center center;
+	cursor:pointer;
+}
+
+/* Horizontal scrollbar left arrow Div  */
+.rMateH5__HScrollDownArrow {
+	border:1px solid #e6e6e6;
+	border-left:none;
+	background:#eaeaea url("./right_arrow.png") no-repeat center center;
+	cursor:pointer;
+}
+
+.rMateH5__VScrollThumbHeader{
+}
+
+.rMateH5__VScrollUpArrow {
+	border:1px solid #e6e6e6;
+	border-right:none;
+	background:#f2f2f2 url("./up_arrow.png") no-repeat center center;
+	cursor:pointer;
+}
+
+.rMateH5__VScrollDownArrow {
+	border:1px solid #e6e6e6;
+	border-right:none;
+	background:#f2f2f2 url("./down_arrow.png") no-repeat center center;
+	cursor:pointer;
+}
+
+/******************************************************
+ *
+ *			SlideChart
+ *
+ *****************************************************/
+
+.rMateH5__SlideController{
+}
+
+.rMateH5__PrevCanvas, .rMateH5__NextCanvas{
+	position:absolute;
+	z-index:1;
+}
+
+/* 슬라이드 이전 버튼 */
+.rMateH5__SlidePrevButton{
+	background:url("./slide_left.png") no-repeat 50% 50%;
+}
+
+/* 슬라이드 다음 버튼 */
+.rMateH5__SlideNextButton{
+	background:url("./slide_right.png") no-repeat 50% 50%;
+}
+
+.rMateH5__SlidePrevButton, .rMateH5__SlideNextButton{
+	width:20px;
+	height:20px;
+}
+
+/* 슬라이드 버튼 */
+.rMateH5__SlideButton{
+	width:15px;
+	height:15px;
+	background:url("./slide_button.png") no-repeat 50% 50%;
+}
+
+/* 선택된 슬라이드의 버튼 */
+.rMateH5__SlideActiveButton{
+	background:url("./slide_active_button.png") no-repeat 50% 50%;
+}
+
+.rMateH5__SlideButton, .rMateH5__SlidePrevButton, .rMateH5__SlideNextButton{
+	cursor:pointer;
+	position:absolute;
+}
+
+/******************************************************
+ *
+ *			MotionController
+ *
+ *****************************************************/
+
+.rMateH5__MotionController{
+	padding:4px;
+}
+
+.rMateH5__PlayButton{
+	position:absolute;
+	width:35px;
+	height:26px;
+	border-radius:15px;
+	border-style:none;
+	cursor:pointer;
+	transition:background-color 0.3s;
+	background-color:rgb(69, 206, 200);
+	color:#ffffff;
+	text-align:center;
+	padding-top:5px;
+}
+
+.rMateH5__PlayButton:hover{
+	background-color:#8de2da;
+}
+
+.rMateH5__PlayButton:active{
+	background-color:#2a98a0;
+}
+
+.rMateH5__Pause{
+	background:url("./loader.gif") no-repeat 50% 50%;
+}
+
+.rMateH5__MotionController .rMateH5__Slider{
+	height:8px;
+	position:absolute;
+	font-size:1px;
+	cursor:pointer;
+}
+
+.rMateH5__MotionController .rMateH5__SliderThumb{
+	height:10px;
+	position:absolute;
+}
+
+.rMateH5__SliderCompleteTrack{
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff00CEFF', endColorstr='#ff00CEFF');
+	background:-ms-linear-gradient(0deg, rgb(255, 216, 51), rgb(0, 206, 255));
+	background:-moz-linear-gradient(0deg, rgb(255, 216, 51), rgb(0, 206, 255));
+	background:-o-linear-gradient(0deg, rgb(255, 216, 51), rgb(0, 206, 255));
+	background:-webkit-linear-gradient(0deg, rgb(255, 216, 51), rgb(0, 206, 255));
+}
+
+/******************************************************
+ *
+ *			CrossRangeZoomer
+ *
+ *****************************************************/
+
+.rMateH5__CrossRangeZoomer{
+	
+}
+
+.rMateH5__CrossHair_Label{
+	position:absolute;
+	color:#ffffff;
+	font-size:11px;
+	font-weight:normal;
+	font-style:normal;
+	background-color:#454545;
+	border:1px solid #555555;
+	padding:2px 4px;
+	text-align:center;
+	visibility:hidden;
+	cursor:default;
+}
+
+.rMateH5__CrossRangeZoomer_Restore{
+	position:absolute;
+	top:0px;
+	right:0px;
+	width:20px;
+	height:20px;
+	cursor:pointer;
+	background:#555555 url("./restore.png") no-repeat 50% 50%/90% 90%;
+	transition:width 0.2s, height 0.2s, background-color 0.2s;
+}
+
+.rMateH5__CrossRangeZoomer_Restore:hover{
+	width:30px;
+	height:30px;
+	background:url("./restore.png") no-repeat 50% 50%/100% 100%;
+	background-color:#555555;
+}
+
+/******************************************************
+ *
+ *			DualChart
+ *
+ *****************************************************/
+
+.rMateH5__MainChart, .rMateH5__SubChart{
+	position:absolute;
+}
+
+/******************************************************
+ *
+ *			SymboldDiv
+ *
+ *****************************************************/
+
+ .rMateH5__SymbolDiv{
+	cursor:pointer;
+	position:absolute;
+	text-align:center;
+ }
+
+/******************************************************
+ *
+ *			History
+ *
+ *****************************************************/
+
+/* History CSS for IE 7,8 시작 */
+
+*.rMateH5__ChartRangeSelector_Center{
+	background-color:rgb(255, 255, 255);
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+}
+
+*.rMateH5__ChartRangeSelector_Left, *.rMateH5__ChartRangeSelector_Right{
+	border:1px solid #999999;
+	background-color:rgb(238, 238, 238);
+	filter:progid:DXImageTransform.Microsoft.Alpha(opacity=80);
+}
+
+/* History CSS for IE 7,8 끝 */
+
+.rMateH5__ChartRangeSelector_LeftThumb, .rMateH5__ChartRangeSelector_RightThumb{
+	width:10px;
+	height:20px;
+	background:url("./selector.png") no-repeat 50% 50%;
+	cursor:col-resize;
+}
+
+.rMateH5__ChartRangeSelector_Left, .rMateH5__ChartRangeSelector_Right{
+	background-color:rgba(238, 238, 238, 0.8);
+	border:1px solid #999999;
+}
+
+.rMateH5__ChartRangeSelector_Center{
+	cursor:pointer;
+	background-color:rgba(255, 255, 255, 0);
+}
+
+/******************************************************
+ *
+ *			CanvasLabel ( Memo )
+ *
+ *****************************************************/
+
+.rMateH5__CanvasElement{
+}
+
+ .rMateH5__CanvasLabel{
+ }
+
+/******************************************************
+ *
+ *			DrillDownMenu
+ *
+ *****************************************************/
+
+ .rMateH5__DrillDownMenu{
+	position:absolute;
+	left:0px;
+	top:0px;
+ }
+
+ .rMateH5__DrillDownMenu > .rMateH5__DrillDownBackButton, .rMateH5__DrillDownFirstButton{
+	width:24px;
+	height:22px;
+	text-align:center;
+	color:#ffffff;
+	border:1px solid #555555;
+	background-color:#555555;
+	transition:background-color 0.2s, color 0.2s;
+	cursor:pointer;
+	float:left;
+	margin-right:2px;
+	padding-top:2px;
+ }
+
+.rMateH5__DrillDownMenu > .rMateH5__DrillDownBackButton:hover, .rMateH5__DrillDownFirstButton:hover{
+	color:#555555;
+	background-color:#ffffff;
+ }
+
+ /******************************************************
+ *
+ *			Preloader
+ *
+ *****************************************************/
+
+.rMateH5__Preloader{
+	top:0px;
+	left:0px;
+	z-index:2;
+	width:100%;
+	height:100%;
+	opacity:0.7;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+	background:url("./loader.gif") 50% 50% no-repeat #FFF;
+}
+
+/******************************************************
+ *
+ *			DataEditor
+ *
+ *****************************************************/
+
+.rMateH5__DataEditor{
+	overflow-y:hidden;
+	overflow-x:auto;
+}
+
+.rMateH5__DataEditor table{
+	height:100%;
+	border:solid 1px #555555;
+	text-decoration:none;
+	font-style:normal;
+	font-weight:normal;
+	font-size:11px;
+	text-align:center;
+	cursor:default;
+}
+
+/* default th */
+.rMateH5__DataEditor th{
+	color:#ffffff;
+	font-weight:bold;
+	font-size:11px;
+	letter-spacing:0;
+	text-align:center;
+	height:22px;
+	padding:2px 4px;
+	background:-ms-linear-gradient(270deg, #6e7376 20%, #6e7376 100%);
+	background:-moz-linear-gradient(270deg, #6e7376 20%, #6e7376 100%);
+	background:-o-linear-gradient(270deg, #6e7376 20%, #6e7376 100%);
+	background:-webkit-linear-gradient(270deg, #6e7376 20%, #6e7376 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff6e7376', endColorstr='#ff6e7376');
+}
+
+.rMateH5__DataEditor th.column{
+	border-right:solid 1px #555555;
+}
+
+.rMateH5__DataEditor th.row{
+	border-bottom:solid 1px #555555;
+}
+
+.rMateH5__DataEditor td{
+	padding:2px 4px;
+}
+
+.rMateH5__DataEditor td.column{
+	border-right:solid 1px #555555;
+}
+
+.rMateH5__DataEditor td.row{
+	border-bottom:solid 1px #555555;
+}
+
+.rMateH5__DataEditor td.oddRow{
+	background-color:#EFEEEE;
+}
+
+.rMateH5__DataEditor td.evenRow{
+	background-color:#FFFFFF;
+}
+
+.rMateH5__DataEditor td:hover{
+	background-color:#E3FFD6;
+}
+
+.rMateH5__DataEditor td:focus{
+	background-color:#D1EBB4;
+	color:#ff0000;
+}
+
+.rMateH5__CloseButton{
+	background:url("./close_btn.png") no-repeat;
+	cursor:pointer;
+	position:fixed;
+	width:13px;
+	height:13px;
+}
+
+.rMateH5__CloseButton:hover{
+	background:url("./hover_close_btn.png") no-repeat;
+}
+
+/******************************************************
+ *
+ *			Information
+ *
+ *****************************************************/
+
+.rMateH5__Information{
+	overflow:hidden;
+}
+
+/* cursor */
+.rMateH5__CursorPointer{
+	cursor:pointer;
+}
+
+/******************************************************
+ *
+ *			LabelLayer
+ *
+ *****************************************************/
+
+.rMateH5__BarSetLabelLayer,
+.rMateH5__AreaSetLabelLayer,
+.rMateH5__ColumnSetLabelLayer
+{
+	pointer-events:none;
+}

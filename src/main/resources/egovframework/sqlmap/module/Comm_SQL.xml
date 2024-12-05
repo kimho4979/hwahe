@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.module.comm.mapper.CommMapper">
+
+   	<resultMap id="commResultMap" type="java.util.HashMap">
+		<result property="cdId" column="CD_ID"/>
+		<result property="cdNm" column="CD_NM"/>
+		<result property="cdSeq" column="CD_SEQ"/>
+		<result property="itemCd" column="ITEM_CD"/>
+	</resultMap>
+
+	<select id="selectComCdList" parameterType="java.util.HashMap" resultMap="commResultMap">
+		<![CDATA[
+			SELECT /* com.fpdisys.module.comm.mapper.CommMapper.selectComCdList */
+			      CD_ID     AS CD_ID
+			    , CD_NM     AS CD_NM
+			    , SEQ       AS CD_SEQ
+			  FROM TB_GEN_CODE
+			 WHERE GP_ID = #{gpId, jdbcType=VARCHAR}
+			 ORDER BY CD_SEQ
+		]]>
+	</select>
+
+	<select id="selectItemList" parameterType="java.util.HashMap" resultMap="commResultMap">
+		<![CDATA[
+			SELECT /* com.fpdisys.module.comm.mapper.CommMapper.selectItemList */
+				  ITEM     	AS CD_ID
+			    , ITEM     	AS CD_NM
+			    , ROWNUM	AS CD_SEQ
+			    , ITEM		AS ITEM_CD
+			  FROM (
+				SELECT NVL(TB.PUM_NM, TA.PUM_NAME)	AS ITEM
+				  FROM (
+				  	SELECT DISTINCT A.PUM_NAME
+				  	  FROM (
+				  	  	SELECT
+				  	  		  CASE
+				  	  		  	WHEN CMP_CD = '0000000001' AND PUM_NAME = '팔레높시스' THEN
+				  	  		  		'호접란'
+				  	  		  	ELSE
+				  	  		  		PUM_NAME
+				  	  		  END	AS PUM_NAME
+				  	  	  FROM T_SALE_DATE
+				  	  	 WHERE SALE_DATE BETWEEN #{saleDateFrom} AND #{saleDateTo}
+		]]>
+					<if test="flowerCtgrList != null and flowerCtgrList.size > 0">
+						   AND FLOWER_GUBN IN
+						<foreach item="flower" collection="flowerCtgrList" open="(" separator="," close=")">
+				        	#{flower}
+				 		</foreach>
+					</if>
+					<if test="marketList != null and marketList.size > 0">
+						   AND CMP_CD IN
+						<foreach item="market" collection="marketList" open="(" separator="," close=")">
+				        	#{market}
+				 		</foreach>
+					</if>
+		<![CDATA[
+				  	  ) A
+				  ) TA
+				  , (
+				  	SELECT
+				  		  PUM_NM_MAP
+		                , MAX(PUM_NM)   AS PUM_NM
+				  	  FROM FLOWER.TB_KIND_MAP
+				  	 WHERE 1=1
+		]]>
+				<if test="flowerCtgrList != null and flowerCtgrList.size > 0">
+					   AND FLOWER_GUBN_MAP IN
+					<foreach item="flower" collection="flowerCtgrList" open="(" separator="," close=")">
+			        	#{flower}
+			 		</foreach>
+				</if>
+				<if test="marketList != null and marketList.size > 0">
+					   AND CMP_CD_MAP IN
+					<foreach item="market" collection="marketList" open="(" separator="," close=")">
+			        	#{market}
+			 		</foreach>
+				</if>
+		<![CDATA[
+				  	 GROUP BY PUM_NM_MAP
+				  ) TB
+				 WHERE TA.PUM_NAME = TB.PUM_NM_MAP(+)
+				 GROUP BY NVL(TB.PUM_NM, TA.PUM_NAME)
+			 	 ORDER BY ITEM
+			  ) ITM
+		]]>
+	</select>
+
+	<select id="selectItemDtlList" parameterType="java.util.HashMap" resultMap="commResultMap">
+		<![CDATA[
+			SELECT /* com.fpdisys.module.comm.mapper.CommMapper.selectItemDtlList */
+			      ITEM_DTL  AS CD_ID
+			    , ITEM_DTL  AS CD_NM
+			    , ROWNUM	AS CD_SEQ
+			    , ITEM		AS ITEM_CD
+			  FROM (
+			    SELECT
+			          NVL(TB.PUM_NM, TA.PUM_NAME)   AS ITEM
+			        , NVL(TC.JONG_NM, TA.GOOD_NAME) AS ITEM_DTL
+			      FROM
+			        (
+			            SELECT
+			                  A.PUM_NAME
+			                , A.GOOD_NAME
+			              FROM (
+			                SELECT
+			                      CASE
+			                        WHEN CMP_CD = '0000000001' AND PUM_NAME = '팔레높시스' THEN '호접란'
+			                        ELSE PUM_NAME
+			                      END   AS PUM_NAME
+			                    , GOOD_NAME
+			                  FROM T_SALE_DATE
+				  	  	 WHERE SALE_DATE BETWEEN #{saleDateFrom} AND #{saleDateTo}
+		]]>
+					<if test="flowerClassList != null and flowerClassList.size > 0">
+						   AND FLOWER_GUBN IN
+						<foreach item="flower" collection="flowerClassList" open="(" separator="," close=")">
+				        	#{flower}
+				 		</foreach>
+					</if>
+					<if test="marketList != null and marketList.size > 0">
+						   AND CMP_CD IN
+						<foreach item="market" collection="marketList" open="(" separator="," close=")">
+				        	#{market}
+				 		</foreach>
+					</if>
+					<if test="itemList != null and itemList.size > 0">
+						   AND PUM_NAME IN
+						<foreach item="item" collection="itemList" open="(" separator="," close=")">
+				        	#{item}
+				 		</foreach>
+					</if>
+		<![CDATA[
+			              ) A
+			             GROUP BY
+			                  A.PUM_NAME
+			                , A.GOOD_NAME
+			        ) TA
+			        , (
+			            SELECT
+			                  PUM_NM_MAP
+			                , MAX(PUM_NM)   AS PUM_NM
+			              FROM FLOWER.TB_KIND_MAP
+			             WHERE   1=1
+		]]>
+					<if test="flowerClassList != null and flowerClassList.size > 0">
+						   AND FLOWER_GUBN_MAP IN
+						<foreach item="flower" collection="flowerClassList" open="(" separator="," close=")">
+				        	#{flower}
+				 		</foreach>
+					</if>
+					<if test="marketList != null and marketList.size > 0">
+						   AND CMP_CD_MAP IN
+						<foreach item="market" collection="marketList" open="(" separator="," close=")">
+				        	#{market}
+				 		</foreach>
+					</if>
+		<![CDATA[
+			             GROUP BY PUM_NM_MAP
+			        ) TB
+			        , (
+			            SELECT
+			                  JONG_NM_MAP
+			                , MAX(JONG_NM)   AS JONG_NM
+			              FROM FLOWER.TB_KIND_MAP
+			             WHERE   1=1
+		]]>
+					<if test="flowerClassList != null and flowerClassList.size > 0">
+						   AND FLOWER_GUBN_MAP IN
+						<foreach item="flower" collection="flowerClassList" open="(" separator="," close=")">
+				        	#{flower}
+				 		</foreach>
+					</if>
+					<if test="marketList != null and marketList.size > 0">
+						   AND CMP_CD_MAP IN
+						<foreach item="market" collection="marketList" open="(" separator="," close=")">
+				        	#{market}
+				 		</foreach>
+					</if>
+		<![CDATA[
+			             GROUP BY JONG_NM_MAP
+			        ) TC
+			     WHERE TA.PUM_NAME  = TB.PUM_NM_MAP(+)
+			       AND TA.GOOD_NAME = TC.JONG_NM_MAP(+)
+			     GROUP BY NVL(TB.PUM_NM, TA.PUM_NAME), NVL(TC.JONG_NM, TA.GOOD_NAME)
+			     ORDER BY ITEM_DTL
+			  ) A
+		]]>
+	</select>
+	
+ 	<select id="selectGoodNameCmpTotal" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 	WITH	V_SALE_DATA
+		AS		(
+				SELECT	TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD AS ITEM_CD
+				,		TIS.KIND_CD
+				FROM	T_INT_SALE TIS
+				WHERE	1=1
+				<if test="flowerCd.size != 0">
+					AND tis.FLOWER_GUBN IN
+					<foreach item="item" collection="flowerCd" open="(" separator="," close=")">
+						#{item ,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="cmpCd.size != 0">
+					AND tis.MARKET_CD IN
+					<foreach item="item" collection="cmpCd" open="(" separator="," close=")">
+						#{item ,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				<if test="searchStrDate != null and searchStrDate != ''">
+					AND SALE_DATE BETWEEN #{searchStrDate,jdbcType=VARCHAR} AND #{searchEndDate,jdbcType=VARCHAR}
+				</if>
+				<if test="itemList.size != 0">
+					AND TIS.FLOWER_CODE || TIS.ITEM_CD IN
+					<foreach item="item" collection="itemList" open="(" separator="," close=")">
+						#{item ,jdbcType=VARCHAR}
+					</foreach>
+				</if>
+				GROUP BY TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD, TIS.KIND_CD
+				)
+		SELECT	tik.FLOWER_GUBN
+		,		tik.FLOWER_CODE
+		,		tik.ITEM_CD
+		,		tik.KIND_CD
+		,		DECODE(vsd.ITEM_CD , '36043', '(호)', DECODE(vsd.ITEM_CD, '36002', '(팔)', '')) || tik.KIND_NM AS kind_nm
+		FROM	V_SALE_DATA vsd
+		LEFT JOIN T_INT_KIND tik ON tik.FLOWER_GUBN || tik.FLOWER_CODE || tik.ITEM_CD = vsd.item_cd AND tik.KIND_CD = vsd.kind_cd AND tik.USE_YN = 'Y'
+		ORDER BY tik.KIND_NM
+ 	</select>
+
+</mapper>

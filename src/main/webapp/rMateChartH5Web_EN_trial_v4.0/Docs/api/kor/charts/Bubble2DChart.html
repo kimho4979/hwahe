@@ -1,0 +1,817 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="Bubble2DChart,kor.charts.Bubble2DChart" name="keywords">
+<title>kor.charts.Bubble2DChart</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'Bubble2DChart - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?kor/charts/Bubble2DChart.html&amp;kor/charts/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Bubble2DChart</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Bubble2DChart"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor.charts</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Bubble2DChart</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">Bubble2DChart <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../images/inherit-arrow.gif"> <a href="chartClasses/CartesianChart.html">CartesianChart</a> <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../images/inherit-arrow.gif"> <a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Subclasses</td><td><a href="../charts/Bubble3DChart.html">Bubble3DChart</a></td>
+</tr>
+</table>
+<p></p>
+  Bubble2DChart 클래스는 데이터 포인트를 3개의 값(X축 값, Y축 값, 반경)에 따라서 차트상에 버블로 표현합니다.
+  <p>각 데이터 포인트는 수평 축을 따르는 값, 수직 축을 따르는 값 그리고 버블의 크기 값으로 정의됩니다.<br/>
+  Bubble2DChart 의 series 속성에는 Bubble2DSeries 클래스 인스턴스의 배열을 지정합니다.</p>
+  
+  <p>레이아웃은 다음과 같은 형식으로 작성됩니다.</p>
+  
+  <pre>
+  &lt;rMateChart &gt;
+   &lt;Options&gt;
+    &lt;Caption text="Annual Report"/&gt;
+   &lt;/Options&gt;
+   &lt;Bubble2DChart showDataTips="true" minRadius="5" maxRadius="30"&gt;
+    &lt;series&gt;
+     &lt;Bubble2DSeries displayName="Profit/Cost/Revenue" xField="Profit" yField="Cost" radiusField="Revenue"/&gt;
+    &lt;/series&gt;
+   &lt;/Bubble2DChart&gt;
+  &lt;/rMateChart&gt;
+  </pre>
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<div class="showHideLinks">
+<div class="hideInheritedStyle" id="hideInheritedStyle">
+<a onclick="javascript:setInheritedVisible(false,'Style');" href="#styleSummary" class="showHideLink"><img src="../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Styles</a>
+</div>
+<div class="showInheritedStyle" id="showInheritedStyle">
+<a onclick="javascript:setInheritedVisible(true,'Style');" href="#styleSummary" class="showHideLink"><img src="../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Styles</a>
+</div>
+</div>
+<table id="summaryTableStyle" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:annotationElements">annotationElements</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>차트의 전경(foreground)에 표현할 요소들을 설정합니다.</p>
+  유효값은 아래와 같습니다.</td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:axisClickJsFunction">axisClickJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>축의 라벨을 클릭하였을 때 실행될 자바스크립트 함수명을 지정합니다.</p>
+  예) &lt;...Chart axisClickJsFunction="axisClickFunc"&gt;
+    <p><code>axisClickJsFunction</code> 함수 시그너쳐(signature)는 아래와 같습니다.</p>
+    <pre>
+   <i>function_name</i>(id, text){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:axisDataTipBorderColor">axisDataTipBorderColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>축 데이터 팁 테두리선의 색상을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:axisDataTipBorderRadius">axisDataTipBorderRadius</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>축 데이터 팁 테두리 모서리선의 둥근정도를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:axisDataTipBorderStyle">axisDataTipBorderStyle</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>축 데이터 팁 테두리선의 스타일을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:axisDataTipBorderWidth">axisDataTipBorderWidth</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>축 데이터 팁 테두리선의 굵기를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:axisDataTipJsFunction">axisDataTipJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>축에 대한 데이터 팁 보여주기 여부(showHorizontalAxisDataTip, showVerticalAxisDataTip) 값이 true 일 경우, 데이터 팁의 내용을 작성하는 자바스크립트 함수명을 지정합니다.</p>
+  예) &lt;...Chart axisDataTipJsFunction="axisDataTipFunc"&gt;
+    <p><code>axisDataTipJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(id, text){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:axisMouseSensitivity">axisMouseSensitivity</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>>축 데이터 팁 출력 시 출력되는 마우스 반경을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:backgroundElements">backgroundElements</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>차트 배경에 표현할 요소들을 설정합니다.<br/>
+  기본값(default)은 GridLines 입니다.</p>
+  유효값은 아래와 같습니다.</td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:buttonMode">buttonMode</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+   <p>차트상의 데이터 포인트에 마우스 오버 시 손모양 커서 사용 여부를 나타냅니다.</p>
+      </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:chartClickJsFunction">chartClickJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트 영역을 마우스 클릭하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart chartClickJsFunction="chartClickHandler"&gt;
+    <p><code>chartClickJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(id){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:chartDoubleClickJsFunction">chartDoubleClickJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트 영역을 마우스 더블클릭하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart chartDoubleClickJsFunction="chartDoubleClickHandler"&gt;
+    <p><code>chartDoubleClickJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+  <pre>
+   <i>function_name</i>(id){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:chartOutJsFunction">chartOutJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트 영역에서 마우스 아웃하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart chartOutJsFunction="chartOutHandler"&gt;
+    <p><code>chartOutJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(id){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:chartOverJsFunction">chartOverJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트 영역을 마우스 오버하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart chartOverJsFunction="chartOverHandler"&gt;
+    <p><code>chartOverJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(id){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipBackgroundColorOnSeries">dataTipBackgroundColorOnSeries</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>데이터 팁의 배경색을 시리즈의 기본 색상으로 설정할 지 여부를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipBorderColor">dataTipBorderColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Uint<br>
+  <p>데이터 팁이 표시되는 div 의 테두리 선의 색상을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipBorderColor">dataTipBorderColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁 테두리선의 색상을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipBorderColorOnSeries">dataTipBorderColorOnSeries</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>데이터 팁의 테두리 색상을 시리즈 색상과 동일할게 할지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipBorderRadius">dataTipBorderRadius</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>데이터 팁 테두리 모서리선의 둥근정도를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipBorderStyle">dataTipBorderStyle</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁이 표시되는 div 의 테두리 스타일을 설정합니다.</p>
+    <p>유효값은 none, solid, inset, outset 입니다.</p>
+    <ul>
+   <li>none - 테두리 선을 그리지 않도록 설정합니다.</li>
+   <li>solid - 테두리를 기준으로 테두리 자체에 선을 그리도록 설정합니다.</li>
+   <li>inset - 테두리를 기준으로 테두리 안쪽에 선을 그리도록 설정합니다.</li>
+   <li>outset - 테두리를 기준으로 테두리 바깥쪽에 선을 그리도록 설정합니다.</li>
+  </ul>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipBorderStyle">dataTipBorderStyle</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁 테두리선의 스타일을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipBorderWidth">dataTipBorderWidth</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>데이터 팁이 표시되는 div 의 테두리 선의 굵기를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipBorderWidth">dataTipBorderWidth</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>데이터 팁 테두리선의 굵기를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipDisplayMode">dataTipDisplayMode</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁의 출력형태를 설정합니다.</p>
+    유효값은 아래와 같습니다.</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipFontColorOnSeries">dataTipFontColorOnSeries</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>데이터 팁의 폰트 색상을 시리즈 색상과 동일할게 할지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipFormatter">dataTipFormatter</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>데이터 팁에 적용되는 포맷터를 설정합니다.</p>
+    <p>유효값은 아래와 같습니다.</p>
+    <ul>
+   <li>NumberFormatter</li>
+   <li>CurrencyFormatter</li>
+   <li>DateFormatter</li>
+  </ul>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipJsFunction">dataTipJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트상의 데이터 포인트에 마우스 오버 시 표시되는 데이터 팁의 내용을 작성하는 자바스크립트 함수명을 지정합니다.<br/>
+  차트 레이아웃 설정시 dataTipJsFunction 속성값을 자바스크립트 함수명으로 지정합니다.</p>
+    예) &lt;...Chart showDataTips="true" dataTipJsFunction="myDataTip"&gt;
+    <p><code>dataTipJsFunction</code> 함수 시그너쳐(signature)는 아래와 같습니다.</p>
+    <pre>
+  <i>function_name</i>(seriesId, seriesName, index, xName, yName, data, values) { ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipMode">dataTipMode</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>showDataTips 값이 true 인 경우, 데이터 팁의 표현 방식을 정의합니다.</p>
+    유효값은 다음과 같습니다.</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipOrder">dataTipOrder</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>dataTipDisplayMode가 axis일 경우 출력되는 데이터 팁의 순서를 변경합니다.<br/>
+  유효값은 "normal", "reverse" 입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:dataTipStyleName">dataTipStyleName</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 팁의 스타일 이름을 설정합니다.<br/>
+  &ltStyle&gt; 노드에서 정의한 이름을 설정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:displayCompleteCallFunction">displayCompleteCallFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트의 생성이 완료되었을 때 실행될 자바스크립트 함수명을 지정합니다.<br/>
+  차트의 생성이 완료되면 설정된 자바스크립트 함수를 실행하게 됩니다.</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:doubleClickEnabled">doubleClickEnabled</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트 영역에 대하여 마우스 더블클릭을 활성화 할지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:enableDataEffect">enableDataEffect</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>이펙트를 적용할지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:enablePattern">enablePattern</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>시각 장애 사용자를 위한 패턴 적용 여부를 설정합니다.<br/>
+  차트를 생성하는 HTML 내에 차트 설정 변수, chartVars 값이 "&usePattern=true" 으로 설정되고<br/>
+  이 속성값이 true 일 경우 차트에 패턴이 적용됩니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:groupField">groupField</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>그룹 카테고리 사용시 차트에 출력될 데이터 필드명을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:gutterBottom">gutterBottom</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number &nbsp; <span class="label">Format: </span>Length<br>
+  <p>축과 차트의 데이터 포인트들이 표현되는 영역 사이의 하단 공간을 지정합니다.<br/>
+  미 설정 시 자동으로 계산됩니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:gutterLeft">gutterLeft</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number &nbsp; <span class="label">Format: </span>Length<br>
+  <p>축과 차트의 데이터 포인트들이 표현되는 영역 사이의 왼쪽 공간을 지정합니다.<br/>
+  미 설정 시 자동으로 계산됩니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:gutterRight">gutterRight</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number &nbsp; <span class="label">Format: </span>Length<br>
+  <p>축과 차트의 데이터 포인트들이 표현되는 영역 사이의 오른쪽 공간을 지정합니다.<br/>
+  미 설정 시 자동으로 계산됩니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:gutterTop">gutterTop</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number &nbsp; <span class="label">Format: </span>Length<br>
+  <p>축과 차트의 데이터 포인트들이 표현되는 영역 사이의 상단 공간을 지정합니다.<br/>
+  미 설정 시 자동으로 계산됩니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:hideToolTipAtTouchEnd">hideToolTipAtTouchEnd</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>모바일에서 touch end 이벤트가 발생할 경우 툴팁을 삭제 할지 여부를 설정합니다.<br/>
+  유효값은 다음과 같습니다.</p>
+    <ul>
+   <li><code>true</code> : touch end 이벤트 발생 시에 출력된 툴팁을 삭제합니다.</li>
+   <li><code>false</code> : 차트 영역 이외의 부분에 touch 시 출력된 툴팁을 삭제합니다.</li>
+  </ul>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:horizontalAxis">horizontalAxis</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>차트의 가로축을 설정합니다.<br/>
+  일반적으로 영역 차트인 경우 수평축에 CategoryAxis를 사용하지만 경우에 따라서 LinearAxis 혹은 DateTimeAxis를 사용할 수 있습니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:horizontalAxisRenderers">horizontalAxisRenderers</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>가로축의 렌더러를 설정합니다.<br/>
+  예를 들어, 가로축의 위치, 색상, 텍스트 스타일 등에 기본값(default)을 사용하지 않고 원하는 값으로 설정하려면 렌더러를 정의할 필요가 있습니다.<br/>
+  유효값은 Axis2DRenderer 와 Axis2DRenderer를 상속받은 클래스들의 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:id">id</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>식별자(Identifier)를 설정합니다.</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:itemClickJsFunction">itemClickJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트상에서 데이터 아이템을 마우스 클릭하면 호출할 자바스크립트 함수명을 지정합니다.<br/>
+  차트 레이아웃 설정시 itemClickJsFunction 속성값을 자바스크립트 함수명으로 지정합니다.</p>
+    예) &lt;Column2DChart showDataTips="true" itemClickJsFunction="chartClick"&gt;
+    <p><code>itemClickJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+  <i>function_name</i>(seriesId, displayText, index, data, values) { ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:itemDoubleClickJsFunction">itemDoubleClickJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템을 마우스 더블클릭하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemDoubleClickJsFunction="itemDoubleClickHandler"&gt;
+    <p><code>itemDoubleClickJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(seriesId, displayName, index, data, values){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:itemDownJsFunction">itemDownJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템을 마우스 다운하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemDownJsFunction="itemDownHandler"&gt;
+    <p><code>itemDownJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(seriesId, displayName, index, data, values){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:itemMoveJsFunction">itemMoveJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템에서 마우스 무브하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemMoveJsFunction="itemMoveHandler"&gt;
+    <p><code>itemMoveJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(eventName, items){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:itemOutJsFunction">itemOutJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템에서 마우스 아웃하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemOutJsFunction="itemOutHandler"&gt;
+    <p><code>itemOutJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(eventName, items){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:itemOverJsFunction">itemOverJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템을 마우스 오버하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemOverJsFunction="itemOverHandler"&gt;
+    <p><code>itemOverJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(eventName, items){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:itemUpJsFunction">itemUpJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 아이템에서 마우스 업하면 호출할 자바스크립트 함수명을 지정합니다.</p>
+    예) &lt;...Chart itemUpJsFunction="itemUpHandler"&gt;
+    <p><code>itemUpJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+   <i>function_name</i>(seriesId, displayName, index, data, values){ ...</td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:lazyJsFunction">lazyJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>스크롤 차트에서 차트 영역을 마우스 드래그하여 스크롤의 끝에 이르면 실행될 자바스크립트 함수명을 지정합니다.</p>
+  예) &lt;...Chart lazyJsFunction="lazyData"&gt;
+    <p><code>lazyJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:maximumDataTipCount">maximumDataTipCount</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>dataTipMode가 multiple일 경우의 최대 출력되는 데이터 팁의 개수를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:maxRadius"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">maxRadius</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>차트에 표시되는 버블들 중 가장 큰 버블의 최대 반경을 지정합니다. (픽셀 단위)<br/>
+  데이터 값 중에서 가장 큰 값과 관련이 있습니다.</p>
+  
+   기본값(default) :  <code>50</code>.</td><td class="summaryTableOwnerCol">Bubble2DChart</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:minRadius"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">minRadius</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+   <p>차트에 표시되는 버블들 중 가장 작은 버블의 최소 반경을 지정합니다. (픽셀 단위)<br/>
+   데이터 값 중에서 가장 작은 값과 관련이 있습니다.</p>
+  
+    기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">Bubble2DChart</td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:mouseSensitivity">mouseSensitivity</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>데이터 팁 출력 시 출력되는 데이터 포인트들의 마우스 반경을 설정합니다.<br/>
+  설정한 값이 클수록 더 많은 데이터 팁(더 큰 마우스 반경에 포함되는 데이터 포인트들)이 출력됩니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:paddingBottom">paddingBottom</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>하단 여백 크기를 픽셀 단위로 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:paddingLeft">paddingLeft</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>왼쪽 여백 크기를 픽셀 단위로 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:paddingRight">paddingRight</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>오른쪽 여백 크기를 픽셀 단위로 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:paddingTop">paddingTop</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>상단 여백 크기를 픽셀 단위로 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:selectionMode">selectionMode</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트상의 데이터 포인트에 마우스 오버 혹은 클릭 시 해당 아이템의 강조 표시 방식을 설정합니다.<br/>
+  유효값은 "none", "single", "multiple" 입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:series">series</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>차트상에 표시되는 데이터의 시리즈를 정의합니다.<br/>
+  유효값은 Column2DSeries, Area2DSet, Column3DSet, Bar3DSeries, 등등.</p>
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:showDataTipMarker">showDataTipMarker</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>데이터 팁 내에 각 시리즈의 색상과 같은 색상의 마커의 표시 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:showDataTips">showDataTips</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트상의 데이터 포인트에 마우스 오버 시 데이터 팁의 출력 여부를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:showDataTipTargets">showDataTipTargets</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>차트상에 데이터 팁이 표시될 때 마우스 오버된 데이터 포인트에 원을 표시할 지 여부를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:showDataTipTargetsLine">showDataTipTargetsLine</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>dataTipMode가 multiple이고 여러개의 데이터팁이 출력될 경우 데이터 팁을 선으로 연결할지 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:showHorizontalAxisDataTip">showHorizontalAxisDataTip</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>가로축에 대한 데이터 팁 보여주기 여부를 설정합니다.</p>
+
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:showVerticalAxisDataTip">showVerticalAxisDataTip</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>세로축에 대한 데이터 팁 보여주기 여부를 설정합니다.</p>
+
+  </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/ChartBase.html#style:touchMoveEnable">touchMoveEnable</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>모바일 기기에서 손가락으로 차트 영역을 이동할 경우, touchMove 이벤트를 브라우저에 넘길지 여부를 설정합니다.<br/>
+  touchMove 이벤트를 브라우저에 넘기면 차트 영역에서 touchMove 이벤트 발생 시 브라우저 스크롤이 일어나며,<br/>
+  touchMove 이벤트를 브라우저에 넘기지 않으면 차트 영역 내에서 브라우저 스크롤이 일어나지 않습니다.<br/>
+  이는 차트를 touchMove 할 때 브라우저 스크롤이 발생하면, tooltips 을 확인하기 어려운 문제가 있으므로, 이를 사용자가 선택할 수 있도록 하기 위한 속성입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/ChartBase.html">ChartBase</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:verticalAxis">verticalAxis</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>차트의 세로축을 설정합니다.<br/>
+  일반적으로 영역 차트인 경우 수직축에 LinearAxis를 사용하지만 경우에 따라서 CategoryAxis 혹은 DateTimeAxis를 사용할 수 있습니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="chartClasses/CartesianChart.html#style:verticalAxisRenderers">verticalAxisRenderers</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>세로축의 렌더러를 설정합니다.</td><td class="summaryTableOwnerCol"><a href="chartClasses/CartesianChart.html">CartesianChart</a></td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

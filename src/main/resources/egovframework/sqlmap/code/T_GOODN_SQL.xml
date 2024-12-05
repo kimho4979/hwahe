@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpditrans.trans.cmmn.mapper.TGoodNMapper">
+	<resultMap id="goodNResultMap" type="com.fpditrans.trans.cmmn.domain.TGoodNVO">
+		<result property="large" column="LARGE"/>
+		<result property="largeName" column="LARGE_NAME"/>
+		<result property="mid" column="MID"/>
+		<result property="midCode" column="MID_CODE"/>
+		<result property="midName" column="MID_NAME"/>
+		<result property="small" column="SMALL"/>
+		<result property="goodName" column="GOOD_NAME"/>
+		<result property="stdCode" column="STD_CODE"/>
+		<result property="stdName" column="STD_NAME"/>
+		<result property="manageCd" column="MANAGE_CD"/>
+		<result property="gubn" column="GUBN"/>
+		<result property="bigo" column="BIGO"/>
+		<result property="rowNum" column="ROW_NUM"/>	
+
+</resultMap>
+    
+ 	<select id="selectGoodNListAll" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="goodNResultMap">
+ 	    SELECT A.LARGE,
+	       (SELECT  B.LARGE_NAME FROM T_GOODL B WHERE 1=1 AND B.LARGE = A.LARGE) AS LARGE_NAME, 
+	       A.MID,
+	        (A.LARGE || A.MID ) AS MID_CODE,
+	       (SELECT C.MID_NAME FROM T_GOODM C WHERE 1=1 AND C.LARGE= A.LARGE AND C.MID= A.MID) AS MID_NAME,
+	       A.SMALL,
+	       A.GOOD_NAME,
+	       (A.LARGE || A.MID || A.SMALL) AS STD_CODE,  
+	       A.MANAGE_CD,
+	       A.GUBN,
+	       A.BIGO
+	  FROM T_GOODN A
+ 	</select>    
+ 	
+ 	<select id="selectGoodNListSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="goodNResultMap">
+ 	    SELECT   
+		   D.*
+		  FROM 
+		 (SELECT A.LARGE,
+			       (SELECT  B.LARGE_NAME FROM T_GOODL B WHERE 1=1 AND B.LARGE = A.LARGE) AS LARGE_NAME, 
+			       A.MID,
+			       (A.LARGE || A.MID ) AS  MID_CODE, 
+			       (SELECT C.MID_NAME FROM T_GOODM C WHERE 1=1 AND C.LARGE= A.LARGE AND C.MID= A.MID) AS MID_NAME,
+			       A.SMALL,
+			       A.GOOD_NAME,
+			       (A.LARGE || A.MID || A.SMALL) AS STD_CODE,  
+			       A.MANAGE_CD,
+			       A.GUBN,
+			       A.BIGO
+			  FROM T_GOODN A
+			  WHERE 1=1 
+		    )  D
+   		 WHERE 1=1
+	    <if  test ="searchParams!=null and searchParams!='' " >
+	     AND  (D.STD_CODE LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%'   OR D.LARGE_NAME LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%' OR D.MID_NAME LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%'     OR D.GOOD_NAME LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%') 
+	    </if>
+	    <if  test ="searchParams==null or searchParams=='' " >
+	     AND ROWNUM &lt;=20
+	    </if>   
+ 	</select> 
+ 	<select id="selectGoodNListSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="goodNResultMap">
+ 	    	SELECT data.* 
+		  FROM 
+		       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+		              ROWNUM ROW_NUM, 
+		              ROWNUM LINENUM, 
+		              data.* 
+		         FROM 
+		              (
+ 	    
+				 	    SELECT   
+						   D.*
+						  FROM 
+						 (SELECT A.LARGE,
+							       (SELECT  B.LARGE_NAME FROM T_GOODL B WHERE 1=1 AND B.LARGE = A.LARGE) AS LARGE_NAME, 
+							       A.MID,
+							       (A.LARGE || A.MID ) AS  MID_CODE, 
+							       (SELECT C.MID_NAME FROM T_GOODM C WHERE 1=1 AND C.LARGE= A.LARGE AND C.MID= A.MID) AS MID_NAME,
+							       A.SMALL,
+							       A.GOOD_NAME,
+							       (A.LARGE || A.MID || A.SMALL) AS STD_CODE,  
+							       A.MANAGE_CD,
+							       A.GUBN,
+							       A.BIGO
+							  FROM T_GOODN A
+							  WHERE 1=1 
+						    )  D
+				   		 WHERE 1=1
+					    <if  test ="searchParams!=null and searchParams!='' " >
+					     AND  (D.STD_CODE LIKE '%' || #{searchParams ,jdbcType=VARCHAR} || '%'   OR D.LARGE_NAME LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%' OR D.MID_NAME LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%'     OR D.GOOD_NAME LIKE '%' || #{searchParams, jdbcType=VARCHAR}} || '%') 
+					    </if>
+					    <if  test ="searchParams==null or searchParams=='' " >
+					     AND ROWNUM &lt;=20
+					    </if>   
+					          
+		              ) data 
+	       		) data 
+	 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	  
+	       
+ 	</select>       
+ 
+</mapper>

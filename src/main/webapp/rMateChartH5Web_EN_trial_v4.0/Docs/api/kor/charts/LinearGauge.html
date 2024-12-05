@@ -1,0 +1,345 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="LinearGauge,kor.charts.LinearGauge" name="keywords">
+<title>kor.charts.LinearGauge</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'LinearGauge - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?kor/charts/LinearGauge.html&amp;kor/charts/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;LinearGauge</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class LinearGauge"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor.charts</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class LinearGauge</td>
+</tr>
+</table>
+<p></p>
+  LinearGauge 클래스는 설정된 막대의 방향과 값에 따라서 막대(가로, 세로) 게이지를 표현합니다.
+    <pre>
+  &lt;rMateChart&gt;
+   &lt;Options&gt;
+    &lt;Caption text="Gauge"/&gt;
+   &lt;Options&gt;
+   &lt;LinearGauge minimum="0" maximum="100" showDataTip="true" direction="vertical"
+    showAnimation="true" duration="800" showLabel="true" bounceAnimating="true"/&gt;
+  &lt;/rMateChart&gt;
+  </pre>
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<table id="summaryTableStyle" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:backgroundAlpha"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">backgroundAlpha</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 배경색의 투명도를 지정합니다.</p>
+     기본값(default) :  <code>1</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:backgroundColor"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">backgroundColor</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>게이지의 배경 색상을 지정합니다.</p>
+     기본값(default) :  <code>#ffffff</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:backgroundStroke"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">backgroundStroke</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>게이지 배경 테두리 선의 색상을 지정합니다.</p>
+  </td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:bounceAnimating"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">bounceAnimating</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>이펙트 바운스 효과를 설정합니다.</p>
+     기본값(default) :  <code>true</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:direction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">direction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>게이지 출력 방향을 설정합니다.</p>
+     기본값(default) :  <code>vertical</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:duration"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">duration</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>이펙트 출력 시간을 설정합니다.</p>
+     기본값(default) :  <code>800</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:fillJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">fillJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>사용자 정의 색상을 설정하는 자바스크립트 함수명을 지정합니다.</p>
+    <p><code>fillJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+  <i>function_name</i>(value){ ... }
+  </pre>
+    <code>value</code> : 데이터 값
+    자바스크립트 함수가 반환하는 결과 값이 게이지의 색상으로 설정됩니다.
+  </td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:foregroundColor"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">foregroundColor</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>게이지의 전경 색상을 지정합니다.</p>
+     기본값(default) :  <code>#33eeff</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:forgroundColor"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">forgroundColor</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 전경색의 투명도를 지정합니다.</p>
+     기본값(default) :  <code>1</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:formatter"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">formatter</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>게이지 값(라벨)에 적용가능한 포맷터를 지정합니다.</p>
+     기본값(default) :  <code>NumberFormatter</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:horizontalRatio"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">horizontalRatio</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지의 총 넓이(width)에서 해당 비율로 설정된 값 까지의 크기를 지정합니다.<br/>
+  유효값은 0 과 1 사이의 값입니다.</p>
+     기본값(default) :  <code>0.6</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:labelJsFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">labelJsFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>사용자 정의 라벨(수치값)을 설정하는 자바스크립트 함수명을 지정합니다.</p>
+    <p><code>labelJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+  <i>function_name</i>(value){ ... }
+  </pre>
+    <code>value</code> : 데이터 값
+    자바스크립트 함수가 반환하는 결과 값이 게이지의 수치 라벨로 설정됩니다.
+  </td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:leftBottomBorderRadius"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">leftBottomBorderRadius</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 왼쪽 아래 테두리 모서리선의 둥근정도를 설정합니다.<br/>
+  유효값은 0 과 1 사이의 값입니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:leftTopBorderRadius"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">leftTopBorderRadius</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 왼쪽 위 테두리 모서리선의 둥근정도를 설정합니다.<br/>
+  유효값은 0 과 1 사이의 값입니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:maximum"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">maximum</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 값(라벨)의 최대값을 지정합니다.</p>
+     기본값(default) :  <code>100</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:minimum"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">minimum</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 값(라벨)의 최소값을 지정합니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:rightBottomBorderRadius"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">rightBottomBorderRadius</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 오른쪽 아래 테두리 모서리선의 둥근정도를 설정합니다.<br/>
+  유효값은 0 과 1 사이의 값입니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:rightTopBorderRadius"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">rightTopBorderRadius</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 오른쪽 위 테두리 모서리선의 둥근정도를 설정합니다.<br/>
+  유효값은 0 과 1 사이의 값입니다.</p>
+     기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showAnimation"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showAnimation</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>이펙트 효과를 줄지 여부를 설정합니다.</p>
+     기본값(default) :  <code>true</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showDataTip"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showDataTip</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>마우스 오버 시 게이지의 데이터 팁에 대한 표시 여부를 설정합니다.</p>
+     기본값(default) :  <code>true</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showTargetLine"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showTargetLine</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>목표값에 선을 출력할 지 여부를 설정합니다.</p>
+     기본값(default) :  <code>false</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:showValueLabel"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">showValueLabel</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>게이지 값(라벨)의 출력 여부를 설정합니다.</p>
+     기본값(default) :  <code>true</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:targetValue"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">targetValue</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>목표값을 설정합니다.</p>
+     기본값(default) :  <code>80</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:valueChangeFunction"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">valueChangeFunction</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>데이터 변경 시 호출될 자바스크립트 함수명을 지정합니다.</p>
+    <p><code>valueChangeFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+    <pre>
+  <i>function_name</i>(value){ ... }
+  </pre>
+    <code>value</code> : 데이터 값
+  </td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:valueLabelHorizontalRatio"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">valueLabelHorizontalRatio</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 값(라벨)에 대한 수평 위치의 비율값을 지정합니다.</p>
+     기본값(default) :  <code>0.5</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:valueLabelVerticalRatio"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">valueLabelVerticalRatio</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 값(라벨)에 대한 수직 위치의 비율값을 지정합니다.</p>
+     기본값(default) :  <code>0.5</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:verticalRatio"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">verticalRatio</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지의 총 높이(height)에서 해당 비율로 설정된 값 까지의 크기를 지정합니다.<br/>
+  유효값은 0 과 1 사이의 값입니다.</p>
+     기본값(default) :  <code>0.8</code>.</td><td class="summaryTableOwnerCol">LinearGauge</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

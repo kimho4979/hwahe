@@ -1,0 +1,385 @@
+@charset "utf-8";
+/* common.css */
+/* Noto Sans KR (korean) http://www.google.com/fonts/earlyaccess */
+
+ 
+/* font */
+@font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 100;
+	src: url(../fonts/NotoSansKr/NotoSansKR-Thin.woff2) format('woff2'),
+		 url(../fonts/NotoSansKr/NotoSansKR-Thin.woff) format('woff'),
+		 url(../fonts/NotoSansKr/NotoSansKR-Thin.otf) format('opentype');
+  }
+  @font-face {
+	font-family: 'Noto Sans KR';
+	font-style: normal;
+	font-weight: 300;
+	src: url(../fonts/NotoSansKr/NotoSansKR-Light.woff2) format('woff2'),
+		 url(../fonts/NotoSansKr/NotoSansKR-Light.woff) format('woff'),
+		 url(../fonts/NotoSansKr/NotoSansKR-Light.otf) format('opentype');
+  }
+  @font-face {
+	 font-family: 'Noto Sans KR';
+	 font-style: normal;
+	 font-weight: 400;
+	 src: url(../fonts/NotoSansKr/NotoSansKR-Regular.woff2) format('woff2'),
+		  url(../fonts/NotoSansKr/NotoSansKR-Regular.woff) format('woff'),
+		  url(../fonts/NotoSansKr/NotoSansKR-Regular.otf) format('opentype');
+   }
+  @font-face {
+	 font-family: 'Noto Sans KR';
+	 font-style: normal;
+	 font-weight: 500;
+	 src: url(../fonts/NotoSansKr/NotoSansKR-Medium.woff2) format('woff2'),
+		  url(../fonts/NotoSansKr/NotoSansKR-Medium.woff) format('woff'),
+		  url(../fonts/NotoSansKr/NotoSansKR-Medium.otf) format('opentype');
+   }
+
+  @font-face {
+	 font-family: 'Noto Sans KR';
+	 font-style: normal;
+	 font-weight: 700;
+	 src: url(../fonts/NotoSansKr/NotoSansKR-Bold.woff2) format('woff2'),
+		  url(../fonts/NotoSansKr/NotoSansKR-Bold.woff) format('woff'), 
+		  url(../fonts/NotoSansKr/NotoSansKR-Bold.otf) format('opentype');
+   }
+  @font-face {
+	 font-family: 'Noto Sans KR';
+	 font-style: normal;
+	 font-weight: 900;
+	 src: url(../fonts/NotoSansKr/NotoSansKR-Black.woff2) format('woff2'),
+		  url(../fonts/NotoSansKr/NotoSansKR-Black.woff) format('woff'),
+		  url(../fonts/NotoSansKr/NotoSansKR-Black.otf) format('opentype');
+   }
+
+   @font-face { font-family: 'S-CoreDream-9Black'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-9Black.woff') format('woff'); font-weight: normal; font-style: normal; }
+  
+/* overflow */
+.overflow_a{overflow:auto!important;}
+.overflow_x{overflow-x:auto;}
+.overflow_y{overflow-y:auto;}
+
+.m0a{margin:0 auto;}
+/* margin-top */
+.mt0{margin-top:0px!important;}
+.mt5{margin-top:5px!important;}
+.mt8{margin-top:8px!important;}
+.mt10{margin-top:10px!important;}
+.mt15{margin-top:15px!important;}
+.mt20{margin-top:20px!important;}
+.mt25{margin-top:25px!important;}
+.mt30{margin-top:30px!important;}
+.mt40{margin-top:40px!important;}
+.mt50{margin-top:50px;}
+.mt60{margin-top:60px;}
+.mt70{margin-top:70px;}
+.mt80{margin-top:80px!important;}
+.mt90{margin-top:90px;}
+.mt100{margin-top:100px!important;}
+
+.mtm1{margin-top:-1px;}
+
+/* margin-right */
+.mb0{margin-bottom:0px!important;}
+.mb10{margin-bottom:10px;}
+.mb20{margin-bottom:20px;}
+.mb30{margin-bottom:30px;}
+.mb40{margin-bottom:40px;}
+.mb50{margin-bottom:50px;}
+.mb60{margin-bottom:60px;}
+.mb70{margin-bottom:70px;}
+.mb80{margin-bottom:80px;}
+.mb90{margin-bottom:90px;}
+.mb100{margin-bottom:100px;}
+
+/* margin-left */
+.ml0{margin-left:0!important;}
+.ml5{margin-left:5px;}
+.ml10{margin-left:10px!important;}
+.ml20{margin-left:20px!important;}
+.ml30{margin-left:30px;}
+.ml40{margin-left:40px;}
+.ml50{margin-left:50px;}
+.ml60{margin-left:60px;}
+.ml70{margin-left:70px;}
+.ml80{margin-left:80px;}
+.ml90{margin-left:90px;}
+.ml100{margin-left:100px;}
+
+/* margin-right */
+.mr0{margin-right:0px!important;}
+.mr10{margin-right:10px;}
+.mr20{margin-right:20px;}
+.mr30{margin-right:30px;}
+.mr40{margin-right:40px;}
+.mr50{margin-right:50px;}
+.mr60{margin-right:60px;}
+.mr70{margin-right:70px;}
+.mr80{margin-right:80px;}
+.mr90{margin-right:90px;}
+.mr100{margin-right:100px;}
+
+/* padding */
+.pd5{padding:5px!important;}
+.pd10{padding:10px!important;}
+.pd60{padding:60px!important;}
+
+/* padding-top */
+.pdt0{padding-top:0!important;}
+.pd0{padding:0!important;}
+.pd2{padding:2px!important;}
+
+/* padding-left */
+.pdl20{padding-left:20px;}
+
+/* width */
+.w50{width:50px!important;}
+.w55{width:55px!important;}
+.w60{width:60px!important;}
+.w65{width:65px!important;}
+.w70{width:70px!important;}
+.w75{width:75px!important;}
+.w80{width:80px!important;}
+.w85{width:85px!important;}
+.w90{width:90px!important;}
+.w95{width:95px!important;}
+.w100{width:100px!important;}
+.w105{width:105px!important;}
+.w110{width:110px!important;}
+.w115{width:115px!important;}
+.w120{width:120px!important;}
+.w125{width:125px!important;}
+.w130{width:130px!important;}
+.w135{width:135px!important;}
+.w140{width:140px!important;}
+.w145{width:145px!important;}
+.w150{width:150px!important;}
+.w155{width:155px!important;}
+.w160{width:160px!important;}
+.w165{width:165px!important;}
+.w170{width:170px!important;}
+.w175{width:175px!important;}
+.w180{width:180px!important;}
+.w185{width:185px!important;}
+.w190{width:190px!important;}
+.w195{width:195px!important;}
+.w200{width:200px!important;}
+.w205{width:205px!important;}
+.w210{width:210px!important;}
+.w215{width:215px!important;}
+.w220{width:220px!important;}
+.w225{width:225px!important;}
+.w230{width:230px!important;}
+.w235{width:235px!important;}
+.w240{width:240px!important;}
+.w245{width:245px!important;}
+.w250{width:250px!important;}
+.w378{width:378px;}
+.w400{width:400px;}
+.w1000{width:1000px!important;}
+
+.w25p{width:25%!important;}
+.w39p{width:39%!important;}
+.w40p{width:40%!important;}
+.w50p{width:50%!important;}
+.w100p{width:100%!important;}
+
+/* height */
+.h40{height:40px!important;}
+.h120{height:120px!important;}
+.h200{height:200px!important;}
+.h220{height:220px!important;}
+.h230{height:230px!important;}
+.h400{height:400px;}
+.h500{height:500px!important;}
+
+.mh300{max-height:300px!important;}
+.mh500{max-height:620px!important;}
+.h_auto{height:auto!important;}
+.h100p{height:100%!important;}
+
+
+/* vertical align */
+.vt {vertical-align:top;}
+.vm {vertical-align:middle;}
+.vb {vertical-align:bottom;}
+
+/* text align */
+.tl {text-align:left!important;}
+.tc {text-align:center!important;}
+.tr {text-align:right!important;}
+.tj {text-align:justify!important;}
+
+/* display */
+.db {display:block !important;}
+.dib {display:inline-block !important;}
+.hide {display:none !important;}
+/* .show{display:table-row;} */
+.show{display:block;}
+
+/* elip */
+.elips {text-overflow:ellipsis; white-space:nowrap; word-wrap:normal; overflow:hidden;}
+
+/* float */
+.fl {float:left;}
+.fr {float:right;}
+.fn {float:none!important;}
+
+/* font-weight */
+.fwb{font-weight:bold!important;}
+
+/* font-size */
+.fs0{font-size:0;}
+
+/* color */
+.color_r{color:#e6541c!important;}
+.color_g{color:#53af31!important;}
+.color_o{color:#fd721f!important;}
+.color_b{color:#303030!important;}
+.color_b_02{color:#8f82bc!important;}
+.gray{color:#777777;}
+.color_p{color:#ab10e9;}
+
+/* border */
+.bdg{border:1px solid #53af31!important;}
+.bdgray{border:1px solid #cecece!important;}
+.btgray{border-top:1px solid #cecece!important;}
+.bdlg{border-left:1px solid #dcdcdc;}
+.bdn{border:none!important;}
+.bdtn{border-top:none!important;}
+.bdtg{border-top:1px solid #dcdcdc;}
+.bdtg2{border-top:2px solid #a4a4a4;}
+.bdln{border-left:none!important;}
+
+
+/* text-decoration */
+.txt_ul{text-decoration: underline;}
+
+/* background */
+.bgw{background:#ffffff!important;}
+.bg_gray{background:#eeeeee;}
+.orange{}
+.sub_bg_01{background:#e8e8e8;}
+/* etc */
+.csp {cursor:pointer;}
+
+.clear {clear:both;}
+/***** SET *****/
+
+.bold{font-weight:bold;}
+
+
+.point{color:#ef4153;}
+
+/* placeholder color 제어 */
+input:-ms-input-placeholder { color: #888888; }
+/* Internet Explorer 10 이상에 적용 */
+
+input::-webkit-input-placeholder { color: #888888; } 
+ /* Webkit, Blink, Edge에 적용 */
+
+input::-moz-placeholder { color: #888888; }
+ /* Mozilla Firefox 4 부터 18에 적용 */
+
+input::-moz-placeholder { color: #888888; }
+/* Mozilla Firefox 19 이상에 적용 */
+
+
+
+
+
+.wrap{width:100%; height:auto; box-sizing:border-box;  background:#edeef3;}
+
+/*** 헤더 ***/
+.header{width:100%; box-sizing:border-box;  background:#5361b3;  position:absolute; height:77px; top:0;}
+.header_in{max-width:1400px; margin:0 auto;  position:relative; height:100%; text-align:center; }
+.btn_home{position:absolute; top:50%; transform:translateY(-50%); left:0; color:#e3e5f0; font-size:18px; }
+.btn_home::before{content:''; display:inline-block; width:38px; height:38px; background:url(../img/btn_home.png) center no-repeat; background-size:cover;  vertical-align:-70%; margin-right:15px;}
+.btn_logout{position:absolute; top:50%; transform:translateY(-50%); right:0; color:#e3e5f0; font-size:18px; }
+.btn_logout::after{content:''; display:inline-block; width:38px; height:38px; background:url(../img/btn_logout.png) center no-repeat; background-size:cover;  vertical-align:-70%;  margin-left:15px;}
+.menu{text-align:center; margin-top:28px; display:inline-block; font-size:0; width:520px; }
+.menu li{display:block; box-sizing:border-box; width:33.33%; float:left;}
+.menu li .btn_menu{ color:#ffffff; font-size:18px; vertical-align:middle; margin-right:100px; }
+.menu li .btn_menu:hover, .menu .btn_menu.on{font-size:20px; font-weight:bold;}
+.menu li .btn_menu:last-child{margin-right:0;}
+
+
+
+
+
+
+/*** lnb ***/
+
+
+/*** 푸터 ***/
+/* .footer{width:100%; box-sizing:border-box; overflow:hidden; background:#ffffff; height:111px; border-top:1px solid #dcdcdc;} */
+
+
+
+/*** lnb ***/
+
+
+@media screen and (max-width: 1400px) {
+	
+}
+
+@media screen and (max-width: 1650px) {
+	
+}
+
+@media screen and (max-width: 1526px) {
+
+}
+
+@media screen and (max-width: 1266px) {
+	
+}
+
+
+@media screen and (max-width: 1086px) {
+	
+
+	
+
+
+   }
+
+@media screen and (max-width: 690px) {
+
+
+
+}
+   
+   
+@media screen and (max-width: 630px) {
+	
+
+
+}
+
+@media screen and (max-width: 600px) {
+	
+	
+}
+
+@media screen and (max-width: 320px){
+  .wrap{min-width:320px;}
+  
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

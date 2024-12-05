@@ -1,0 +1,129 @@
+.wrap{width:1150px; margin:0 auto;}
+
+.blue{color:#3373dd; font-weight:bold;}
+.white{color:white;}
+.red{color:#e3493d; font-weight:bold; }
+.brown{color:#5e4000;}
+.hw_big{font-size:30px;}
+.hw_small{font-size:12px;}
+.bold{font-weight:700;}
+
+경매정보분석 선택
+.hw_select{background-color:#e2e2e2; height:50px; margin-top:15px; overflow:hidden;}
+.hw_select_01{width:130px; height:40px; float:left; margin-top:5px; margin-left:10px; line-height:40px; font-size:16px; 
+color:#2c2c2c; font-weight:700;}
+.hw_select_02{width:180px; height:30px; margin-top:10px; margin-left:50px; float:left; background-color:#eeeeee; text-align:center;
+line-height:30px; font-size:16px; color:#2c2c2c; font-weight:700;}
+.hw_select_03{width:80px; height:40px; float:left; margin-top:5px; margin-left:27px; line-height:40px; font-size:16px; 
+color:#2c2c2c; font-weight:700;}
+.hw_select_04{width:180px; height:30px; margin-top:5px; float:left; background-color:white; line-height:30px; text-align:center;}
+.hw_select_05{width:90px; height:30px; margin:10px 0 0 6px; float:left; background-color:#e6d0cf;  text-align:center; line-height:30px;font-weight:700;}
+.hw_select_05 a{color:black;}
+.hw_select_05 a:hover{width:90px; height:30px;  font-size:14px; font-weight:700; text-align:center; color:white;  line-height:30px;  float:right; background-color:#820900;}
+
+
+.hw_select_06{width:120px; height:30px; margin-top:10px; font-size:14px; font-weight:700; text-align:center; line-height:30px; margin-right:5px; float:right; background-color:#e3493d;}
+.hw_select_06 a{color:white;}
+.hw_select_06 a:hover{width:120px; height:30px;  font-size:14px; font-weight:700; text-align:center; color:white;  line-height:30px;  float:right; background-color:#820900;}
+
+.hw_select_06_g{width:120px; height:30px; margin-top:10px; font-size:14px; font-weight:700; text-align:center; line-height:30px; margin-right:5px; float:right; background-color:#00b88f;}
+.hw_select_06_g a{color:white;}
+.hw_select_06_g a:hover{width:120px; height:30px;  font-size:14px; font-weight:700; text-align:center; color:white;  line-height:30px;  float:right; background-color:#08866a;}
+
+.hw_select_06_b{width:120px; height:30px; margin-top:10px; font-size:14px; font-weight:700; text-align:center; line-height:30px; margin-right:5px; float:right; background-color:#4664be;}
+.hw_select_06_b a{color:white;}
+.hw_select_06_b a:hover{width:120px; height:30px;  font-size:14px; font-weight:700; text-align:center; color:white;  line-height:30px;  float:right; background-color:#2b49a3;}
+
+.hw_select_06_y{width:120px; height:30px; margin-top:10px; font-size:14px; font-weight:700; text-align:center; line-height:30px; margin-right:5px; float:right; background-color:#f9a10b;}
+.hw_select_06_y a{color:white;}
+.hw_select_06_y a:hover{width:120px; height:30px;  font-size:14px; font-weight:700; text-align:center; color:white;  line-height:30px;  float:right; background-color:#ea9402;}
+
+.hw_select_06_w{width:120px; height:30px; margin-top:10px; font-size:14px; font-weight:700; text-align:center; line-height:30px; margin-right:5px; float:right; background-color:white;}
+.hw_select_06_w a{color:#419154;}
+.hw_select_06_w a:hover{width:120px; height:30px;  font-size:14px; font-weight:700; text-align:center; color:#419154;  line-height:30px;  float:right; background-color:#e2e2e2;}
+
+.hw_select_07{width:190px; height:30px; margin-top:10px; float:left; text-align:left; line-height:30px; font-size:12px; color:#2c2c2c;}
+
+
+.hw_total_box{clear:both;}
+.hw_total{width:32.3%; height:270px; float:left; margin-right:15px; margin-top:3px; border:1px solid #e2e2e2; }
+.hw_total_02{width:32.2%; height:270px; float:right; margin-top:3px; border:1px solid #e2e2e2;}
+
+경매정보 테이블
+.hw_action_table{width:100%; height:30px; border-collapse:collapse; margin:0 auto; clear:both; }
+
+.hw_thead{border-top:2px solid #7e7e7e; margin-top:20px; color:#2c2c2c}
+
+tr{ border-bottom:1px dashed #cccccc;}
+
+td{line-height:38px; font-size:14px; color:#535353; text-align:center;}
+
+.hw_table_list{text-align:center; margin-top:8px;}
+
+.hw_table_ch_1{width:100%; background-color:#e3493d;} 
+
+.hw_table_ch_2{width:100%; background-color:#9b1b12;} 
+
+주요거래지표 출하물량
+.hw_line_gray{height:2px; background-color:#7e7e7e; width:100%; margin-top:5px;}
+.hw_gray_box_50_l{width:49.8%; height:70px; background-color:#e2e2e2; float:left; margin-left:1px; margin-top:1px;}
+.hw_gray_box_50_s{width:49.8%; height:40px; background-color:#e2e2e2; float:left; margin-left:1px; margin-top:1px; line-height:40px; text-align:center;
+font-size:14px;}
+.hw_gray_box_100_l{width:99.6%; height:70px; background-color:#e2e2e2; float:left; margin-left:1px; margin-top:1px;}
+
+.hw_box_20{width:125px;; float:right; text-align:center; margin-top:3px; margin-right:5px;}  
+
+.hw_box_40{width:144px;; float:left; margin-top:3px; margin-left:10px; }
+.hw_box_60{width:125px;; float:right; text-align:center; margin-top:3px; }  
+.hw_graph_3{height:163px; background-color:#00b88f; margin-top:1px; margin-left:1px; margin-right:1px;}
+.hw_graph_4{height:245px; background-color:#4664be; margin-top:1px; margin-left:1px; margin-right:1px;}
+.hw_graph_5{height:275px; background-color:#f9a10b; margin-top:1px; margin-left:1px; margin-right:1px;}
+
+경매정보 분석 최종결과값
+
+.hw_analysis{height:44px; background-color:#e3493d; text-align:center; color:white; line-height:44px; font-weight:700;}
+.hw_analysis_data
+.hw_01{width:50%; height:30px; background-color:#820900; text-align:center; color:white; line-height:30px; float:left; font-size:14px; }
+.hw_02{width:50%; height:30px; background-color:#9b1b12; text-align:center; color:white; line-height:30px; float:right; font-size:14px; }
+.hw_03{width:50%; height:50px; background-color:#a50b00; text-align:center; color:white; line-height:50px; float:left; font-size:14px; }
+.hw_04{width:50%; height:50px; background-color:#ae3228; text-align:center; color:white; line-height:50px; float:right; font-size:14px; }
+.hw_05{width:50%; height:48px; border-right:1px solid #e2e2e2; border-top:1px solid #e2e2e2;  text-align:center; 
+line-height:50px; float:left; font-size:14px; }
+.hw_06{width:49.5%; height:48px; border-top:1px solid #e2e2e2;  text-align:center; line-height:50px; float:right; font-size:14px;}
+
+
+
+
+.hw_3{width:49.1%; height:370px; border:1px solid #e2e2e2; float:left; margin-top:15px;}
+.hw_4{width:49.1%; height:370px; border:1px solid #e2e2e2; float:right; margin-top:15px;}
+
+.hw_5{width:49.1%;; height:370px; border:1px solid #e2e2e2; float:left; margin-right:15px; margin-top:15px;}
+.hw_6{width:23.9%; height:370px; border:1px solid #e2e2e2; float:left; margin-top:15px; background-color:#419154;}
+.hw_7{width:23.9%; height:370px; border:1px solid #e2e2e2; float:right; margin-top:15px;  background-color:#fdbc04}
+
+
+작황동향
+
+.hw_photo{width:100%; text-align:center; margin-top:5px;}
+.hw_6_text{width:150px; height:138px; text-align:left; margin-left:10px; font-size:13px; padding-top:10px; color:white;}
+.hw_6_text_bg{width:100%; height:164px; background-image:url(../images/grow_background.JPG);}
+.hw_7_text{width:41%; height:135px; text-align:left; margin-left:10px; font-size:13px; padding-top:10px; 
+color:#5e4000; line-height:11px; float:left; padding-left:10px;
+background-color:white; margin-top:10px;}
+
+**추가 팝업창**
+ 품목검색창
+.header_popup1 {width:100%;height:50px;background:#e3493d;}
+.hw_popup_p {font-size:14px;color:white;line-height:3.5;margin-left:20px;font-weight:bold;}
+.hw_popup_arrow {display:block;width:5px;height:3px;margin:17px 0 0 15px;background:url("../images/popup_arrow.png")no-repeat;}
+.popup_arrow_text {display:block;margin:-13px 0 0 25px;font-size:12px;}
+.hw_popup_selectbox {width:99%;height:37px;margin:13px 0 0 10px;border:1px solid #e5e5e5;}
+.flower_code {margin:7px 0 0 30px;}
+.popup_text{margin-left:8px;width:200px;}
+.popup_button {width:33px;height:20px;background:#714646;color:white;border:1px solid #6d6d6d;font-size:12px;vertical-align:1px;}
+.popup_ul {width:2030px;height:273px;}
+.popup_li1 {width:2028px;height:30px;border-top:2px solid #ead9d9;border-bottom:1px solid #ead9d9;margin:17px 0 0 10px;color:#eb6969;font-size:14px;font-weight:bold;line-height: 1.9;}
+.popup_li1 p {margin-left:13px;}
+.popup_li2 p {margin-left:13px;}
+.popup_li2 {width:2011px;height:25px;border-bottom:1px solid #ececec;margin-left:10px;font-size:12px;line-height:1.7;}
+li:last-child {border-bottom:1px solid #ead9d9;} 

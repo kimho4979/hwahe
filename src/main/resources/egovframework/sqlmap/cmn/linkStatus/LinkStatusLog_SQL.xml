@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.linkStatus.mapper.LinkStatusLogMapper">
+	<resultMap id="ResultMap" type="com.fpminput.mntr.linkStatus.domain.LinkStatusLogVO">
+		<result property="jobId"		column="JOB_ID"/>
+		<result property="jobNm"		column="JOB_NM"/>
+		<result property="jobDetil"		column="JOB_DETIL"/>
+		<result property="jobCycle"		column="JOB_CYCLE"/>
+		<result property="jobYype"		column="JOB_TYPE"/>
+		<result property="agency"		column="AGENCY"/>
+		<result property="useTbNm"		column="USE_TB_NM"/>
+		<result property="uptStat"		column="UPT_STAT"/>
+		<result property="uptDtFormat"	column="UPT_DT_FORMAT"/>
+		<result property="uptDt"		column="UPT_DT"/>
+		
+		<result property="startDate"	column="START_DATE"/>
+		<result property="sysGp"	column="SYS_GP"/>
+		<result property="sysGpNm"	column="SYS_GP_NM"/>
+		<result property="rsltGp"	column="RSLT_GP"/>
+		<result property="rsltGpNm"	column="RSLT_GP_NM"/>
+		<result property="endDate"	column="END_DATE"/>
+		<result property="procMsg"	column="PROC_MSG"/>
+		<result property="cdId"		column="CD_ID"/>
+		<result property="cdNm"		column="CD_ID"/>
+	</resultMap>
+	
+	<!-- 연계현황 조회 -->
+	<select id="selectLogList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	
+	   <if test="sysGp != null and sysGp != ''">
+	   		<if test="sysGp != '2'">
+	   		SELECT A.LOG_SEQ
+				, TO_CHAR(TO_DATE(A.START_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE
+				, A.SYS_GP
+				, C.CD_NM AS SYS_GP_NM
+				, A.RSLT_GP
+				, B.CD_NM AS RSLT_GP_NM
+				, TO_CHAR(TO_DATE(A.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE
+				, A.PROC_MSG
+			  FROM T_LOG_H A
+			     , TB_GEN_CODE B
+			     , TB_GEN_CODE C
+			 WHERE A.RSLT_GP = B.CD_ID
+			   AND B.GP_ID = 'RSLT_GP'
+			   AND A.SYS_GP = C.CD_ID
+			   AND C.GP_ID = 'SYS_GP'
+			   AND A.SYS_GP in ('2', '3', '4', '5') 
+			   AND SUBSTR(A.START_DATE,1,8) BETWEEN REPLACE(#{searchDateF}, '-', '') AND REPLACE(#{searchDateT}, '-', '')  
+			   AND A.SYS_GP = #{sysGp}
+			   ORDER BY A.END_DATE DESC
+			 </if>
+			 <if test="sysGp == '2'"> <!-- 학교일정만 따로 처리  -->
+				SELECT DISTINCT 
+				  D.LOG_SEQ   
+				, D.END_DATE AS START_DATE
+				, A.SYS_GP
+				, C.CD_NM AS SYS_GP_NM
+				, A.RSLT_GP
+				, B.CD_NM AS RSLT_GP_NM
+				, D.END_DATE
+				, '학교일정 등록 합계 : ' || D.PROC_MSG AS PROC_MSG
+			  FROM T_LOG_H2 A
+			     , TB_GEN_CODE B
+			     , TB_GEN_CODE C
+			     , (SELECT 
+			     TO_CHAR(TO_DATE(aa.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') END_DATE
+			     ,sum(REGEXP_REPLACE( PROC_MSG , '[^0-9]')) PROC_MSG
+			     ,ROW_NUMBER() over(ORDER BY TO_CHAR(TO_DATE(aa.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD')) AS LOG_SEQ
+			     FROM T_LOG_H2 aa 
+			     GROUP BY TO_CHAR(TO_DATE(aa.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') ORDER BY end_DATE DESC ) D
+			 WHERE A.RSLT_GP = B.CD_ID
+			   AND B.GP_ID = 'RSLT_GP'
+			   AND A.SYS_GP = '2'
+			   AND C.CD_ID = '2'
+			   AND C.GP_ID = 'SYS_GP'
+			   AND A.SYS_GP in ('2', '3', '4', '5')
+			   AND TO_CHAR(TO_DATE(A.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD') = D.END_DATE 
+			   AND SUBSTR(A.START_DATE,1,8) BETWEEN REPLACE(#{searchDateF}, '-', '') AND REPLACE(#{searchDateT}, '-', '')
+			  ORDER BY END_DATE DESC 		
+			 </if>
+	   		
+	   </if>
+	   <if test="sysGp == null or sysGp == ''">
+			SELECT A.LOG_SEQ
+				, TO_CHAR(TO_DATE(A.START_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE
+				, A.SYS_GP
+				, C.CD_NM AS SYS_GP_NM
+				, A.RSLT_GP
+				, B.CD_NM AS RSLT_GP_NM
+				, TO_CHAR(TO_DATE(A.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE
+				, A.PROC_MSG
+			  FROM T_LOG_H A
+			     , TB_GEN_CODE B
+			     , TB_GEN_CODE C
+			 WHERE A.RSLT_GP = B.CD_ID
+			   AND B.GP_ID = 'RSLT_GP'
+			   AND A.SYS_GP = C.CD_ID
+			   AND C.GP_ID = 'SYS_GP'
+			   AND A.SYS_GP in ('2', '3', '4', '5') 
+			   AND SUBSTR(A.START_DATE,1,8) BETWEEN REPLACE(#{searchDateF}, '-', '') AND REPLACE(#{searchDateT}, '-', '')  
+			   ORDER BY A.END_DATE DESC 
+	   </if>	
+	 
+	</select>
+	
+	<select id="selectLog" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT A.LOG_SEQ, A.SYS_GP, A.RSLT_GP, A.START_DATE, A.END_DATE, A.PROC_MSG, A.USER_NM, A.PGM_ID, A.PGM_NM
+		FROM T_LOG_H A
+		WHERE A.LOG_SEQ = #{logSeq}
+	</select>
+	
+	<!-- 시스템 구분 공통코드 조회 -->
+	<select id="selectSysGp" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	SELECT CD_ID, CD_NM
+	  FROM TB_GEN_CODE
+	 WHERE GP_ID = 'SYS_GP'
+	   AND CD_ID NOT IN ('1', 'A', 'B', 'C', 'D', 'E')
+	 ORDER BY CD_ID
+	</select>
+	
+	
+	<!-- 연계현황 상세조회 :: 로그조회 -->
+	<select id="selectCheckListDetailLog" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			JOB_ID
+			, LOG_SEQ
+			,(CASE WHEN LOG_STAT = '1' THEN '성공'
+				   WHEN LOG_STAT = '2' THEN '실패'
+			END) AS LOG_STAT
+			, LOG_FAIL_RESN
+			, JOB_PRCD_NM
+			, (CASE WHEN LOG_GUBN = '1' THEN '자동'
+					WHEN LOG_GUBN = '2' THEN '수동'
+			END) AS LOG_GUBN
+			,TO_CHAR(LOG_DT, 'YYYY-MM-DD') AS LOG_DT
+		FROM TB_JOB_LOG
+		WHERE 1=1
+		<if test="jobId != null and jobId != ''">
+			AND JOB_ID = #{jobId}
+		</if>
+		<if test="logStat != null and logStat != ''">
+			AND LOG_STAT = #{logStat}
+		</if>
+		<if test="strDt != null and strDt != '' and endDt != null and endDt != ''">
+			AND LOG_DT BETWEEN TO_DATE(#{strDt}||' 000000','YYYY-MM-DD HH24MISS') AND  TO_DATE(#{endDt}|| ' 235959','YYYY-MM-DD HH24MISS')
+		</if>
+		ORDER BY LOG_SEQ DESC, LOG_DT DESC
+	</select>
+	
+	<!-- 연계현황 상세조회 :: 로그조회 -->
+	<select id="selectFailList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT FAIL_DATA, FAIL_DETAIL
+        FROM TB_JOB_FAIL
+        WHERE LOG_SEQ=#{logSeq}
+	</select>
+
+	<!-- 수동배치 실행 -->
+	<select id="selectRunManualBatchList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			JOB_ID
+			, JOB_NM
+			, JOB_DETIL
+			, JOB_CYCLE
+			, (CASE WHEN JOB_TYPE = '1' THEN 'OpenAPI'
+				WHEN JOB_TYPE = '2' THEN '프로시저'
+				WHEN JOB_TYPE = '3' THEN 'DB연계'
+				WHEN JOB_TYPE = '4' THEN '수동'
+				END) AS JOB_TYPE
+			, AGENCY
+			, USE_TB_NM
+			, (CASE WHEN UPT_STAT = '1' THEN '성공'
+				WHEN UPT_STAT = '2' THEN '실패'
+				END) AS UPT_STAT
+			, UPT_DT_FORMAT
+			, TO_CHAR(UPT_DT, 'YYYY-MM-DD') AS UPT_DT
+		FROM TB_JOB_LIST
+		<if test="jobId != null and jobId != ''">
+			WHERE JOB_ID = #{jobId}
+		</if>
+		ORDER BY JOB_ID
+	</select>
+
+</mapper>

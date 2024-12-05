@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.monitor.mapper.Maa01MonitorReportMapper">
+
+	<select id="selectHba01" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">  
+SELECT   TOTAL_COUNT
+            ,RNUM
+            ,ANUM
+            ,REG_MONTH 
+            ,TITLE    
+            ,WRITE_NAME
+            ,INS_DT   
+             ,ORIGINAL_FILE_NAME     
+             ,SEQ_NO
+             ,GUBN
+FROM(                                          
+        SELECT   COUNT(*) OVER() AS TOTAL_COUNT
+                    ,RNUM
+                    ,ANUM
+                    ,REG_MONTH 
+                    ,TITLE    
+                    ,WRITE_NAME
+                    ,INS_DT       
+                    ,ORIGINAL_FILE_NAME 
+                      ,SEQ_NO 
+                      ,GUBN           
+        FROM (                 
+                SELECT  ROW_NUMBER() OVER (ORDER BY REG_MONTH DESC, TITLE) AS RNUM  
+                ,ROW_NUMBER() OVER (ORDER BY REG_MONTH ASC, TITLE) AS ANUM  
+                            ,REG_MONTH 
+                            ,TITLE    
+                            ,WRITE_NAME
+                            ,TO_CHAR(INS_DT,'YYYY-MM-DD') AS INS_DT   
+                            ,T1.ORIGINAL_FILE_NAME    AS    ORIGINAL_FILE_NAME       
+                              ,T.SEQ_NO
+                              ,T.GUBN               
+                FROM T_FORECAST_REPORT T,T_FORECAST_REPORT_FILE T1   
+                WHERE T.SEQ_NO = T1.FORECAST_SEQ
+                <if test="GUBN==1">
+                AND GUBN='1'   
+                </if>
+                <if test="GUBN==2">
+                AND GUBN='2'   
+                </if>
+                
+                AND USE_YN='Y' 
+                      ORDER BY  ANUM DESC,   TITLE   
+                )
+)
+   
+ WHERE RNUM BETWEEN #{startCount} AND #{endCount} 
+	</select>
+	<insert id="Maa01MonitorReportInsert"  parameterType="java.util.HashMap">	
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			 SELECT MAX(SEQ_NO)+1 FROM T_FORECAST_REPORT
+		</selectKey>
+		
+		
+    INSERT INTO T_FORECAST_REPORT
+     (SEQ_NO,REG_MONTH,TITLE,WRITE_NAME,INS_DT,GUBN,USE_YN)
+    VALUES(
+     (SELECT MAX(SEQ_NO)+1 FROM T_FORECAST_REPORT)
+     ,(SELECT TO_CHAR(SYSDATE,'YYYY-MM') FROM DUAL)
+     ,#{TITLE}
+     ,'Admin'
+     ,SYSDATE
+     <if test="GUBN==1">
+     ,#{GUBN}
+     </if>
+     <if test="GUBN==2">
+     ,#{GUBN}
+     </if>
+     ,'Y')
+    </insert>
+    
+    <insert id="Maa01MonitorReportFileInsert"  parameterType="java.util.HashMap">	
+		
+    INSERT INTO T_FORECAST_REPORT_FILE
+     (     
+       		 SEQ_NO
+            ,FORECAST_SEQ                    
+            ,ORIGINAL_FILE_NAME            
+            ,STORED_FILE_NAME    
+            ,FILE_SIZE
+            ,CREA_ID                            
+       ) 
+       VALUES 
+       (    
+               (SELECT MAX(SEQ_NO+1) FROM T_FORECAST_REPORT_FILE)
+             ,#{FORECAST_SEQ, jdbcType=VARCHAR}      
+            ,#{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}  
+            ,#{STORED_FILE_NAME, jdbcType=VARCHAR}            
+            ,#{FILE_SIZE, jdbcType=VARCHAR}           
+            ,'Admin'    
+       )         
+    </insert>
+    
+    
+<update id="deleteMonitorReport"  parameterType="java.util.HashMap" >
+  UPDATE T_FORECAST_REPORT  SET USE_YN='N'
+		  WHERE SEQ_NO= #{SEQ_NO}
+		 <if test="GUBN==1">
+         	 AND GUBN='1'
+          </if>
+          <if test="GUBN==2">
+         	 AND GUBN='2'
+          </if>
+  </update>  
+  
+      
+<update id="Maa01MonitorSugeupUpdate_Popup"  parameterType="java.util.HashMap" >
+  UPDATE T_FORECAST_REPORT SET TITLE=#{TITLE}  
+		  WHERE SEQ_NO= #{SEQ_NO}
+		 <if test="GUBN==1">
+         	 AND GUBN='1'
+          </if>
+          <if test="GUBN==2">
+         	 AND GUBN='2'
+          </if>
+  </update>  
+    
+    
+</mapper>

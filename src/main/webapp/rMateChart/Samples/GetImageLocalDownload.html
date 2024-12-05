@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>rMate Chart for HTML5</title>
+<!-- rMateChartH5 에서 사용하는 스타일 -->
+<link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/>
+
+<!-- IE7, 8 에서 차트 생성하고자 하는 경우 -->
+<!--[if IE]><script language="javascript" type="text/javascript" src="../rMateChartH5/JS/excanvas.js"></script><![endif]-->
+
+<!-- rMateChartH5 라이센스 -->
+<script language="javascript" type="text/javascript" src="../LicenseKey/rMateChartH5License.js"></script>
+
+<!-- 실제적인 rMateChartH5 라이브러리 -->
+<script language="javascript" type="text/javascript" src="../rMateChartH5/JS/rMateChartH5.js"></script>
+
+<!-- rMateChartH5 테마 js -->
+<script type="text/javascript" src="../rMateChartH5/Assets/Theme/theme.js"></script>
+
+<!-- jsPDF -->
+<script type="text/javascript" src="../rMateChartH5/JS/jspdf.js"></script>
+<script type="text/javascript" src="../rMateChartH5/JS/jspdf.plugin.addimage.js"></script>
+
+<script type="text/javascript">
+
+// -----------------------차트 설정 시작-----------------------
+
+// rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.
+var chartVars = "rMateOnLoadCallFunction=chartReadyHandler";
+
+// 데이터 에디터를 사용할 경우 
+chartVars += "&useDataEditor=true";
+
+// 데이터 에디터 js의 주소
+rMateChartH5.dataEditorUrl = "../rMateChartH5/JS/editablegrid-2.0.1.js";
+
+// 차트 메뉴를 사용할 경우
+chartVars += "&chartMenu=menus";
+
+// 차트메뉴에 설정할 데이터
+var menus = {
+	options : {
+		textField : "name", // 메뉴에 출력할 메뉴 아이템의 문자열
+		callbackField : "callback" // 메뉴 아이템 클릭 시 실행할 콜백 함수
+	}, 
+	items : [
+		{
+			name : "PNG 저장",
+			callback : function(){
+				/**
+				 * rMateChartH5 - 저장되어지는 파일 명
+				 * png - 확장자
+				 * http://../downloadLocal.jsp - IE 9 혹은 로컬 다운로드를 지원하지 않는 브라우저를 위한 다운로드 jsp 서버 경로
+				 * function(){ .. } - 다운받으려는 데이터 base64 인코딩 하여 반환하는 함수
+				 */
+				rMateChartH5.downloadToLocal("rMateChartH5", "png", "http://demo.riamore.net/demo/chart/downloadLocal.jsp", function(){
+					return document.getElementById("chart1").saveAsImage();
+				});
+			}
+		},{
+			name : "PDF 저장",
+			callback : function(){
+				/**
+				 * rMateChartH5 - 저장되어지는 파일 명
+				 * pdf - 확장자
+				 * http://../downloadLocal.jsp - IE 9 혹은 로컬 다운로드를 지원하지 않는 브라우저를 위한 다운로드 jsp 서버 경로
+				 * function(){ .. } - 다운받으려는 데이터 base64 인코딩 하여 반환하는 함수
+				 */
+				rMateChartH5.downloadToLocal("rMateChartH5", "pdf", "http://demo.riamore.net/demo/chart/downloadLocal.jsp", function(){
+					return document.getElementById("chart1").getSnapshot("jpeg"); // jpeg만 지원
+				}, (function(){
+					var holder = document.getElementById("chartHolder"),
+						width = holder.offsetWidth,
+						height = holder.offsetHeight;
+					return {portrait : width < height, size : {width : width, height : height}};
+				})());
+			}
+		}
+	]
+};
+
+// rMateChart 를 생성합니다.
+// 파라메터 (순서대로) 
+//  1. 차트의 id ( 임의로 지정하십시오. ) 
+//  2. 차트가 위치할 div 의 id (즉, 차트의 부모 div 의 id 입니다.)
+//  3. 차트 생성 시 필요한 환경 변수들의 묶음인 chartVars
+//  4. 차트의 가로 사이즈 (생략 가능, 생략 시 100%)
+//  5. 차트의 세로 사이즈 (생략 가능, 생략 시 100%)
+rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+
+// 차트의 속성인 rMateOnLoadCallFunction 으로 설정된 함수.
+// rMate 차트 준비가 완료된 경우 이 함수가 호출됩니다.
+// 이 함수를 통해 차트에 레이아웃과 데이터를 삽입합니다.
+// 파라메터 : id - rMateChartH5.create() 사용 시 사용자가 지정한 id 입니다.
+function chartReadyHandler(id) {
+	document.getElementById(id).setLayout(layoutStr);
+	document.getElementById(id).setData(chartData);
+}
+
+// 스트링 형식으로 레이아웃 정의.
+var layoutStr = 
+				'<rMateChart backgroundColor="#FFFFFF"  borderStyle="none">'
+					+'<NumberFormatter id="numFmt" precision="0"/>'
+					+'<Options>'
+						+'<Caption text="Balance on Current Account"/>'
+						+'<SubCaption text="( billion $ )" textAlign="right" />'
+						+'<DataEditor showOnInit="true" formatter="{numFmt}" editorHeight="96" reverseRow="true"/>' 
+						/* 데이터 에디터 입니다. */
+						/* showOnInit : 차트 출력시 같이 데이터 에디터를 표시할지 나타냅니다. */
+						/* useCloseButton : 데이터 에디터 오른쪽 상단데 에디터 닫기 버튼을 표시할지 나타냅니다. */
+						/* editorHeight : 데이터 에디터의 전체 높이를 설정 합니다. */
+						/* borderColor : 데이터 에디터의 테두리 색을 설정 합니다. */
+						/* fontFamily : 폰트 명을 나타냅니다. */
+						/* fontWeight : 폰트의 굵기를 나타냅니다. normal | bold */
+						/* fontSize : 폰트의 크기를 나타냅니다. */
+						/* color : 글자의 색상을 나타냅니다. */
+						/* headerColors : 데이터 에디터 헤더의 색상을 설정 합니다. */
+						/* headerHeight : 데이터 에디터 헤더의 height를 지정 합니다. */
+						/* reverseRow : 차트 데이터와 반대로 Row를 위치시킬지를 나타냅니다. */
+						/* showHeaders : 데이터 에디터의 헤더 표시를 나타냅니다. */
+						/* textAlign : 텍스트 정렬을 나타냅니다. left | center | right */
+						/* verticalAlign : 셀 안에서의 텍스트 정렬을 나타냅니다. top | middle | bottom */
+						/* styleName : dataEditor 의 스타일 명입니다. */
+						/* minColumnWidth : 칼럼(열)의 가로 최소 사이즈를 픽셀 단위로 지정합니다. */
+					+'</Options>'
+					+'<Column2DChart showDataTips="true">'
+						+'<horizontalAxis>'
+							+'<CategoryAxis categoryField="Month"/>' 
+						+'</horizontalAxis>'
+						+'<verticalAxis>'
+							+'<LinearAxis maximum="100" interval="10"/>'
+						+'</verticalAxis>'
+						+'<series>'
+							/* 
+							type 속성을 stacked로 변경	
+							type속성으로는
+							clustered : 일반적인 다중데이터(차트의 멀티시리즈)방식으로 데이터를 표현합니다.(Default)
+							stacked : 데이터를 위에 쌓아 올린 방식으로 표현 합니다.
+							overlaid : 수치 데이터 값을 겹쳐서 표현 합니다. 주로 목표 위치와 현재 위치를 나타낼 때 많이 쓰입니다.
+							100% : 차트의 수치 데이터를 퍼센티지로 계산 후 값을 퍼센티지로 나타냅니다. 
+							*/
+							+'<Column2DSet type="stacked" showTotalLabel="true" >'
+								+'<series>'
+								/*  Column2D Stacked 를 생성시에는 Column2DSeries를 최소 2개 정의합니다 */
+									+'<Column2DSeries labelPosition="inside" yField="goods" displayName="goods" color="#ffffff">'
+										+'<showDataEffect>'
+											+'<SeriesInterpolate/>' 
+										+'</showDataEffect>'
+									+'</Column2DSeries>'
+									+'<Column2DSeries labelPosition="inside" yField="income" displayName="income" color="#ffffff">'
+										+'<showDataEffect>'
+											+'<SeriesInterpolate/>' 
+										+'</showDataEffect>'
+									+'</Column2DSeries>'
+									+'<Column2DSeries labelPosition="inside" yField="service" displayName="service" color="#ffffff">'
+										+'<showDataEffect>'
+											+'<SeriesInterpolate/>' 
+										+'</showDataEffect>'
+									+'</Column2DSeries>'
+								+'</series>'
+							+'</Column2DSet>'
+						+'</series>'
+					+'</Column2DChart>'
+					+'<Style>'
+						+'.gridStyle{'
+							+'color:#000000;'
+							+'alternatingItemColors:#f7f7f7,#ffffff;'
+							+'headerColors:#7dcad0,#7dcad0;'
+							+'headerStyleName:gridHeaderStyle;'
+							+'horizontalGridLines:true;'
+							+'horizontalGridLineColor:#5C8484;'
+							+'headerLineColor:#44a4c8;'
+							+'selectionColor:#ADC1C1;'
+							+'rollOverColor:#CC9999;'
+							+'fontWeight:bold;'
+							+'verticalAlign:middle;'
+							+'verticalGridLineColor:#abd6e6;'
+							+'fontWeight:normal;'
+							+'borderColor:#44a4c8;'
+						+'}'
+						+'.gridHeaderStyle'
+							+'{color:#ffffff;}'
+						+'}'
+					+'</Style>'
+				+'</rMateChart>';
+
+// 차트 데이터
+var chartData = [{"Month":"Jan","service":12,"goods":11,"income":12},
+				{"Month":"Feb","service":14,"goods":19,"income":17},
+				{"Month":"Mar","service":23,"goods":25,"income":20},
+				{"Month":"Apr","service":20,"goods":20,"income":18},
+				{"Month":"May","service":35,"goods":25,"income":25},
+				{"Month":"Jun","service":20,"goods":22,"income":23},
+				{"Month":"Jul","service":17,"goods":20,"income":17},
+				{"Month":"Aug","service":23,"goods":21,"income":21},
+				{"Month":"Sep","service":18,"goods":17,"income":10}];
+	
+// -----------------------차트 설정 끝 -----------------------
+
+// 이미지 저장
+function saveAsImage(){
+	// IE 판별
+	if(compIE())
+		menus.items[0].callback();
+}
+
+function compIE(){
+	var agent = navigator.userAgent;
+	if(agent.indexOf("MSIE 7.0") > -1 || agent.indexOf("MSIE 8.0") > - 1 || agent.indexOf("Trident 4.0") > -1){
+		alert("IE7,8 에서는 이미지 변환 및 전송기능이 지원되지 않습니다.");
+		return false;
+	}
+	if(document.documentMode && document.documentMode <= 5){
+		alert("쿼크모드에서는 이미지 변환 및 전송기능이 지원되지 않습니다.");
+		return false;
+	}
+	return true;
+}
+
+// PDF 저장
+function saveAsPDF(){
+	// IE 판별
+	if(compIE())
+		menus.items[1].callback();
+}
+
+// 스택 수치 합 사용자 정의 함수
+function totalFunc(index, data, value){
+	if(index == 6 || index == 4)
+		return value;
+	return "";
+}
+
+</script>
+<!-- 샘플 작동을 위한 css와 js -->
+<script type="text/javascript" src="./Web/JS/common.js"></script>
+<script type="text/javascript" src="./Web/JS/sample_util.js"></script>
+<link rel="stylesheet" type="text/css" href="./Web/sample.css"/>
+
+<!-- SyntaxHighlighter -->
+<script type="text/javascript" src="./Web/syntax/shCore.js"></script>
+<script type="text/javascript" src="./Web/syntax/shBrushJScript.js"></script>
+<link type="text/css" rel="stylesheet" href="./Web/syntax/shCoreDefault.css"/>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">
+			<div class="headerTitle">로컬로 이미지 저장</div>
+		</div>
+		<div class="sampleButtons">
+			<div class="button button_top" onclick="saveAsImage();">이미지 저장</div>
+			<div class="button button_top" onclick="saveAsPDF();">PDF 저장</div>
+		</div>
+		<div id="content">
+			<!-- 차트가 삽입될 DIV -->
+			<div id="chartHolder"></div>
+		</div>
+		<div class="description">
+			<span class="warn">- IE7,8 에서는 이미지 변환 및 전송기능이 지원되지 않습니다.<br>
+			- IE9 는 이미지 저장시 서버에 데이터를 전송하여야 합니다.<br/>
+			자세한 사항은 html 소스를 참고하시기 바랍니다.</span>
+		</div>
+		<div id="updater">
+			<div>Layout과 Data를 수정 후 적용 할 수 있습니다.</div>
+			<div id="updaterTab">
+				<ul id="updaterTabUl">
+					<li id="updaterTabUlSource" class="active_tab">Source</li>
+					<li id="updaterTabUlLayout" class="non_active_li">Layout</li>
+					<li id="updaterTabUlData" class="non_active_li">Data</li>
+					<li id="updaterTabUlBlank">
+						<span id="btn_update">수정적용</span>
+					</li>
+				</ul>
+			</div>
+			<div id="updaterTarea">
+				<pre id="updaterTareaSource" class="brush:js toolbar:false" name="updaterTareaSource"></pre>
+				<textarea id="updaterTareaLayout" class="updaterTextarea" spellcheck="false"></textarea>
+				<textarea id="updaterTareaData" class="updaterTextarea" spellcheck="false"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

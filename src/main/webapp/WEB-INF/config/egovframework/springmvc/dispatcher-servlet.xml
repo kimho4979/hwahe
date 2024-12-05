@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">        
+    <context:component-scan base-package="com">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+	<!-- 이미지 맵핑 -->
+	<mvc:resources location="file:///C:/FLOWER/files/" mapping="/admin/img/loc/**"/>
+    
+    <mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes" value="text/plain;charset=UTF-8"/>
+			</bean>		
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+        
+     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="webBindingInitializer">
+            <bean class="com.fpdisys.base.controller.EgovBindingInitializer"/>
+        </property>
+    </bean>
+    
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+    
+      
+     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="2"
+	    p:viewClass="org.springframework.web.servlet.view.JstlView"
+	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
+	    
+    	<bean id="beanNameResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<property name="order" value="1" />
+	</bean>
+    
+    <!--컨트롤러 리턴시 다른것들보다 먼저 읽혀야 하기 때문에 order를 0과 1로 지정-->
+<!-- 	<bean class = "org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+	    <property name = "order" value = "0" />
+	    <property name = "defaultErrorView" value = "error" />
+	    <property name = "exceptionMappings">
+		    <props>
+	            <prop key = "RuntimeException">error</prop>
+	        </props>
+	    </property>
+	</bean> -->
+	<bean name = "excelView" class = "com.fpdisys.dist.excel.controller.ExcelView" />
+    
+    	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="contentNegotiationManager">
+            <bean class="org.springframework.web.accept.ContentNegotiationManager">
+                <constructor-arg>
+                    <bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+                        <constructor-arg>
+                            <map>
+								<entry key="json" value="application/json;charset=UTF-8" />
+								<entry key="jsonp" value="application/javascript;charset=UTF-8" />
+								<entry key="do" value="text/html;charset=UTF-8" />
+								<entry key="api" value="text/plain;charset=UTF-8" />
+                            </map>
+                        </constructor-arg>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </property>
+
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+                	<property name="prefixJson" value="false" />
+            	</bean>
+            </list>
+        </property>
+    </bean>
+     <!-- For Pagination Tag -->
+    <bean id="imageRenderer" class="com.fpdisys.base.controller.EgovImgPaginationRenderer"/>
+
+    <bean id="paginationManager" class="egovframework.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager">
+        <property name="rendererType">
+            <map>
+                <entry key="image" value-ref="imageRenderer"/>
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+	      <property name="classesToBeBound">
+	           <list>
+	                <value>com.fpdisys.dist.apiCall.domain.ApiCallSaleResult</value>
+	                <value>com.fpdisys.dist.apiCall.domain.ApiCallSaleDateVO</value>
+	                <value>com.fpdisys.dist.apiCall.domain.ApiCallYuchalResult</value>
+	                <value>com.fpdisys.dist.apiCall.domain.ApiCallYuchalVO</value>
+	           </list>
+	      </property>
+	 </bean>
+
+	 <bean id="xmlView" class="org.springframework.web.servlet.view.xml.MarshallingView">
+	      <constructor-arg ref="jaxb2Marshaller"></constructor-arg>
+	 </bean>
+	
+	
+	 <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"></bean>
+   
+
+
+</beans>

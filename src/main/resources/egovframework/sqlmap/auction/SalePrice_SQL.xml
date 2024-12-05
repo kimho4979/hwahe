@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.saleprice.mapper.SalePriceMapper">
+    
+    <resultMap id="resultSalePriceMap" type="com.fpdisys.dist.saleprice.domain.SalePriceVO">
+		<result property="regMonth" column="REG_MONTH"/>
+		<result property="regDate" column="REG_DATE"/>
+		<result property="pumName" column="PUM_NAME"/>
+		<result property="goodName" column="GOOD_NAME"/>
+		<result property="qty" column="QTY"/>
+		<result property="bigo" column="BIGO"/>	
+		<result property="chulNo" column="CHUL_NO"/>
+		<result property="totalCount" column="TOTAL_COUNT"/>
+		<result property="rnum" column="RNUM"/>
+	</resultMap>
+	
+	<select id="selectFastDay" statementType="PREPARED" resultType="String"> 
+		SELECT REG_DATE
+		FROM
+		(
+		    SELECT SUBSTR(REG_DATE,0,7) AS REG_DATE
+		    FROM T_CONSUMPTION_TREND
+		    WHERE REG_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-2),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		    GROUP BY REG_DATE
+        	ORDER BY REG_DATE DESC
+		)
+		WHERE ROWNUM=1
+		ORDER BY REG_DATE DESC
+	</select>
+	
+	<select id="selectSalePrice" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="resultSalePriceMap">
+		
+		  SELECT  RNUM   
+                           ,REG_MONTH
+                           ,PUM_NAME
+                           ,GOOD_NAME                           
+                           ,QTY 
+                FROM
+                (
+                SELECT   ROW_NUMBER() OVER (ORDER BY QTY DESC, GOOD_NAME) AS  RNUM   
+                           ,REG_MONTH
+                           ,PUM_NAME
+                           ,GOOD_NAME                           
+                           ,QTY                           
+                FROM (
+                SELECT
+                            SUBSTR(REG_DATE,1,7) AS REG_MONTH
+                           ,PUM_NAME
+                           ,GOOD_NAME                           
+                           ,SUM(QTY) AS QTY                                                       
+                FROM T_CONSUMPTION_TREND
+                WHERE 1=1
+                AND SUBSTR(REG_DATE,1,7)=#{REG_MONTH, jdbcType=VARCHAR}
+                GROUP BY SUBSTR(REG_DATE,1,7),PUM_NAME,GOOD_NAME
+                		)              
+                )                 
+                WHERE RNUM  &lt; 8 									
+	</select>
+	
+	<select id="selectSalePriceChart" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="resultSalePriceMap">
+		SELECT RNUM
+                   ,REG_MONTH
+			       ,PUM_NAME
+			       ,GOOD_NAME
+			       ,QTY
+			       ,BIGO
+		 FROM
+			(SELECT ROW_NUMBER() OVER (ORDER BY QTY DESC) RNUM
+			       ,REG_MONTH
+			       ,PUM_NAME
+			       ,GOOD_NAME
+			       ,QTY
+			       ,BIGO
+			FROM T_CONSUMPTION_TREND			
+			WHERE REG_MONTH=#{REG_MONTH, jdbcType=VARCHAR}
+			)
+			WHERE RNUM &lt; '8'							
+	</select>
+	
+	<select id="selectPointSalePrice" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="resultSalePriceMap">
+		SELECT 
+			TOTAL_COUNT
+			, RNUM
+			, REG_DATE
+			, PUM_NAME
+			, GOOD_NAME
+			, BIGO
+			, CHUL_NO
+		FROM
+		(
+			SELECT 
+				COUNT(*) OVER() AS TOTAL_COUNT
+				, RNUM
+				, REG_DATE
+				, PUM_NAME
+				, GOOD_NAME
+				, BIGO
+				, CHUL_NO
+			FROM          
+			(
+				SELECT  
+					ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, GOOD_NAME) RNUM  
+					, REG_DATE
+					, PUM_NAME
+					, GOOD_NAME
+					, BIGO
+					, CHUL_NO
+				FROM
+				(
+					SELECT REG_DATE
+						, PUM_NAME
+						, GOOD_NAME
+						, BIGO
+						, '경기도' AS CHUL_NO
+					FROM T_CONSUMPTION_TREND
+					WHERE SUBSTR(REG_DATE,1,7) =#{REG_MONTH, jdbcType=VARCHAR}
+					ORDER BY QTY DESC
+				)
+  			ORDER BY RNUM ASC
+  			)
+  		)
+		WHERE RNUM BETWEEN #{START} AND #{END}   		
+	</select>
+			
+	<select id="getBizMail" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.saleprice.domain.BizMailVO">	
+		SELECT
+			SEQ 
+		    ,USER_ID 
+		    ,SUBJECT
+		    ,MSG_BODY
+		    ,SEND_TIME
+		FROM BIZ_MAIL
+	</select>
+	
+	<delete id="delBizMail" parameterType="java.util.HashMap">	
+		DELETE FROM BIZ_MAIL
+		WHERE SEQ=#{seq, jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="getBizMsg" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.saleprice.domain.BizMsgVO">	
+		SELECT 
+		   CMID, UMID, MSG_TYPE, DEST_PHONE, SEND_PHONE, SUBJECT, 
+		   MSG_BODY, NATION_CODE, SENDER_KEY, 
+		   TEMPLATE_CODE, RE_TYPE, RE_BODY
+		FROM BIZ_MSG
+	</select>
+	
+	<delete id="delBizMsg" parameterType="java.util.HashMap">	
+		DELETE FROM BIZ_MSG
+		WHERE CMID=#{cmid, jdbcType=VARCHAR}
+	</delete>
+	
+	
+	<update id="insertBizMSGForOarcle" parameterType="java.util.HashMap">
+		 MERGE INTO BIZ_LOG
+                 USING DUAL
+                ON ( CMID = #{CMID, jdbcType=VARCHAR} )
+        WHEN MATCHED
+        THEN
+           UPDATE SET
+                UMID = #{UMID, jdbcType=VARCHAR}
+                ,MSG_TYPE = #{MSG_TYPE, jdbcType=VARCHAR}
+                ,STATUS = #{STATUS, jdbcType=VARCHAR}
+                ,REQUEST_TIME = TO_DATE(#{REQUEST_TIME, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+                ,SEND_TIME = TO_DATE(#{SEND_TIME, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+                ,REPORT_TIME = TO_DATE(#{REPORT_TIME, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+                ,DEST_PHONE = #{DEST_PHONE, jdbcType=VARCHAR}
+                ,DEST_NAME = #{DEST_NAME, jdbcType=VARCHAR}
+                ,SEND_PHONE = #{SEND_PHONE, jdbcType=VARCHAR}
+                ,SEND_NAME = #{SEND_NAME, jdbcType=VARCHAR}
+                ,SUBJECT = #{SUBJECT, jdbcType=VARCHAR}
+                ,MSG_BODY = #{MSG_BODY, jdbcType=VARCHAR}
+                ,NATION_CODE = #{NATION_CODE, jdbcType=VARCHAR}
+                ,SENDER_KEY = #{SENDER_KEY, jdbcType=VARCHAR}
+                ,TEMPLATE_CODE = #{TEMPLATE_CODE, jdbcType=VARCHAR}
+                ,RESPONSE_METHOD = #{RESPONSE_METHOD, jdbcType=VARCHAR}
+                ,TIMEOUT = #{TIMEOUT, jdbcType=VARCHAR}
+                ,RE_TYPE = #{RE_TYPE, jdbcType=VARCHAR}
+                ,RE_BODY = #{RE_BODY, jdbcType=VARCHAR}
+                ,RE_PART = #{RE_PART, jdbcType=VARCHAR}
+                ,WAP_URL = #{WAP_URL, jdbcType=VARCHAR}
+                ,COVER_FLAG = #{COVER_FLAG, jdbcType=VARCHAR}
+                ,SMS_FLAG = #{SMS_FLAG, jdbcType=VARCHAR}
+                ,REPLY_FLAG = #{REPLY_FLAG, jdbcType=VARCHAR}
+                ,RETRY_CNT = #{RETRY_CNT, jdbcType=VARCHAR}
+                ,ATTACHED_FILE = #{ATTACHED_FILE, jdbcType=VARCHAR}
+                ,VXML_FILE = #{VXML_FILE, jdbcType=VARCHAR}
+                ,CALL_STATUS = #{CALL_STATUS, jdbcType=VARCHAR}
+                ,USE_PAGE = #{USE_PAGE, jdbcType=VARCHAR}
+                ,USE_TIME = #{USE_TIME, jdbcType=VARCHAR}
+                ,SN_RESULT = #{SN_RESULT, jdbcType=VARCHAR}
+                ,TEL_INFO = #{TEL_INFO, jdbcType=VARCHAR}
+                ,CINFO = #{CINFO, jdbcType=VARCHAR}
+                ,USER_KEY = #{USER_KEY, jdbcType=VARCHAR}
+                ,AD_FLAG = #{AD_FLAG, jdbcType=VARCHAR}
+        WHEN NOT MATCHED
+        THEN
+           INSERT (
+				CMID
+				,UMID
+				,MSG_TYPE
+				,STATUS
+				,REQUEST_TIME
+				,SEND_TIME
+				,REPORT_TIME
+				,DEST_PHONE
+				,DEST_NAME
+				,SEND_PHONE
+				,SEND_NAME
+				,SUBJECT
+				,MSG_BODY
+				,NATION_CODE
+				,SENDER_KEY
+				,TEMPLATE_CODE
+				,RESPONSE_METHOD
+				,TIMEOUT
+				,RE_TYPE
+				,RE_BODY
+				,RE_PART
+				,WAP_URL
+				,COVER_FLAG
+				,SMS_FLAG
+				,REPLY_FLAG
+				,RETRY_CNT
+				,ATTACHED_FILE
+				,VXML_FILE
+				,CALL_STATUS
+				,USE_PAGE
+				,USE_TIME
+				,SN_RESULT
+				,TEL_INFO
+				,CINFO
+				,USER_KEY
+				,AD_FLAG
+           )VALUES(
+				#{CMID, jdbcType=VARCHAR}
+				,#{UMID, jdbcType=VARCHAR}
+				,#{MSG_TYPE, jdbcType=VARCHAR}
+				,#{STATUS, jdbcType=VARCHAR}
+				,TO_DATE(#{REQUEST_TIME, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+				,TO_DATE(#{SEND_TIME, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+				,TO_DATE(#{REPORT_TIME, jdbcType=VARCHAR}, 'YYYY-MM-DD HH24:MI:SS')
+				,#{DEST_PHONE, jdbcType=VARCHAR}
+				,#{DEST_NAME, jdbcType=VARCHAR}
+				,#{SEND_PHONE, jdbcType=VARCHAR}
+				,#{SEND_NAME, jdbcType=VARCHAR}
+				,#{SUBJECT, jdbcType=VARCHAR}
+				,#{MSG_BODY, jdbcType=VARCHAR}
+				,#{NATION_CODE, jdbcType=VARCHAR}
+				,#{SENDER_KEY, jdbcType=VARCHAR}
+				,#{TEMPLATE_CODE, jdbcType=VARCHAR}
+				,#{RESPONSE_METHOD, jdbcType=VARCHAR}
+				,#{TIMEOUT, jdbcType=VARCHAR}
+				,#{RE_TYPE, jdbcType=VARCHAR}
+				,#{RE_BODY, jdbcType=VARCHAR}
+				,#{RE_PART, jdbcType=VARCHAR}
+				,#{WAP_URL, jdbcType=VARCHAR}
+				,#{COVER_FLAG, jdbcType=VARCHAR}
+				,#{SMS_FLAG, jdbcType=VARCHAR}
+				,#{REPLY_FLAG, jdbcType=VARCHAR}
+				,#{RETRY_CNT, jdbcType=VARCHAR}
+				,#{ATTACHED_FILE, jdbcType=VARCHAR}
+				,#{VXML_FILE, jdbcType=VARCHAR}
+				,#{CALL_STATUS, jdbcType=VARCHAR}
+				,#{USE_PAGE, jdbcType=VARCHAR}
+				,#{USE_TIME, jdbcType=VARCHAR}
+				,#{SN_RESULT, jdbcType=VARCHAR}
+				,#{TEL_INFO, jdbcType=VARCHAR}
+				,#{CINFO, jdbcType=VARCHAR}
+				,#{USER_KEY, jdbcType=VARCHAR}
+				,#{AD_FLAG, jdbcType=VARCHAR}
+           )
+	</update>
+	
+	<select id="selectTodaySale" resultType="String">
+		SELECT SALE_DATE
+		FROM T_SALE_DATE
+		WHERE SALE_DATE = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		GROUP BY SALE_DATE
+	</select>
+	
+	<!-- 소비동향 :: Excel -->
+	<select id="selectPointSalePriceExcel" resultType="com.fpdisys.dist.saleprice.domain.SalePriceVO" resultMap="resultSalePriceMap">
+		SELECT 
+			TOTAL_COUNT
+			, RNUM
+			, REG_DATE
+			, PUM_NAME
+			, GOOD_NAME
+			, BIGO
+			, CHUL_NO
+		FROM
+		(
+			SELECT 
+				COUNT(*) OVER() AS TOTAL_COUNT
+				, RNUM
+				, REG_DATE
+				, PUM_NAME
+				, GOOD_NAME
+				, BIGO
+				, CHUL_NO
+			FROM          
+			(
+				SELECT  
+					ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, GOOD_NAME) RNUM  
+					, REG_DATE
+					, PUM_NAME
+					, GOOD_NAME
+					, BIGO
+					, CHUL_NO
+				FROM
+				(
+					SELECT REG_DATE
+						, PUM_NAME
+						, GOOD_NAME
+						, BIGO
+						, '경기도' AS CHUL_NO
+					FROM T_CONSUMPTION_TREND
+					WHERE SUBSTR(REG_DATE,1,7) =#{regMonth, jdbcType=VARCHAR}
+					ORDER BY QTY DESC
+				)
+  			ORDER BY RNUM ASC
+  			)
+  		)
+	</select>
+	
+	
+</mapper>

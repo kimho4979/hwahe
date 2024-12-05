@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.customerBbs.mapper.CustomerBbsMapper">
+	<select id="customerList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			AA.TOTAL_COUNT
+			, AA.RANK_SEQ
+			, AA.LEVEL_SEQ
+		    , AA.RNUM
+	        , AA.SEQ
+	        , FN_ENCRYPT(AA.SEQ) AS ENCRYPT_SEQ
+	        , AA.PARENT_SEQ
+	        <!-- , DECODE(USR_NM,'관리자','관리자',SUBSTR(AA.USR_NM,1,1) || lpad('*',length(AA.USR_NM)-1,'*')) USR_NM -->
+	        , CASE WHEN USR_NM = '관리자' AND PARENT_SEQ != 0 THEN '관리자'
+	          ELSE SUBSTR(AA.USR_NM,1,1) || lpad('*',length(AA.USR_NM)-1,'*') END AS USR_NM
+	        , USR_NM USR_NM_ORI
+	        , FN_DECRYPT(AA.USR_PASS) AS USR_PASS
+	        , SUBSTR(AA.TITLE,1,5) || lpad('*',length(AA.TITLE)-5,'*') TITLE
+	        , TITLE TITLE_ORI
+		   , REPLACE(AA.CONT,CHR(13),'<![CDATA[<]]>BR<![CDATA[>]]>') AS CONT
+		   , CONT CONT_ORI
+		   , AA.MOB_NUM
+		   , AA.ORIGIN_FILE_NAME
+       		, AA.STORED_FILE_NAME
+		   , TO_CHAR(AA.INS_DT,'YYYY-MM-DD HH24:MI:SS') INS_DT
+		   , AA.INS_ID
+		   , AA.UPT_DT
+		   , AA.UPT_ID
+		   , AA.CLICK_CNT
+		   , AA.BBS_DEL
+		  FROM 
+		  (
+		      SELECT 
+		           COUNT(*) OVER() AS TOTAL_COUNT
+		           ,RANK() OVER(ORDER BY RNUM DESC) RANK_SEQ
+		           , A.LEVEL_SEQ
+		           ,A.RNUM
+		           ,A.SEQ
+		          , A.PARENT_SEQ
+		          , A.USR_NM
+		          , A.USR_PASS
+		          , A.TITLE
+		          , A.CONT
+		          , A.MOB_NUM
+		          , A.INS_DT
+		          , A.INS_ID
+		          , A.UPT_DT
+		          , A.UPT_ID
+		          , A.CLICK_CNT
+		          , A.FILE_SEQ
+		          , A.ORIGIN_FILE_NAME
+		          , A.STORED_FILE_NAME
+		          , A.FILE_SIZE
+		          , A.BBS_DEL
+		      FROM(
+		      SELECT ROWNUM AS RNUM, E.*
+                FROM
+                (
+                    SELECT LEVEL AS LEVEL_SEQ
+                       ,T1.SEQ
+                      , T1.PARENT_SEQ
+                      , T1.USR_NM
+                      , T1.USR_PASS
+                      , T1.TITLE
+                      , T1.CONT
+                      , T1.MOB_NUM
+                      , T1.INS_DT
+                      , T1.INS_ID
+                      , T1.UPT_DT
+                      , T1.UPT_ID
+                      , T1.CLICK_CNT
+                      , T1.BBS_DEL
+                      , T2.FILE_SEQ
+                      , T2.ORIGIN_FILE_NAME
+                      , T2.STORED_FILE_NAME
+                      , T2.FILE_SIZE
+                    FROM FLOWER.TB_CUSTOMER_BBS T1
+                    LEFT OUTER JOIN TB_CUSTOMER_BBS_FILE T2 ON T1.SEQ = T2.FILE_SEQ
+                    WHERE 1=1
+                     <if test="admParam==null or admParam==''">
+	            	   AND BBS_DEL='N'
+	            	</if>
+                     <if test="seq!=null and seq!=''">
+	            	   AND T1.SEQ= #{seq, jdbcType=VARCHAR}
+	            	</if>
+	            	<if test="enSeq!=null and enSeq!=''">
+	            	   AND T1.SEQ= FN_DECRYPT(#{enSeq, jdbcType=VARCHAR})
+	            	</if>
+	            	<if test="pass!=null and pass!=''">
+	            	   AND T1.USR_PASS= FN_ENCRYPT(#{pass, jdbcType=VARCHAR})
+	            	</if>
+                    START WITH PARENT_SEQ='0'
+                    CONNECT BY PRIOR T1.SEQ = T1.PARENT_SEQ
+                    ORDER SIBLINGS BY T1.SEQ DESC
+                ) E
+		      )A
+		  ) AA
+		  <if test="start!=null and start!=''">
+		  	WHERE AA.RNUM BETWEEN #{start} AND #{end}	
+		  </if>
+		  ORDER BY RANK_SEQ DESC
+	</select>
+	
+	<select id="dupChkCustomer" parameterType="java.util.HashMap" statementType="PREPARED" resultType="int">
+		SELECT COUNT(1) CNT
+		FROM TB_CUSTOMER_BBS
+		WHERE USR_NM=#{usrNm, jdbcType=VARCHAR}
+		AND TITLE =#{title, jdbcType=VARCHAR}
+		<if test="mobNum!=null and mobNum!=''">
+		AND MOB_NUM=#{mobNum, jdbcType=VARCHAR}
+		</if>
+		AND CONT=#{cont, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertCustomer"  parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			SELECT NVL(MAX(SEQ),0)+1 FROM TB_CUSTOMER_BBS
+		</selectKey>
+ 		INSERT INTO TB_CUSTOMER_BBS
+		(     
+			SEQ               
+			, PARENT_SEQ   
+			, USR_NM
+			, USR_PASS
+            , TITLE          
+            , CONT  
+            , MOB_NUM
+            , INS_ID    
+            , INS_DT
+            , UPT_ID
+            , UPT_DT  
+       	) 
+       	VALUES 
+       	(    
+       		#{IDX}   
+            , #{parentSeq, jdbcType=VARCHAR}  
+            , #{usrNm, jdbcType=VARCHAR}
+            , FN_ENCRYPT(#{usrPass, jdbcType=VARCHAR})
+            , #{title, jdbcType=VARCHAR}
+            , #{cont, jdbcType=VARCHAR}
+            , #{mobNum, jdbcType=VARCHAR}
+            , #{usrNm, jdbcType=VARCHAR}
+            , SYSDATE
+            , #{usrNm, jdbcType=VARCHAR}
+            , SYSDATE   
+       	) 
+ 	</insert>
+ 	
+ 	<insert id="insertCustomerFile"  parameterType="java.util.HashMap">
+		INSERT INTO TB_CUSTOMER_BBS_FILE
+		(
+			SEQ
+       		, FILE_SEQ
+			, ORIGIN_FILE_NAME
+			, STORED_FILE_NAME
+			, FILE_SIZE
+			, INS_ID
+			, INS_DT
+		) 
+		VALUES 
+		(    
+			(SELECT NVL(MAX(SEQ),0)+1 FROM TB_CUSTOMER_BBS_FILE)
+            , #{CROP_IDX, jdbcType=VARCHAR}
+            , #{ORIGIN_FILE_NAME, jdbcType=VARCHAR}
+            , #{STORED_FILE_NAME, jdbcType=VARCHAR}
+            , #{FILE_SIZE, jdbcType=VARCHAR}
+            , #{usrNm, jdbcType=VARCHAR}
+            , SYSDATE
+		)          
+	</insert>
+	
+	<insert id="insertCustomerFileEncrpt"  parameterType="java.util.HashMap">
+		INSERT INTO TB_CUSTOMER_BBS_FILE
+		(
+			SEQ
+       		, FILE_SEQ
+			, ORIGIN_FILE_NAME
+			, STORED_FILE_NAME
+			, FILE_SIZE
+			, INS_ID
+			, INS_DT
+		) 
+		VALUES 
+		(    
+			(SELECT NVL(MAX(SEQ),0)+1 FROM TB_CUSTOMER_BBS_FILE)
+            , FN_DECRYPT(#{CROP_IDX, jdbcType=VARCHAR})
+            , #{ORIGIN_FILE_NAME, jdbcType=VARCHAR}
+            , #{STORED_FILE_NAME, jdbcType=VARCHAR}
+            , #{FILE_SIZE, jdbcType=VARCHAR}
+            , #{usrNm, jdbcType=VARCHAR}
+            , SYSDATE
+		)          
+	</insert>
+	
+	<update id="updateCustomer"  parameterType="java.util.HashMap">
+		UPDATE TB_CUSTOMER_BBS SET            
+			   USR_NM = #{usrNm, jdbcType=VARCHAR}
+			   <if test="usrPass!=null and usrPass!=''">
+			   , USR_PASS = FN_ENCRYPT(#{usrPass, jdbcType=VARCHAR})
+			   </if>
+			   , TITLE = #{title, jdbcType=VARCHAR}
+			   , CONT = #{cont, jdbcType=VARCHAR}
+			   , MOB_NUM = #{mobNum, jdbcType=VARCHAR}			   
+			   , UPT_DT = SYSDATE
+			   , UPT_ID = #{usrNm, jdbcType=VARCHAR}
+	    WHERE SEQ = FN_DECRYPT(#{seq, jdbcType=VARCHAR})
+	</update>
+	
+	<update id="updateCustomerFile"  parameterType="java.util.HashMap" >
+		UPDATE TB_CUSTOMER_BBS_FILE SET
+            ORIGIN_FILE_NAME = #{ORIGIN_FILE_NAME, jdbcType=VARCHAR}
+            , STORED_FILE_NAME = #{STORED_FILE_NAME, jdbcType=VARCHAR}
+            , FILE_SIZE = #{FILE_SIZE, jdbcType=VARCHAR}
+            , UPT_DT = SYSDATE
+		WHERE FILE_SEQ = FN_DECRYPT(#{seq, jdbcType=VARCHAR})
+	</update>
+	
+	<update id="updateClickCnt"  parameterType="java.util.HashMap">
+		UPDATE TB_CUSTOMER_BBS SET
+			   CLICK_CNT = (CLICK_CNT + 1)
+	    WHERE SEQ = #{seq, jdbcType=VARCHAR}	
+ 	</update>
+	  
+	<update id="deleteCustomer"  parameterType="java.util.HashMap">
+		UPDATE TB_CUSTOMER_BBS
+		SET BBS_DEL='Y' 
+	    WHERE SEQ = FN_DECRYPT(#{seq, jdbcType=VARCHAR})
+	</update>
+	
+	  <update id="deleteCustomerFile"  parameterType="java.util.HashMap" >
+		DELETE TB_CUSTOMER_BBS_FILE 
+		WHERE FILE_SEQ = FN_DECRYPT(#{seq, jdbcType=VARCHAR})
+	</update>
+	  
+</mapper>

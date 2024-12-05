@@ -1,0 +1,316 @@
+.dim{display:none;}
+/*** 콘텐츠 메인 ***/
+.conts_main{ width:100%; height:auto; padding-top:132px; background:#ffffff; padding-bottom:20px; overflow:hidden;}
+
+/*** 메인슬라이드 웹(S) ***/
+#visual{width:100%; height:auto; position:relative;  box-sizing:border-box;}
+.touch_left_btn{position:absolute;top:50%;left:30px; transform: translateY(-50%); opacity: 0.3}
+.touch_right_btn{position:absolute;top:50%;right:30px; transform: translateY(-50%); opacity: 0.3;}
+/* Swipe 2 required styles */
+.swipe {overflow: hidden; visibility: hidden; position: relative; }
+.swipe-wrap { overflow: hidden; position: relative; }
+.swipe-wrap > li { float:left; width:100%; position: relative;}
+/* END required styles */
+#mySwipe img{width:100%; max-width:100%;  height:auto; box-sizing:border-box; background-size:cover;}
+
+.web_slide_img{display:block;}
+.mobile_slide_img{display:none;}
+/*** 메인슬라이드 웹(E) ***/
+
+/*** 메인슬라이드 모바일(S) ***/
+/************보류*************/ 
+/*** 메인슬라이드 모바일(E) ***/
+
+/*** 타이틀박스(S) ***/
+.tit_box{ max-width:1300px; overflow:hidden; margin:0 auto;}
+.title_01{position:relative; margin: 30px 0px 30px 0px; color:#62a127; font-size:24px; font-weight:bold; padding-left:40px;}
+.title_01:before{display:inline-block; position:absolute; width:33px; height:22px; top:4px; left:0; content:""; background:url(../../images/2020/main_fw.png);}
+
+.title_02{position:relative; margin: 30px 0px 30px 0px; color:#000859; font-size:22px; font-weight:bold; }
+/* .title_02:before{display:inline-block; position:absolute; width:29px; height:22px; top:4px; left:0; content:""; background:url(../../images/2020/sub/title_02_ico.png); background-size:cover;} */
+
+.title_03{position:relative; margin: 0px 0px 10px 0px; color:#009e5d; font-size:24px; font-weight:bold; padding-left:40px;}
+.title_03:before{display:inline-block; position:absolute; width:29px; height:22px; top:4px; left:0; content:""; background:url(../../images/2020/sub/title_02_ico.png);}
+
+/*** 타이틀박스(E) ***/
+
+/*** 탭박스(S) ***/
+.tab_box{width:100%; overflow:visible; position:relative; box-sizing:border-box;  max-width:1300px; border:1px solid #aaaaaa;  background:#eeeeee; box-sizing:border-box;margin:0 auto; height:62px;}
+.tab_box .tab {overflow:hidden;}
+.tab_box .tab li{float:left; border-right:1px solid #aaaaaa; background:#eeeeee; border-bottom:1px solid #aaaaaa;}
+.tab_box .tab li a{display:inline-block; color:#777; min-width:120px; text-align:center; padding:20px 40px; box-sizing:border-box; font-size:20px; }
+.tab_box .tab li.on{background:#ffffff; border-bottom:1px solid #ffffff;}
+.tab_box .tab li:hover{background:#ffffff; border-bottom:1px solid #ffffff;}
+.tab_box .tab li.on a{font-weight:bold; }
+/* .tab_box div input.dateinput{border: 1px solid #eee; background: #eee;  position: absolute; right: 0; top: 10px;} */
+
+/*** 탭박스(E) ***/
+/*** 탭내용(S) ***/
+.tab_con { clear:both;max-width:1300px; margin:0 auto; box-sizing:border-box; border-left:1px solid #aaaaaa; border-right:1px solid #aaaaaa; border-bottom:1px solid #aaaaaa;}
+.tab_con .tabContent { display:none;  background:#fff; line-height:100px; text-align:center; margin-top:-1px;      padding: 30px 40px;}
+
+.tab_box .date_box_01.main{display: inline-block; position: absolute; right: 15px; top:0; height: 60px; box-sizing: border-box; line-height: 60px; padding-right:30px;}
+.tab_box .date_box_01.main input{border:none; background:#eeeeee; width:200px; font-size:24px; color:#777;}
+.tab_box .date_box_01.main .ui-datepicker-trigger{position:absolute; top:14px; right:22px; width:32px; height:32px; }
+
+.date_list_img{text-align:center; margin-top:15px;}
+.date_list_img ul{padding:5px 15px; border:1px solid #ccc; border-radius:10px; overflow:hidden; display:inline-block;}
+.date_list_img ul li{font-size:16px; line-height: 30px; font-weight:600; color:#777;display:inline-block; padding: 0 5px;}
+.date_list_img ul li img{vertical-align: middle; padding-right:5px;}
+
+.main_content_box{height:auto; overflow: hidden; }
+.main_content_box .tab_btn_list{height:100%;}
+.main_content_box .tab_btn{overflow:hidden; padding: 25px 15px 15px 40px;}
+.main_content_box .tab_btn li{float:left; border:1px solid #ccc; border-radius:5px; margin-right:10px;}
+.main_content_box .tab_btn li a{padding:10px 20px; display:block; color:#777;  font-size:18px;}
+.main_content_box .tab_btn li.c_on{border:2px solid #f17b7c;}
+.main_content_box .tab_btn li.c_on a{color:#f17b7c;}
+/*** 탭내용(E) ***/
+.main_content_box .date_box01{overflow:hidden; margin-top:0px; padding: 10px 10px 50px;}
+.main_content_box .date_box01 div.datel_list .datel_pt{height:500px; width:30%; float:left; margin-top:12px; padding-left:55px}
+.main_content_box .date_box01 div.datel_list .datel_pt .datel_txt{width:22%; margin:0 auto; border-radius:10px; text-align:center; height:35px; background:#777777;}
+.main_content_box .date_box01 div.datel_list .datel_pt .datel_txt p{display:block; font-size:18px;  line-height:35px; color:#fff;}
+.main_content_box .date_box01 div.dater_list .dater_pt{width:60%; height:500px; position: relative; float:right; margin-top:35px; padding-right:25px;} 
+.main_content_box .date_box01 div.dater_list .dater_pt .dater_txt{width:11%; border-radius:10px; text-align:center; height:32px; background:#777777;}
+.main_content_box .date_box01 div.dater_list .dater_pt .dater_txt p{line-height:32px; font-size:18px; color:#fff;}
+.main_content_box .date_box01 div.dater_list .dater_pt .dater_txt01{position:absolute; bottom:45px; right:35px; border-radius:10px; width:10%; text-align:center; height:32px; background:#777777;}
+.main_content_box .date_box01 div.dater_list .dater_pt .dater_txt01 .dater_txt02{ line-height:32px; font-size:18px; color:#fff; }
+.tab_box div input.dateinput{top:13px; width:250px;}
+/**기념일달력 & 가격문자 알림서비스**/
+.bottom_content{max-width:1300px; margin:0 auto; margin-top:40px; overflow:hidden; padding:20px;}
+.bottom_content .left_box{float:left; width:45%;}
+.bottom_content .left_box a.plus_bt{float:right; margin-top:40px; color:#777; font-size:18px;}
+.bottom_content .left_box h2{display:inline-block;}
+.bottom_content .left_box ul{overflow: hidden; border-top:1px solid #ccc; border-bottom:1px solid #ccc; }
+.bottom_content .left_box ul > li img{width: 90%; margin-top: 30px;}
+.bottom_content .left_box ul > li{float:left; width:50%; text-align:center;}
+.bottom_content .left_box ul > li p{font-size:20px; color:#777; font-weight:400; padding:29px 0 30px 0px; border-bottom: 1px solid #ccc;}
+.bottom_content .left_box ul > li p span{font-size:16px; padding:2px 10px; border:1px solid #ccc; border-radius:10px; color:#fff; background:#a0a0a0; margin-right:10px;}
+.bottom_content .left_box ul > li div.cl_title{ padding: 30px;}
+.bottom_content .left_box ul > li div.cl_title p{width: 160px; margin: 0 auto; padding: 5px; margin-top: 5px; color: #fff; font-size: 16px;}
+.bottom_content .left_box ul > li div.cl_title p.blue{background:blue;}
+.bottom_content .left_box ul > li div.cl_title p.green{background:green;}
+.bottom_content .left_box ul > li div.cl_title p.red{background:red;}
+.bottom_content .left_box ul > li div.cl_title p img{width: 10%; margin-top: 0px; vertical-align: top; }
+.bottom_content .left_box ul > li div.cl_title .nothing_img{width:83px!important; height:82px!important; margin-top:0;}
+.bottom_content .left_box ul > li div.cl_title p.ment{font-size:16px; color:#6b6b6b; border-bottom:none;}
+.bottom_content .right_box{float:right; width:45%;}
+.bottom_content .right_box ul{height:255px; overflow: hidden; border-top:1px solid #ccc; border-bottom:1px solid #ccc; margin-top:20px; }
+.bottom_content .right_box ul > li{float:left; }
+.bottom_content .right_box ul li:first-child{width:65%; padding-left:30px;}
+.bottom_content .right_box ul li:first-child p{font-size:26px; color:#777; font-weight:bold; letter-spacing:-4px; line-height:40px; padding:50px 0 20px; line-height:40px;} 
+.bottom_content .right_box ul li:first-child strong{font-size:20px; color:#777; font-weight:400; letter-spacing:-4px; line-height:25px;} 
+.bottom_content .right_box ul li:last-child{width:25%;text-align:center; } 
+.bottom_content .right_box ul li:last-child img{padding-top:50px; margin-bottom:10px;}
+.bottom_content .right_box ul li:last-child a{display:block; margin: 0 auto; height: 35px; line-height: 35px; width:100px; background:#009e5d; font-size:20px; color:#fff; font-weight:bold;}
+
+/* DATEPICKER */
+.ui-datepicker{height:auto!important;}
+.ui-datepicker td{width:14.2%!important;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (max-width: 1300px) { 
+input[type="text"]{/*height: 40px;*/}
+.tab_box div input.dateinput{top:12px; width:250px; }
+/*** 메인슬라이드 웹(S) ***/
+/*** 메인슬라이드 웹(E) ***/
+
+/*** 메인슬라이드 모바일(S) ***/
+
+/*** 메인슬라이드 모바일(E) ***/
+
+/*** 타이틀박스(S) ***/
+}
+
+@media screen and (max-width: 1100px){
+/***메인****/
+.bottom_content .left_box{width:50%;}
+.bottom_content .left_box ul > li div.cl_title p{width:143px !important;}
+.bottom_content .right_box ul li:first-child p{font-size:22px; color:#777; font-weight:bold; letter-spacing:-4px; line-height:40px; padding:40px 0 20px; line-height:40px;} 
+.bottom_content .right_box ul li:first-child strong{font-size:18px; color:#777; font-weight:400; letter-spacing:-4px; line-height:25px;} 
+.date_list_img{text-align:center; margin-top:15px;}
+.date_list_img ul li{padding:8px 5px;}
+.bottom_content .left_box ul > li div p{width:200px; font-size:30px;}
+}
+
+
+
+
+
+@media screen and (max-width: 990px){
+    .title_02{font-size:18px; margin: 30px 0px 15px 0px; padding-left:30px;}
+    .title_02:before{top:0; width:24px; height:18px;}
+    .bottom_content .left_box a.plus_bt{margin-top:30px; font-size:16px;}
+    
+    
+    /***메인***/
+
+
+.tit_box .title_02{text-align:left;}
+
+
+.dim{position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 100; opacity: 0.5; background-color: rgb(0, 0, 0);}
+/* #mySwipe img{height:150px;} */
+.touch_right_btn,.touch_left_btn > a > img{display:none;}
+.main_content_box .tab_btn{padding: 25px 0px 15px 20px;}
+
+/* input[type="text"]{height: 35px;} */
+.bottom_content{max-width:990px;}
+.conts_main{padding-top:0px;}
+.title_01{font-size:25px; text-align: left;}
+.tit_box{padding:10px 10px; text-align: center}
+.tit_box h2 img{vertical-align: bottom; width: 40px;}
+.swipe{margin-top:90px}
+.tab_box{height:62px; width: 95%;}
+.tab_box .tab li a{padding:none;}
+.tab_con{width:95%;}
+
+.main_content_box .date_box01 ul.date_list{width:100%;}
+.main_content_box .date_box01 div.datel_list .datel_pt{width:100%; margin:0 auto; float:none; padding-left:0;}
+.main_content_box .date_box01 div.dater_list .dater_pt{width:100%; margin:0 auto; float:none; margin-top:50px; padding-right:0;} 
+.main_content_box .date_box01 .date_list li{float:none; width:100%; text-align: center;}
+.main_content_box .date_box01 .date_list li img{width:100%;}
+.main_content_box .date_box02 .date_list li{float:none; width:100%; text-align: center;}
+.main_content_box .date_box02 .date_list li img{width:100%;}
+.main_content_box .date_box03 .date_list li{float:none; width:100%; text-align: center;}
+.main_content_box .date_box03 .date_list li img{width:100%;}
+
+.tab_box div input.dateinput{top:13px; width:200px;}
+.main_content_box{height:100%; margin: 0px; overflow: hidden;}
+.date_list_img{text-align:center;}
+.date_list_img ul{margin:0 20px;}
+.date_list_img ul li{padding:7px 5px; line-height:20px;}
+.bottom_content .left_box ul > li div.cl_title p img{height:15px;}
+.bottom_content .left_box{float:none; width:100%; }
+.bottom_content .left_box ul > li img{width: 100%; height: 200px;}
+.bottom_content .left_box ul > li div p{width:200px; font-size:30px;}
+.bottom_content .right_box{float:none; width:100%; margin-top: 60px;}
+.bottom_content .right_box ul li:first-child p{font-size:34px; }
+.bottom_content .right_box ul li:first-child strong{font-size:26px;}
+.tab_box .date_box_01.main{right:0;}
+.footer{height:100%;}
+.footer_in{padding:20px;}
+/* .footer_in .f_logo_box{display:none;} */
+.footer_in .f_menu{text-align:center;  float:none; margin-left:0;}
+input[type="text"]{padding:5px;}
+.tab_box .date_box_01.main input{width:150px; margin-right: 15px;}
+
+/* DATEPICKER */
+.ui-datepicker{height:auto!important; width:70%!important;}
+.ui-datepicker td{width:14.2%!important;}
+
+}
+@media screen and (max-width: 850px){
+.bottom_content .right_box ul li:first-child{width:63%;}
+.bottom_content .left_box ul > li img{width:80%; margin-top: 10px;}
+.tab_box .tab li a{min-width: 90px; padding: 20px 25px;}
+.main_content_box .tab_btn li{margin-top: 8px;}
+
+}
+@media screen and (max-width: 730px){
+.bottom_content .right_box ul li:first-child p{font-size:26px}
+.bottom_content .right_box ul li:first-child strong{font-size:20px;}
+.bottom_content .left_box ul > li img{width:75%;  margin-top: 10px;}
+.tab_box div input.dateinput{top:13px; width:130px;}
+.footer_in .f_menu .f_menu_list a{font-size:12px;}
+.footer_in .f_menu .f_menu_address p{font-size:12px;}
+}
+@media screen and (max-width:550px ){
+/*****메인******/
+.web_slide_img{display:none;}
+.mobile_slide_img{display:block;}
+/* 슬라이드 */
+/* .swipe-wrap > li{border:2px solid red; width:100%; height:300px; box-sizing:border-box;}
+.swipe-wrap > li img{box-sizing:border-box; width:100%; height:auto;} */
+.calendar{margin:0 auto;}
+.bottom_content .right_box ul li:last-child img{padding-top:25px}
+.main_content_box .tab_btn li{ display: inline-block; float: none;}
+
+.header .header_in .logo_box .btn_home{width:135px;}
+
+.tit_box h2 img{width:28px; margin-right: 5px;}
+.title_01{font-size:22px;}
+.title_01 img{width:28px; margin-right:5px;}
+.tab_box{height:60px;}
+.tab_box .tab li a{padding:20px 15px; font-size:18px; min-width:65px;}
+.tab_box .date_box_01.main input{font-size: 16px; width: 110px;}
+.main_content_box .date_box01 div.datel_list .datel_pt .datel_txt{width:30%;}
+.main_content_box .date_box01 div.datel_list .datel_pt .datel_txt p{}
+.main_content_box .date_box01 div.dater_list .dater_pt .dater_txt{width:30%;}
+.main_content_box .date_box01 div.dater_list .dater_pt .dater_txt01{width:20%; right:10px;}
+
+.bottom_content .left_box ul > li{/* float:none; */ width:100%;}
+
+/* .calendar .date-items{margin-left:0 !important;} */
+.bottom_content .right_box ul li:first-child{width:64%; padding-left:10px;}
+.bottom_content .right_box ul li:first-child p{font-size:14px !important; letter-spacing:-1px; line-height:30px;}
+.bottom_content .right_box ul li:first-child strong{font-size:12px !important; letter-spacing:-1px;}
+
+
+.rMateH5__Root{font-size:11px!important;}
+
+
+
+
+
+
+
+
+.bottom_content .left_box{padding:0;}
+.bottom_content .right_box{padding:0;}
+.bottom_content .right_box ul li:first-child p{font-size:22px;}
+.bottom_content .right_box ul li:first-child strong{font-size:16px;}
+.bottom_content .left_box ul > li img{width: 100%; margin-top: 10px;}
+}
+@media screen and (max-width:400px ){
+    .main_content_box{margin:0 0px!important;}
+    .main_content_box .tab_btn{padding:20px 5px 20px 5px!important; box-sizing: border-box;}
+    .date_list_img{padding:20px 5px 20px 5px!important; box-sizing: border-box;}
+    .main_content_box .tab_btn li{margin-right:5px!important;}
+    .main_content_box .date_box01{padding: 5px 5px 50px;}
+    .date_list_img ul{margin:0px!important;}
+    .bottom_content .right_box ul li:first-child{padding-left:0!important; }
+    .bottom_content{padding:5px!important;}    
+.tab_box .tab li a{min-width:40px; padding: 21px 5px; font-size: 16px;}
+.tab_box .main.date_box_01 input{width:115px; font-size:16px; margin-right: 0;}
+.tab_box .main.date_box_01 .ui-datepicker-trigger{right:10px;}
+.main_content_box .tab_btn li a{padding:10px 12px!important; font-size:16px!important;}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.monitor.mapper.Maa01MonitorMapper">
+
+	
+   <select id="selectShipmntPrearngeVolm" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+ select * from (  
+ select
+  	   COUNT(*) OVER() AS TOTAL_COUNT
+  	   ,ROWNUM AS RNUM
+      ,COMP_CODE AS COMP_CODE
+      ,A.USER_ID AS USER_ID
+      ,(SELECT COUNT(*) FROM T_SHIPMNT_INFO WHERE CHUL_NO=A.COMP_CODE  AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND GUBN='1' AND USE_YN='Y') AS predictionchluha
+      ,(SELECT COUNT(*) FROM T_SHIPMNT_INFO WHERE CHUL_NO=A.COMP_CODE  AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE}  AND GUBN='2' AND USE_YN='Y') AS chulha
+      ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=A.REMARK) AS SAN_BIGO   
+      ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=A.REMARK) AS SAN_CD  
+       
+    FROM T_USER A
+    WHERE A.USE_YN='Y'
+    AND A.USER_TYPE='M'
+    AND USER_ID NOT IN('at99999999')
+ )
+ WHERE RNUM BETWEEN #{startCount} AND #{endCount} 			         
+   </select>
+   
+      <select id="selectmaa01Monitor_Date" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+ select * from (  
+ select
+  	   COUNT(*) OVER() AS TOTAL_COUNT
+  	   ,ROWNUM AS RNUM
+      ,COMP_CODE AS COMP_CODE
+      ,A.USER_ID AS USER_ID
+       ,(SELECT COUNT(*) FROM T_SHIPMNT_INFO WHERE CHUL_NO=A.COMP_CODE  AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND GUBN='1' AND USE_YN='Y') AS predictionchluha
+      ,(SELECT COUNT(*) FROM T_SHIPMNT_INFO WHERE CHUL_NO=A.COMP_CODE  AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND GUBN='2' AND USE_YN='Y') AS chulha
+      ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=A.REMARK) AS SAN_BIGO     
+      ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=A.REMARK) AS SAN_CD
+          
+   -- ,(SELECT MAX(REG_DT) FROM T_SHIPMNT_INFO WHERE CHUL_NO=A.COMP_CODE) AS REG_DT
+    from T_USER A
+    WHERE A.USE_YN='Y'
+    AND A.USER_TYPE='M'
+    AND USER_ID NOT IN('at99999999')
+  )
+ WHERE RNUM BETWEEN #{startCount} AND #{endCount} 	
+			         
+   </select>
+   
+   <select id="selectMonitorPredictJson" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+   
+ select * from (  
+ select
+  	   COUNT(*) OVER() AS TOTAL_COUNT
+  	   ,ROWNUM AS RNUM
+      ,COMP_CODE AS COMP_CODE
+      ,A.USER_ID AS USER_ID
+      ,(SELECT COUNT(*) FROM T_SHIPMNT_INFO WHERE CHUL_NO=A.COMP_CODE  AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND GUBN='1' AND USE_YN='Y') AS predictionchluha
+      ,(SELECT COUNT(*) FROM T_SHIPMNT_INFO WHERE CHUL_NO=A.COMP_CODE  AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND GUBN='2' AND USE_YN='Y') AS chulha
+      ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=A.REMARK) AS SAN_BIGO     
+      ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=A.REMARK) AS SAN_CD
+          
+    from T_USER A
+    WHERE A.USE_YN='Y'
+    AND A.USER_TYPE='M'
+    AND USER_ID NOT IN('at99999999')
+   )
+ WHERE RNUM BETWEEN #{startCount} AND #{endCount} 	
+			         
+   </select>   
+   
+      <select id="selectMonitorPredictList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+ select
+ 		COUNT(*) OVER() AS TOTAL_COUNT
+      ,COMP_CODE AS COMP_CODE
+      ,A.USER_ID AS USER_ID
+         ,(SELECT COUNT(*) FROM T_SHIPMNT_INFO WHERE CHUL_NO=A.COMP_CODE  AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND GUBN='1' AND USE_YN='Y') AS predictionchluha
+      ,(SELECT COUNT(*) FROM T_SHIPMNT_INFO WHERE CHUL_NO=A.COMP_CODE  AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND GUBN='2' AND USE_YN='Y') AS chulha
+      ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=A.REMARK) AS SAN_BIGO    
+      ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=A.REMARK) AS SAN_CD 
+    FROM T_USER A
+    WHERE A.USE_YN='Y'
+    AND A.USER_TYPE='M'
+    AND USER_ID NOT IN('at99999999')
+ 
+			         
+   </select>   
+  
+  
+  
+  <select id="selectMonitorPredictDetail" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+  
+		select 
+				SUBSTR(T.REG_DATE,'1','7') REG_DATE1
+				,REG_DATE
+				,T.CHUL_NO AS CHUL_NO
+				,F_GET_MARKET_NAME(T.CMP_CD) AS CMP_CD
+				,T.PUM_NAME AS PUM_NAME
+				,T.GOOD_NAME AS GOOD_NAME
+				,T.QTY AS QTY
+				,DECODE(GUBN,'1','출하예정물량','출하물량') AS GUBN
+				,T.BIGO AS BIGO
+				,T.SEQ_NO AS SEQ_NO
+				,T.CMP_CD AS CMP_CODE
+				,T.CMP_CD AS MARKET_CD
+			from T_SHIPMNT_INFO T , T_USER T1
+			
+			WHERE T.CHUL_NO=T1.COMP_CODE
+				AND T1.COMP_CODE=#{COMP_CODE}
+				AND USER_TYPE='M'
+				AND T.USE_YN='Y'
+				AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE}
+				AND GUBN='1'
+				AND USER_ID NOT IN('at99999999')
+			
+			
+</select>
+  
+  <update id="deleteMonitorPredictDetail"  parameterType="java.util.HashMap" >
+		 UPDATE T_SHIPMNT_INFO  SET 					                 
+			        USE_YN = 'N'        				
+			 WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+			 AND PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR}      
+			 AND GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR}
+			 AND CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}  
+			 AND CMP_CD=#{MARKET_CD, jdbcType=VARCHAR}
+			 AND GUBN = #{GUBN, jdbcType=VARCHAR}
+			 AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+  </update> 
+  
+  <update id="deleteMonitortDetail"  parameterType="java.util.HashMap" >
+		 UPDATE T_SHIPMNT_INFO  SET 					                 
+			        USE_YN = 'N'        				
+			 WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+			 AND PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR}      
+			 AND GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR}
+			 AND	 CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}  
+			 AND CMP_CD=#{MARKET_CD, jdbcType=VARCHAR}
+			 AND GUBN = #{GUBN, jdbcType=VARCHAR}
+			 AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+  </update> 
+  
+  <update id="updateMonitorPredictDetail_Popup"  parameterType="java.util.HashMap" >
+	 UPDATE T_SHIPMNT_INFO  SET 					                 
+		QTY = #{QTY, jdbcType=VARCHAR}        
+	         ,BIGO =#{BIGO, jdbcType=VARCHAR}	 				
+		 WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+			 AND PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR}      
+			 AND GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR}
+			 AND	 CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}  
+			 AND CMP_CD=#{MARKET_CD, jdbcType=VARCHAR}
+			 AND GUBN = #{GUBN, jdbcType=VARCHAR}
+  </update>
+
+<update id="updateMonitorDetail_Popup"  parameterType="java.util.HashMap" >
+ UPDATE T_SHIPMNT_INFO  SET 					                 
+		QTY = #{QTY, jdbcType=VARCHAR}        
+	         ,BIGO =#{BIGO, jdbcType=VARCHAR}	 				
+		 WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+			 AND PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR}      
+			 AND GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR}
+			 AND CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}  
+			 AND CMP_CD=#{MARKET_CD, jdbcType=VARCHAR}
+			 AND GUBN = #{GUBN, jdbcType=VARCHAR}
+  </update>
+<select id="selectMonitorDetail" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+  
+		select 
+				SUBSTR(T.REG_DATE,'1','7') AS REG_DATE1
+				,REG_DATE
+				,T.CHUL_NO AS CHUL_NO
+				,F_GET_MARKET_NAME(T.CMP_CD) AS CMP_CD
+				,T.PUM_NAME AS PUM_NAME
+				,T.GOOD_NAME AS GOOD_NAME
+				,T.QTY AS QTY
+				,DECODE(GUBN,'1','출하예정물량','출하물량') AS GUBN
+				,T.BIGO AS BIGO
+				,T.SEQ_NO SEQ_NO
+				,T.CMP_CD AS CMP_CODE
+			from T_SHIPMNT_INFO T , T_USER T1
+			
+			WHERE T.CHUL_NO=T1.COMP_CODE
+				AND T1.COMP_CODE=#{COMP_CODE}
+				AND USER_TYPE='M'
+				AND T.USE_YN='Y'
+				AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE}
+				AND GUBN='2'
+				AND USER_ID NOT IN('at99999999')
+			
+</select>
+
+<insert id="insertMonitorPredictDetail_Popup"  parameterType="java.util.HashMap" >
+ INSERT INTO T_SHIPMNT_INFO
+       ( 
+           SEQ_NO     
+          ,REG_DATE  
+          ,PUM_NAME   
+          ,GOOD_NAME  
+          ,CMP_CD     
+          ,GUBN      
+          ,CHUL_NO   
+          ,QTY       
+          ,BIGO      
+          ,SAN_CD  
+          ,REG_DT
+       ) 
+       VALUES 
+       (    CHULHA_SEQ.NEXTVAL
+            ,#{REG_DATE, jdbcType=VARCHAR}
+            ,#{PUM_NAME, jdbcType=VARCHAR}      
+            ,#{GOOD_NAME, jdbcType=VARCHAR}
+            ,#{CHUL_NO, jdbcType=VARCHAR}
+            ,#{GUBN, jdbcType=VARCHAR}  
+            ,#{COMP_CODE, jdbcType=VARCHAR}         
+            ,#{QTY, jdbcType=VARCHAR}        
+            ,#{BIGO, jdbcType=VARCHAR}
+            ,#{SAN_CD, jdbcType=VARCHAR}       
+            ,(SELECT TO_CHAR(SYSDATE,'YYYY-MM-DD') FROM DUAL)               
+       ) 
+ </insert>
+ 
+ <insert id="insertMonitorDetail_Popup"  parameterType="java.util.HashMap" >
+ INSERT INTO T_SHIPMNT_INFO
+       ( 
+           SEQ_NO     
+          ,REG_DATE  
+          ,PUM_NAME   
+          ,GOOD_NAME  
+          ,CMP_CD     
+          ,GUBN      
+          ,CHUL_NO   
+          ,QTY       
+          ,BIGO      
+          ,SAN_CD  
+          ,REG_DT
+       ) 
+       VALUES 
+       (    CHULHA_SEQ.NEXTVAL
+            ,#{REG_DATE, jdbcType=VARCHAR}
+            ,#{PUM_NAME, jdbcType=VARCHAR}      
+            ,#{GOOD_NAME, jdbcType=VARCHAR}
+            ,#{CHUL_NO, jdbcType=VARCHAR}
+            ,#{GUBN, jdbcType=VARCHAR}  
+            ,#{COMP_CODE, jdbcType=VARCHAR}         
+            ,#{QTY, jdbcType=VARCHAR}        
+            ,#{BIGO, jdbcType=VARCHAR}
+            ,#{SAN_CD, jdbcType=VARCHAR}       
+            ,(SELECT TO_CHAR(SYSDATE,'YYYY-MM-DD') FROM DUAL)               
+       ) 
+ </insert>
+ 
+
+</mapper>

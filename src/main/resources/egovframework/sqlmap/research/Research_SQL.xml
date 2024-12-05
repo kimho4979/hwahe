@@ -1,0 +1,3805 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.research.mapper.ResearchMapper">
+    <delete id="deleteReserchData1">
+    	DELETE FROM TB_NRES_CHUL_INFO WHERE STD_YEAR = #{stdYear, jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteReserchData2">
+    	DELETE FROM TB_NRES_PROD_INFO WHERE STD_YEAR = #{stdYear, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertReserchData1" parameterType="java.util.List">
+    	INSERT INTO TB_NRES_CHUL_INFO 
+    	<foreach collection="list" item="data" index="idx" separator="UNION ALL">
+    	SELECT 
+    		  #{data.stdYear, jdbcType=VARCHAR}
+    	    , #{data.nongId, jdbcType=VARCHAR}
+    	    , #{data.sidoCode, jdbcType=VARCHAR}
+    	    , #{data.agCode, jdbcType=VARCHAR}
+    	    , #{data.sidoName, jdbcType=VARCHAR}
+			, #{data.sidoName, jdbcType=VARCHAR}
+			, #{data.sigunName, jdbcType=VARCHAR}
+			, #{data.gen, jdbcType=NUMERIC}
+			, #{data.fYear, jdbcType=VARCHAR}
+			, #{data.fMonth, jdbcType=VARCHAR}
+			, #{data.gubn, jdbcType=NUMERIC}
+			, #{data.fName, jdbcType=VARCHAR}
+			, #{data.f1Py, jdbcType=NUMERIC}
+			, #{data.f2Py, jdbcType=NUMERIC}
+			, #{data.f3Py, jdbcType=NUMERIC}
+			, #{data.f4Py, jdbcType=NUMERIC}
+			, #{data.f5Py, jdbcType=NUMERIC}
+			, #{data.fPy, jdbcType=NUMERIC}
+			, #{data.ff1Py, jdbcType=NUMERIC}
+			, #{data.ff2Py, jdbcType=NUMERIC}
+			, #{data.ff3Py, jdbcType=NUMERIC}
+			, #{data.ff4Py, jdbcType=NUMERIC}
+			, #{data.ff5Py, jdbcType=NUMERIC}
+			, #{data.ffPy, jdbcType=NUMERIC}
+			, #{data.b1r1c1, jdbcType=NUMERIC}
+			, #{data.b1r1c2, jdbcType=NUMERIC}
+			, #{data.b1r1c3, jdbcType=NUMERIC}
+			, #{data.b1r1c4, jdbcType=NUMERIC}
+			, #{data.b1r1c5, jdbcType=NUMERIC}
+			, #{data.b1r2c1, jdbcType=NUMERIC}
+			, #{data.b1r2c2, jdbcType=NUMERIC}
+			, #{data.b1r2c3, jdbcType=NUMERIC}
+			, #{data.b1r2c4, jdbcType=NUMERIC}
+			, #{data.b1r2c5, jdbcType=NUMERIC}
+			, #{data.b2r1c1, jdbcType=NUMERIC}
+			, #{data.b2r1c2, jdbcType=NUMERIC}
+			, #{data.b2r1c3, jdbcType=NUMERIC}
+			, #{data.b2r1c4, jdbcType=NUMERIC}
+			, #{data.b2r1c5, jdbcType=NUMERIC}
+			, #{data.b2r1c6, jdbcType=NUMERIC}
+			, #{data.b2r1c7, jdbcType=NUMERIC}
+			, #{data.b2r2c1, jdbcType=NUMERIC}
+			, #{data.b2r2c2, jdbcType=NUMERIC}
+			, #{data.b2r2c3, jdbcType=NUMERIC}
+			, #{data.b2r2c4, jdbcType=NUMERIC}
+			, #{data.b2r2c5, jdbcType=NUMERIC}
+			, #{data.b2r2c6, jdbcType=NUMERIC}
+			, #{data.b2r2c7, jdbcType=NUMERIC}
+			, #{data.b2r3c1, jdbcType=NUMERIC}
+			, #{data.b2r3c2, jdbcType=NUMERIC}
+			, #{data.b2r3c3, jdbcType=NUMERIC}
+			, #{data.b2r3c4, jdbcType=NUMERIC}
+			, #{data.b2r3c5, jdbcType=NUMERIC}
+			, #{data.b2r3c6, jdbcType=NUMERIC}
+			, #{data.b2r3c7, jdbcType=NUMERIC}
+			, #{data.b3c01, jdbcType=NUMERIC}
+			, #{data.b3c02, jdbcType=NUMERIC}
+			, #{data.b3c03, jdbcType=NUMERIC}
+			, #{data.b3c04, jdbcType=NUMERIC}
+			, #{data.b3c05, jdbcType=NUMERIC}
+			, #{data.b3c06, jdbcType=NUMERIC}
+			, #{data.b3c06e, jdbcType=VARCHAR}
+			, #{data.b3c07, jdbcType=NUMERIC}
+			, #{data.b3c08, jdbcType=NUMERIC}
+			, #{data.b3c09, jdbcType=NUMERIC}
+			, #{data.b3c10, jdbcType=NUMERIC}
+			, #{data.b3c11, jdbcType=NUMERIC}
+			, #{data.b3c11e, jdbcType=VARCHAR}
+			, #{data.b4, jdbcType=NUMERIC}
+			, #{data.b4c01, jdbcType=NUMERIC}
+			, #{data.b4c02, jdbcType=NUMERIC}
+			, #{data.b4c03, jdbcType=NUMERIC}
+			, #{data.b4c04, jdbcType=NUMERIC}
+			, #{data.b4c05, jdbcType=NUMERIC}
+			, #{data.b4c06, jdbcType=NUMERIC}
+			, #{data.b4c07, jdbcType=NUMERIC}
+			, #{data.b4c08, jdbcType=NUMERIC}
+			, #{data.b4c09, jdbcType=NUMERIC}
+			, #{data.b4c10, jdbcType=NUMERIC}
+			, #{data.b4c10e, jdbcType=VARCHAR}
+			, #{data.b4c091, jdbcType=NUMERIC}
+			, #{data.b4c092, jdbcType=NUMERIC}
+			, #{data.b4c093, jdbcType=NUMERIC}
+			, #{data.b4c094, jdbcType=NUMERIC}
+			, #{data.b4c095, jdbcType=NUMERIC}
+			, #{data.b4c096, jdbcType=NUMERIC}
+			, #{data.b4c09e, jdbcType=VARCHAR}
+			, #{data.b5, jdbcType=NUMERIC}
+			, #{data.b5c01, jdbcType=NUMERIC}
+			, #{data.b5c02, jdbcType=NUMERIC}
+			, #{data.b5c03, jdbcType=NUMERIC}
+			, #{data.b5c04, jdbcType=NUMERIC}
+			, #{data.b5c05, jdbcType=NUMERIC}
+			, #{data.b5c06, jdbcType=NUMERIC}
+			, #{data.b5c07, jdbcType=NUMERIC}
+			, #{data.b5c08, jdbcType=NUMERIC}
+			, #{data.b5c08e, jdbcType=VARCHAR}
+			, #{data.b5c09, jdbcType=NUMERIC}
+			, #{data.b5c10, jdbcType=NUMERIC}
+			, #{data.b5c11, jdbcType=NUMERIC}
+			, #{data.b5c12, jdbcType=NUMERIC}
+			, #{data.b5c13, jdbcType=NUMERIC}
+			, #{data.b5c14, jdbcType=NUMERIC}
+			, #{data.b5c15, jdbcType=NUMERIC}
+			, #{data.b5c16, jdbcType=NUMERIC}
+			, #{data.b5c16e, jdbcType=VARCHAR}
+			, #{data.b5c071, jdbcType=NUMERIC}
+			, #{data.b5c072, jdbcType=NUMERIC}
+			, #{data.b5c073, jdbcType=NUMERIC}
+			, #{data.b5c074, jdbcType=NUMERIC}
+			, #{data.b5c07e, jdbcType=VARCHAR}
+			, #{data.b5c151, jdbcType=NUMERIC}
+			, #{data.b5c152, jdbcType=NUMERIC}
+			, #{data.b5c153, jdbcType=NUMERIC}
+			, #{data.b5c154, jdbcType=NUMERIC}
+			, #{data.b5c155, jdbcType=NUMERIC}
+			, #{data.b5c15e, jdbcType=VARCHAR}
+			, #{data.c101, jdbcType=VARCHAR}
+			, #{data.c102, jdbcType=VARCHAR}
+			, #{data.c103, jdbcType=VARCHAR}
+			, #{data.c104, jdbcType=VARCHAR}
+			, #{data.c105, jdbcType=VARCHAR}
+			, #{data.c106, jdbcType=VARCHAR}
+			, #{data.c107, jdbcType=VARCHAR}
+			, #{data.c108, jdbcType=VARCHAR}
+			, #{data.c109, jdbcType=VARCHAR}
+			, #{data.c201, jdbcType=VARCHAR}
+			, #{data.c202, jdbcType=VARCHAR}
+			, #{data.c203, jdbcType=VARCHAR}
+			, #{data.c204, jdbcType=VARCHAR}
+			, #{data.c205, jdbcType=VARCHAR}
+			, #{data.c206, jdbcType=VARCHAR}
+			, #{data.c207, jdbcType=VARCHAR}
+			, #{data.c208, jdbcType=VARCHAR}
+			, #{data.c209, jdbcType=VARCHAR} FROM DUAL
+    	</foreach>
+    </insert>
+    <insert id="insertReserchData2">
+    	INSERT INTO TB_NRES_PROD_INFO 
+    	VALUES(
+    		
+    	)
+    </insert>
+    
+    <insert id="insertReserchData1Each">
+    	INSERT INTO TB_NRES_CHUL_INFO 
+    	VALUES(
+   			  #{stdYear, jdbcType=VARCHAR}
+   			, #{nongId, jdbcType=VARCHAR}
+   			, #{sidoCode, jdbcType=VARCHAR}
+   			, #{agCode, jdbcType=VARCHAR}
+   		    , #{sidoName, jdbcType=VARCHAR}
+			, #{sigunName, jdbcType=VARCHAR}
+			, #{gen, jdbcType=NUMERIC}
+			, #{fYear, jdbcType=VARCHAR}
+			, #{fMonth, jdbcType=VARCHAR}
+			, #{gubn, jdbcType=NUMERIC}
+			, #{fName, jdbcType=VARCHAR}
+			, #{f1Py, jdbcType=NUMERIC}
+			, #{f2Py, jdbcType=NUMERIC}
+			, #{f3Py, jdbcType=NUMERIC}
+			, #{f4Py, jdbcType=NUMERIC}
+			, #{f5Py, jdbcType=NUMERIC}
+			, #{fPy, jdbcType=NUMERIC}
+			, #{ff1Py, jdbcType=NUMERIC}
+			, #{ff2Py, jdbcType=NUMERIC}
+			, #{ff3Py, jdbcType=NUMERIC}
+			, #{ff4Py, jdbcType=NUMERIC}
+			, #{ff5Py, jdbcType=NUMERIC}
+			, #{ffPy, jdbcType=NUMERIC}
+			, #{b1r1c1, jdbcType=NUMERIC}
+			, #{b1r1c2, jdbcType=NUMERIC}
+			, #{b1r1c3, jdbcType=NUMERIC}
+			, #{b1r1c4, jdbcType=NUMERIC}
+			, #{b1r1c5, jdbcType=NUMERIC}
+			, #{b1r2c1, jdbcType=NUMERIC}
+			, #{b1r2c2, jdbcType=NUMERIC}
+			, #{b1r2c3, jdbcType=NUMERIC}
+			, #{b1r2c4, jdbcType=NUMERIC}
+			, #{b1r2c5, jdbcType=NUMERIC}
+			, #{b2r1c1, jdbcType=NUMERIC}
+			, #{b2r1c2, jdbcType=NUMERIC}
+			, #{b2r1c3, jdbcType=NUMERIC}
+			, #{b2r1c4, jdbcType=NUMERIC}
+			, #{b2r1c5, jdbcType=NUMERIC}
+			, #{b2r1c6, jdbcType=NUMERIC}
+			, #{b2r1c7, jdbcType=NUMERIC}
+			, #{b2r2c1, jdbcType=NUMERIC}
+			, #{b2r2c2, jdbcType=NUMERIC}
+			, #{b2r2c3, jdbcType=NUMERIC}
+			, #{b2r2c4, jdbcType=NUMERIC}
+			, #{b2r2c5, jdbcType=NUMERIC}
+			, #{b2r2c6, jdbcType=NUMERIC}
+			, #{b2r2c7, jdbcType=NUMERIC}
+			, #{b2r3c1, jdbcType=NUMERIC}
+			, #{b2r3c2, jdbcType=NUMERIC}
+			, #{b2r3c3, jdbcType=NUMERIC}
+			, #{b2r3c4, jdbcType=NUMERIC}
+			, #{b2r3c5, jdbcType=NUMERIC}
+			, #{b2r3c6, jdbcType=NUMERIC}
+			, #{b2r3c7, jdbcType=NUMERIC}
+			, #{b3c01, jdbcType=NUMERIC}
+			, #{b3c02, jdbcType=NUMERIC}
+			, #{b3c03, jdbcType=NUMERIC}
+			, #{b3c04, jdbcType=NUMERIC}
+			, #{b3c05, jdbcType=NUMERIC}
+			, #{b3c06, jdbcType=NUMERIC}
+			, #{b3c06e, jdbcType=VARCHAR}
+			, #{b3c07, jdbcType=NUMERIC}
+			, #{b3c08, jdbcType=NUMERIC}
+			, #{b3c09, jdbcType=NUMERIC}
+			, #{b3c10, jdbcType=NUMERIC}
+			, #{b3c11, jdbcType=NUMERIC}
+			, #{b3c11e, jdbcType=VARCHAR}
+			, #{b4, jdbcType=NUMERIC}
+			, #{b4c01, jdbcType=NUMERIC}
+			, #{b4c02, jdbcType=NUMERIC}
+			, #{b4c03, jdbcType=NUMERIC}
+			, #{b4c04, jdbcType=NUMERIC}
+			, #{b4c05, jdbcType=NUMERIC}
+			, #{b4c06, jdbcType=NUMERIC}
+			, #{b4c07, jdbcType=NUMERIC}
+			, #{b4c08, jdbcType=NUMERIC}
+			, #{b4c09, jdbcType=NUMERIC}
+			, #{b4c10, jdbcType=NUMERIC}
+			, #{b4c10e, jdbcType=VARCHAR}
+			, #{b4c091, jdbcType=NUMERIC}
+			, #{b4c092, jdbcType=NUMERIC}
+			, #{b4c093, jdbcType=NUMERIC}
+			, #{b4c094, jdbcType=NUMERIC}
+			, #{b4c095, jdbcType=NUMERIC}
+			, #{b4c096, jdbcType=NUMERIC}
+			, #{b4c09e, jdbcType=VARCHAR}
+			, #{b5, jdbcType=NUMERIC}
+			, #{b5c01, jdbcType=NUMERIC}
+			, #{b5c02, jdbcType=NUMERIC}
+			, #{b5c03, jdbcType=NUMERIC}
+			, #{b5c04, jdbcType=NUMERIC}
+			, #{b5c05, jdbcType=NUMERIC}
+			, #{b5c06, jdbcType=NUMERIC}
+			, #{b5c07, jdbcType=NUMERIC}
+			, #{b5c08, jdbcType=NUMERIC}
+			, #{b5c08e, jdbcType=VARCHAR}
+			, #{b5c09, jdbcType=NUMERIC}
+			, #{b5c10, jdbcType=NUMERIC}
+			, #{b5c11, jdbcType=NUMERIC}
+			, #{b5c12, jdbcType=NUMERIC}
+			, #{b5c13, jdbcType=NUMERIC}
+			, #{b5c14, jdbcType=NUMERIC}
+			, #{b5c15, jdbcType=NUMERIC}
+			, #{b5c16, jdbcType=NUMERIC}
+			, #{b5c16e, jdbcType=VARCHAR}
+			, #{b5c071, jdbcType=NUMERIC}
+			, #{b5c072, jdbcType=NUMERIC}
+			, #{b5c073, jdbcType=NUMERIC}
+			, #{b5c074, jdbcType=NUMERIC}
+			, #{b5c07e, jdbcType=VARCHAR}
+			, #{b5c151, jdbcType=NUMERIC}
+			, #{b5c152, jdbcType=NUMERIC}
+			, #{b5c153, jdbcType=NUMERIC}
+			, #{b5c154, jdbcType=NUMERIC}
+			, #{b5c155, jdbcType=NUMERIC}
+			, #{b5c15e, jdbcType=VARCHAR}
+			, #{c101, jdbcType=VARCHAR}
+			, #{c102, jdbcType=VARCHAR}
+			, #{c103, jdbcType=VARCHAR}
+			, #{c104, jdbcType=VARCHAR}
+			, #{c105, jdbcType=VARCHAR}
+			, #{c106, jdbcType=VARCHAR}
+			, #{c107, jdbcType=VARCHAR}
+			, #{c108, jdbcType=VARCHAR}
+			, #{c109, jdbcType=VARCHAR}
+			, #{c201, jdbcType=VARCHAR}
+			, #{c202, jdbcType=VARCHAR}
+			, #{c203, jdbcType=VARCHAR}
+			, #{c204, jdbcType=VARCHAR}
+			, #{c205, jdbcType=VARCHAR}
+			, #{c206, jdbcType=VARCHAR}
+			, #{c207, jdbcType=VARCHAR}
+			, #{c208, jdbcType=VARCHAR}
+			, #{c209, jdbcType=VARCHAR}
+    	)
+    </insert>
+    
+    
+    <insert id="insertReserchData2Each">
+    	INSERT INTO TB_NRES_PROD_INFO 
+    	VALUES(
+    		  #{stdYear, jdbcType=VARCHAR}
+			, #{nongId, jdbcType=NUMERIC}
+			, #{gu, jdbcType=NUMERIC}
+			, #{fid, jdbcType=NUMERIC}
+			, #{flower, jdbcType=VARCHAR}
+			, #{d1c2, jdbcType=NUMERIC}
+			, #{d1c3, jdbcType=NUMERIC}
+			, #{d1c4, jdbcType=NUMERIC}
+			, #{d1c5, jdbcType=NUMERIC}
+			, #{d1c6, jdbcType=NUMERIC}
+			, #{d1c7, jdbcType=NUMERIC}
+			, #{e1s01, jdbcType=NUMERIC}
+			, #{e1s02, jdbcType=NUMERIC}
+			, #{e1s03, jdbcType=NUMERIC}
+			, #{e1s04, jdbcType=NUMERIC}
+			, #{e1s05, jdbcType=NUMERIC}
+			, #{e1s06, jdbcType=NUMERIC}
+			, #{e1s07, jdbcType=NUMERIC}
+			, #{e1s08, jdbcType=NUMERIC}
+			, #{e1s09, jdbcType=NUMERIC}
+			, #{e1s10, jdbcType=NUMERIC}
+			, #{e1s11, jdbcType=NUMERIC}
+			, #{e1s12, jdbcType=NUMERIC}
+			, #{e2s01, jdbcType=NUMERIC}
+			, #{e2s02, jdbcType=NUMERIC}
+			, #{e2s03, jdbcType=NUMERIC}
+			, #{e2s04, jdbcType=NUMERIC}
+			, #{e2s05, jdbcType=NUMERIC}
+			, #{e2s06, jdbcType=NUMERIC}
+			, #{e2s07, jdbcType=NUMERIC}
+			, #{e2s08, jdbcType=NUMERIC}
+			, #{e2s09, jdbcType=NUMERIC}
+			, #{e2s10, jdbcType=NUMERIC}
+			, #{e2s11, jdbcType=NUMERIC}
+			, #{e2s11e, jdbcType=VARCHAR}
+			, #{f1, jdbcType=NUMERIC}
+			, #{fnowa01s1, jdbcType=NUMERIC}
+			, #{fnowa02s1, jdbcType=NUMERIC}
+			, #{fnowa03s1, jdbcType=NUMERIC}
+			, #{fnowa04s1, jdbcType=NUMERIC}
+			, #{fnowa05s1, jdbcType=NUMERIC}
+			, #{fnowa06s1, jdbcType=NUMERIC}
+			, #{fnowa07s1, jdbcType=NUMERIC}
+			, #{fnowa08s1, jdbcType=NUMERIC}
+			, #{fnowa09s1, jdbcType=NUMERIC}
+			, #{fnowa10s1, jdbcType=NUMERIC}
+			, #{fnowa11s1, jdbcType=NUMERIC}
+			, #{fnowa12s1, jdbcType=NUMERIC}
+			, #{fnowa01s2, jdbcType=NUMERIC}
+			, #{fnowa02s2, jdbcType=NUMERIC}
+			, #{fnowa03s2, jdbcType=NUMERIC}
+			, #{fnowa04s2, jdbcType=NUMERIC}
+			, #{fnowa05s2, jdbcType=NUMERIC}
+			, #{fnowa06s2, jdbcType=NUMERIC}
+			, #{fnowa07s2, jdbcType=NUMERIC}
+			, #{fnowa08s2, jdbcType=NUMERIC}
+			, #{fnowa09s2, jdbcType=NUMERIC}
+			, #{fnowa10s2, jdbcType=NUMERIC}
+			, #{fnowa11s2, jdbcType=NUMERIC}
+			, #{fnowa12s2, jdbcType=NUMERIC}
+			, #{fnexta01s1, jdbcType=NUMERIC}
+			, #{fnexta02s1, jdbcType=NUMERIC}
+			, #{fnexta03s1, jdbcType=NUMERIC}
+			, #{fnexta04s1, jdbcType=NUMERIC}
+			, #{fnexta05s1, jdbcType=NUMERIC}
+			, #{fnexta06s1, jdbcType=NUMERIC}
+			, #{fnexta07s1, jdbcType=NUMERIC}
+			, #{fnexta08s1, jdbcType=NUMERIC}
+			, #{fnexta09s1, jdbcType=NUMERIC}
+			, #{fnexta10s1, jdbcType=NUMERIC}
+			, #{fnexta11s1, jdbcType=NUMERIC}
+			, #{fnexta12s1, jdbcType=NUMERIC}
+			, #{fnexta01s2, jdbcType=NUMERIC}
+			, #{fnexta02s2, jdbcType=NUMERIC}
+			, #{fnexta03s2, jdbcType=NUMERIC}
+			, #{fnexta04s2, jdbcType=NUMERIC}
+			, #{fnexta05s2, jdbcType=NUMERIC}
+			, #{fnexta06s2, jdbcType=NUMERIC}
+			, #{fnexta07s2, jdbcType=NUMERIC}
+			, #{fnexta08s2, jdbcType=NUMERIC}
+			, #{fnexta09s2, jdbcType=NUMERIC}
+			, #{fnexta10s2, jdbcType=NUMERIC}
+			, #{fnexta11s2, jdbcType=NUMERIC}
+			, #{fnexta12s2, jdbcType=NUMERIC}
+			, #{ffnowa01, jdbcType=NUMERIC}
+			, #{ffnowa02, jdbcType=NUMERIC}
+			, #{ffnowa03, jdbcType=NUMERIC}
+			, #{ffnowa04, jdbcType=NUMERIC}
+			, #{ffnowa05, jdbcType=NUMERIC}
+			, #{ffnowa06, jdbcType=NUMERIC}
+			, #{ffnowa07, jdbcType=NUMERIC}
+			, #{ffnowa08, jdbcType=NUMERIC}
+			, #{ffnowa09, jdbcType=NUMERIC}
+			, #{ffnowa10, jdbcType=NUMERIC}
+			, #{ffnowa11, jdbcType=NUMERIC}
+			, #{ffnowa12, jdbcType=NUMERIC}
+			, #{ffnexta01, jdbcType=NUMERIC}
+			, #{ffnexta02, jdbcType=NUMERIC}
+			, #{ffnexta03, jdbcType=NUMERIC}
+			, #{ffnexta04, jdbcType=NUMERIC}
+			, #{ffnexta05, jdbcType=NUMERIC}
+			, #{ffnexta06, jdbcType=NUMERIC}
+			, #{ffnexta07, jdbcType=NUMERIC}
+			, #{ffnexta08, jdbcType=NUMERIC}
+			, #{ffnexta09, jdbcType=NUMERIC}
+			, #{ffnexta10, jdbcType=NUMERIC}
+			, #{ffnexta11, jdbcType=NUMERIC}
+			, #{ffnexta12, jdbcType=NUMERIC}
+    	)
+    </insert>
+    
+    <select id="sidoList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT AREA_CODE
+    		 , GUBUN
+    		 , KOR_NAME
+    		 , ENG_NAME
+    		 , HORIZENTAL_GAP
+    		 , VERTICAL_GAP
+    		 , REMARK
+    		 , PARENT_CD
+    		 , SEARCH_KOR_NAME
+    		 , SIDO_CODE
+    		 , AG_CODE
+		FROM TB_NRES_AREA_MAP
+		WHERE GUBUN = '1'
+		AND AREA_CODE NOT IN ('000','1800','1900')
+		ORDER BY TO_NUMBER(AREA_CODE) ASC
+    </select>
+    
+    <select id="sigunList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT AREA_CODE
+    		 , GUBUN
+    		 , KOR_NAME
+    		 , ENG_NAME
+    		 , HORIZENTAL_GAP
+    		 , VERTICAL_GAP
+    		 , REMARK
+    		 , PARENT_CD
+    		 , SEARCH_KOR_NAME
+    		 , SIDO_CODE
+    		 , AG_CODE
+		FROM TB_NRES_AREA_MAP
+		WHERE GUBUN = '2'
+		AND PARENT_CD = #{areaCode}
+		ORDER BY TO_NUMBER(AREA_CODE) ASC
+    </select>
+    
+    
+    <select id="chulInfoList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT SIDO_ORDER
+		     , SIDO_NAME
+		     , SUM(CHUL_CNT) AS CHUL_CNT
+		     , ROUND(SUM(PRD_AREA)*0.000331) AS PRD_AREA
+		     , ROUND(SUM(YEAR_QTY)/10000) AS YEAR_QTY
+		     , ROUND(SUM(YEAR_AMT)/100000000) AS YEAR_AMT
+		FROM (
+		    SELECT CASE WHEN SIDO_CODE IN('1','4','9') THEN '서울, 인천, 경기'
+		                WHEN SIDO_CODE IN('6','11','12') THEN '대전, 충청'
+		                WHEN SIDO_CODE IN('5','13','14') THEN '광주, 전라'
+		                WHEN SIDO_CODE IN('17') THEN '제주'
+		                WHEN SIDO_CODE IN('10') THEN '강원'
+		                WHEN SIDO_CODE IN('3','15') THEN '대구, 경북'
+		                WHEN SIDO_CODE IN('2','7','16') THEN '부산, 울산, 경남'
+		                ELSE '' END AS SIDO_NAME
+		          ,CASE WHEN SIDO_CODE IN('1','4','9') THEN 1
+		                WHEN SIDO_CODE IN('6','11','12') THEN 2
+		                WHEN SIDO_CODE IN('5','13','14') THEN 3
+		                WHEN SIDO_CODE IN('17') THEN 4
+		                WHEN SIDO_CODE IN('10') THEN 5
+		                WHEN SIDO_CODE IN('3','15') THEN 6
+		                WHEN SIDO_CODE IN('2','7','16') THEN 7
+		                ELSE 999 END AS SIDO_ORDER
+		          , SIDO_CODE
+		          , CHUL_CNT
+		          , PRD_AREA
+		          , YEAR_QTY
+		          , YEAR_AMT
+		    FROM (
+		        SELECT T1.SIDO_CODE
+		             , (SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE SIDO_CODE = T1.SIDO_CODE AND GUBUN = '1') AS SIDO_NAME 
+		             , COUNT(T1.NONG_ID) AS CHUL_CNT
+		             , SUM(T1.FF_PY) AS PRD_AREA
+		             , (SELECT SUM(D1C4) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T1.STD_YEAR AND NONG_ID = T1.NONG_ID) AS YEAR_QTY
+             		 , (SELECT SUM(D1C7) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T1.STD_YEAR AND NONG_ID = T1.NONG_ID) AS YEAR_AMT
+		        FROM TB_NRES_CHUL_INFO T1
+		        WHERE T1.STD_YEAR = #{stdYear}
+		        <if test="prdArea != null and prdArea !=''">
+		        	<choose>
+		        		<when test='prdArea == "1"'>
+		        			AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.3
+		        		</when>
+		        		<when test='prdArea == "2"'>
+		        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.3 AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.5 
+		        		</when>
+		        		<when test='prdArea == "3"'>
+		        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.5 AND T1.FF_PY*0.000331 <![CDATA[<]]>  1
+		        		</when>
+		        		<when test='prdArea == "4"'>
+		        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  1
+		        		</when>
+		        		<otherwise></otherwise>
+		        	</choose>
+		        </if>
+		        GROUP BY T1.STD_YEAR, T1.SIDO_CODE, T1.NONG_ID
+		        ORDER BY TO_NUMBER(T1.SIDO_CODE)
+		    )
+		)GROUP BY SIDO_ORDER, SIDO_NAME
+		ORDER BY SIDO_ORDER
+    </select>
+    
+    
+    <select id="chulInfoMapSidoList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT CODE
+    	     , SIDO_CODE
+             , (SELECT KOR_NAME FROM TB_NRES_AREA_MAP WHERE AREA_CODE = CODE) AS LABEL
+             , (SELECT GUBUN FROM TB_NRES_AREA_MAP WHERE AREA_CODE = CODE) AS GUBUN
+             , CHUL_CNT
+             , PRD_AREA
+             , YEAR_QTY
+             , YEAR_AMT
+        FROM (
+            SELECT NVL(CODE, SIDO_CODE) AS CODE
+                 , SIDO_CODE
+                 , COUNT(NONG_ID) AS CHUL_CNT
+                 , ROUND(SUM(FF_PY)*0.000331,1) AS PRD_AREA
+                 , ROUND(SUM(YEAR_QTY)/10000,1) AS YEAR_QTY
+                 , ROUND(SUM(YEAR_AMT)/100000000,1) AS YEAR_AMT
+            FROM (
+            SELECT T1.NONG_ID
+                 , T1.FF_PY
+                 , T1.AG_CODE
+                 , (SELECT SUM(D1C4) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T1.STD_YEAR AND NONG_ID = T1.NONG_ID) AS YEAR_QTY
+                 , (SELECT SUM(D1C7) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T1.STD_YEAR AND NONG_ID = T1.NONG_ID) AS YEAR_AMT
+                 , NVL((SELECT MAX(AREA_CODE) FROM TB_NRES_AREA_MAP WHERE AG_CODE = T1.AG_CODE AND GUBUN = '2')
+                    ,(SELECT MAX(AREA_CODE) FROM TB_NRES_AREA_MAP WHERE AG_CODE = SUBSTR(T1.AG_CODE,0,4) || '000000' AND GUBUN = '2')) AS CODE
+                 , (SELECT MAX(AREA_CODE) FROM TB_NRES_AREA_MAP WHERE SIDO_CODE = T1.SIDO_CODE AND GUBUN = '1') AS SIDO_CODE
+            FROM TB_NRES_CHUL_INFO T1
+            WHERE T1.STD_YEAR = #{stdYear}
+            <if test="prdArea != null and prdArea !=''">
+	        	<choose>
+	        		<when test='prdArea == "1"'>
+	        			AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.3
+	        		</when>
+	        		<when test='prdArea == "2"'>
+	        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.3 AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.5 
+	        		</when>
+	        		<when test='prdArea == "3"'>
+	        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.5 AND T1.FF_PY*0.000331 <![CDATA[<]]>  1
+	        		</when>
+	        		<when test='prdArea == "4"'>
+	        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  1
+	        		</when>
+	        		<otherwise></otherwise>
+	        	</choose>
+	        </if>
+            ) T2
+            GROUP BY ROLLUP(SIDO_CODE, CODE)
+        )
+    </select>
+    
+    
+    <select id="chulInfoEachVO" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT SUM(CHUL_CNT) AS CHUL_CNT
+		     , ROUND(SUM(PRD_AREA)*0.000331) AS PRD_AREA
+		     , ROUND(SUM(YEAR_QTY)/10000) AS YEAR_QTY
+		     , ROUND(SUM(YEAR_AMT)/100000000) AS YEAR_AMT
+		     <if test="agCode != null and agCode !=''">
+		     , SIGUN_NAME AS AREA_NAME
+		     </if>
+		     <if test="agCode == null or agCode ==''">
+		     , SIDO_NAME AS AREA_NAME
+		     </if>
+		FROM (
+		SELECT T1.SIDO_CODE
+		     , T1.AG_CODE
+		     , T1.NONG_ID
+		     , (SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE SIDO_CODE = T1.SIDO_CODE AND GUBUN = '1') AS SIDO_NAME
+		     , NVL((SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = T1.AG_CODE AND GUBUN = '2')
+		          ,(SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = SUBSTR(T1.AG_CODE,0,4) || '000000' AND GUBUN = '2')) AS SIGUN_NAME  
+		     , COUNT(T1.NONG_ID) AS CHUL_CNT
+		     , SUM(T1.FF_PY) AS PRD_AREA
+		     , (SELECT SUM(D1C4) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T1.STD_YEAR AND NONG_ID = T1.NONG_ID) AS YEAR_QTY
+		     , (SELECT SUM(D1C7) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T1.STD_YEAR AND NONG_ID = T1.NONG_ID) AS YEAR_AMT
+		FROM TB_NRES_CHUL_INFO T1
+		WHERE T1.STD_YEAR = #{stdYear}
+		<if test="sidoCode != null and sidoCode !=''">
+		AND T1.SIDO_CODE = #{sidoCode}
+		</if>
+		<if test="agCode != null and agCode !=''">
+		AND (T1.AG_CODE = #{agCode} OR SUBSTR(T1.AG_CODE,0,4) || '000000' = #{agCode}) 
+		</if>
+		<if test="prdArea != null and prdArea !=''">
+        	<choose>
+        		<when test='prdArea == "1"'>
+        			AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.3
+        		</when>
+        		<when test='prdArea == "2"'>
+        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.3 AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.5 
+        		</when>
+        		<when test='prdArea == "3"'>
+        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.5 AND T1.FF_PY*0.000331 <![CDATA[<]]>  1
+        		</when>
+        		<when test='prdArea == "4"'>
+        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  1
+        		</when>
+        		<otherwise></otherwise>
+        	</choose>
+        </if>
+		GROUP BY STD_YEAR, SIDO_CODE, T1.AG_CODE, T1.NONG_ID
+		)
+		<if test="agCode != null and agCode !=''">
+		GROUP BY SIGUN_NAME
+		</if>
+		<if test="agCode == null or agCode ==''">
+		GROUP BY SIDO_NAME
+		</if>
+    </select>
+    
+    
+    <select id="chulInfoEachList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT SUM(CHUL_CNT) AS CHUL_CNT
+		     , ROUND(SUM(PRD_AREA)*0.000331) AS PRD_AREA
+		     , ROUND(SUM(YEAR_QTY)/10000) AS YEAR_QTY
+		     , ROUND(SUM(YEAR_AMT)/100000000) AS YEAR_AMT
+		     , SIGUN_NAME AS AREA_NAME
+		FROM (
+		SELECT T1.SIDO_CODE
+		     , T1.AG_CODE
+		     , T1.NONG_ID
+		     , (SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE SIDO_CODE = T1.SIDO_CODE AND GUBUN = '1') AS SIDO_NAME
+		     , NVL((SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = T1.AG_CODE AND GUBUN = '2')
+		          ,(SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = SUBSTR(T1.AG_CODE,0,4) || '000000' AND GUBUN = '2')) AS SIGUN_NAME  
+		     , COUNT(T1.NONG_ID) AS CHUL_CNT
+		     , SUM(T1.FF_PY) AS PRD_AREA
+		     , (SELECT SUM(D1C4) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T1.STD_YEAR AND NONG_ID = T1.NONG_ID) AS YEAR_QTY
+		     , (SELECT SUM(D1C7) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T1.STD_YEAR AND NONG_ID = T1.NONG_ID) AS YEAR_AMT
+		FROM TB_NRES_CHUL_INFO T1
+		WHERE T1.STD_YEAR = #{stdYear}
+		<if test="sidoCode != null and sidoCode !=''">
+		AND T1.SIDO_CODE = #{sidoCode}
+		</if>
+		<if test="agCode != null and agCode !=''">
+		AND (T1.AG_CODE != #{agCode} AND SUBSTR(T1.AG_CODE,0,4) || '000000' != #{agCode}) 
+		</if>
+		<if test="prdArea != null and prdArea !=''">
+        	<choose>
+        		<when test='prdArea == "1"'>
+        			AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.3
+        		</when>
+        		<when test='prdArea == "2"'>
+        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.3 AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.5 
+        		</when>
+        		<when test='prdArea == "3"'>
+        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.5 AND T1.FF_PY*0.000331 <![CDATA[<]]>  1
+        		</when>
+        		<when test='prdArea == "4"'>
+        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  1
+        		</when>
+        		<otherwise></otherwise>
+        	</choose>
+        </if>
+		GROUP BY STD_YEAR, SIDO_CODE, T1.AG_CODE, T1.NONG_ID
+		)
+		GROUP BY SIGUN_NAME
+		ORDER BY CHUL_CNT DESC
+    </select>
+    
+     
+    <select id="chulInfoChart" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT CATE_NAME AS CATE_NAME
+    	     , NVL(ROUND((B2R2C1/NULLIF((B2R3C1 + B2R2C1),0))*100,1),0) AS B2R2C1
+		     , NVL(ROUND((B2R3C1/NULLIF((B2R3C1 + B2R2C1),0))*100,1),0) AS B2R3C1
+		     , NVL(ROUND((B2R1C3/NULLIF((B2R1C3 + B2R1C2),0))*100,1),0) AS B2R1C3
+		     , NVL(ROUND((B2R1C2/NULLIF((B2R1C3 + B2R1C2),0))*100,1),0) AS B2R1C2
+		     , NVL(ROUND((B2R1C4/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C4
+		     , NVL(ROUND((B2R1C5/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C5
+		     , NVL(ROUND((B2R1C6/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C6
+		     , NVL(ROUND((B2R1C7/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C7
+		     , NVL(ROUND((YUNDONG/NULLIF((YUNDONG + DANDONG),0))*100,1),0) AS YUNDONG
+		     , NVL(ROUND((DANDONG/NULLIF((YUNDONG + DANDONG),0))*100,1),0) AS DANDONG
+		     , NVL(ROUND((B3C02/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C02
+		     , NVL(ROUND((B3C03/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C03
+		     , NVL(ROUND((B3C07/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C07
+		     , NVL(ROUND((B4C02/NULLIF((B4C02 + B4C03),0))*100,1),0) AS B4C02
+		     , NVL(ROUND((B4C03/NULLIF((B4C02 + B4C03),0))*100,1),0) AS B4C03
+		     , NVL(ROUND((B5C02/NULLIF((B5C02 + B5C03),0))*100,1),0) AS B5C02
+		     , NVL(ROUND((B5C03/NULLIF((B5C02 + B5C03),0))*100,1),0) AS B5C03
+		     , B1R1C2 
+		     , B1R1C3
+		     , B1R1C4
+		     , B1R1C5
+		     , NVL(ROUND((B1R1C2/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C21
+		     , NVL(ROUND((B1R1C3/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C31
+		     , NVL(ROUND((B1R1C4/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C41
+		     , NVL(ROUND((B1R1C5/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C51
+		     , B1R1C1
+		     , B1R2C1
+		     , NVL(ROUND((B1R1C1/NULLIF((B1R1C1 + B1R2C1),0))*100,1),0) AS B1R1C11
+		     , NVL(ROUND((B1R2C1/NULLIF((B1R1C1 + B1R2C1),0))*100,1),0) AS B1R2C11
+		     , B1R1C2 + B1R1C3 + B1R1C4 AS PERSON_ALL
+		     , NVL(ROUND((B1R1C2 + B1R1C3 + B1R1C4)/NULLIF(NONG_CNT,0),1),0) AS PERSON_AVG
+		FROM ( 
+			SELECT COUNT(T1.NONG_ID) AS NONG_CNT
+			     <if test="sidoCode == null or sidoCode ==''">
+			        , STD_YEAR AS CATE_NAME
+			     </if>
+				 <if test="sidoCode != null and sidoCode !=''">
+		        	<if test="agCode == null or agCode ==''">
+		        	, STD_YEAR || ' ' || (SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE SIDO_CODE = T1.SIDO_CODE AND GUBUN = '1') AS CATE_NAME
+		        	</if>
+		        	<if test="agCode != null and agCode !=''">
+					, STD_YEAR || ' ' || SIGUN_AREA_NAME AS CATE_NAME
+					</if>
+		        </if>
+				 , SUM(T1.B2R2C1) AS B2R2C1 /* 자가*/
+		         , SUM(T1.B2R3C1) AS B2R3C1 /* 임차*/
+		         , SUM(T1.B2R1C3) AS B2R1C3 /* 시설*/
+		         , SUM(T1.B2R1C2) AS B2R1C2 /* 노지*/
+		         , SUM(T1.B2R1C4) AS B2R1C4 /* 철골유리*/
+		         , SUM(T1.B2R1C5) AS B2R1C5 /* 철골경질*/
+		         , SUM(T1.B2R1C6) AS B2R1C6 /* 철파이프*/
+		         , SUM(T1.B2R1C7) AS B2R1C7 /* 기타*/
+		         , SUM(T1.B5C02)+SUM(T1.B5C03) AS YUNDONG /* 연동*/
+		         , SUM(T1.B5C09)+SUM(T1.B5C10) AS DANDONG /* 단동*/
+		         , SUM(T1.B3C02) AS B3C02 /* 토경재배*/
+		         , SUM(T1.B3C03) AS B3C03 /* 고형배지*/
+		         , SUM(T1.B3C07) AS B3C07 /* 순수수경*/
+		         , SUM(T1.B4C02) AS B4C02 /* 무가온*/
+		         , SUM(T1.B4C03) AS B4C03 /* 가온*/
+		         , SUM(T1.B5C02)+SUM(T1.B5C09) AS B5C02 /* 무보온*/
+		         , SUM(T1.B5C03)+SUM(T1.B5C10) AS B5C03 /* 보온*/
+		         , SUM(T1.B1R1C2)+SUM(T1.B1R2C2) AS B1R1C2 /* 상시고용직*/
+		         , SUM(T1.B1R1C3)+SUM(T1.B1R2C3) AS B1R1C3 /* 무급가족종사자 자가인력*/
+		         , SUM(T1.B1R1C4)+SUM(T1.B1R2C4) AS B1R1C4 /* 임시직*/
+		         , SUM(T1.B1R1C5)+SUM(T1.B1R2C5) AS B1R1C5 /* 성수기임시직*/
+		         , SUM(T1.B1R1C1) AS B1R1C1/* 내국인*/
+		         , SUM(T1.B1R2C1) AS B1R2C1/* 외국인*/
+		    FROM (SELECT T0.* 
+		               , NVL((SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = T0.AG_CODE AND GUBUN = '2')
+		                    ,(SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = SUBSTR(T0.AG_CODE,0,4) || '000000' AND GUBUN = '2')) AS SIGUN_AREA_NAME
+		          FROM TB_NRES_CHUL_INFO T0) T1
+		    WHERE T1.STD_YEAR = #{stdYear}
+			<if test="sidoCode != null and sidoCode !=''">
+			AND T1.SIDO_CODE = #{sidoCode}
+			</if>
+			<if test="agCode != null and agCode !=''">
+			AND (T1.AG_CODE = #{agCode} OR SUBSTR(T1.AG_CODE,0,4) || '000000' = #{agCode}) 
+			</if>
+			<if test="prdArea != null and prdArea !=''">
+	        	<choose>
+	        		<when test='prdArea == "1"'>
+	        			AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.3
+	        		</when>
+	        		<when test='prdArea == "2"'>
+	        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.3 AND T1.FF_PY*0.000331 <![CDATA[<]]>  0.5 
+	        		</when>
+	        		<when test='prdArea == "3"'>
+	        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  0.5 AND T1.FF_PY*0.000331 <![CDATA[<]]>  1
+	        		</when>
+	        		<when test='prdArea == "4"'>
+	        			AND T1.FF_PY*0.000331 <![CDATA[>=]]>  1
+	        		</when>
+	        		<otherwise></otherwise>
+	        	</choose>
+	        </if>
+	        <if test="sidoCode == null or sidoCode ==''">
+	        GROUP BY STD_YEAR
+	        </if>
+	        <if test="sidoCode != null and sidoCode !=''">
+	        	<if test="agCode == null or agCode ==''">
+	        	GROUP BY STD_YEAR, SIDO_CODE
+	        	</if>
+	        	<if test="agCode != null and agCode !=''">
+				GROUP BY STD_YEAR, SIDO_CODE, SIGUN_AREA_NAME
+				</if>
+	        </if>
+		)
+    </select>
+    
+    <select id="pumMokList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT FLOWER, SUM (D1C4) AS D1C4
+		FROM (SELECT FLOWER, D1C4 
+		      FROM TB_NRES_PROD_INFO
+		      WHERE STD_YEAR = #{stdYear}
+		      UNION ALL 
+		      SELECT CASE WHEN FLOWER LIKE '국화%' THEN '국화'
+		                  WHEN FLOWER LIKE '장미%' THEN '장미'
+		                  WHEN FLOWER LIKE '카네이션%' THEN '카네이션'
+		                  WHEN FLOWER LIKE '백합%' THEN '백합'
+		             ELSE '' END AS FLOWER 
+		           , D1C4 
+		      FROM TB_NRES_PROD_INFO
+		      WHERE STD_YEAR = #{stdYear}
+		      AND (FLOWER LIKE '국화%' OR FLOWER LIKE '장미%' OR FLOWER LIKE '카네이션%' OR FLOWER LIKE '백합%')
+		      )
+		GROUP BY FLOWER
+		ORDER BY D1C4 DESC
+		
+    </select>
+    
+    <select id="prodInfoChartArea" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	    SELECT STD_YEAR
+             , SIDO_CODE
+             , CATE_NAME
+             , D1C2
+             , D1C3
+             , NVL(ROUND(D1C4/10000,1),0) AS D1C4
+             , NVL(ROUND((D1C4 / NULLIF(SUM(D1C4) OVER(),0))*100,1),1) AS D1C4_PER 
+             , D1C5
+             , D1C6
+             , D1C7
+             , E1S01
+             , E1S02
+             , E1S03
+             , E1S04
+             , E1S05
+             , E1S06
+             , E1S07
+             , E1S08
+             , E1S09
+             , E1S10
+             , E1S11
+             , E1S12
+             , E2S01
+             , E2S02
+             , E2S03
+             , E2S04
+             , E2S05
+             , E2S06
+             , E2S07
+             , E2S08
+             , E2S09
+             , E2S10
+             , E2S11
+             , F1
+             , FNOWA01S1
+             , FNOWA02S1
+             , FNOWA03S1
+             , FNOWA04S1
+             , FNOWA05S1
+             , FNOWA06S1
+             , FNOWA07S1
+             , FNOWA08S1
+             , FNOWA09S1
+             , FNOWA10S1
+             , FNOWA11S1
+             , FNOWA12S1
+             , FNOWA01S2
+             , FNOWA02S2
+             , FNOWA03S2
+             , FNOWA04S2
+             , FNOWA05S2
+             , FNOWA06S2
+             , FNOWA07S2
+             , FNOWA08S2
+             , FNOWA09S2
+             , FNOWA10S2
+             , FNOWA11S2
+             , FNOWA12S2
+             , FNEXTA01S1
+             , FNEXTA02S1
+             , FNEXTA03S1
+             , FNEXTA04S1
+             , FNEXTA05S1
+             , FNEXTA06S1
+             , FNEXTA07S1
+             , FNEXTA08S1
+             , FNEXTA09S1
+             , FNEXTA10S1
+             , FNEXTA11S1
+             , FNEXTA12S1
+             , FNEXTA01S2
+             , FNEXTA02S2
+             , FNEXTA03S2
+             , FNEXTA04S2
+             , FNEXTA05S2
+             , FNEXTA06S2
+             , FNEXTA07S2
+             , FNEXTA08S2
+             , FNEXTA09S2
+             , FNEXTA10S2
+             , FNEXTA11S2
+             , FNEXTA12S2
+             , NVL(ROUND(FFNOWA01*0.000331,1),0) AS FFNOWA01
+             , NVL(ROUND(FFNOWA02*0.000331,1),0) AS FFNOWA02
+             , NVL(ROUND(FFNOWA03*0.000331,1),0) AS FFNOWA03
+             , NVL(ROUND(FFNOWA04*0.000331,1),0) AS FFNOWA04
+             , NVL(ROUND(FFNOWA05*0.000331,1),0) AS FFNOWA05
+             , NVL(ROUND(FFNOWA06*0.000331,1),0) AS FFNOWA06
+             , NVL(ROUND(FFNOWA07*0.000331,1),0) AS FFNOWA07
+             , NVL(ROUND(FFNOWA08*0.000331,1),0) AS FFNOWA08
+             , NVL(ROUND(FFNOWA09*0.000331,1),0) AS FFNOWA09
+             , NVL(ROUND(FFNOWA10*0.000331,1),0) AS FFNOWA10
+             , NVL(ROUND(FFNOWA11*0.000331,1),0) AS FFNOWA11
+             , NVL(ROUND(FFNOWA12*0.000331,1),0) AS FFNOWA12
+             , NVL(ROUND(FF_PY*0.000331,1),0) AS FFNOWA_TOT
+             , FFNEXTA01
+             , FFNEXTA02
+             , FFNEXTA03
+             , FFNEXTA04
+             , FFNEXTA05
+             , FFNEXTA06
+             , FFNEXTA07
+             , FFNEXTA08
+             , FFNEXTA09
+             , FFNEXTA10
+             , FFNEXTA11
+             , FFNEXTA12 
+        FROM (
+            SELECT STD_YEAR
+                 , SIDO_CODE
+                 <if test="sidoCode == null or sidoCode ==''">
+		        	, (SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE SIDO_CODE = T3.SIDO_CODE AND GUBUN = '1') AS CATE_NAME
+		         </if>
+		         <if test="sidoCode != null and sidoCode !=''">
+					, SIGUN_AREA_NAME AS CATE_NAME
+				 </if>
+                 , SUM(D1C2) AS D1C2
+                 , SUM(D1C3) AS D1C3
+                 , SUM(D1C4) AS D1C4
+                 , SUM(D1C5) AS D1C5
+                 , SUM(D1C6) AS D1C6
+                 , SUM(D1C7) AS D1C7
+                 , SUM(E1S01) AS E1S01
+                 , SUM(E1S02) AS E1S02
+                 , SUM(E1S03) AS E1S03
+                 , SUM(E1S04) AS E1S04
+                 , SUM(E1S05) AS E1S05
+                 , SUM(E1S06) AS E1S06
+                 , SUM(E1S07) AS E1S07
+                 , SUM(E1S08) AS E1S08
+                 , SUM(E1S09) AS E1S09
+                 , SUM(E1S10) AS E1S10
+                 , SUM(E1S11) AS E1S11
+                 , SUM(E1S12) AS E1S12
+                 , SUM(E2S01) AS E2S01
+                 , SUM(E2S02) AS E2S02
+                 , SUM(E2S03) AS E2S03
+                 , SUM(E2S04) AS E2S04
+                 , SUM(E2S05) AS E2S05
+                 , SUM(E2S06) AS E2S06
+                 , SUM(E2S07) AS E2S07
+                 , SUM(E2S08) AS E2S08
+                 , SUM(E2S09) AS E2S09
+                 , SUM(E2S10) AS E2S10
+                 , SUM(E2S11) AS E2S11
+                 , SUM(F1) AS F1
+                 , SUM(FNOWA01S1) AS FNOWA01S1
+                 , SUM(FNOWA02S1) AS FNOWA02S1
+                 , SUM(FNOWA03S1) AS FNOWA03S1
+                 , SUM(FNOWA04S1) AS FNOWA04S1
+                 , SUM(FNOWA05S1) AS FNOWA05S1
+                 , SUM(FNOWA06S1) AS FNOWA06S1
+                 , SUM(FNOWA07S1) AS FNOWA07S1
+                 , SUM(FNOWA08S1) AS FNOWA08S1
+                 , SUM(FNOWA09S1) AS FNOWA09S1
+                 , SUM(FNOWA10S1) AS FNOWA10S1
+                 , SUM(FNOWA11S1) AS FNOWA11S1
+                 , SUM(FNOWA12S1) AS FNOWA12S1
+                 , SUM(FNOWA01S2) AS FNOWA01S2
+                 , SUM(FNOWA02S2) AS FNOWA02S2
+                 , SUM(FNOWA03S2) AS FNOWA03S2
+                 , SUM(FNOWA04S2) AS FNOWA04S2
+                 , SUM(FNOWA05S2) AS FNOWA05S2
+                 , SUM(FNOWA06S2) AS FNOWA06S2
+                 , SUM(FNOWA07S2) AS FNOWA07S2
+                 , SUM(FNOWA08S2) AS FNOWA08S2
+                 , SUM(FNOWA09S2) AS FNOWA09S2
+                 , SUM(FNOWA10S2) AS FNOWA10S2
+                 , SUM(FNOWA11S2) AS FNOWA11S2
+                 , SUM(FNOWA12S2) AS FNOWA12S2
+                 , SUM(FNEXTA01S1) AS FNEXTA01S1
+                 , SUM(FNEXTA02S1) AS FNEXTA02S1
+                 , SUM(FNEXTA03S1) AS FNEXTA03S1
+                 , SUM(FNEXTA04S1) AS FNEXTA04S1
+                 , SUM(FNEXTA05S1) AS FNEXTA05S1
+                 , SUM(FNEXTA06S1) AS FNEXTA06S1
+                 , SUM(FNEXTA07S1) AS FNEXTA07S1
+                 , SUM(FNEXTA08S1) AS FNEXTA08S1
+                 , SUM(FNEXTA09S1) AS FNEXTA09S1
+                 , SUM(FNEXTA10S1) AS FNEXTA10S1
+                 , SUM(FNEXTA11S1) AS FNEXTA11S1
+                 , SUM(FNEXTA12S1) AS FNEXTA12S1
+                 , SUM(FNEXTA01S2) AS FNEXTA01S2
+                 , SUM(FNEXTA02S2) AS FNEXTA02S2
+                 , SUM(FNEXTA03S2) AS FNEXTA03S2
+                 , SUM(FNEXTA04S2) AS FNEXTA04S2
+                 , SUM(FNEXTA05S2) AS FNEXTA05S2
+                 , SUM(FNEXTA06S2) AS FNEXTA06S2
+                 , SUM(FNEXTA07S2) AS FNEXTA07S2
+                 , SUM(FNEXTA08S2) AS FNEXTA08S2
+                 , SUM(FNEXTA09S2) AS FNEXTA09S2
+                 , SUM(FNEXTA10S2) AS FNEXTA10S2
+                 , SUM(FNEXTA11S2) AS FNEXTA11S2
+                 , SUM(FNEXTA12S2) AS FNEXTA12S2
+                 , SUM(FFNOWA01) AS FFNOWA01
+                 , SUM(FFNOWA02) AS FFNOWA02
+                 , SUM(FFNOWA03) AS FFNOWA03
+                 , SUM(FFNOWA04) AS FFNOWA04
+                 , SUM(FFNOWA05) AS FFNOWA05
+                 , SUM(FFNOWA06) AS FFNOWA06
+                 , SUM(FFNOWA07) AS FFNOWA07
+                 , SUM(FFNOWA08) AS FFNOWA08
+                 , SUM(FFNOWA09) AS FFNOWA09
+                 , SUM(FFNOWA10) AS FFNOWA10
+                 , SUM(FFNOWA11) AS FFNOWA11
+                 , SUM(FFNOWA12) AS FFNOWA12
+                 , SUM(FFNEXTA01) AS FFNEXTA01
+                 , SUM(FFNEXTA02) AS FFNEXTA02
+                 , SUM(FFNEXTA03) AS FFNEXTA03
+                 , SUM(FFNEXTA04) AS FFNEXTA04
+                 , SUM(FFNEXTA05) AS FFNEXTA05
+                 , SUM(FFNEXTA06) AS FFNEXTA06
+                 , SUM(FFNEXTA07) AS FFNEXTA07
+                 , SUM(FFNEXTA08) AS FFNEXTA08
+                 , SUM(FFNEXTA09) AS FFNEXTA09
+                 , SUM(FFNEXTA10) AS FFNEXTA10
+                 , SUM(FFNEXTA11) AS FFNEXTA11
+                 , SUM(FFNEXTA12) AS FFNEXTA12
+                 , SUM(FF_PY) AS FF_PY
+            FROM (
+                SELECT T1.STD_YEAR
+                     , T1.NONG_ID
+                     , T2.SIDO_CODE
+                     , T2.AG_CODE
+                     , GU
+                     , FID
+                     , FLOWER
+                     , D1C2
+                     , D1C3
+                     , D1C4
+                     , D1C5
+                     , D1C6
+                     , D1C7
+                     , E1S01
+                     , E1S02
+                     , E1S03
+                     , E1S04
+                     , E1S05
+                     , E1S06
+                     , E1S07
+                     , E1S08
+                     , E1S09
+                     , E1S10
+                     , E1S11
+                     , E1S12
+                     , E2S01
+                     , E2S02
+                     , E2S03
+                     , E2S04
+                     , E2S05
+                     , E2S06
+                     , E2S07
+                     , E2S08
+                     , E2S09
+                     , E2S10
+                     , E2S11
+                     , F1
+                     , FNOWA01S1
+                     , FNOWA02S1
+                     , FNOWA03S1
+                     , FNOWA04S1
+                     , FNOWA05S1
+                     , FNOWA06S1
+                     , FNOWA07S1
+                     , FNOWA08S1
+                     , FNOWA09S1
+                     , FNOWA10S1
+                     , FNOWA11S1
+                     , FNOWA12S1
+                     , FNOWA01S2
+                     , FNOWA02S2
+                     , FNOWA03S2
+                     , FNOWA04S2
+                     , FNOWA05S2
+                     , FNOWA06S2
+                     , FNOWA07S2
+                     , FNOWA08S2
+                     , FNOWA09S2
+                     , FNOWA10S2
+                     , FNOWA11S2
+                     , FNOWA12S2
+                     , FNEXTA01S1
+                     , FNEXTA02S1
+                     , FNEXTA03S1
+                     , FNEXTA04S1
+                     , FNEXTA05S1
+                     , FNEXTA06S1
+                     , FNEXTA07S1
+                     , FNEXTA08S1
+                     , FNEXTA09S1
+                     , FNEXTA10S1
+                     , FNEXTA11S1
+                     , FNEXTA12S1
+                     , FNEXTA01S2
+                     , FNEXTA02S2
+                     , FNEXTA03S2
+                     , FNEXTA04S2
+                     , FNEXTA05S2
+                     , FNEXTA06S2
+                     , FNEXTA07S2
+                     , FNEXTA08S2
+                     , FNEXTA09S2
+                     , FNEXTA10S2
+                     , FNEXTA11S2
+                     , FNEXTA12S2
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '1' THEN FFNOWA01 ELSE 0 END AS FFNOWA01
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '2' THEN FFNOWA02 ELSE 0 END AS FFNOWA02
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '3' THEN FFNOWA03 ELSE 0 END AS FFNOWA03
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '4' THEN FFNOWA04 ELSE 0 END AS FFNOWA04
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '5' THEN FFNOWA05 ELSE 0 END AS FFNOWA05
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '6' THEN FFNOWA06 ELSE 0 END AS FFNOWA06
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '7' THEN FFNOWA07 ELSE 0 END AS FFNOWA07
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '8' THEN FFNOWA08 ELSE 0 END AS FFNOWA08
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '9' THEN FFNOWA09 ELSE 0 END AS FFNOWA09
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '10' THEN FFNOWA10 ELSE 0 END AS FFNOWA10
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '11' THEN FFNOWA11 ELSE 0 END AS FFNOWA11
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '12' THEN FFNOWA12 ELSE 0 END AS FFNOWA12
+                     , FFNEXTA01
+                     , FFNEXTA02
+                     , FFNEXTA03
+                     , FFNEXTA04
+                     , FFNEXTA05
+                     , FFNEXTA06
+                     , FFNEXTA07
+                     , FFNEXTA08
+                     , FFNEXTA09
+                     , FFNEXTA10
+                     , FFNEXTA11
+                     , FFNEXTA12
+                     , T2.FF_PY
+                     , NVL((SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = T2.AG_CODE AND GUBUN = '2')
+		                 ,(SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = SUBSTR(T2.AG_CODE,0,4) || '000000' AND GUBUN = '2')) AS SIGUN_AREA_NAME
+                FROM TB_NRES_PROD_INFO T1
+                   , TB_NRES_CHUL_INFO T2
+                WHERE T1.NONG_ID = T2.NONG_ID 
+                AND T1.STD_YEAR = #{stdYear}
+                <if test="sidoCode != null and sidoCode !=''">
+				AND T2.SIDO_CODE = #{sidoCode}
+				</if>
+				<if test="agCode != null and agCode !=''">
+				AND (T2.AG_CODE = #{agCode} OR SUBSTR(T2.AG_CODE,0,4) || '000000' = #{agCode}) 
+				</if>
+				<if test="flower != null and flower !=''">
+				AND FLOWER LIKE #{flower} || '%'
+				</if>
+            ) T3
+            <if test="sidoCode == null or sidoCode ==''">
+        	GROUP BY STD_YEAR, SIDO_CODE
+        	</if>
+        	<if test="sidoCode != null and sidoCode !=''">
+			GROUP BY STD_YEAR, SIDO_CODE, SIGUN_AREA_NAME
+			</if>
+        )ORDER BY TO_NUMBER(SIDO_CODE) ASC
+    </select>
+    
+    <select id="prodInfoChart" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT NVL(ROUND(E1S01 / 10000,1),0) AS E1S01
+             , NVL(ROUND(E1S02 / 10000,1),0) AS E1S02
+             , NVL(ROUND(E1S03 / 10000,1),0) AS E1S03
+             , NVL(ROUND(E1S04 / 10000,1),0) AS E1S04
+             , NVL(ROUND(E1S05 / 10000,1),0) AS E1S05
+             , NVL(ROUND(E1S06 / 10000,1),0) AS E1S06
+             , NVL(ROUND(E1S07 / 10000,1),0) AS E1S07
+             , NVL(ROUND(E1S08 / 10000,1),0) AS E1S08
+             , NVL(ROUND(E1S09 / 10000,1),0) AS E1S09
+             , NVL(ROUND(E1S10 / 10000,1),0) AS E1S10
+             , NVL(ROUND(E1S11 / 10000,1),0) AS E1S11
+             , NVL(ROUND(E1S12 / 10000,1),0) AS E1S12
+             , NVL(ROUND((E2S01 / NULLIF(D1C4,0))*100,1),0) AS E2S01
+             , NVL(ROUND((E2S02 / NULLIF(D1C4,0))*100,1),0) AS E2S02
+             , NVL(ROUND((E2S03 / NULLIF(D1C4,0))*100,1),0) AS E2S03
+             , NVL(ROUND((E2S04 / NULLIF(D1C4,0))*100,1),0) AS E2S04
+             , NVL(ROUND((E2S05 / NULLIF(D1C4,0))*100,1),0) AS E2S05
+             , NVL(ROUND((E2S06 / NULLIF(D1C4,0))*100,1),0) AS E2S06
+             , NVL(ROUND((E2S07 / NULLIF(D1C4,0))*100,1),0) AS E2S07
+             , NVL(ROUND((E2S08 / NULLIF(D1C4,0))*100,1),0) AS E2S08
+             , NVL(ROUND((E2S09 / NULLIF(D1C4,0))*100,1),0) AS E2S09
+             , NVL(ROUND((E2S10 / NULLIF(D1C4,0))*100,1),0) AS E2S10
+             , NVL(ROUND((E2S11 / NULLIF(D1C4,0))*100,1),0) AS E2S11
+        FROM (
+            SELECT SUM(D1C4) AS D1C4
+                 , SUM(D1C4*E1S01/100) AS E1S01
+                 , SUM(D1C4*E1S02/100) AS E1S02
+                 , SUM(D1C4*E1S03/100) AS E1S03
+                 , SUM(D1C4*E1S04/100) AS E1S04
+                 , SUM(D1C4*E1S05/100) AS E1S05
+                 , SUM(D1C4*E1S06/100) AS E1S06
+                 , SUM(D1C4*E1S07/100) AS E1S07
+                 , SUM(D1C4*E1S08/100) AS E1S08
+                 , SUM(D1C4*E1S09/100) AS E1S09
+                 , SUM(D1C4*E1S10/100) AS E1S10
+                 , SUM(D1C4*E1S11/100) AS E1S11
+                 , SUM(D1C4*E1S12/100) AS E1S12
+                 , SUM(D1C4*E2S01/100) AS E2S01
+                 , SUM(D1C4*E2S02/100) AS E2S02
+                 , SUM(D1C4*E2S03/100) AS E2S03
+                 , SUM(D1C4*E2S04/100) AS E2S04
+                 , SUM(D1C4*E2S05/100) AS E2S05
+                 , SUM(D1C4*E2S06/100) AS E2S06
+                 , SUM(D1C4*E2S07/100) AS E2S07
+                 , SUM(D1C4*E2S08/100) AS E2S08
+                 , SUM(D1C4*E2S09/100) AS E2S09
+                 , SUM(D1C4*E2S10/100) AS E2S10
+                 , SUM(D1C4*E2S11/100) AS E2S11
+            FROM (
+                SELECT T1.STD_YEAR
+                     , T1.NONG_ID
+                     , T2.SIDO_CODE
+                     , T2.AG_CODE
+                     , GU
+                     , FID
+                     , FLOWER
+                     , D1C4
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '1' THEN E1S01 ELSE 0 END AS E1S01
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '2' THEN E1S02 ELSE 0 END AS E1S02
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '3' THEN E1S03 ELSE 0 END AS E1S03
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '4' THEN E1S04 ELSE 0 END AS E1S04
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '5' THEN E1S05 ELSE 0 END AS E1S05
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '6' THEN E1S06 ELSE 0 END AS E1S06
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '7' THEN E1S07 ELSE 0 END AS E1S07
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '8' THEN E1S08 ELSE 0 END AS E1S08
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '9' THEN E1S09 ELSE 0 END AS E1S09
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '10' THEN E1S10 ELSE 0 END AS E1S10
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '11' THEN E1S11 ELSE 0 END AS E1S11
+                     , CASE WHEN #{stdMonth} IS NULL OR #{stdMonth} = '' OR #{stdMonth} = '12' THEN E1S12 ELSE 0 END AS E1S12
+                     , E2S01
+                     , E2S02
+                     , E2S03
+                     , E2S04
+                     , E2S05
+                     , E2S06
+                     , E2S07
+                     , E2S08
+                     , E2S09
+                     , E2S10
+                     , E2S11
+                FROM TB_NRES_PROD_INFO T1
+                   , TB_NRES_CHUL_INFO T2
+                WHERE T1.NONG_ID = T2.NONG_ID 
+                AND T1.STD_YEAR = #{stdYear}
+                <if test="sidoCode != null and sidoCode !=''">
+				AND T2.SIDO_CODE = #{sidoCode}
+				</if>
+				<if test="agCode != null and agCode !=''">
+				AND (T2.AG_CODE = #{agCode} OR SUBSTR(T2.AG_CODE,0,4) || '000000' = #{agCode}) 
+				</if>
+				<if test="flower != null and flower !=''">
+				AND FLOWER LIKE #{flower} || '%'
+				</if>
+            ) T3
+            GROUP BY STD_YEAR
+        )
+    </select>
+     
+    <select id="mainChulInfoChart" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT CATE_NAME AS CATE_NAME
+             , AREA_TYPE
+             , AREA_TYPE_ORDER
+             , NVL(ROUND((B2R2C1/NULLIF((B2R3C1 + B2R2C1),0))*100,1),0) AS B2R2C1
+             , NVL(ROUND((B2R3C1/NULLIF((B2R3C1 + B2R2C1),0))*100,1),0) AS B2R3C1
+             , NVL(ROUND((B2R1C3/NULLIF((B2R1C3 + B2R1C2),0))*100,1),0) AS B2R1C3
+             , NVL(ROUND((B2R1C2/NULLIF((B2R1C3 + B2R1C2),0))*100,1),0) AS B2R1C2
+             , NVL(ROUND((B2R1C4/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C4
+             , NVL(ROUND((B2R1C5/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C5
+             , NVL(ROUND((B2R1C6/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C6
+             , NVL(ROUND((B2R1C7/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C7
+             , NVL(ROUND((YUNDONG/NULLIF((YUNDONG + DANDONG),0))*100,1),0) AS YUNDONG
+             , NVL(ROUND((DANDONG/NULLIF((YUNDONG + DANDONG),0))*100,1),0) AS DANDONG
+             , NVL(ROUND((B3C02/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C02
+             , NVL(ROUND((B3C03/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C03
+             , NVL(ROUND((B3C07/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C07
+             , NVL(ROUND((B4C02/NULLIF((B4C02 + B4C03),0))*100,1),0) AS B4C02
+             , NVL(ROUND((B4C03/NULLIF((B4C02 + B4C03),0))*100,1),0) AS B4C03
+             , NVL(ROUND((B5C02/NULLIF((B5C02 + B5C03),0))*100,1),0) AS B5C02
+             , NVL(ROUND((B5C03/NULLIF((B5C02 + B5C03),0))*100,1),0) AS B5C03
+             , B1R1C2 
+             , B1R1C3
+             , B1R1C4
+             , B1R1C5
+             , NVL(ROUND((B1R1C2/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C21
+             , NVL(ROUND((B1R1C3/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C31
+             , NVL(ROUND((B1R1C4/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C41
+             , NVL(ROUND((B1R1C5/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C51
+             , B1R1C1
+             , B1R2C1
+             , NVL(ROUND((B1R1C1/NULLIF((B1R1C1 + B1R2C1),0))*100,1),0) AS B1R1C11
+             , NVL(ROUND((B1R2C1/NULLIF((B1R1C1 + B1R2C1),0))*100,1),0) AS B1R2C11
+             , B1R1C2 + B1R1C3 + B1R1C4 AS PERSON_ALL
+             , NVL(ROUND((B1R1C2 + B1R1C3 + B1R1C4)/NULLIF(NONG_CNT,0),1),0) AS PERSON_AVG
+             , NONG_CNT
+             , YEAR_QTY
+             , YEAR_AMT
+        FROM ( 
+            SELECT COUNT(T1.NONG_ID) AS NONG_CNT
+                 , T1.STD_YEAR AS CATE_NAME
+                 , T1.AREA_TYPE
+                 , T1.AREA_TYPE_ORDER
+                 , SUM(T1.B2R2C1) AS B2R2C1 /* 자가*/
+                 , SUM(T1.B2R3C1) AS B2R3C1 /* 임차*/
+                 , SUM(T1.B2R1C3) AS B2R1C3 /* 시설*/
+                 , SUM(T1.B2R1C2) AS B2R1C2 /* 노지*/
+                 , SUM(T1.B2R1C4) AS B2R1C4 /* 철골유리*/
+                 , SUM(T1.B2R1C5) AS B2R1C5 /* 철골경질*/
+                 , SUM(T1.B2R1C6) AS B2R1C6 /* 철파이프*/
+                 , SUM(T1.B2R1C7) AS B2R1C7 /* 기타*/
+                 , SUM(T1.B5C02)+SUM(T1.B5C03) AS YUNDONG /* 연동*/
+                 , SUM(T1.B5C09)+SUM(T1.B5C10) AS DANDONG /* 단동*/
+                 , SUM(T1.B3C02) AS B3C02 /* 토경재배*/
+                 , SUM(T1.B3C03) AS B3C03 /* 고형배지*/
+                 , SUM(T1.B3C07) AS B3C07 /* 순수수경*/
+                 , SUM(T1.B4C02) AS B4C02 /* 무가온*/
+                 , SUM(T1.B4C03) AS B4C03 /* 가온*/
+                 , SUM(T1.B5C02)+SUM(T1.B5C09) AS B5C02 /* 무보온*/
+                 , SUM(T1.B5C03)+SUM(T1.B5C10) AS B5C03 /* 보온*/
+                 , SUM(T1.B1R1C2)+SUM(T1.B1R2C2) AS B1R1C2 /* 상시고용직*/
+                 , SUM(T1.B1R1C3)+SUM(T1.B1R2C3) AS B1R1C3 /* 무급가족종사자 자가인력*/
+                 , SUM(T1.B1R1C4)+SUM(T1.B1R2C4) AS B1R1C4 /* 임시직*/
+                 , SUM(T1.B1R1C5)+SUM(T1.B1R2C5) AS B1R1C5 /* 성수기임시직*/
+                 , SUM(T1.B1R1C1) AS B1R1C1/* 내국인*/
+                 , SUM(T1.B1R2C1) AS B1R2C1/* 외국인*/
+                 , ROUND(SUM(YEAR_QTY)/10000) AS YEAR_QTY
+                 , ROUND(SUM(YEAR_AMT)/100000000) AS YEAR_AMT
+            FROM (SELECT T0.*
+                       , CASE WHEN T0.FF_PY*0.000331 <![CDATA[<]]>  0.3 THEN '0.3ha 미만' 
+                              WHEN T0.FF_PY*0.000331 <![CDATA[>=]]>  0.3 AND T0.FF_PY*0.000331 <![CDATA[<]]> 0.5  THEN '0.3ha ~ 0.5ha 미만'
+                              WHEN T0.FF_PY*0.000331 <![CDATA[>=]]>  0.5 AND T0.FF_PY*0.000331 <![CDATA[<]]>  1 THEN '0.5ha ~ 1ha 미만'
+                              WHEN T0.FF_PY*0.000331 <![CDATA[>=]]>  1 THEN '1ha 이상'
+                         ELSE NULL END AS AREA_TYPE
+                       , CASE WHEN T0.FF_PY*0.000331 <![CDATA[<]]>  0.3 THEN '1' 
+                              WHEN T0.FF_PY*0.000331 <![CDATA[>=]]>  0.3 AND T0.FF_PY*0.000331 <![CDATA[<]]> 0.5  THEN '2'
+                              WHEN T0.FF_PY*0.000331 <![CDATA[>=]]>  0.5 AND T0.FF_PY*0.000331 <![CDATA[<]]>  1 THEN '3'
+                              WHEN T0.FF_PY*0.000331 <![CDATA[>=]]>  1 THEN '4'
+                         ELSE NULL END AS AREA_TYPE_ORDER
+                       , (SELECT SUM(D1C4) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T0.STD_YEAR AND NONG_ID = T0.NONG_ID) AS YEAR_QTY
+                       , (SELECT SUM(D1C7) FROM TB_NRES_PROD_INFO WHERE STD_YEAR = T0.STD_YEAR AND NONG_ID = T0.NONG_ID) AS YEAR_AMT
+                  FROM TB_NRES_CHUL_INFO T0) T1
+            WHERE T1.STD_YEAR = #{stdYear}
+            GROUP BY T1.STD_YEAR, T1.AREA_TYPE_ORDER, T1.AREA_TYPE
+          )
+          ORDER BY AREA_TYPE_ORDER ASC
+    </select>
+    
+    
+    <select id="mainPrdInfoChart" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+     SELECT STD_YEAR
+             , FLOWER
+             , D1C2
+             , D1C3
+             , NVL(ROUND(D1C4/10000,0),0) AS D1C4
+             , NVL(ROUND((D1C4 / NULLIF(SUM(D1C4) OVER(),0))*100,1),1) AS D1C4_PER 
+             , D1C5
+             , D1C6
+             , NVL(ROUND(D1C7/100000000,0),0) AS D1C7
+             , E1S01
+             , E1S02
+             , E1S03
+             , E1S04
+             , E1S05
+             , E1S06
+             , E1S07
+             , E1S08
+             , E1S09
+             , E1S10
+             , E1S11
+             , E1S12
+             , E2S01
+             , E2S02
+             , E2S03
+             , E2S04
+             , E2S05
+             , E2S06
+             , E2S07
+             , E2S08
+             , E2S09
+             , E2S10
+             , E2S11
+             , F1
+             , FNOWA01S1
+             , FNOWA02S1
+             , FNOWA03S1
+             , FNOWA04S1
+             , FNOWA05S1
+             , FNOWA06S1
+             , FNOWA07S1
+             , FNOWA08S1
+             , FNOWA09S1
+             , FNOWA10S1
+             , FNOWA11S1
+             , FNOWA12S1
+             , FNOWA01S2
+             , FNOWA02S2
+             , FNOWA03S2
+             , FNOWA04S2
+             , FNOWA05S2
+             , FNOWA06S2
+             , FNOWA07S2
+             , FNOWA08S2
+             , FNOWA09S2
+             , FNOWA10S2
+             , FNOWA11S2
+             , FNOWA12S2
+             , FNEXTA01S1
+             , FNEXTA02S1
+             , FNEXTA03S1
+             , FNEXTA04S1
+             , FNEXTA05S1
+             , FNEXTA06S1
+             , FNEXTA07S1
+             , FNEXTA08S1
+             , FNEXTA09S1
+             , FNEXTA10S1
+             , FNEXTA11S1
+             , FNEXTA12S1
+             , FNEXTA01S2
+             , FNEXTA02S2
+             , FNEXTA03S2
+             , FNEXTA04S2
+             , FNEXTA05S2
+             , FNEXTA06S2
+             , FNEXTA07S2
+             , FNEXTA08S2
+             , FNEXTA09S2
+             , FNEXTA10S2
+             , FNEXTA11S2
+             , FNEXTA12S2
+             , NVL(ROUND(FFNOWA01*0.000331,1),0) AS FFNOWA01
+             , NVL(ROUND(FFNOWA02*0.000331,1),0) AS FFNOWA02
+             , NVL(ROUND(FFNOWA03*0.000331,1),0) AS FFNOWA03
+             , NVL(ROUND(FFNOWA04*0.000331,1),0) AS FFNOWA04
+             , NVL(ROUND(FFNOWA05*0.000331,1),0) AS FFNOWA05
+             , NVL(ROUND(FFNOWA06*0.000331,1),0) AS FFNOWA06
+             , NVL(ROUND(FFNOWA07*0.000331,1),0) AS FFNOWA07
+             , NVL(ROUND(FFNOWA08*0.000331,1),0) AS FFNOWA08
+             , NVL(ROUND(FFNOWA09*0.000331,1),0) AS FFNOWA09
+             , NVL(ROUND(FFNOWA10*0.000331,1),0) AS FFNOWA10
+             , NVL(ROUND(FFNOWA11*0.000331,1),0) AS FFNOWA11
+             , NVL(ROUND(FFNOWA12*0.000331,1),0) AS FFNOWA12
+             , NVL(ROUND(FF_PY*0.000331,0),0) AS FFNOWA_TOT
+             , FFNEXTA01
+             , FFNEXTA02
+             , FFNEXTA03
+             , FFNEXTA04
+             , FFNEXTA05
+             , FFNEXTA06
+             , FFNEXTA07
+             , FFNEXTA08
+             , FFNEXTA09
+             , FFNEXTA10
+             , FFNEXTA11
+             , FFNEXTA12
+             , NONG_CNT 
+        FROM (
+            SELECT STD_YEAR
+                 , FLOWER
+                 , COUNT(FLOWER) AS NONG_CNT
+                 , SUM(D1C2) AS D1C2
+                 , SUM(D1C3) AS D1C3
+                 , SUM(D1C4) AS D1C4
+                 , SUM(D1C5) AS D1C5
+                 , SUM(D1C6) AS D1C6
+                 , SUM(D1C7) AS D1C7
+                 , SUM(E1S01) AS E1S01
+                 , SUM(E1S02) AS E1S02
+                 , SUM(E1S03) AS E1S03
+                 , SUM(E1S04) AS E1S04
+                 , SUM(E1S05) AS E1S05
+                 , SUM(E1S06) AS E1S06
+                 , SUM(E1S07) AS E1S07
+                 , SUM(E1S08) AS E1S08
+                 , SUM(E1S09) AS E1S09
+                 , SUM(E1S10) AS E1S10
+                 , SUM(E1S11) AS E1S11
+                 , SUM(E1S12) AS E1S12
+                 , SUM(E2S01) AS E2S01
+                 , SUM(E2S02) AS E2S02
+                 , SUM(E2S03) AS E2S03
+                 , SUM(E2S04) AS E2S04
+                 , SUM(E2S05) AS E2S05
+                 , SUM(E2S06) AS E2S06
+                 , SUM(E2S07) AS E2S07
+                 , SUM(E2S08) AS E2S08
+                 , SUM(E2S09) AS E2S09
+                 , SUM(E2S10) AS E2S10
+                 , SUM(E2S11) AS E2S11
+                 , SUM(F1) AS F1
+                 , SUM(FNOWA01S1) AS FNOWA01S1
+                 , SUM(FNOWA02S1) AS FNOWA02S1
+                 , SUM(FNOWA03S1) AS FNOWA03S1
+                 , SUM(FNOWA04S1) AS FNOWA04S1
+                 , SUM(FNOWA05S1) AS FNOWA05S1
+                 , SUM(FNOWA06S1) AS FNOWA06S1
+                 , SUM(FNOWA07S1) AS FNOWA07S1
+                 , SUM(FNOWA08S1) AS FNOWA08S1
+                 , SUM(FNOWA09S1) AS FNOWA09S1
+                 , SUM(FNOWA10S1) AS FNOWA10S1
+                 , SUM(FNOWA11S1) AS FNOWA11S1
+                 , SUM(FNOWA12S1) AS FNOWA12S1
+                 , SUM(FNOWA01S2) AS FNOWA01S2
+                 , SUM(FNOWA02S2) AS FNOWA02S2
+                 , SUM(FNOWA03S2) AS FNOWA03S2
+                 , SUM(FNOWA04S2) AS FNOWA04S2
+                 , SUM(FNOWA05S2) AS FNOWA05S2
+                 , SUM(FNOWA06S2) AS FNOWA06S2
+                 , SUM(FNOWA07S2) AS FNOWA07S2
+                 , SUM(FNOWA08S2) AS FNOWA08S2
+                 , SUM(FNOWA09S2) AS FNOWA09S2
+                 , SUM(FNOWA10S2) AS FNOWA10S2
+                 , SUM(FNOWA11S2) AS FNOWA11S2
+                 , SUM(FNOWA12S2) AS FNOWA12S2
+                 , SUM(FNEXTA01S1) AS FNEXTA01S1
+                 , SUM(FNEXTA02S1) AS FNEXTA02S1
+                 , SUM(FNEXTA03S1) AS FNEXTA03S1
+                 , SUM(FNEXTA04S1) AS FNEXTA04S1
+                 , SUM(FNEXTA05S1) AS FNEXTA05S1
+                 , SUM(FNEXTA06S1) AS FNEXTA06S1
+                 , SUM(FNEXTA07S1) AS FNEXTA07S1
+                 , SUM(FNEXTA08S1) AS FNEXTA08S1
+                 , SUM(FNEXTA09S1) AS FNEXTA09S1
+                 , SUM(FNEXTA10S1) AS FNEXTA10S1
+                 , SUM(FNEXTA11S1) AS FNEXTA11S1
+                 , SUM(FNEXTA12S1) AS FNEXTA12S1
+                 , SUM(FNEXTA01S2) AS FNEXTA01S2
+                 , SUM(FNEXTA02S2) AS FNEXTA02S2
+                 , SUM(FNEXTA03S2) AS FNEXTA03S2
+                 , SUM(FNEXTA04S2) AS FNEXTA04S2
+                 , SUM(FNEXTA05S2) AS FNEXTA05S2
+                 , SUM(FNEXTA06S2) AS FNEXTA06S2
+                 , SUM(FNEXTA07S2) AS FNEXTA07S2
+                 , SUM(FNEXTA08S2) AS FNEXTA08S2
+                 , SUM(FNEXTA09S2) AS FNEXTA09S2
+                 , SUM(FNEXTA10S2) AS FNEXTA10S2
+                 , SUM(FNEXTA11S2) AS FNEXTA11S2
+                 , SUM(FNEXTA12S2) AS FNEXTA12S2
+                 , SUM(FFNOWA01) AS FFNOWA01
+                 , SUM(FFNOWA02) AS FFNOWA02
+                 , SUM(FFNOWA03) AS FFNOWA03
+                 , SUM(FFNOWA04) AS FFNOWA04
+                 , SUM(FFNOWA05) AS FFNOWA05
+                 , SUM(FFNOWA06) AS FFNOWA06
+                 , SUM(FFNOWA07) AS FFNOWA07
+                 , SUM(FFNOWA08) AS FFNOWA08
+                 , SUM(FFNOWA09) AS FFNOWA09
+                 , SUM(FFNOWA10) AS FFNOWA10
+                 , SUM(FFNOWA11) AS FFNOWA11
+                 , SUM(FFNOWA12) AS FFNOWA12
+                 , SUM(FFNEXTA01) AS FFNEXTA01
+                 , SUM(FFNEXTA02) AS FFNEXTA02
+                 , SUM(FFNEXTA03) AS FFNEXTA03
+                 , SUM(FFNEXTA04) AS FFNEXTA04
+                 , SUM(FFNEXTA05) AS FFNEXTA05
+                 , SUM(FFNEXTA06) AS FFNEXTA06
+                 , SUM(FFNEXTA07) AS FFNEXTA07
+                 , SUM(FFNEXTA08) AS FFNEXTA08
+                 , SUM(FFNEXTA09) AS FFNEXTA09
+                 , SUM(FFNEXTA10) AS FFNEXTA10
+                 , SUM(FFNEXTA11) AS FFNEXTA11
+                 , SUM(FFNEXTA12) AS FFNEXTA12
+                 , SUM(FF_PY) AS FF_PY
+            FROM (
+                SELECT T1.STD_YEAR
+                     , T1.NONG_ID
+                     , T2.SIDO_CODE
+                     , T2.AG_CODE
+                     , GU
+                     , FID
+                     , CASE WHEN FLOWER LIKE '국화%' THEN '국화'
+			                WHEN FLOWER LIKE '장미%' THEN '장미'
+			                WHEN FLOWER LIKE '카네이션%' THEN '카네이션'
+			                WHEN FLOWER LIKE '백합%' THEN '백합'
+			           ELSE FLOWER END AS FLOWER 
+                     , D1C2
+                     , D1C3
+                     , D1C4
+                     , D1C5
+                     , D1C6
+                     , D1C7
+                     , E1S01
+                     , E1S02
+                     , E1S03
+                     , E1S04
+                     , E1S05
+                     , E1S06
+                     , E1S07
+                     , E1S08
+                     , E1S09
+                     , E1S10
+                     , E1S11
+                     , E1S12
+                     , E2S01
+                     , E2S02
+                     , E2S03
+                     , E2S04
+                     , E2S05
+                     , E2S06
+                     , E2S07
+                     , E2S08
+                     , E2S09
+                     , E2S10
+                     , E2S11
+                     , F1
+                     , FNOWA01S1
+                     , FNOWA02S1
+                     , FNOWA03S1
+                     , FNOWA04S1
+                     , FNOWA05S1
+                     , FNOWA06S1
+                     , FNOWA07S1
+                     , FNOWA08S1
+                     , FNOWA09S1
+                     , FNOWA10S1
+                     , FNOWA11S1
+                     , FNOWA12S1
+                     , FNOWA01S2
+                     , FNOWA02S2
+                     , FNOWA03S2
+                     , FNOWA04S2
+                     , FNOWA05S2
+                     , FNOWA06S2
+                     , FNOWA07S2
+                     , FNOWA08S2
+                     , FNOWA09S2
+                     , FNOWA10S2
+                     , FNOWA11S2
+                     , FNOWA12S2
+                     , FNEXTA01S1
+                     , FNEXTA02S1
+                     , FNEXTA03S1
+                     , FNEXTA04S1
+                     , FNEXTA05S1
+                     , FNEXTA06S1
+                     , FNEXTA07S1
+                     , FNEXTA08S1
+                     , FNEXTA09S1
+                     , FNEXTA10S1
+                     , FNEXTA11S1
+                     , FNEXTA12S1
+                     , FNEXTA01S2
+                     , FNEXTA02S2
+                     , FNEXTA03S2
+                     , FNEXTA04S2
+                     , FNEXTA05S2
+                     , FNEXTA06S2
+                     , FNEXTA07S2
+                     , FNEXTA08S2
+                     , FNEXTA09S2
+                     , FNEXTA10S2
+                     , FNEXTA11S2
+                     , FNEXTA12S2
+                     , FFNOWA01
+                     , FFNOWA02
+                     , FFNOWA03
+                     , FFNOWA04
+                     , FFNOWA05
+                     , FFNOWA06
+                     , FFNOWA07
+                     , FFNOWA08
+                     , FFNOWA09
+                     , FFNOWA10
+                     , FFNOWA11
+                     , FFNOWA12
+                     , FFNEXTA01
+                     , FFNEXTA02
+                     , FFNEXTA03
+                     , FFNEXTA04
+                     , FFNEXTA05
+                     , FFNEXTA06
+                     , FFNEXTA07
+                     , FFNEXTA08
+                     , FFNEXTA09
+                     , FFNEXTA10
+                     , FFNEXTA11
+                     , FFNEXTA12
+                     , T2.FF_PY
+                     , NVL((SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = T2.AG_CODE AND GUBUN = '2')
+                         ,(SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AG_CODE = SUBSTR(T2.AG_CODE,0,4) || '000000' AND GUBUN = '2')) AS SIGUN_AREA_NAME
+                FROM TB_NRES_PROD_INFO T1
+                   , TB_NRES_CHUL_INFO T2
+                WHERE T1.NONG_ID = T2.NONG_ID 
+                AND T1.STD_YEAR = #{stdYear}
+            ) T3
+            GROUP BY STD_YEAR, FLOWER
+        )ORDER BY NONG_CNT DESC
+    </select>
+    
+    <select id="chulInfoList2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT SIDO_ORDER
+		     , SIDO_NAME
+		     , SUM(CHUL_CNT) AS CHUL_CNT
+		     , ROUND(SUM(PRD_AREA)*0.000331) AS PRD_AREA
+		     , ROUND(SUM(YEAR_QTY)/10000) AS YEAR_QTY
+		     , ROUND(SUM(YEAR_AMT)/100000000) AS YEAR_AMT
+		FROM (
+		    SELECT CASE WHEN SIDO_CODE IN('1','4','9') THEN '서울, 인천, 경기'
+		                WHEN SIDO_CODE IN('6', '8', '11','12') THEN '대전, 충청'
+		                WHEN SIDO_CODE IN('5','13','14') THEN '광주, 전라'
+		                WHEN SIDO_CODE IN('17') THEN '제주'
+		                WHEN SIDO_CODE IN('10') THEN '강원'
+		                WHEN SIDO_CODE IN('3','15') THEN '대구, 경북'
+		                WHEN SIDO_CODE IN('2','7','16') THEN '부산, 울산, 경남'
+		                ELSE '' END AS SIDO_NAME
+		          ,CASE WHEN SIDO_CODE IN('1','4','9') THEN 1
+		                WHEN SIDO_CODE IN('6', '8', '11','12') THEN 2
+		                WHEN SIDO_CODE IN('5','13','14') THEN 3
+		                WHEN SIDO_CODE IN('17') THEN 4
+		                WHEN SIDO_CODE IN('10') THEN 5
+		                WHEN SIDO_CODE IN('3','15') THEN 6
+		                WHEN SIDO_CODE IN('2','7','16') THEN 7
+		                ELSE 999 END AS SIDO_ORDER
+		          , SIDO_CODE
+		          , CHUL_CNT
+		          , PRD_AREA
+		          , YEAR_QTY
+		          , YEAR_AMT
+		    FROM (
+            
+                SELECT  DM4                 AS SIDO_CODE        -- 시도코드
+                      , SIDO                AS SIDO_NAME        -- 시도명
+                      , 1                   AS CHUL_CNT         -- 농가수
+                      , SUM(NVL(D2R1C3,0) +
+                        NVL(D2R2C3,0) +
+                        NVL(D2R3C3,0) +
+                        NVL(D2R4C3,0) +
+                        NVL(D2R5C3,0) +
+                        NVL(D2R6C3,0) +
+                        NVL(D2R7C3,0))      AS PRD_AREA         -- 재배면적
+                      , SUM(NVL(C2S1R1C1,0) +
+                        NVL(C2S1R2C1,0) +
+                        NVL(C2S1R3C1,0) +
+                        NVL(C2S1R4C1,0) +
+                        NVL(C2S1R5C1,0) +
+                        NVL(C2S1R6C1,0) +
+                        NVL(C2S1R7C1,0))    AS YEAR_QTY         -- 판매수량
+                      , SUM(NVL(C2S1R1C3,0) +
+                        NVL(C2S1R2C3,0) +
+                        NVL(C2S1R3C3,0) +
+                        NVL(C2S1R4C3,0) +
+                        NVL(C2S1R5C3,0) +
+                        NVL(C2S1R6C3,0) +
+                        NVL(C2S1R7C3,0))    AS YEAR_AMT         -- 판매액
+            
+                FROM    FLOWER.TB_NRES_ORCHID_INFO
+                WHERE   1=1
+                AND     STD_YEAR = #{stdYear}
+		        <if test="prdArea != null and prdArea !=''">
+		        	<choose>
+		        		<when test='prdArea == "1"'>
+		        			AND DM5 IN ('1','2')
+		        		</when>
+		        		<when test='prdArea == "2"'>
+		        			AND DM5 IN ('3')
+		        		</when>
+		        		<when test='prdArea == "3"'>
+		        			AND DM5 IN ('4')
+		        		</when>
+		        		<when test='prdArea == "4"'>
+		        			AND DM5 IN ('5') 
+		        		</when>
+		        		<otherwise></otherwise>
+		        	</choose>
+		        </if>
+                GROUP BY DM4, SIDO, AID
+                ORDER BY TO_NUMBER(DM4)            
+		    )
+		) GROUP BY SIDO_ORDER, SIDO_NAME
+		ORDER BY SIDO_ORDER
+    </select>
+
+    <select id="chulInfoMapSidoList2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT CODE
+    	     , SIDO_CODE
+             , (SELECT KOR_NAME FROM TB_NRES_AREA_MAP WHERE AREA_CODE = CODE) AS LABEL
+             , (SELECT GUBUN FROM TB_NRES_AREA_MAP WHERE AREA_CODE = CODE) AS GUBUN
+             , CHUL_CNT
+             , PRD_AREA
+             , YEAR_QTY
+             , YEAR_AMT
+        FROM (
+            SELECT NVL(CODE, SIDO_CODE) AS CODE
+                 , SIDO_CODE
+                 , COUNT(NONG_ID) AS CHUL_CNT
+                 , ROUND(SUM(FF_PY)*0.000331,1) AS PRD_AREA
+                 , ROUND(SUM(YEAR_QTY)/10000,1) AS YEAR_QTY
+                 , ROUND(SUM(YEAR_AMT)/100000000,1) AS YEAR_AMT
+            FROM (
+                    SELECT  AID                 AS NONG_ID          -- 농경지ID
+                          , NVL(D2R1C3,0) +
+                            NVL(D2R2C3,0) +
+                            NVL(D2R3C3,0) +
+                            NVL(D2R4C3,0) +
+                            NVL(D2R5C3,0) +
+                            NVL(D2R6C3,0) +
+                            NVL(D2R7C3,0)       AS FF_PY            -- 재배면적
+                          , NVL(C2S1R1C1,0) +
+                            NVL(C2S1R2C1,0) +
+                            NVL(C2S1R3C1,0) +
+                            NVL(C2S1R4C1,0) +
+                            NVL(C2S1R5C1,0) +
+                            NVL(C2S1R6C1,0) +
+                            NVL(C2S1R7C1,0)     AS YEAR_QTY         -- 판매수량
+                          , NVL(C2S1R1C3,0) +
+                            NVL(C2S1R2C3,0) +
+                            NVL(C2S1R3C3,0) +
+                            NVL(C2S1R4C3,0) +
+                            NVL(C2S1R5C3,0) +
+                            NVL(C2S1R6C3,0) +
+                            NVL(C2S1R7C3,0)     AS YEAR_AMT         -- 판매액
+                          , DM6                 AS CODE             -- 지역코드
+                          ,(SELECT MAX(A.AREA_CODE) FROM TB_NRES_AREA_MAP A WHERE A.GUBUN ='1' AND A.SIDO_CODE = DM4) AS SIDO_CODE -- 시도코드 
+                    FROM    FLOWER.TB_NRES_ORCHID_INFO
+            WHERE STD_YEAR = #{stdYear}
+		        <if test="prdArea != null and prdArea !=''">
+		        	<choose>
+		        		<when test='prdArea == "1"'>
+		        			AND DM5 IN ('1','2')
+		        		</when>
+		        		<when test='prdArea == "2"'>
+		        			AND DM5 IN ('3')
+		        		</when>
+		        		<when test='prdArea == "3"'>
+		        			AND DM5 IN ('4')
+		        		</when>
+		        		<when test='prdArea == "4"'>
+		        			AND DM5 IN ('5') 
+		        		</when>
+		        		<otherwise></otherwise>
+		        	</choose>
+		        </if>
+            ) T2
+            GROUP BY ROLLUP(SIDO_CODE, CODE)
+        )    
+    </select>
+ 	
+    <select id="chulInfoEachVO2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT SUM(CHUL_CNT) AS CHUL_CNT
+		     , ROUND(SUM(PRD_AREA)) AS PRD_AREA
+		     , ROUND(SUM(YEAR_QTY)) AS YEAR_QTY
+		     , ROUND(SUM(YEAR_AMT)/1000) AS YEAR_AMT
+		     <if test="agCode != null and agCode !=''">
+		     , SIGUN_NAME AS AREA_NAME
+		     </if>
+		     <if test="agCode == null or agCode ==''">
+		     , SIDO_NAME AS AREA_NAME
+		     </if>
+		FROM (
+                SELECT  T1.DM4              AS SIDO_CODE        -- 시도코드
+                      , T1.AID              AS NONG_ID          -- 농경지ID
+                      ,(SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE SIDO_CODE = T1.DM4 AND GUBUN = '1') AS SIDO_NAME 	-- 시도명 
+                      ,(SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AREA_CODE = T1.DM6 AND GUBUN = '2') AS SIGUN_NAME  -- 시군명
+                      , COUNT(T1.AID)       AS CHUL_CNT         -- 출하량
+                      , SUM(NVL(T1.D2R1C3,0) +
+                        NVL(T1.D2R2C3,0) +
+                        NVL(T1.D2R3C3,0) +
+                        NVL(T1.D2R4C3,0) +
+                        NVL(T1.D2R5C3,0) +
+                        NVL(T1.D2R6C3,0) +
+                        NVL(T1.D2R7C3,0))      AS PRD_AREA      -- 재배면적
+                      , SUM(NVL(T1.C2S1R1C1,0) +
+                        NVL(T1.C2S1R2C1,0) +
+                        NVL(T1.C2S1R3C1,0) +
+                        NVL(T1.C2S1R4C1,0) +
+                        NVL(T1.C2S1R5C1,0) +
+                        NVL(T1.C2S1R6C1,0) +
+                        NVL(T1.C2S1R7C1,0))    AS YEAR_QTY      -- 판매수량
+                      , SUM(NVL(T1.C2S1R1C3,0) +
+                        NVL(T1.C2S1R2C3,0) +
+                        NVL(T1.C2S1R3C3,0) +
+                        NVL(T1.C2S1R4C3,0) +
+                        NVL(T1.C2S1R5C3,0) +
+                        NVL(T1.C2S1R6C3,0) +
+                        NVL(T1.C2S1R7C3,0))    AS YEAR_AMT      -- 판매액
+                FROM   (SELECT 	A.*, B.AG_CODE
+                		FROM 	FLOWER.TB_NRES_ORCHID_INFO A,
+                				FLOWER.TB_NRES_AREA_MAP B
+                		WHERE   A.DM6 = B.AREA_CODE(+)) T1
+                WHERE T1.STD_YEAR = #{stdYear}
+                <if test="sidoCode != null and sidoCode !=''">
+                AND T1.DM4 = #{sidoCode}
+                </if>
+                <if test="agCode != null and agCode !=''">
+                AND (T1.DM6 = #{agCode} OR SUBSTR(T1.AG_CODE,0,4) || '000000' = #{agCode})
+                </if>
+                <if test="prdArea != null and prdArea !=''">
+                    <choose>
+                        <when test='prdArea == "1"'>
+                            AND DM5 IN ('1','2')
+                        </when>
+                        <when test='prdArea == "2"'>
+                            AND DM5 IN ('3')
+                        </when>
+                        <when test='prdArea == "3"'>
+                            AND DM5 IN ('4')
+                        </when>
+                        <when test='prdArea == "4"'>
+                            AND DM5 IN ('5') 
+                        </when>
+                        <otherwise></otherwise>
+                    </choose>
+                </if>    
+                GROUP BY T1.DM4, T1.DM6, T1.AID, T1.SIDO
+		)
+		<if test="agCode != null and agCode !=''">
+		GROUP BY SIGUN_NAME
+		</if>
+		<if test="agCode == null or agCode ==''">
+		GROUP BY SIDO_NAME
+		</if>
+    </select>
+ 	
+    <select id="chulInfoEachList2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT SUM(CHUL_CNT) AS CHUL_CNT
+ 	         , ROUND(SUM(PRD_AREA)) AS PRD_AREA  
+	         , ROUND(SUM(YEAR_QTY)) AS YEAR_QTY 
+	         , ROUND(SUM(YEAR_AMT)/1000) AS YEAR_AMT 
+		     
+		     , SIGUN_NAME AS AREA_NAME
+		FROM (
+                SELECT T1.DM4                   AS SIDO_CODE        -- 시도코드
+                     , T1.DM6                   AS AG_CODE          -- 시군코드
+                     , T1.AID                   AS NONG_ID          -- 농경ID
+                     , T1.SIDO                  AS SIDO_NAME        -- 시도명
+                     ,(SELECT MAX(KOR_NAME) 
+                       FROM   TB_NRES_AREA_MAP 
+                       WHERE  AREA_CODE = T1.DM6 
+                       AND    GUBUN = '2')      AS SIGUN_NAME       -- 시군명 
+                     , COUNT(T1.AID)            AS CHUL_CNT
+                     , SUM(NVL(T1.D2R1C3,0) +
+                       NVL(T1.D2R2C3,0) +
+                       NVL(T1.D2R3C3,0) +
+                       NVL(T1.D2R4C3,0) +
+                       NVL(T1.D2R5C3,0) +
+                       NVL(T1.D2R6C3,0) +
+                       NVL(T1.D2R7C3,0))      AS PRD_AREA      -- 재배면적
+                     , SUM(NVL(T1.C2S1R1C1,0) +
+                       NVL(T1.C2S1R2C1,0) +
+                       NVL(T1.C2S1R3C1,0) +
+                       NVL(T1.C2S1R4C1,0) +
+                       NVL(T1.C2S1R5C1,0) +
+                       NVL(T1.C2S1R6C1,0) +
+                       NVL(T1.C2S1R7C1,0))    AS YEAR_QTY      -- 판매수량
+                     , SUM(NVL(T1.C2S1R1C3,0) +
+                       NVL(T1.C2S1R2C3,0) +
+                       NVL(T1.C2S1R3C3,0) +
+                       NVL(T1.C2S1R4C3,0) +
+                       NVL(T1.C2S1R5C3,0) +
+                       NVL(T1.C2S1R6C3,0) +
+                       NVL(T1.C2S1R7C3,0))    AS YEAR_AMT      -- 판매액
+                FROM   (SELECT 	A.*, B.AG_CODE
+                		FROM 	FLOWER.TB_NRES_ORCHID_INFO A,
+                				FLOWER.TB_NRES_AREA_MAP B
+                		WHERE   A.DM6 = B.AREA_CODE(+)) T1                
+                WHERE T1.STD_YEAR = #{stdYear}
+                <if test="sidoCode != null and sidoCode !=''">
+                AND T1.DM4 = #{sidoCode}
+                </if>
+                <if test="agCode != null and agCode !=''">
+                AND (T1.DM6 = #{agCode} OR SUBSTR(T1.AG_CODE,0,4) || '000000' = #{agCode})
+                </if>
+                <if test="prdArea != null and prdArea !=''">
+                    <choose>
+                        <when test='prdArea == "1"'>
+                            AND T1.DM5 IN ('1','2')
+                        </when>
+                        <when test='prdArea == "2"'>
+                            AND T1.DM5 IN ('3')
+                        </when>
+                        <when test='prdArea == "3"'>
+                            AND T1.DM5 IN ('4')
+                        </when>
+                        <when test='prdArea == "4"'>
+                            AND T1.DM5 IN ('5') 
+                        </when>
+                        <otherwise></otherwise>
+                    </choose>
+                </if>  
+                GROUP BY T1.STD_YEAR, T1.DM4, T1.DM6, T1.AID, T1.SIDO 
+		)
+		GROUP BY SIGUN_NAME
+		ORDER BY CHUL_CNT DESC
+    </select>
+    
+    
+    <select id="chulInfoChart2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT    CATE_NAME AS CATE_NAME 
+		        , NVL(ROUND((B2R2C1/NULLIF((B2R3C1 + B2R2C1),0))*100,1),0) AS B2R2C1 
+		        , NVL(ROUND((B2R3C1/NULLIF((B2R3C1 + B2R2C1),0))*100,1),0) AS B2R3C1 
+		        , NVL(ROUND((B2R1C3/NULLIF((B2R1C3 + B2R1C2),0))*100,1),0) AS B2R1C3 
+		        , NVL(ROUND((B2R1C2/NULLIF((B2R1C3 + B2R1C2),0))*100,1),0) AS B2R1C2 
+		        , NVL(ROUND((B2R1C4/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C4 
+		        , NVL(ROUND((B2R1C5/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C5 
+		        , NVL(ROUND((B2R1C6/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C6 
+		        , NVL(ROUND((B2R1C7/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C7 
+		        , NVL(ROUND((YUNDONG/NULLIF((YUNDONG + DANDONG),0))*100,1),0) AS YUNDONG 
+		        , NVL(ROUND((DANDONG/NULLIF((YUNDONG + DANDONG),0))*100,1),0) AS DANDONG 
+		        , NVL(ROUND((B3C02/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C02 
+		        , NVL(ROUND((B3C03/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C03 
+		        , NVL(ROUND((B3C07/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C07 
+		        , NVL(ROUND((B4C02/NULLIF((B4C02 + B4C03),0))*100,1),0) AS B4C02 
+		        , NVL(ROUND((B4C03/NULLIF((B4C02 + B4C03),0))*100,1),0) AS B4C03 
+		        , NVL(ROUND((B5C02/NULLIF((B5C02 + B5C03),0))*100,1),0) AS B5C02 
+		        , NVL(ROUND((B5C03/NULLIF((B5C02 + B5C03),0))*100,1),0) AS B5C03 
+		        , B1R1C2 
+		        , B1R1C3 
+		        , B1R1C4 
+		        , B1R1C5 
+		        , NVL(ROUND((B1R1C2/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C21 
+		        , NVL(ROUND((B1R1C3/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C31 
+		        , NVL(ROUND((B1R1C4/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C41 
+		        , NVL(ROUND((B1R1C5/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C51 
+		        , B1R1C1 
+		        , B1R2C1 
+		        , NVL(ROUND((B1R1C1/NULLIF((B1R1C1 + B1R2C1),0))*100,1),0) AS B1R1C11 
+		        , NVL(ROUND((B1R2C1/NULLIF((B1R1C1 + B1R2C1),0))*100,1),0) AS B1R2C11 
+		        , B1R1C2 + B1R1C3 + B1R1C4 AS PERSON_ALL 
+		        , NVL(ROUND((B1R1C2 + B1R1C3 + B1R1C4)/NULLIF(NONG_CNT,0),1),0) AS PERSON_AVG 
+		FROM    ( 
+		          SELECT   COUNT(AID) AS NONG_CNT,
+		          
+					     <if test="sidoCode == null or sidoCode ==''">
+		                     STD_YEAR AS CATE_NAME, 
+					     </if>
+						 <if test="sidoCode != null and sidoCode !=''">
+				        	<if test="agCode == null or agCode ==''">
+			        	        STD_YEAR || ' ' || (SELECT MAX(A.KOR_NAME) FROM TB_NRES_AREA_MAP A WHERE A.SIDO_CODE = DM4 AND GUBUN = '1') AS CATE_NAME,
+				        	</if>
+				        	<if test="agCode != null and agCode !=''">
+		                        STD_YEAR || ' ' || (SELECT MAX(A.KOR_NAME) FROM TB_NRES_AREA_MAP A WHERE A.AREA_CODE = DM6) AS CATE_NAME,
+							</if>
+				         </if>
+		                
+		                   SUM(B2R2C1) B2R2C1, SUM(B2R3C1) B2R3C1, SUM(B2R1C3) B2R1C3, SUM(B2R1C2) B2R1C2,
+		                   SUM(B2R1C4) B2R1C4, SUM(B2R1C6) B2R1C6, SUM(B2R1C5) B2R1C5, SUM(B2R1C7) B2R1C7,
+		                   SUM(YUNDONG) YUNDONG, SUM(DANDONG) DANDONG, SUM(B3C02) B3C02, 
+		                   SUM(B3C03) B3C03, SUM(B3C07) B3C07, SUM(B4C02) B4C02, SUM(B4C03) B4C03, SUM(B5C02) B5C02, SUM(B5C03) B5C03,
+		                   SUM(B1R1C2) B1R1C2, SUM(B1R1C3) B1R1C3, SUM(B1R1C4) B1R1C4, SUM(B1R1C5) B1R1C5, SUM(B1R1C1) B1R1C1, SUM(B1R2C1) B1R2C1
+		                   
+		          FROM    (
+		                   SELECT T1.AID
+		                        , STD_YEAR
+		                        , NVL(T1.D2R1C3,0) + NVL(T1.D2R2C3,0) + NVL(T1.D2R3C3,0) + NVL(T1.D2R4C3,0) + NVL(T1.D2R5C3,0) + NVL(T1.D2R6C3,0) + NVL(T1.D2R7C3,0) AS B2R2C1 -- 자가 
+		                        , 0 AS B2R3C1 -- 임차 
+		                        , NVL(T1.D7AR1C1,0) + NVL(T1.D7AR1C3,0) + NVL(T1.D7AR2C1,0) + NVL(T1.D7AR2C3,0) + NVL(T1.D7AR3C1,0) + NVL(T1.D7AR3C3,0) + NVL(T1.D7AR4C1,0) + 
+		                          NVL(T1.D7AR4C3,0) + NVL(T1.D7AR5C1,0) + NVL(T1.D7AR5C3,0) + NVL(T1.D7AR6C1,0) + NVL(T1.D7AR6C3,0) + NVL(T1.D7AR7C1,0) + NVL(T1.D7AR7C3,0) + 
+		                          NVL(T1.D7AR8C1,0) + NVL(T1.D7AR8C3,0) + NVL(T1.D7AR9C1,0) + NVL(T1.D7AR9C3,0) + NVL(T1.D7AR10C1,0) + NVL(T1.D7AR10C3,0) + NVL(T1.D7AR11C1,0) + 
+		                          NVL(T1.D7AR11C3,0) + NVL(T1.D7AR12C1,0) + NVL(T1.D7AR12C3,0) AS B2R1C3 -- 시설 
+		                        , NVL(T1.D7AR1C2,0) + NVL(T1.D7AR1C4,0) + NVL(T1.D7AR2C2,0) + NVL(T1.D7AR2C4,0) + NVL(T1.D7AR3C2,0) + NVL(T1.D7AR3C4,0) + NVL(T1.D7AR4C2,0) + 
+		                          NVL(T1.D7AR4C4,0) + NVL(T1.D7AR5C2,0) + NVL(T1.D7AR5C4,0) + NVL(T1.D7AR6C2,0) + NVL(T1.D7AR6C4,0) + NVL(T1.D7AR7C2,0) + NVL(T1.D7AR7C4,0) + 
+		                          NVL(T1.D7AR8C2,0) + NVL(T1.D7AR8C4,0) + NVL(T1.D7AR9C2,0) + NVL(T1.D7AR9C4,0) + NVL(T1.D7AR10C2,0) + NVL(T1.D7AR10C4,0) + NVL(T1.D7AR11C2,0) + 
+		                          NVL(T1.D7AR11C4,0) + NVL(T1.D7AR12C2,0) + NVL(T1.D7AR12C4,0) AS B2R1C2 -- 노지 
+		                        , CASE WHEN T1.D3A_1 = '1' THEN NVL(T1.D2R1C3,0) + NVL(T1.D2R2C3,0) + NVL(T1.D2R3C3,0) + NVL(T1.D2R4C3,0) + NVL(T1.D2R5C3,0) + NVL(T1.D2R6C3,0) + NVL(T1.D2R7C3,0) 
+		                               ELSE 0 END AS B2R1C4 -- 철골유리 
+		                        , CASE WHEN T1.D3A_2 = '2' THEN NVL(T1.D2R1C3,0) + NVL(T1.D2R2C3,0) + NVL(T1.D2R3C3,0) + NVL(T1.D2R4C3,0) + NVL(T1.D2R5C3,0) + NVL(T1.D2R6C3,0) + NVL(T1.D2R7C3,0)
+		                               ELSE 0 END AS B2R1C6 -- 철파이프 
+		                        , 0 AS B2R1C5 -- 철골경질 
+		                        , CASE WHEN T1.D3A_3 IS NOT NULL THEN NVL(T1.D2R1C3,0) + NVL(T1.D2R2C3,0) + NVL(T1.D2R3C3,0) + NVL(T1.D2R4C3,0) + NVL(T1.D2R5C3,0) + NVL(T1.D2R6C3,0) + NVL(T1.D2R7C3,0) 
+		                               ELSE 0 END AS B2R1C7 -- 기타 
+		                        , 0 AS YUNDONG -- 연동 
+		                        , 0 AS DANDONG -- 단동 
+		                        , NVL(T1.D2R1C3,0) + NVL(T1.D2R2C3,0) + NVL(T1.D2R3C3,0) + NVL(T1.D2R4C3,0) + NVL(T1.D2R5C3,0) + NVL(T1.D2R6C3,0) + NVL(T1.D2R7C3,0) AS B3C02 -- 토경재배 
+		                        , 0 AS B3C03 -- 고형배지 
+		                        , 0 AS B3C07 -- 순수수경 
+		                        , CASE WHEN T1.D5 = '3' THEN NVL(T1.D2R1C3,0) + NVL(T1.D2R2C3,0) + NVL(T1.D2R3C3,0) + NVL(T1.D2R4C3,0) + NVL(T1.D2R5C3,0) + NVL(T1.D2R6C3,0) + NVL(T1.D2R7C3,0) 
+		                               ELSE 0 END AS B4C02 -- 무가온 
+		                        , CASE WHEN T1.D5 NOT IN ('3') THEN NVL(T1.D2R1C3,0) + NVL(T1.D2R2C3,0) + NVL(T1.D2R3C3,0) + NVL(T1.D2R4C3,0) + NVL(T1.D2R5C3,0) + NVL(T1.D2R6C3,0) + NVL(T1.D2R7C3,0) 
+		                               ELSE 0 END AS B4C03 -- 가온 
+		                        , CASE WHEN T1.D6 = '3' THEN NVL(T1.D2R1C3,0) + NVL(T1.D2R2C3,0) + NVL(T1.D2R3C3,0) + NVL(T1.D2R4C3,0) + NVL(T1.D2R5C3,0) + NVL(T1.D2R6C3,0) + NVL(T1.D2R7C3,0)
+		                               ELSE 0 END AS B5C02 -- 무보온 
+		                        , CASE WHEN T1.D6 NOT IN ('3') THEN NVL(T1.D2R1C3,0) + NVL(T1.D2R2C3,0) + NVL(T1.D2R3C3,0) + NVL(T1.D2R4C3,0) + NVL(T1.D2R5C3,0) + NVL(T1.D2R6C3,0) + NVL(T1.D2R7C3,0)
+		                               ELSE 0 END AS B5C03 -- 보온 
+		                        , 100 AS B1R1C2 -- 상시고용직 
+		                        , 0 AS B1R1C3 -- 무급가족종사자 자가인력 
+		                        , 0 AS B1R1C4 -- 임시직 
+		                        , 0 AS B1R1C5 -- 성수기임시직 
+		                        , 100 AS B1R1C1 -- 내국인 
+		                        , 0 AS B1R2C1 -- 외국인 
+		                        , T1.DM4
+		                        , T1.DM6
+		                FROM    ( SELECT 	A.*, B.AG_CODE, (SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE AREA_CODE = A.DM6 AND GUBUN = '2') AS SIGUN_AREA_NAME 
+			                		FROM 	FLOWER.TB_NRES_ORCHID_INFO A,
+			                				FLOWER.TB_NRES_AREA_MAP B
+			                		WHERE   A.DM6 = B.AREA_CODE(+)) T1 
+		                          
+		                WHERE     T1.STD_YEAR = #{stdYear} 
+		                
+		    			<if test="sidoCode != null and sidoCode !=''">
+		                    AND     T1.DM4 = #{sidoCode}
+		                </if>
+		                <if test="agCode != null and agCode !=''">
+		                    AND    (T1.DM6 = #{agCode} OR T1.AG_CODE = #{agCode} ) 
+		                </if>
+		                  
+		                <if test="prdArea != null and prdArea !=''">
+		                    <choose>
+		                        <when test='prdArea == "1"'>
+		                            AND T1.DM5 IN ('1','2')
+		                        </when>
+		                        <when test='prdArea == "2"'>
+		                            AND T1.DM5 IN ('3')
+		                        </when>
+		                        <when test='prdArea == "3"'>
+		                            AND T1.DM5 IN ('4')
+		                        </when>
+		                        <when test='prdArea == "4"'>
+		                            AND T1.DM5 IN ('5') 
+		                        </when>
+		                        <otherwise></otherwise>                    
+		                    </choose>
+		                </if>
+		               )
+		        WHERE 1=1
+			        <if test="sidoCode == null or sidoCode ==''">
+		                GROUP BY STD_YEAR
+			        </if>
+			        <if test="sidoCode != null and sidoCode !=''">
+			        	<if test="agCode == null or agCode ==''">
+		                    GROUP BY STD_YEAR, DM4
+			        	</if>
+			        	<if test="agCode != null and agCode !=''">
+		                    GROUP BY STD_YEAR, DM4, DM6
+						</if>
+			        </if>
+		) 
+    </select>
+    
+    <select id="pumMokList2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT  FLOWER, SUM(D1C4) AS D1C4
+        FROM   (SELECT  B.CD_NM AS FLOWER, NVL(A.C2S1R1C1,0) AS D1C4
+                FROM    FLOWER.TB_NRES_ORCHID_INFO A, FLOWER.TB_CM_CODE B
+                WHERE   A.C2S1R1C0 = B.CD_ID
+                AND     B.GP_ID  = 'CULT_KIND'
+                AND     STD_YEAR = #{stdYear}
+                UNION ALL
+                SELECT  B.CD_NM AS FLOWER, NVL(A.C2S1R2C1,0) AS D1C4
+                FROM    FLOWER.TB_NRES_ORCHID_INFO A, FLOWER.TB_CM_CODE B
+                WHERE   A.C2S1R1C0 = B.CD_ID
+                AND     B.GP_ID  = 'CULT_KIND'
+                AND     STD_YEAR = #{stdYear}
+                UNION ALL
+                SELECT  B.CD_NM AS FLOWER, NVL(A.C2S1R3C1,0) AS D1C4
+                FROM    FLOWER.TB_NRES_ORCHID_INFO A, FLOWER.TB_CM_CODE B
+                WHERE   A.C2S1R1C0 = B.CD_ID
+                AND     B.GP_ID  = 'CULT_KIND'
+                AND     STD_YEAR = #{stdYear}
+                UNION ALL
+                SELECT  B.CD_NM AS FLOWER, NVL(A.C2S1R4C1,0) AS D1C4
+                FROM    FLOWER.TB_NRES_ORCHID_INFO A, FLOWER.TB_CM_CODE B
+                WHERE   A.C2S1R1C0 = B.CD_ID
+                AND     B.GP_ID  = 'CULT_KIND'
+                AND     STD_YEAR = #{stdYear}
+                UNION ALL
+                SELECT  B.CD_NM AS FLOWER, NVL(A.C2S1R5C1,0) AS D1C4
+                FROM    FLOWER.TB_NRES_ORCHID_INFO A, FLOWER.TB_CM_CODE B
+                WHERE   A.C2S1R1C0 = B.CD_ID
+                AND     B.GP_ID  = 'CULT_KIND'
+                AND     STD_YEAR = #{stdYear}
+                UNION ALL
+                SELECT  B.CD_NM AS FLOWER, NVL(A.C2S1R6C1,0) AS D1C4
+                FROM    FLOWER.TB_NRES_ORCHID_INFO A, FLOWER.TB_CM_CODE B
+                WHERE   A.C2S1R1C0 = B.CD_ID
+                AND     B.GP_ID  = 'CULT_KIND'
+                AND     STD_YEAR = #{stdYear}
+                UNION ALL
+                SELECT  B.CD_NM AS FLOWER, NVL(A.C2S1R7C1,0) AS D1C4
+                FROM    FLOWER.TB_NRES_ORCHID_INFO A, FLOWER.TB_CM_CODE B
+                WHERE   A.C2S1R1C0 = B.CD_ID
+                AND     B.GP_ID  = 'CULT_KIND'
+                AND     STD_YEAR = #{stdYear})
+        GROUP BY FLOWER
+        ORDER BY D1C4 DESC    
+    </select>
+
+    <select id="prodInfoChartArea2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	    SELECT STD_YEAR
+             , SIDO_CODE
+             , CATE_NAME
+             , D1C2
+             , D1C3
+             , NVL(ROUND(D1C4/10000,1),0) AS D1C4
+             , NVL(ROUND((D1C4 / NULLIF(SUM(D1C4) OVER(),0))*100,1),1) AS D1C4_PER 
+             , D1C5
+             , D1C6
+             , D1C7
+             , E1S01
+             , E1S02
+             , E1S03
+             , E1S04
+             , E1S05
+             , E1S06
+             , E1S07
+             , E1S08
+             , E1S09
+             , E1S10
+             , E1S11
+             , E1S12
+             , E2S01
+             , E2S02
+             , E2S03
+             , E2S04
+             , E2S05
+             , E2S06
+             , E2S07
+             , E2S08
+             , E2S09
+             , E2S10
+             , E2S11
+             , F1
+             , FNOWA01S1
+             , FNOWA02S1
+             , FNOWA03S1
+             , FNOWA04S1
+             , FNOWA05S1
+             , FNOWA06S1
+             , FNOWA07S1
+             , FNOWA08S1
+             , FNOWA09S1
+             , FNOWA10S1
+             , FNOWA11S1
+             , FNOWA12S1
+             , FNOWA01S2
+             , FNOWA02S2
+             , FNOWA03S2
+             , FNOWA04S2
+             , FNOWA05S2
+             , FNOWA06S2
+             , FNOWA07S2
+             , FNOWA08S2
+             , FNOWA09S2
+             , FNOWA10S2
+             , FNOWA11S2
+             , FNOWA12S2
+             , FNEXTA01S1
+             , FNEXTA02S1
+             , FNEXTA03S1
+             , FNEXTA04S1
+             , FNEXTA05S1
+             , FNEXTA06S1
+             , FNEXTA07S1
+             , FNEXTA08S1
+             , FNEXTA09S1
+             , FNEXTA10S1
+             , FNEXTA11S1
+             , FNEXTA12S1
+             , FNEXTA01S2
+             , FNEXTA02S2
+             , FNEXTA03S2
+             , FNEXTA04S2
+             , FNEXTA05S2
+             , FNEXTA06S2
+             , FNEXTA07S2
+             , FNEXTA08S2
+             , FNEXTA09S2
+             , FNEXTA10S2
+             , FNEXTA11S2
+             , FNEXTA12S2
+             , NVL(ROUND(FFNOWA01*0.000331,1),0) AS FFNOWA01
+             , NVL(ROUND(FFNOWA02*0.000331,1),0) AS FFNOWA02
+             , NVL(ROUND(FFNOWA03*0.000331,1),0) AS FFNOWA03
+             , NVL(ROUND(FFNOWA04*0.000331,1),0) AS FFNOWA04
+             , NVL(ROUND(FFNOWA05*0.000331,1),0) AS FFNOWA05
+             , NVL(ROUND(FFNOWA06*0.000331,1),0) AS FFNOWA06
+             , NVL(ROUND(FFNOWA07*0.000331,1),0) AS FFNOWA07
+             , NVL(ROUND(FFNOWA08*0.000331,1),0) AS FFNOWA08
+             , NVL(ROUND(FFNOWA09*0.000331,1),0) AS FFNOWA09
+             , NVL(ROUND(FFNOWA10*0.000331,1),0) AS FFNOWA10
+             , NVL(ROUND(FFNOWA11*0.000331,1),0) AS FFNOWA11
+             , NVL(ROUND(FFNOWA12*0.000331,1),0) AS FFNOWA12
+             , NVL(ROUND(FF_PY*0.000331,1),0) AS FFNOWA_TOT
+             , FFNEXTA01
+             , FFNEXTA02
+             , FFNEXTA03
+             , FFNEXTA04
+             , FFNEXTA05
+             , FFNEXTA06
+             , FFNEXTA07
+             , FFNEXTA08
+             , FFNEXTA09
+             , FFNEXTA10
+             , FFNEXTA11
+             , FFNEXTA12 
+        FROM (
+            SELECT STD_YEAR
+                 , SIDO_CODE
+                 <if test="sidoCode == null or sidoCode ==''">
+		        	, (SELECT MAX(KOR_NAME) FROM TB_NRES_AREA_MAP WHERE SIDO_CODE = T3.SIDO_CODE AND GUBUN = '1') AS CATE_NAME
+		         </if>
+		         <if test="sidoCode != null and sidoCode !=''">
+					, SIGUN_AREA_NAME AS CATE_NAME
+				 </if>
+                 , SUM(D1C2) AS D1C2
+                 , SUM(D1C3) AS D1C3
+                 , SUM(D1C4) AS D1C4
+                 , SUM(D1C5) AS D1C5
+                 , SUM(D1C6) AS D1C6
+                 , SUM(D1C7) AS D1C7
+                 , SUM(E1S01) AS E1S01
+                 , SUM(E1S02) AS E1S02
+                 , SUM(E1S03) AS E1S03
+                 , SUM(E1S04) AS E1S04
+                 , SUM(E1S05) AS E1S05
+                 , SUM(E1S06) AS E1S06
+                 , SUM(E1S07) AS E1S07
+                 , SUM(E1S08) AS E1S08
+                 , SUM(E1S09) AS E1S09
+                 , SUM(E1S10) AS E1S10
+                 , SUM(E1S11) AS E1S11
+                 , SUM(E1S12) AS E1S12
+                 , SUM(E2S01) AS E2S01
+                 , SUM(E2S02) AS E2S02
+                 , SUM(E2S03) AS E2S03
+                 , SUM(E2S04) AS E2S04
+                 , SUM(E2S05) AS E2S05
+                 , SUM(E2S06) AS E2S06
+                 , SUM(E2S07) AS E2S07
+                 , SUM(E2S08) AS E2S08
+                 , SUM(E2S09) AS E2S09
+                 , SUM(E2S10) AS E2S10
+                 , SUM(E2S11) AS E2S11
+                 , SUM(F1) AS F1
+                 , SUM(FNOWA01S1) AS FNOWA01S1
+                 , SUM(FNOWA02S1) AS FNOWA02S1
+                 , SUM(FNOWA03S1) AS FNOWA03S1
+                 , SUM(FNOWA04S1) AS FNOWA04S1
+                 , SUM(FNOWA05S1) AS FNOWA05S1
+                 , SUM(FNOWA06S1) AS FNOWA06S1
+                 , SUM(FNOWA07S1) AS FNOWA07S1
+                 , SUM(FNOWA08S1) AS FNOWA08S1
+                 , SUM(FNOWA09S1) AS FNOWA09S1
+                 , SUM(FNOWA10S1) AS FNOWA10S1
+                 , SUM(FNOWA11S1) AS FNOWA11S1
+                 , SUM(FNOWA12S1) AS FNOWA12S1
+                 , SUM(FNOWA01S2) AS FNOWA01S2
+                 , SUM(FNOWA02S2) AS FNOWA02S2
+                 , SUM(FNOWA03S2) AS FNOWA03S2
+                 , SUM(FNOWA04S2) AS FNOWA04S2
+                 , SUM(FNOWA05S2) AS FNOWA05S2
+                 , SUM(FNOWA06S2) AS FNOWA06S2
+                 , SUM(FNOWA07S2) AS FNOWA07S2
+                 , SUM(FNOWA08S2) AS FNOWA08S2
+                 , SUM(FNOWA09S2) AS FNOWA09S2
+                 , SUM(FNOWA10S2) AS FNOWA10S2
+                 , SUM(FNOWA11S2) AS FNOWA11S2
+                 , SUM(FNOWA12S2) AS FNOWA12S2
+                 , SUM(FNEXTA01S1) AS FNEXTA01S1
+                 , SUM(FNEXTA02S1) AS FNEXTA02S1
+                 , SUM(FNEXTA03S1) AS FNEXTA03S1
+                 , SUM(FNEXTA04S1) AS FNEXTA04S1
+                 , SUM(FNEXTA05S1) AS FNEXTA05S1
+                 , SUM(FNEXTA06S1) AS FNEXTA06S1
+                 , SUM(FNEXTA07S1) AS FNEXTA07S1
+                 , SUM(FNEXTA08S1) AS FNEXTA08S1
+                 , SUM(FNEXTA09S1) AS FNEXTA09S1
+                 , SUM(FNEXTA10S1) AS FNEXTA10S1
+                 , SUM(FNEXTA11S1) AS FNEXTA11S1
+                 , SUM(FNEXTA12S1) AS FNEXTA12S1
+                 , SUM(FNEXTA01S2) AS FNEXTA01S2
+                 , SUM(FNEXTA02S2) AS FNEXTA02S2
+                 , SUM(FNEXTA03S2) AS FNEXTA03S2
+                 , SUM(FNEXTA04S2) AS FNEXTA04S2
+                 , SUM(FNEXTA05S2) AS FNEXTA05S2
+                 , SUM(FNEXTA06S2) AS FNEXTA06S2
+                 , SUM(FNEXTA07S2) AS FNEXTA07S2
+                 , SUM(FNEXTA08S2) AS FNEXTA08S2
+                 , SUM(FNEXTA09S2) AS FNEXTA09S2
+                 , SUM(FNEXTA10S2) AS FNEXTA10S2
+                 , SUM(FNEXTA11S2) AS FNEXTA11S2
+                 , SUM(FNEXTA12S2) AS FNEXTA12S2
+                 , SUM(FFNOWA01) AS FFNOWA01
+                 , SUM(FFNOWA02) AS FFNOWA02
+                 , SUM(FFNOWA03) AS FFNOWA03
+                 , SUM(FFNOWA04) AS FFNOWA04
+                 , SUM(FFNOWA05) AS FFNOWA05
+                 , SUM(FFNOWA06) AS FFNOWA06
+                 , SUM(FFNOWA07) AS FFNOWA07
+                 , SUM(FFNOWA08) AS FFNOWA08
+                 , SUM(FFNOWA09) AS FFNOWA09
+                 , SUM(FFNOWA10) AS FFNOWA10
+                 , SUM(FFNOWA11) AS FFNOWA11
+                 , SUM(FFNOWA12) AS FFNOWA12
+                 , SUM(FFNEXTA01) AS FFNEXTA01
+                 , SUM(FFNEXTA02) AS FFNEXTA02
+                 , SUM(FFNEXTA03) AS FFNEXTA03
+                 , SUM(FFNEXTA04) AS FFNEXTA04
+                 , SUM(FFNEXTA05) AS FFNEXTA05
+                 , SUM(FFNEXTA06) AS FFNEXTA06
+                 , SUM(FFNEXTA07) AS FFNEXTA07
+                 , SUM(FFNEXTA08) AS FFNEXTA08
+                 , SUM(FFNEXTA09) AS FFNEXTA09
+                 , SUM(FFNEXTA10) AS FFNEXTA10
+                 , SUM(FFNEXTA11) AS FFNEXTA11
+                 , SUM(FFNEXTA12) AS FFNEXTA12
+                 , SUM(FF_PY) AS FF_PY
+            FROM (
+                SELECT * FROM (
+                SELECT STD_YEAR
+                     , AID  AS NONG_ID
+                     , DM4  AS SIDO_CODE
+                     ,NVL((SELECT A.AG_CODE FROM TB_NRES_AREA_MAP A WHERE A.AREA_CODE = DM6 AND A.GUBUN = '2'), DM6) AS AG_CODE
+                     , '1'  AS GU
+                     , null AS FID
+                     ,(SELECT A.CD_NM FROM FLOWER.TB_CM_CODE A WHERE A.GP_ID='CULT_KIND' AND A.CD_ID = PJ) AS FLOWER
+                     , 0    AS D1C2
+                     , 0    AS D1C3
+                     , QTY  AS D1C4
+                     , '1'  AS D1C5
+                     , DAN  AS D1C6
+                     , AMT  AS D1C7
+                     , M01  AS E1S01
+                     , M02  AS E1S02
+                     , M03  AS E1S03
+                     , M04  AS E1S04
+                     , M05  AS E1S05
+                     , M06  AS E1S06
+                     , M07  AS E1S07
+                     , M08  AS E1S08
+                     , M09  AS E1S09
+                     , M10  AS E1S10
+                     , M11  AS E1S11
+                     , M12  AS E1S12
+                     , P01  AS E2S01
+                     , P02  AS E2S02
+                     , P03  AS E2S03
+                     , P04  AS E2S04
+                     , P05  AS E2S05
+                     , P06  AS E2S06
+                     , P07  AS E2S07
+                     , P08  AS E2S08
+                     , P09  AS E2S09
+                     , P10  AS E2S10
+                     , P11  AS E2S11
+                     , AREA AS F1
+                     , 0    AS FNOWA01S1
+                     , 0    AS FNOWA02S1
+                     , 0    AS FNOWA03S1
+                     , 0    AS FNOWA04S1
+                     , 0    AS FNOWA05S1
+                     , 0    AS FNOWA06S1
+                     , 0    AS FNOWA07S1
+                     , 0    AS FNOWA08S1
+                     , 0    AS FNOWA09S1
+                     , 0    AS FNOWA10S1
+                     , 0    AS FNOWA11S1
+                     , 0    AS FNOWA12S1
+                     , 0    AS FNOWA01S2
+                     , 0    AS FNOWA02S2
+                     , 0    AS FNOWA03S2
+                     , 0    AS FNOWA04S2
+                     , 0    AS FNOWA05S2
+                     , 0    AS FNOWA06S2
+                     , 0    AS FNOWA07S2
+                     , 0    AS FNOWA08S2
+                     , 0    AS FNOWA09S2
+                     , 0    AS FNOWA10S2
+                     , 0    AS FNOWA11S2
+                     , 0    AS FNOWA12S2
+                     , 0    AS FNEXTA01S1
+                     , 0    AS FNEXTA02S1
+                     , 0    AS FNEXTA03S1
+                     , 0    AS FNEXTA04S1
+                     , 0    AS FNEXTA05S1
+                     , 0    AS FNEXTA06S1
+                     , 0    AS FNEXTA07S1
+                     , 0    AS FNEXTA08S1
+                     , 0    AS FNEXTA09S1
+                     , 0    AS FNEXTA10S1
+                     , 0    AS FNEXTA11S1
+                     , 0    AS FNEXTA12S1
+                     , 0    AS FNEXTA01S2
+                     , 0    AS FNEXTA02S2
+                     , 0    AS FNEXTA03S2
+                     , 0    AS FNEXTA04S2
+                     , 0    AS FNEXTA05S2
+                     , 0    AS FNEXTA06S2
+                     , 0    AS FNEXTA07S2
+                     , 0    AS FNEXTA08S2
+                     , 0    AS FNEXTA09S2
+                     , 0    AS FNEXTA10S2
+                     , 0    AS FNEXTA11S2
+                     , 0    AS FNEXTA12S2
+                     , 0    AS FFNOWA01
+                     , 0    AS FFNOWA02
+                     , 0    AS FFNOWA03
+                     , 0    AS FFNOWA04
+                     , 0    AS FFNOWA05
+                     , 0    AS FFNOWA06
+                     , 0    AS  FFNOWA07
+                     , 0    AS FFNOWA08
+                     , 0    AS FFNOWA09
+                     , 0    AS FFNOWA10
+                     , 0    AS FFNOWA11
+                     , 0    AS FFNOWA12
+                     , 0    AS FFNEXTA01
+                     , 0    AS FFNEXTA02
+                     , 0    AS FFNEXTA03
+                     , 0    AS FFNEXTA04
+                     , 0    AS FFNEXTA05
+                     , 0    AS FFNEXTA06
+                     , 0    AS FFNEXTA07
+                     , 0    AS FFNEXTA08
+                     , 0    AS FFNEXTA09
+                     , 0    AS FFNEXTA10
+                     , 0    AS FFNEXTA11
+                     , 0    AS FFNEXTA12
+                     , AREA AS FF_PY
+                     ,(SELECT MAX(A.KOR_NAME) FROM TB_NRES_AREA_MAP A WHERE A.AREA_CODE = DM6 AND A.GUBUN = '2') AS SIGUN_AREA_NAME
+                FROM  
+                       (SELECT  STD_YEAR, AID, DM4, DM6, C2S2R1C0 AS PJ, NVL(C2S1R1C1,0) AS QTY,  NVL(C2S1R1C2,0) AS DAN, NVL(C2S1R1C3,0) AS AMT, NVL(D2R1C3,0) AS AREA,
+                                NVL(C2S2R1C1,0) M01, NVL(C2S2R1C2,0) M02, NVL(C2S2R1C3,0) M03, NVL(C2S2R1C4,0) M04, NVL(C2S2R1C5,0) M05, NVL(C2S2R1C6,0) M06, 
+                                NVL(C2S2R1C7,0) M07, NVL(C2S2R1C8,0) M08, NVL(C2S2R1C9,0) M09, NVL(C2S2R1C10,0) M10, NVL(C2S2R1C11,0) M11, NVL(C2S2R1C12,0) M12,
+                                NVL(C2S3R1C1,0) P01, NVL(C2S3R1C2,0) P02, NVL(C2S3R1C3,0) P03, NVL(C2S3R1C4,0) P04, NVL(C2S3R1C5,0) P05, 
+                                NVL(C2S3R1C6,0) P06, NVL(C2S3R1C7,0) P07, NVL(C2S3R1C8,0) P08, NVL(C2S3R1C9,0) P09, NVL(C2S3R1C10,0) P10, 
+                                NVL(C2S3R1C11,0) P11
+                        FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R1C0 IS NOT NULL
+                        UNION ALL
+                        SELECT  STD_YEAR, AID, DM4, DM6, C2S2R2C0 AS PJ, NVL(C2S1R2C1,0) AS QTY,  NVL(C2S1R2C2,0) AS DAN, NVL(C2S1R2C3,0) AS AMT, NVL(D2R2C3,0) AS AREA,
+                                NVL(C2S2R2C1,0) M01, NVL(C2S2R2C2,0) M02, NVL(C2S2R2C3,0) M03, NVL(C2S2R2C4,0) M04, NVL(C2S2R2C5,0) M05, NVL(C2S2R2C6,0) M06, 
+                                NVL(C2S2R2C7,0) M07, NVL(C2S2R2C8,0) M08, NVL(C2S2R2C9,0) M09, NVL(C2S2R2C10,0) M10, NVL(C2S2R2C11,0) M11, NVL(C2S2R2C12,0) M12,
+                                NVL(C2S3R2C1,0) P01, NVL(C2S3R2C2,0) P02, NVL(C2S3R2C3,0) P03, NVL(C2S3R2C4,0) P04, NVL(C2S3R2C5,0) P05, 
+                                NVL(C2S3R2C6,0) P06, NVL(C2S3R2C7,0) P07, NVL(C2S3R2C8,0) P08, NVL(C2S3R2C9,0) P09, NVL(C2S3R2C10,0) P10, 
+                                NVL(C2S3R2C11,0) P11
+                        FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R2C0 IS NOT NULL
+                        UNION ALL
+                        SELECT  STD_YEAR, AID, DM4, DM6, C2S2R3C0 AS PJ, NVL(C2S1R3C1,0) AS QTY,  NVL(C2S1R3C2,0) AS DAN, NVL(C2S1R3C3,0) AS AMT, NVL(D2R3C3,0) AS AREA,
+                                NVL(C2S2R3C1,0) M01, NVL(C2S2R3C2,0) M02, NVL(C2S2R3C3,0) M03, NVL(C2S2R3C4,0) M04, NVL(C2S2R3C5,0) M05, NVL(C2S2R3C6,0) M06, 
+                                NVL(C2S2R3C7,0) M07, NVL(C2S2R3C8,0) M08, NVL(C2S2R3C9,0) M09, NVL(C2S2R3C10,0) M10, NVL(C2S2R3C11,0) M11, NVL(C2S2R3C12,0) M12,
+                                NVL(C2S3R3C1,0) P01, NVL(C2S3R3C2,0) P02, NVL(C2S3R3C3,0) P03, NVL(C2S3R3C4,0) P04, NVL(C2S3R3C5,0) P05, 
+                                NVL(C2S3R3C6,0) P06, NVL(C2S3R3C7,0) P07, NVL(C2S3R3C8,0) P08, NVL(C2S3R3C9,0) P09, NVL(C2S3R3C10,0) P10, 
+                                NVL(C2S3R3C11,0) P11
+                        FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R3C0 IS NOT NULL
+                        UNION ALL
+                        SELECT  STD_YEAR, AID, DM4, DM6, C2S2R4C0 AS PJ, NVL(C2S1R4C1,0) AS QTY,  NVL(C2S1R4C2,0) AS DAN, NVL(C2S1R4C3,0) AS AMT, NVL(D2R4C3,0) AS AREA,
+                                NVL(C2S2R4C1,0) M01, NVL(C2S2R4C2,0) M02, NVL(C2S2R4C3,0) M03, NVL(C2S2R4C4,0) M04, NVL(C2S2R4C5,0) M05, NVL(C2S2R4C6,0) M06, 
+                                NVL(C2S2R4C7,0) M07, NVL(C2S2R4C8,0) M08, NVL(C2S2R4C9,0) M09, NVL(C2S2R4C10,0) M10, NVL(C2S2R4C11,0) M11, NVL(C2S2R4C12,0) M12,
+                                NVL(C2S3R4C1,0) P01, NVL(C2S3R4C2,0) P02, NVL(C2S3R4C3,0) P03, NVL(C2S3R4C4,0) P04, NVL(C2S3R4C5,0) P05, 
+                                NVL(C2S3R4C6,0) P06, NVL(C2S3R4C7,0) P07, NVL(C2S3R4C8,0) P08, NVL(C2S3R4C9,0) P09, NVL(C2S3R4C10,0) P10, 
+                                NVL(C2S3R4C11,0) P11
+                        FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R4C0 IS NOT NULL
+                        UNION ALL
+                        SELECT  STD_YEAR, AID, DM4, DM6, C2S2R5C0 AS PJ, NVL(C2S1R5C1,0) AS QTY,  NVL(C2S1R5C2,0) AS DAN, NVL(C2S1R5C3,0) AS AMT, NVL(D2R5C3,0) AS AREA,
+                                NVL(C2S2R5C1,0) M01, NVL(C2S2R5C2,0) M02, NVL(C2S2R5C3,0) M03, NVL(C2S2R5C4,0) M04, NVL(C2S2R5C5,0) M05, NVL(C2S2R5C6,0) M06, 
+                                NVL(C2S2R5C7,0) M07, NVL(C2S2R5C8,0) M08, NVL(C2S2R5C9,0) M09, NVL(C2S2R5C10,0) M10, NVL(C2S2R5C11,0) M11, NVL(C2S2R5C12,0) M12, 
+                                NVL(C2S3R5C1,0) P01, NVL(C2S3R5C2,0) P02, NVL(C2S3R5C3,0) P03, NVL(C2S3R5C4,0) P04, NVL(C2S3R5C5,0) P05, 
+                                NVL(C2S3R5C6,0) P06, NVL(C2S3R5C7,0) P07, NVL(C2S3R5C8,0) P08, NVL(C2S3R5C9,0) P09, NVL(C2S3R5C10,0) P10, 
+                                NVL(C2S3R5C11,0) P11
+                        FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R5C0 IS NOT NULL
+                        UNION ALL
+                        SELECT  STD_YEAR, AID, DM4, DM6, C2S2R6C0 AS PJ, NVL(C2S1R6C1,0) AS QTY,  NVL(C2S1R6C2,0) AS DAN, NVL(C2S1R6C3,0) AS AMT, NVL(D2R6C3,0) AS AREA,
+                                NVL(C2S2R6C1,0) M01, NVL(C2S2R6C2,0) M02, NVL(C2S2R6C3,0) M03, NVL(C2S2R6C4,0) M04, NVL(C2S2R6C5,0) M05, NVL(C2S2R6C6,0) M06, 
+                                NVL(C2S2R6C7,0) M07, NVL(C2S2R6C8,0) M08, NVL(C2S2R6C9,0) M09, NVL(C2S2R6C10,0) M10, NVL(C2S2R6C11,0) M11, NVL(C2S2R6C12,0) M12, 
+                                NVL(C2S3R6C1,0) P01, NVL(C2S3R6C2,0) P02, NVL(C2S3R6C3,0) P03, NVL(C2S3R6C4,0) P04, NVL(C2S3R6C5,0) P05, 
+                                NVL(C2S3R6C6,0) P06, NVL(C2S3R6C7,0) P07, NVL(C2S3R6C8,0) P08, NVL(C2S3R6C9,0) P09, NVL(C2S3R6C10,0) P10, 
+                                NVL(C2S3R6C11,0) P11
+                        FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R6C0 IS NOT NULL
+                        UNION ALL
+                        SELECT  STD_YEAR, AID, DM4, DM6, C2S2R7C0 AS PJ, NVL(C2S1R7C1,0) AS QTY,  NVL(C2S1R7C2,0) AS DAN, NVL(C2S1R7C3,0) AS AMT, NVL(D2R7C3,0) AS AREA,
+                                NVL(C2S2R7C1,0) M01, NVL(C2S2R7C2,0) M02, NVL(C2S2R7C3,0) M03, NVL(C2S2R7C4,0) M04, NVL(C2S2R7C5,0) M05, NVL(C2S2R7C6,0) M06, 
+                                NVL(C2S2R7C7,0) M07, NVL(C2S2R7C8,0) M08, NVL(C2S2R7C9,0) M09, NVL(C2S2R7C10,0) M10, NVL(C2S2R7C11,0) M11, NVL(C2S2R7C12,0) M12, 
+                                NVL(C2S3R7C1,0) P01, NVL(C2S3R7C2,0) P02, NVL(C2S3R7C3,0) P03, NVL(C2S3R7C4,0) P04, NVL(C2S3R7C5,0) P05, 
+                                NVL(C2S3R7C6,0) P06, NVL(C2S3R7C7,0) P07, NVL(C2S3R7C8,0) P08, NVL(C2S3R7C9,0) P09, NVL(C2S3R7C10,0) P10, 
+                                NVL(C2S3R7C11,0) P11
+                        FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R7C0 IS NOT NULL))                
+                        
+                WHERE   STD_YEAR = #{stdYear}
+                <if test="sidoCode != null and sidoCode !=''">
+				AND     SIDO_CODE = #{sidoCode}
+				</if>
+				<if test="agCode != null and agCode !=''">
+				AND    (AG_CODE = #{agCode} OR SUBSTR(AG_CODE,0,4) || '000000' = #{agCode}) 
+				</if>
+				<if test="flower != null and flower !=''">
+				AND     FLOWER LIKE #{flower} || '%'
+				</if>  
+            ) T3
+            <if test="sidoCode == null or sidoCode ==''">
+        	GROUP BY STD_YEAR, SIDO_CODE
+        	</if>
+        	<if test="sidoCode != null and sidoCode !=''">
+			GROUP BY STD_YEAR, SIDO_CODE, SIGUN_AREA_NAME
+			</if>
+        )ORDER BY TO_NUMBER(SIDO_CODE) ASC
+    </select>
+
+    <select id="prodInfoChart2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT NVL(ROUND(E1S01 / 10000,1),0) AS E1S01
+             , NVL(ROUND(E1S02 / 10000,1),0) AS E1S02
+             , NVL(ROUND(E1S03 / 10000,1),0) AS E1S03
+             , NVL(ROUND(E1S04 / 10000,1),0) AS E1S04
+             , NVL(ROUND(E1S05 / 10000,1),0) AS E1S05
+             , NVL(ROUND(E1S06 / 10000,1),0) AS E1S06
+             , NVL(ROUND(E1S07 / 10000,1),0) AS E1S07
+             , NVL(ROUND(E1S08 / 10000,1),0) AS E1S08
+             , NVL(ROUND(E1S09 / 10000,1),0) AS E1S09
+             , NVL(ROUND(E1S10 / 10000,1),0) AS E1S10
+             , NVL(ROUND(E1S11 / 10000,1),0) AS E1S11
+             , NVL(ROUND(E1S12 / 10000,1),0) AS E1S12
+             , NVL(ROUND((E2S01 / NULLIF(D1C4,0))*100,1),0) AS E2S01
+             , NVL(ROUND((E2S02 / NULLIF(D1C4,0))*100,1),0) AS E2S02
+             , NVL(ROUND((E2S03 / NULLIF(D1C4,0))*100,1),0) AS E2S03
+             , NVL(ROUND((E2S04 / NULLIF(D1C4,0))*100,1),0) AS E2S04
+             , NVL(ROUND((E2S05 / NULLIF(D1C4,0))*100,1),0) AS E2S05
+             , NVL(ROUND((E2S06 / NULLIF(D1C4,0))*100,1),0) AS E2S06
+             , NVL(ROUND((E2S07 / NULLIF(D1C4,0))*100,1),0) AS E2S07
+             , NVL(ROUND((E2S08 / NULLIF(D1C4,0))*100,1),0) AS E2S08
+             , NVL(ROUND((E2S09 / NULLIF(D1C4,0))*100,1),0) AS E2S09
+             , NVL(ROUND((E2S10 / NULLIF(D1C4,0))*100,1),0) AS E2S10
+             , NVL(ROUND((E2S11 / NULLIF(D1C4,0))*100,1),0) AS E2S11
+        FROM (
+                SELECT SUM(QTY) AS D1C4     --수량
+                     , SUM(M01) AS E1S01
+                     , SUM(M02) AS E1S02
+                     , SUM(M03) AS E1S03
+                     , SUM(M04) AS E1S04
+                     , SUM(M05) AS E1S05
+                     , SUM(M06) AS E1S06
+                     , SUM(M07) AS E1S07
+                     , SUM(M08) AS E1S08
+                     , SUM(M09) AS E1S09
+                     , SUM(M10) AS E1S10
+                     , SUM(M11) AS E1S11
+                     , SUM(M12) AS E1S12
+                     , SUM(P01) AS E2S01    --양재
+                     , SUM(P02) AS E2S02    --엄궁
+                     , SUM(P03) AS E2S03    --영남
+                     , SUM(P04) AS E2S04    --부경
+                     , SUM(P05) AS E2S05    --광주
+                     , SUM(P06) AS E2S06    --터이널
+                     , SUM(P07) AS E2S07    --코벤트
+                     , SUM(P08) AS E2S08    --남대문
+                     , SUM(P09) AS E2S09    --기타
+                     , SUM(P10) AS E2S10    --온라인
+                     , SUM(P11) AS E2S11    --오프라인
+                     
+                FROM   (SELECT  A.STD_YEAR, A.AID, A.DM4, A.DM6, A.PJ, B.CD_NM, SUM(QTY) QTY, 
+                                ROUND(SUM(M01)/COUNT(1)) M01, ROUND(SUM(M02)/COUNT(1)) M02, ROUND(SUM(M03)/COUNT(1)) M03, 
+                                ROUND(SUM(M04)/COUNT(1)) M04, ROUND(SUM(M05)/COUNT(1)) M05, ROUND(SUM(M06)/COUNT(1)) M06,
+                                ROUND(SUM(M07)/COUNT(1)) M07, ROUND(SUM(M08)/COUNT(1)) M08, ROUND(SUM(M09)/COUNT(1)) M09, 
+                                ROUND(SUM(M10)/COUNT(1)) M10, ROUND(SUM(M11)/COUNT(1)) M11, ROUND(SUM(M12)/COUNT(1)) M12,
+                                SUM(P01) P01, SUM(P02) P02, SUM(P03) P03, SUM(P04) P04, SUM(P05) P05, SUM(P06) P06, 
+                                SUM(P07) P07, SUM(P08) P08, SUM(P09) P09, SUM(P10) P10, SUM(P11) P11
+                        FROM   (SELECT  STD_YEAR, AID, DM4, DM6, C2S2R1C0 AS PJ, C2S1R1C1 AS QTY, 
+                                        NVL(C2S2R1C1,0) M01, NVL(C2S2R1C2,0) M02, NVL(C2S2R1C3,0) M03, NVL(C2S2R1C4,0) M04, NVL(C2S2R1C5,0) M05, NVL(C2S2R1C6,0) M06, 
+                                        NVL(C2S2R1C7,0) M07, NVL(C2S2R1C8,0) M08, NVL(C2S2R1C9,0) M09, NVL(C2S2R1C10,0) M10, NVL(C2S2R1C11,0) M11, NVL(C2S2R1C12,0) M12,
+                                        NVL(C2S3R1C1,0) P01, NVL(C2S3R1C2,0) P02, NVL(C2S3R1C3,0) P03, NVL(C2S3R1C4,0) P04, NVL(C2S3R1C5,0) P05, 
+                                        NVL(C2S3R1C6,0) P06, NVL(C2S3R1C7,0) P07, NVL(C2S3R1C8,0) P08, NVL(C2S3R1C9,0) P09, NVL(C2S3R1C10,0) P10, 
+                                        NVL(C2S3R1C11,0) P11
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R1C0 IS NOT NULL
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, DM6, C2S2R2C0 AS PJ, C2S1R2C1 AS QTY, 
+                                        NVL(C2S2R2C1,0) M01, NVL(C2S2R2C2,0) M02, NVL(C2S2R2C3,0) M03, NVL(C2S2R2C4,0) M04, NVL(C2S2R2C5,0) M05, NVL(C2S2R2C6,0) M06, 
+                                        NVL(C2S2R2C7,0) M07, NVL(C2S2R2C8,0) M08, NVL(C2S2R2C9,0) M09, NVL(C2S2R2C10,0) M10, NVL(C2S2R2C11,0) M11, NVL(C2S2R2C12,0) M12,
+                                        NVL(C2S3R2C1,0) P01, NVL(C2S3R2C2,0) P02, NVL(C2S3R2C3,0) P03, NVL(C2S3R2C4,0) P04, NVL(C2S3R2C5,0) P05, 
+                                        NVL(C2S3R2C6,0) P06, NVL(C2S3R2C7,0) P07, NVL(C2S3R2C8,0) P08, NVL(C2S3R2C9,0) P09, NVL(C2S3R2C10,0) P10, 
+                                        NVL(C2S3R2C11,0) P11
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R2C0 IS NOT NULL
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, DM6, C2S2R3C0 AS PJ, C2S1R3C1 AS QTY, 
+                                        NVL(C2S2R3C1,0) M01, NVL(C2S2R3C2,0) M02, NVL(C2S2R3C3,0) M03, NVL(C2S2R3C4,0) M04, NVL(C2S2R3C5,0) M05, NVL(C2S2R3C6,0) M06, 
+                                        NVL(C2S2R3C7,0) M07, NVL(C2S2R3C8,0) M08, NVL(C2S2R3C9,0) M09, NVL(C2S2R3C10,0) M10, NVL(C2S2R3C11,0) M11, NVL(C2S2R3C12,0) M12,
+                                        NVL(C2S3R3C1,0) P01, NVL(C2S3R3C2,0) P02, NVL(C2S3R3C3,0) P03, NVL(C2S3R3C4,0) P04, NVL(C2S3R3C5,0) P05, 
+                                        NVL(C2S3R3C6,0) P06, NVL(C2S3R3C7,0) P07, NVL(C2S3R3C8,0) P08, NVL(C2S3R3C9,0) P09, NVL(C2S3R3C10,0) P10, 
+                                        NVL(C2S3R3C11,0) P11
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R3C0 IS NOT NULL
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, DM6, C2S2R4C0 AS PJ, C2S1R4C1 AS QTY, 
+                                        NVL(C2S2R4C1,0) M01, NVL(C2S2R4C2,0) M02, NVL(C2S2R4C3,0) M03, NVL(C2S2R4C4,0) M04, NVL(C2S2R4C5,0) M05, NVL(C2S2R4C6,0) M06, 
+                                        NVL(C2S2R4C7,0) M07, NVL(C2S2R4C8,0) M08, NVL(C2S2R4C9,0) M09, NVL(C2S2R4C10,0) M10, NVL(C2S2R4C11,0) M11, NVL(C2S2R4C12,0) M12,
+                                        NVL(C2S3R4C1,0) P01, NVL(C2S3R4C2,0) P02, NVL(C2S3R4C3,0) P03, NVL(C2S3R4C4,0) P04, NVL(C2S3R4C5,0) P05, 
+                                        NVL(C2S3R4C6,0) P06, NVL(C2S3R4C7,0) P07, NVL(C2S3R4C8,0) P08, NVL(C2S3R4C9,0) P09, NVL(C2S3R4C10,0) P10, 
+                                        NVL(C2S3R4C11,0) P11
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R4C0 IS NOT NULL
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, DM6, C2S2R5C0 AS PJ, C2S1R5C1 AS QTY, 
+                                        NVL(C2S2R5C1,0) M01, NVL(C2S2R5C2,0) M02, NVL(C2S2R5C3,0) M03, NVL(C2S2R5C4,0) M04, NVL(C2S2R5C5,0) M05, NVL(C2S2R5C6,0) M06, 
+                                        NVL(C2S2R5C7,0) M07, NVL(C2S2R5C8,0) M08, NVL(C2S2R5C9,0) M09, NVL(C2S2R5C10,0) M10, NVL(C2S2R5C11,0) M11, NVL(C2S2R5C12,0) M12, 
+                                        NVL(C2S3R5C1,0) P01, NVL(C2S3R5C2,0) P02, NVL(C2S3R5C3,0) P03, NVL(C2S3R5C4,0) P04, NVL(C2S3R5C5,0) P05, 
+                                        NVL(C2S3R5C6,0) P06, NVL(C2S3R5C7,0) P07, NVL(C2S3R5C8,0) P08, NVL(C2S3R5C9,0) P09, NVL(C2S3R5C10,0) P10, 
+                                        NVL(C2S3R5C11,0) P11
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R5C0 IS NOT NULL
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, DM6, C2S2R6C0 AS PJ, C2S1R6C1 AS QTY, 
+                                        NVL(C2S2R6C1,0) M01, NVL(C2S2R6C2,0) M02, NVL(C2S2R6C3,0) M03, NVL(C2S2R6C4,0) M04, NVL(C2S2R6C5,0) M05, NVL(C2S2R6C6,0) M06, 
+                                        NVL(C2S2R6C7,0) M07, NVL(C2S2R6C8,0) M08, NVL(C2S2R6C9,0) M09, NVL(C2S2R6C10,0) M10, NVL(C2S2R6C11,0) M11, NVL(C2S2R6C12,0) M12, 
+                                        NVL(C2S3R6C1,0) P01, NVL(C2S3R6C2,0) P02, NVL(C2S3R6C3,0) P03, NVL(C2S3R6C4,0) P04, NVL(C2S3R6C5,0) P05, 
+                                        NVL(C2S3R6C6,0) P06, NVL(C2S3R6C7,0) P07, NVL(C2S3R6C8,0) P08, NVL(C2S3R6C9,0) P09, NVL(C2S3R6C10,0) P10, 
+                                        NVL(C2S3R6C11,0) P11
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R6C0 IS NOT NULL
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, DM6, C2S2R7C0 AS PJ, C2S1R7C1 AS QTY, 
+                                        NVL(C2S2R7C1,0) M01, NVL(C2S2R7C2,0) M02, NVL(C2S2R7C3,0) M03, NVL(C2S2R7C4,0) M04, NVL(C2S2R7C5,0) M05, NVL(C2S2R7C6,0) M06, 
+                                        NVL(C2S2R7C7,0) M07, NVL(C2S2R7C8,0) M08, NVL(C2S2R7C9,0) M09, NVL(C2S2R7C10,0) M10, NVL(C2S2R7C11,0) M11, NVL(C2S2R7C12,0) M12, 
+                                        NVL(C2S3R7C1,0) P01, NVL(C2S3R7C2,0) P02, NVL(C2S3R7C3,0) P03, NVL(C2S3R7C4,0) P04, NVL(C2S3R7C5,0) P05, 
+                                        NVL(C2S3R7C6,0) P06, NVL(C2S3R7C7,0) P07, NVL(C2S3R7C8,0) P08, NVL(C2S3R7C9,0) P09, NVL(C2S3R7C10,0) P10, 
+                                        NVL(C2S3R7C11,0) P11
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R7C0 IS NOT NULL)  A,
+                               (SELECT  CD_ID, CD_NM FROM FLOWER.TB_CM_CODE WHERE GP_ID = 'CULT_KIND') B
+                        WHERE   A.PJ = B.CD_ID  
+                        
+                    <if test="sidoCode != null and sidoCode !=''">
+                        AND     DM4 = #{sidoCode}
+                    </if>
+                    <if test="agCode != null and agCode !=''">
+                        AND     DM6 = #{agCode} 
+                    </if>
+                    <if test="flower != null and flower !=''">
+        				AND     CD_NM LIKE #{flower} || '%'
+    				</if>
+                        GROUP BY A.STD_YEAR, A.AID, A.DM4, A.DM6, A.PJ, B.CD_NM
+                   )
+            ) T3
+
+    </select>
+    
+    <select id="mainChulInfoChart2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT CATE_NAME AS CATE_NAME
+             , AREA_TYPE
+             , AREA_TYPE_ORDER
+             , NVL(ROUND((B2R2C1/NULLIF((B2R3C1 + B2R2C1),0))*100,1),0) AS B2R2C1
+             , NVL(ROUND((B2R3C1/NULLIF((B2R3C1 + B2R2C1),0))*100,1),0) AS B2R3C1
+             , NVL(ROUND((B2R1C3/NULLIF((B2R1C3 + B2R1C2),0))*100,1),0) AS B2R1C3
+             , NVL(ROUND((B2R1C2/NULLIF((B2R1C3 + B2R1C2),0))*100,1),0) AS B2R1C2
+             , NVL(ROUND((B2R1C4/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C4
+             , NVL(ROUND((B2R1C5/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C5
+             , NVL(ROUND((B2R1C6/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C6
+             , NVL(ROUND((B2R1C7/NULLIF((B2R1C4 + B2R1C5 + B2R1C6 + B2R1C7),0))*100,1),0) AS B2R1C7
+             , NVL(ROUND((YUNDONG/NULLIF((YUNDONG + DANDONG),0))*100,1),0) AS YUNDONG
+             , NVL(ROUND((DANDONG/NULLIF((YUNDONG + DANDONG),0))*100,1),0) AS DANDONG
+             , NVL(ROUND((B3C02/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C02
+             , NVL(ROUND((B3C03/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C03
+             , NVL(ROUND((B3C07/NULLIF((B3C02 + B3C03 + B3C07),0))*100,1),0) AS B3C07
+             , NVL(ROUND((B4C02/NULLIF((B4C02 + B4C03),0))*100,1),0) AS B4C02
+             , NVL(ROUND((B4C03/NULLIF((B4C02 + B4C03),0))*100,1),0) AS B4C03
+             , NVL(ROUND((B5C02/NULLIF((B5C02 + B5C03),0))*100,1),0) AS B5C02
+             , NVL(ROUND((B5C03/NULLIF((B5C02 + B5C03),0))*100,1),0) AS B5C03
+             , B1R1C2 
+             , B1R1C3
+             , B1R1C4
+             , B1R1C5
+             , NVL(ROUND((B1R1C2/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C21
+             , NVL(ROUND((B1R1C3/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C31
+             , NVL(ROUND((B1R1C4/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C41
+             , NVL(ROUND((B1R1C5/NULLIF((B1R1C2 + B1R1C3 + B1R1C4),0))*100,1),0) AS B1R1C51
+             , B1R1C1
+             , B1R2C1
+             , NVL(ROUND((B1R1C1/NULLIF((B1R1C1 + B1R2C1),0))*100,1),0) AS B1R1C11
+             , NVL(ROUND((B1R2C1/NULLIF((B1R1C1 + B1R2C1),0))*100,1),0) AS B1R2C11
+             , B1R1C2 + B1R1C3 + B1R1C4 AS PERSON_ALL
+             , NVL(ROUND((B1R1C2 + B1R1C3 + B1R1C4)/NULLIF(NONG_CNT,0),1),0) AS PERSON_AVG
+             , NONG_CNT
+             , YEAR_QTY
+             , YEAR_AMT
+             
+        FROM ( SELECT    COUNT(T1.AID)  AS NONG_CNT 
+                        , T1.STD_YEAR   AS CATE_NAME 
+                        ,(SELECT CD_NM FROM FLOWER.TB_CM_CODE WHERE GP_ID = 'CULT_AREA'  AND CD_ID = T1.DM5) AS AREA_TYPE
+                        , T1.DM5        AS AREA_TYPE_ORDER 
+                        , SUM(TOT01)    AS B2R2C1   /* 자가*/ 
+                        , 0             AS B2R3C1   /* 임차*/ 
+                        , SUM(TOT02)    AS B2R1C3   /* 시설*/ 
+                        , SUM(TOT03)    AS B2R1C2   /* 노지*/ 
+                        , 0             AS B2R1C4   /* 철골유리*/ 
+                        , 0             AS B2R1C5   /* 철골경질*/ 
+                        , 0             AS B2R1C6   /* 철파이프*/ 
+                        , SUM(TOT04)    AS B2R1C7   /* 기타*/ 
+                        , 0             AS YUNDONG  /* 연동*/ 
+                        , 0             AS DANDONG  /* 단동*/ 
+                        , 0             AS B3C02    /* 토경재배*/ 
+                        , 0             AS B3C03    /* 고형배지*/ 
+                        , 0             AS B3C07    /* 순수수경*/ 
+                        , SUM(T1.TOT05) AS B4C02    /* 무가온*/ 
+                        , SUM(T1.TOT06) AS B4C03    /* 가온*/ 
+                        , SUM(TOT07)    AS B5C02    /* 무보온*/ 
+                        , SUM(TOT08)    AS B5C03    /* 보온*/ 
+                        
+                        , 0             AS B1R1C2   /* 상시고용직*/ 
+                        , 0             AS B1R1C3   /* 무급가족종사자 자가인력*/ 
+                        , 0             AS B1R1C4   /* 임시직*/ 
+                        , 0             AS B1R1C5   /* 성수기임시직*/ 
+                        , 0             AS B1R1C1   /* 내국인*/ 
+                        , 0             AS B1R2C1   /* 외국인*/ 
+                        , ROUND(SUM(TOT09)/10000) AS YEAR_QTY 
+                        , ROUND(SUM(TOT10)/100000000) AS YEAR_AMT 
+                FROM     (SELECT  AID, STD_YEAR, DM5,
+                                  NVL(D2R1C3,0)+NVL(D2R2C3,0)+NVL(D2R3C3,0)+NVL(D2R4C3,0)+NVL(D2R5C3,0)+NVL(D2R6C3,0)+NVL(D2R7C3,0)                 AS TOT01, --재배면적
+                                  NVL(D7AR1C1,0)+NVL(D7AR2C1,0)+NVL(D7AR3C1,0)+NVL(D7AR4C1,0)+NVL(D7AR5C1,0)+NVL(D7AR6C1,0)+
+                                                  NVL(D7AR7C1,0)+NVL(D7AR8C1,0)+NVL(D7AR9C1,0)+NVL(D7AR10C1,0)+NVL(D7AR11C1,0)+NVL(D7AR12C1,0)      AS TOT02, --시설면적
+                                  NVL(D7AR1C2,0)+NVL(D7AR2C2,0)+NVL(D7AR3C2,0)+NVL(D7AR4C2,0)+NVL(D7AR5C2,0)+NVL(D7AR6C2,0)+
+                                                  NVL(D7AR7C2,0)+NVL(D7AR8C2,0)+NVL(D7AR9C2,0)+NVL(D7AR10C2,0)+NVL(D7AR11C2,0)+NVL(D7AR12C2,0)      AS TOT03, --노지면적              
+                                  NVL(D7AR1C5,0)+NVL(D7AR2C5,0)+NVL(D7AR3C5,0)+NVL(D7AR4C5,0)+NVL(D7AR5C5,0)+NVL(D7AR6C5,0)+
+                                                  NVL(D7AR7C5,0)+NVL(D7AR8C5,0)+NVL(D7AR9C5,0)+NVL(D7AR10C5,0)+NVL(D7AR11C5,0)+NVL(D7AR12C5,0)      AS TOT04, --기타면적
+                                  CASE WHEN D5 IN ('3') THEN  
+                                                  NVL(D2R1C3,0)+NVL(D2R2C3,0)+NVL(D2R3C3,0)+NVL(D2R4C3,0)+NVL(D2R5C3,0)+NVL(D2R6C3,0)+NVL(D2R7C3,0)
+                                       ELSE 0 END                                                                                                   AS TOT05, --무가온면적
+                                  CASE WHEN D5 IN ('1','2') THEN  
+                                                  NVL(D2R1C3,0)+NVL(D2R2C3,0)+NVL(D2R3C3,0)+NVL(D2R4C3,0)+NVL(D2R5C3,0)+NVL(D2R6C3,0)+NVL(D2R7C3,0)
+                                       ELSE 0 END                                                                                                   AS TOT06, --가온면적
+                                  CASE WHEN D6 IN ('3') THEN  
+                                                  NVL(D2R1C3,0)+NVL(D2R2C3,0)+NVL(D2R3C3,0)+NVL(D2R4C3,0)+NVL(D2R5C3,0)+NVL(D2R6C3,0)+NVL(D2R7C3,0)
+                                       ELSE 0 END                                                                                                   AS TOT07, --무보온면적
+                                  CASE WHEN D6 IN ('1','2') THEN  
+                                                  NVL(D2R1C3,0)+NVL(D2R2C3,0)+NVL(D2R3C3,0)+NVL(D2R4C3,0)+NVL(D2R5C3,0)+NVL(D2R6C3,0)+NVL(D2R7C3,0)
+                                       ELSE 0 END                                                                                                   AS TOT08, --보온면적
+                                  NVL(C2S1R1C1,0)+NVL(C2S1R2C1,0)+NVL(C2S1R3C1,0)+NVL(C2S1R4C1,0)+NVL(C2S1R5C1,0)+NVL(C2S1R6C1,0)+NVL(C2S1R7C1,0)   AS TOT09, --판매수량
+                                  NVL(C2S1R1C3,0)+NVL(C2S1R2C3,0)+NVL(C2S1R3C3,0)+NVL(C2S1R4C3,0)+NVL(C2S1R5C3,0)+NVL(C2S1R6C3,0)+NVL(C2S1R7C3,0)   AS TOT10  --판매금액
+                          FROM  FLOWER.TB_NRES_ORCHID_INFO
+                          WHERE DM5 IS NOT NULL) T1 
+                  
+                WHERE T1.STD_YEAR = #{stdYear}
+                GROUP BY T1.STD_YEAR, T1.DM5
+          )
+          ORDER BY AREA_TYPE_ORDER ASC
+    </select>
+ 	
+    <select id="mainPrdInfoChart2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+     SELECT STD_YEAR
+             , FLOWER
+             , D1C2
+             , D1C3
+             , NVL(ROUND(D1C4/10000,0),0) AS D1C4
+             , NVL(ROUND((D1C4 / NULLIF(SUM(D1C4) OVER(),0))*100,1),1) AS D1C4_PER 
+             , D1C5
+             , D1C6
+             , NVL(ROUND(D1C7/100000000,0),0) AS D1C7
+             , E1S01
+             , E1S02
+             , E1S03
+             , E1S04
+             , E1S05
+             , E1S06
+             , E1S07
+             , E1S08
+             , E1S09
+             , E1S10
+             , E1S11
+             , E1S12
+             , E2S01
+             , E2S02
+             , E2S03
+             , E2S04
+             , E2S05
+             , E2S06
+             , E2S07
+             , E2S08
+             , E2S09
+             , E2S10
+             , E2S11
+             , F1
+             , FNOWA01S1
+             , FNOWA02S1
+             , FNOWA03S1
+             , FNOWA04S1
+             , FNOWA05S1
+             , FNOWA06S1
+             , FNOWA07S1
+             , FNOWA08S1
+             , FNOWA09S1
+             , FNOWA10S1
+             , FNOWA11S1
+             , FNOWA12S1
+             , FNOWA01S2
+             , FNOWA02S2
+             , FNOWA03S2
+             , FNOWA04S2
+             , FNOWA05S2
+             , FNOWA06S2
+             , FNOWA07S2
+             , FNOWA08S2
+             , FNOWA09S2
+             , FNOWA10S2
+             , FNOWA11S2
+             , FNOWA12S2
+             , FNEXTA01S1
+             , FNEXTA02S1
+             , FNEXTA03S1
+             , FNEXTA04S1
+             , FNEXTA05S1
+             , FNEXTA06S1
+             , FNEXTA07S1
+             , FNEXTA08S1
+             , FNEXTA09S1
+             , FNEXTA10S1
+             , FNEXTA11S1
+             , FNEXTA12S1
+             , FNEXTA01S2
+             , FNEXTA02S2
+             , FNEXTA03S2
+             , FNEXTA04S2
+             , FNEXTA05S2
+             , FNEXTA06S2
+             , FNEXTA07S2
+             , FNEXTA08S2
+             , FNEXTA09S2
+             , FNEXTA10S2
+             , FNEXTA11S2
+             , FNEXTA12S2
+             , NVL(ROUND(FFNOWA01*0.000331,1),0) AS FFNOWA01
+             , NVL(ROUND(FFNOWA02*0.000331,1),0) AS FFNOWA02
+             , NVL(ROUND(FFNOWA03*0.000331,1),0) AS FFNOWA03
+             , NVL(ROUND(FFNOWA04*0.000331,1),0) AS FFNOWA04
+             , NVL(ROUND(FFNOWA05*0.000331,1),0) AS FFNOWA05
+             , NVL(ROUND(FFNOWA06*0.000331,1),0) AS FFNOWA06
+             , NVL(ROUND(FFNOWA07*0.000331,1),0) AS FFNOWA07
+             , NVL(ROUND(FFNOWA08*0.000331,1),0) AS FFNOWA08
+             , NVL(ROUND(FFNOWA09*0.000331,1),0) AS FFNOWA09
+             , NVL(ROUND(FFNOWA10*0.000331,1),0) AS FFNOWA10
+             , NVL(ROUND(FFNOWA11*0.000331,1),0) AS FFNOWA11
+             , NVL(ROUND(FFNOWA12*0.000331,1),0) AS FFNOWA12
+             , NVL(ROUND(FF_PY*0.000331,0),0) AS FFNOWA_TOT
+             , FFNEXTA01
+             , FFNEXTA02
+             , FFNEXTA03
+             , FFNEXTA04
+             , FFNEXTA05
+             , FFNEXTA06
+             , FFNEXTA07
+             , FFNEXTA08
+             , FFNEXTA09
+             , FFNEXTA10
+             , FFNEXTA11
+             , FFNEXTA12
+             , NONG_CNT 
+        FROM (
+            SELECT STD_YEAR
+                 , FLOWER
+                 , COUNT(FLOWER) AS NONG_CNT
+                 , SUM(D1C2) AS D1C2
+                 , SUM(D1C3) AS D1C3
+                 , SUM(D1C4) AS D1C4
+                 , SUM(D1C5) AS D1C5
+                 , SUM(D1C6) AS D1C6
+                 , SUM(D1C7) AS D1C7
+                 , SUM(E1S01) AS E1S01
+                 , SUM(E1S02) AS E1S02
+                 , SUM(E1S03) AS E1S03
+                 , SUM(E1S04) AS E1S04
+                 , SUM(E1S05) AS E1S05
+                 , SUM(E1S06) AS E1S06
+                 , SUM(E1S07) AS E1S07
+                 , SUM(E1S08) AS E1S08
+                 , SUM(E1S09) AS E1S09
+                 , SUM(E1S10) AS E1S10
+                 , SUM(E1S11) AS E1S11
+                 , SUM(E1S12) AS E1S12
+                 , SUM(E2S01) AS E2S01
+                 , SUM(E2S02) AS E2S02
+                 , SUM(E2S03) AS E2S03
+                 , SUM(E2S04) AS E2S04
+                 , SUM(E2S05) AS E2S05
+                 , SUM(E2S06) AS E2S06
+                 , SUM(E2S07) AS E2S07
+                 , SUM(E2S08) AS E2S08
+                 , SUM(E2S09) AS E2S09
+                 , SUM(E2S10) AS E2S10
+                 , SUM(E2S11) AS E2S11
+                 , SUM(F1) AS F1
+                 , SUM(FNOWA01S1) AS FNOWA01S1
+                 , SUM(FNOWA02S1) AS FNOWA02S1
+                 , SUM(FNOWA03S1) AS FNOWA03S1
+                 , SUM(FNOWA04S1) AS FNOWA04S1
+                 , SUM(FNOWA05S1) AS FNOWA05S1
+                 , SUM(FNOWA06S1) AS FNOWA06S1
+                 , SUM(FNOWA07S1) AS FNOWA07S1
+                 , SUM(FNOWA08S1) AS FNOWA08S1
+                 , SUM(FNOWA09S1) AS FNOWA09S1
+                 , SUM(FNOWA10S1) AS FNOWA10S1
+                 , SUM(FNOWA11S1) AS FNOWA11S1
+                 , SUM(FNOWA12S1) AS FNOWA12S1
+                 , SUM(FNOWA01S2) AS FNOWA01S2
+                 , SUM(FNOWA02S2) AS FNOWA02S2
+                 , SUM(FNOWA03S2) AS FNOWA03S2
+                 , SUM(FNOWA04S2) AS FNOWA04S2
+                 , SUM(FNOWA05S2) AS FNOWA05S2
+                 , SUM(FNOWA06S2) AS FNOWA06S2
+                 , SUM(FNOWA07S2) AS FNOWA07S2
+                 , SUM(FNOWA08S2) AS FNOWA08S2
+                 , SUM(FNOWA09S2) AS FNOWA09S2
+                 , SUM(FNOWA10S2) AS FNOWA10S2
+                 , SUM(FNOWA11S2) AS FNOWA11S2
+                 , SUM(FNOWA12S2) AS FNOWA12S2
+                 , SUM(FNEXTA01S1) AS FNEXTA01S1
+                 , SUM(FNEXTA02S1) AS FNEXTA02S1
+                 , SUM(FNEXTA03S1) AS FNEXTA03S1
+                 , SUM(FNEXTA04S1) AS FNEXTA04S1
+                 , SUM(FNEXTA05S1) AS FNEXTA05S1
+                 , SUM(FNEXTA06S1) AS FNEXTA06S1
+                 , SUM(FNEXTA07S1) AS FNEXTA07S1
+                 , SUM(FNEXTA08S1) AS FNEXTA08S1
+                 , SUM(FNEXTA09S1) AS FNEXTA09S1
+                 , SUM(FNEXTA10S1) AS FNEXTA10S1
+                 , SUM(FNEXTA11S1) AS FNEXTA11S1
+                 , SUM(FNEXTA12S1) AS FNEXTA12S1
+                 , SUM(FNEXTA01S2) AS FNEXTA01S2
+                 , SUM(FNEXTA02S2) AS FNEXTA02S2
+                 , SUM(FNEXTA03S2) AS FNEXTA03S2
+                 , SUM(FNEXTA04S2) AS FNEXTA04S2
+                 , SUM(FNEXTA05S2) AS FNEXTA05S2
+                 , SUM(FNEXTA06S2) AS FNEXTA06S2
+                 , SUM(FNEXTA07S2) AS FNEXTA07S2
+                 , SUM(FNEXTA08S2) AS FNEXTA08S2
+                 , SUM(FNEXTA09S2) AS FNEXTA09S2
+                 , SUM(FNEXTA10S2) AS FNEXTA10S2
+                 , SUM(FNEXTA11S2) AS FNEXTA11S2
+                 , SUM(FNEXTA12S2) AS FNEXTA12S2
+                 , SUM(FFNOWA01) AS FFNOWA01
+                 , SUM(FFNOWA02) AS FFNOWA02
+                 , SUM(FFNOWA03) AS FFNOWA03
+                 , SUM(FFNOWA04) AS FFNOWA04
+                 , SUM(FFNOWA05) AS FFNOWA05
+                 , SUM(FFNOWA06) AS FFNOWA06
+                 , SUM(FFNOWA07) AS FFNOWA07
+                 , SUM(FFNOWA08) AS FFNOWA08
+                 , SUM(FFNOWA09) AS FFNOWA09
+                 , SUM(FFNOWA10) AS FFNOWA10
+                 , SUM(FFNOWA11) AS FFNOWA11
+                 , SUM(FFNOWA12) AS FFNOWA12
+                 , SUM(FFNEXTA01) AS FFNEXTA01
+                 , SUM(FFNEXTA02) AS FFNEXTA02
+                 , SUM(FFNEXTA03) AS FFNEXTA03
+                 , SUM(FFNEXTA04) AS FFNEXTA04
+                 , SUM(FFNEXTA05) AS FFNEXTA05
+                 , SUM(FFNEXTA06) AS FFNEXTA06
+                 , SUM(FFNEXTA07) AS FFNEXTA07
+                 , SUM(FFNEXTA08) AS FFNEXTA08
+                 , SUM(FFNEXTA09) AS FFNEXTA09
+                 , SUM(FFNEXTA10) AS FFNEXTA10
+                 , SUM(FFNEXTA11) AS FFNEXTA11
+                 , SUM(FFNEXTA12) AS FFNEXTA12
+                 , SUM(FF_PY) AS FF_PY
+            FROM (
+                SELECT STD_YEAR
+                     , AID      AS NONG_ID
+                     , DM4      AS SIDO_CODE
+                     , null     AS AG_CODE
+                     , '1'      AS GU
+                     , null     AS FID
+                     , (SELECT A.CD_NM FROM FLOWER.TB_CM_CODE A WHERE A.GP_ID = 'CULT_KIND' AND A.CD_ID = PUM) AS FLOWER 
+                     , 0        AS D1C2
+                     , 0        AS D1C3
+                     , EA       AS D1C4
+                     , null     AS D1C5
+                     , DAN      AS D1C6
+                     , AMT      AS D1C7
+                     , M01      AS E1S01
+                     , M02      AS E1S02
+                     , M03      AS E1S03
+                     , M04      AS E1S04
+                     , M05      AS E1S05
+                     , M06      AS E1S06
+                     , M07      AS E1S07
+                     , M08      AS E1S08
+                     , M09      AS E1S09
+                     , M10      AS E1S10
+                     , M11      AS E1S11
+                     , M12      AS E1S12
+                     , 0        AS E2S01
+                     , 0        AS E2S02
+                     , 0        AS E2S03
+                     , 0        AS E2S04
+                     , 0        AS E2S05
+                     , 0        AS E2S06
+                     , 0        AS E2S07
+                     , 0        AS E2S08
+                     , 0        AS E2S09
+                     , 0        AS E2S10
+                     , 0        AS E2S11
+                     , 0        AS F1
+                     , 0        AS FNOWA01S1
+                     , 0        AS FNOWA02S1
+                     , 0        AS FNOWA03S1
+                     , 0        AS FNOWA04S1
+                     , 0        AS FNOWA05S1
+                     , 0        AS FNOWA06S1
+                     , 0        AS FNOWA07S1
+                     , 0        AS FNOWA08S1
+                     , 0        AS FNOWA09S1
+                     , 0        AS FNOWA10S1
+                     , 0        AS FNOWA11S1
+                     , 0        AS FNOWA12S1
+                     , 0        AS FNOWA01S2
+                     , 0        AS FNOWA02S2
+                     , 0        AS FNOWA03S2
+                     , 0        AS FNOWA04S2
+                     , 0        AS FNOWA05S2
+                     , 0        AS FNOWA06S2
+                     , 0        AS FNOWA07S2
+                     , 0        AS FNOWA08S2
+                     , 0        AS FNOWA09S2
+                     , 0        AS FNOWA10S2
+                     , 0        AS FNOWA11S2
+                     , 0        AS FNOWA12S2
+                     , 0        AS FNEXTA01S1
+                     , 0        AS FNEXTA02S1
+                     , 0        AS FNEXTA03S1
+                     , 0        AS FNEXTA04S1
+                     , 0        AS FNEXTA05S1
+                     , 0        AS FNEXTA06S1
+                     , 0        AS FNEXTA07S1
+                     , 0        AS FNEXTA08S1
+                     , 0        AS FNEXTA09S1
+                     , 0        AS FNEXTA10S1
+                     , 0        AS FNEXTA11S1
+                     , 0        AS FNEXTA12S1
+                     , 0        AS FNEXTA01S2
+                     , 0        AS FNEXTA02S2
+                     , 0        AS FNEXTA03S2
+                     , 0        AS FNEXTA04S2
+                     , 0        AS FNEXTA05S2
+                     , 0        AS FNEXTA06S2
+                     , 0        AS FNEXTA07S2
+                     , 0        AS FNEXTA08S2
+                     , 0        AS FNEXTA09S2
+                     , 0        AS FNEXTA10S2
+                     , 0        AS FNEXTA11S2
+                     , 0        AS FNEXTA12S2
+                     , 0        AS FFNOWA01
+                     , 0        AS FFNOWA02
+                     , 0        AS FFNOWA03
+                     , 0        AS FFNOWA04
+                     , 0        AS FFNOWA05
+                     , 0        AS FFNOWA06
+                     , 0        AS FFNOWA07
+                     , 0        AS FFNOWA08
+                     , 0        AS FFNOWA09
+                     , 0        AS FFNOWA10
+                     , 0        AS FFNOWA11
+                     , 0        AS FFNOWA12
+                     , 0        AS FFNEXTA01
+                     , 0        AS FFNEXTA02
+                     , 0        AS FFNEXTA03
+                     , 0        AS FFNEXTA04
+                     , 0        AS FFNEXTA05
+                     , 0        AS FFNEXTA06
+                     , 0        AS FFNEXTA07
+                     , 0        AS FFNEXTA08
+                     , 0        AS FFNEXTA09
+                     , 0        AS FFNEXTA10
+                     , 0        AS FFNEXTA11
+                     , 0        AS FFNEXTA12
+                     , PY       AS FF_PY
+                     , (SELECT A.CD_NM FROM FLOWER.TB_CM_CODE A WHERE A.GP_ID = 'AREA_DIV' AND A.CD_ID = DM4) AS SIGUN_AREA_NAME
+                     
+                FROM   (SELECT  STD_YEAR, AID, DM4, PUM, SUM(EA) EA, SUM(AMT) AS AMT, AVG(DAN) DAN, SUM(PY) PY,
+                                SUM(M01) M01, SUM(M02) M02, SUM(M03) M03, SUM(M04) M04, SUM(M05) M05, SUM(M06) M06,
+                                SUM(M07) M07, SUM(M08) M08, SUM(M09) M09, SUM(M10) M10, SUM(M11) M11, SUM(M12) M12
+                        FROM   (SELECT  STD_YEAR, AID, DM4, C2S1R1C0 AS PUM, NVL(C2S1R1C1,0) AS EA, NVL(C2S1R1C3,0) AS AMT, NVL(C2S1R1C2,0) AS DAN, 0 AS PY
+                                      , 0 AS M01, 0 AS M02, 0 AS M03, 0 AS M04, 0 AS M05, 0 AS M06, 0 AS M07, 0 AS M08, 0 AS M09, 0 AS M10, 0 AS M11, 0 AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S1R1C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S1R2C0 AS PUM, NVL(C2S1R2C1,0) AS EA, NVL(C2S1R2C3,0) AS AMT, NVL(C2S1R2C2,0) AS DAN, 0 AS PY
+                                      , 0 AS M01, 0 AS M02, 0 AS M03, 0 AS M04, 0 AS M05, 0 AS M06, 0 AS M07, 0 AS M08, 0 AS M09, 0 AS M10, 0 AS M11, 0 AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S1R2C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S1R3C0 AS PUM, NVL(C2S1R3C1,0) AS EA, NVL(C2S1R3C3,0) AS AMT, NVL(C2S1R3C2,0) AS DAN, 0 AS PY
+                                      , 0 AS M01, 0 AS M02, 0 AS M03, 0 AS M04, 0 AS M05, 0 AS M06, 0 AS M07, 0 AS M08, 0 AS M09, 0 AS M10, 0 AS M11, 0 AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S1R3C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S1R4C0 AS PUM, NVL(C2S1R4C1,0) AS EA, NVL(C2S1R4C3,0) AS AMT, NVL(C2S1R4C2,0) AS DAN, 0 AS PY
+                                      , 0 AS M01, 0 AS M02, 0 AS M03, 0 AS M04, 0 AS M05, 0 AS M06, 0 AS M07, 0 AS M08, 0 AS M09, 0 AS M10, 0 AS M11, 0 AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S1R4C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S1R5C0 AS PUM, NVL(C2S1R5C1,0) AS EA, NVL(C2S1R5C3,0) AS AMT, NVL(C2S1R5C2,0) AS DAN, 0 AS PY
+                                      , 0 AS M01, 0 AS M02, 0 AS M03, 0 AS M04, 0 AS M05, 0 AS M06, 0 AS M07, 0 AS M08, 0 AS M09, 0 AS M10, 0 AS M11, 0 AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S1R5C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S1R6C0 AS PUM, NVL(C2S1R6C1,0) AS EA, NVL(C2S1R6C3,0) AS AMT, NVL(C2S1R6C2,0) AS DAN, 0 AS PY
+                                      , 0 AS M01, 0 AS M02, 0 AS M03, 0 AS M04, 0 AS M05, 0 AS M06, 0 AS M07, 0 AS M08, 0 AS M09, 0 AS M10, 0 AS M11, 0 AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S1R6C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S1R7C0 AS PUM, NVL(C2S1R7C1,0) AS EA, NVL(C2S1R7C3,0) AS AMT, NVL(C2S1R7C2,0) AS DAN, 0 AS PY
+                                      , 0 AS M01, 0 AS M02, 0 AS M03, 0 AS M04, 0 AS M05, 0 AS M06, 0 AS M07, 0 AS M08, 0 AS M09, 0 AS M10, 0 AS M11, 0 AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S1R7C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S2R1C0 AS PUM, 0 AS EA, 0 AS AMT, 0 AS DAN
+                                      , NVL(D2R1C3,0)+NVL(D2R2C3,0)+NVL(D2R3C3,0)+NVL(D2R4C3,0)+NVL(D2R5C3,0)+NVL(D2R6C3,0)+NVL(D2R7C3,0) AS PY
+                                      , NVL(C2S2R1C1,0) AS M01, NVL(C2S2R1C2,0) AS M02, NVL(C2S2R1C3,0) AS M03, NVL(C2S2R1C4,0) AS M04, NVL(C2S2R1C5,0) AS M05, NVL(C2S2R1C6,0) AS M06
+                                      , NVL(C2S2R1C7,0) AS M07, NVL(C2S2R1C8,0) AS M08, NVL(C2S2R1C9,0) AS M09, NVL(C2S2R1C10,0) AS M10, NVL(C2S2R1C11,0) AS M11, NVL(C2S2R1C12,0) AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R1C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S2R2C0 AS PUM, 0 AS EA, 0 AS AMT, 0 AS DAN, 0 AS PY
+                                      , NVL(C2S2R2C1,0) AS M01, NVL(C2S2R2C2,0) AS M02, NVL(C2S2R2C3,0) AS M03, NVL(C2S2R2C4,0) AS M04, NVL(C2S2R2C5,0) AS M05, NVL(C2S2R2C6,0) AS M06
+                                      , NVL(C2S2R2C7,0) AS M07, NVL(C2S2R2C8,0) AS M08, NVL(C2S2R2C9,0) AS M09, NVL(C2S2R2C10,0) AS M10, NVL(C2S2R2C11,0) AS M11, NVL(C2S2R2C12,0) AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R2C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S2R3C0 AS PUM, 0 AS EA, 0 AS AMT, 0 AS DAN, 0 AS PY
+                                      , NVL(C2S2R3C1,0) AS M01, NVL(C2S2R3C2,0) AS M02, NVL(C2S2R3C3,0) AS M03, NVL(C2S2R3C4,0) AS M04, NVL(C2S2R3C5,0) AS M05, NVL(C2S2R3C6,0) AS M06
+                                      , NVL(C2S2R3C7,0) AS M07, NVL(C2S2R3C8,0) AS M08, NVL(C2S2R3C9,0) AS M09, NVL(C2S2R3C10,0) AS M10, NVL(C2S2R3C11,0) AS M11, NVL(C2S2R3C12,0) AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R3C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S2R4C0 AS PUM, 0 AS EA, 0 AS AMT, 0 AS DAN, 0 AS PY
+                                      , NVL(C2S2R4C1,0) AS M01, NVL(C2S2R4C2,0) AS M02, NVL(C2S2R4C3,0) AS M03, NVL(C2S2R4C4,0) AS M04, NVL(C2S2R4C5,0) AS M05, NVL(C2S2R4C6,0) AS M06
+                                      , NVL(C2S2R4C7,0) AS M07, NVL(C2S2R4C8,0) AS M08, NVL(C2S2R4C9,0) AS M09, NVL(C2S2R4C10,0) AS M10, NVL(C2S2R4C11,0) AS M11, NVL(C2S2R4C12,0) AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R4C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S2R5C0 AS PUM, 0 AS EA, 0 AS AMT, 0 AS DAN, 0 AS PY
+                                      , NVL(C2S2R5C1,0) AS M01, NVL(C2S2R5C2,0) AS M02, NVL(C2S2R5C3,0) AS M03, NVL(C2S2R5C4,0) AS M04, NVL(C2S2R5C5,0) AS M05, NVL(C2S2R5C6,0) AS M06
+                                      , NVL(C2S2R5C7,0) AS M07, NVL(C2S2R5C8,0) AS M08, NVL(C2S2R5C9,0) AS M09, NVL(C2S2R5C10,0) AS M10, NVL(C2S2R5C11,0) AS M11, NVL(C2S2R5C12,0) AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R5C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S2R6C0 AS PUM, 0 AS EA, 0 AS AMT, 0 AS DAN, 0 AS PY
+                                      , NVL(C2S2R6C1,0) AS M01, NVL(C2S2R6C2,0) AS M02, NVL(C2S2R6C3,0) AS M03, NVL(C2S2R6C4,0) AS M04, NVL(C2S2R6C5,0) AS M05, NVL(C2S2R6C6,0) AS M06
+                                      , NVL(C2S2R6C7,0) AS M07, NVL(C2S2R6C8,0) AS M08, NVL(C2S2R6C9,0) AS M09, NVL(C2S2R6C10,0) AS M10, NVL(C2S2R6C11,0) AS M11, NVL(C2S2R6C12,0) AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R6C0 IS NOT NULL AND STD_YEAR = #{stdYear}
+                                UNION ALL
+                                SELECT  STD_YEAR, AID, DM4, C2S2R7C0 AS PUM, 0 AS EA, 0 AS AMT, 0 AS DAN, 0 AS PY
+                                      , NVL(C2S2R7C1,0) AS M01, NVL(C2S2R7C2,0) AS M02, NVL(C2S2R7C3,0) AS M03, NVL(C2S2R7C4,0) AS M04, NVL(C2S2R7C5,0) AS M05, NVL(C2S2R7C6,0) AS M06
+                                      , NVL(C2S2R7C7,0) AS M07, NVL(C2S2R7C8,0) AS M08, NVL(C2S2R7C9,0) AS M09, NVL(C2S2R7C10,0) AS M10, NVL(C2S2R7C11,0) AS M11, NVL(C2S2R7C12,0) AS M12
+                                FROM    FLOWER.TB_NRES_ORCHID_INFO WHERE C2S2R7C0 IS NOT NULL AND STD_YEAR = #{stdYear})
+                        GROUP BY STD_YEAR, AID, DM4, PUM)
+            ) T3
+            GROUP BY STD_YEAR, FLOWER
+        )ORDER BY NONG_CNT DESC
+    </select>
+
+	 	  <!-- 난 데이터 초기화(DB 테이블 delete) -->
+ 	  <delete id="deleteReserchData3">
+    	DELETE FROM TB_NRES_ORCHID_INFO WHERE STD_YEAR = #{stdYear, jdbcType=VARCHAR}
+    </delete>
+    
+    <!-- 난 데이터 저장(DB 데이블 insert) -->
+    <insert id="insertReserchData3Each">
+    	INSERT INTO TB_NRES_ORCHID_INFO 
+    	VALUES(
+    		 #{stdYear,jdbcType=VARCHAR}
+			,#{AID,jdbcType=NUMERIC}
+			,#{ID,jdbcType=NUMERIC}
+			,#{NAME,jdbcType=VARCHAR}
+			,#{SQ1,jdbcType=NUMERIC}
+			,#{GENDER,jdbcType=NUMERIC}
+			,#{YY,jdbcType=VARCHAR}
+			,#{MM,jdbcType=VARCHAR}
+			,#{SIDO,jdbcType=VARCHAR}
+			,#{HOUSE,jdbcType=VARCHAR}
+			,#{TP,jdbcType=VARCHAR}
+			,#{B1C1_1,jdbcType=VARCHAR}
+			,#{B1C1_2,jdbcType=VARCHAR}
+			,#{B1C1_3,jdbcType=VARCHAR}
+			,#{B1C1_4,jdbcType=VARCHAR}
+			,#{B1C1_5,jdbcType=VARCHAR}
+			,#{B1C1_6,jdbcType=VARCHAR}
+			,#{B1C1_7,jdbcType=VARCHAR}
+			,#{B1C1_8,jdbcType=VARCHAR}
+			,#{B1C1_9,jdbcType=VARCHAR}
+			,#{B1C1_9T,jdbcType=VARCHAR}
+			,#{B1C1_11,jdbcType=VARCHAR}
+			,#{B1C1_12,jdbcType=VARCHAR}
+			,#{B1C1_13,jdbcType=VARCHAR}
+			,#{B1C1_14,jdbcType=VARCHAR}
+			,#{B1C1_15,jdbcType=VARCHAR}
+			,#{B1C1_15T,jdbcType=VARCHAR}
+			,#{B1C1_21,jdbcType=VARCHAR}
+			,#{B1C1_22,jdbcType=VARCHAR}
+			,#{B1C1_23,jdbcType=VARCHAR}
+			,#{B1C1_24,jdbcType=VARCHAR}
+			,#{B1C1_25,jdbcType=VARCHAR}
+			,#{B1C1_26,jdbcType=VARCHAR}
+			,#{B1C1_27,jdbcType=VARCHAR}
+			,#{B1C1_28,jdbcType=VARCHAR}
+			,#{B1C1_29,jdbcType=VARCHAR}
+			,#{B1C1_30,jdbcType=VARCHAR}
+			,#{B1C1_31,jdbcType=VARCHAR}
+			,#{B1C1_32,jdbcType=VARCHAR}
+			,#{B1C1_33,jdbcType=VARCHAR}
+			,#{B1C1_33T,jdbcType=VARCHAR}
+			,#{B1C2_1,jdbcType=VARCHAR}
+			,#{B1C2_2,jdbcType=VARCHAR}
+			,#{B1C2_3,jdbcType=VARCHAR}
+			,#{B1C2_4,jdbcType=VARCHAR}
+			,#{B1C2_5,jdbcType=VARCHAR}
+			,#{B1C2_6,jdbcType=VARCHAR}
+			,#{B1C2_7,jdbcType=VARCHAR}
+			,#{B1C2_8,jdbcType=VARCHAR}
+			,#{B1C2_9,jdbcType=VARCHAR}
+			,#{B1C2_9T,jdbcType=VARCHAR}
+			,#{B1C2_11,jdbcType=VARCHAR}
+			,#{B1C2_12,jdbcType=VARCHAR}
+			,#{B1C2_13,jdbcType=VARCHAR}
+			,#{B1C2_14,jdbcType=VARCHAR}
+			,#{B1C2_15,jdbcType=VARCHAR}
+			,#{B1C2_15T,jdbcType=VARCHAR}
+			,#{B1C2_21,jdbcType=VARCHAR}
+			,#{B1C2_22,jdbcType=VARCHAR}
+			,#{B1C2_23,jdbcType=VARCHAR}
+			,#{B1C2_24,jdbcType=VARCHAR}
+			,#{B1C2_25,jdbcType=VARCHAR}
+			,#{B1C2_26,jdbcType=VARCHAR}
+			,#{B1C2_27,jdbcType=VARCHAR}
+			,#{B1C2_28,jdbcType=VARCHAR}
+			,#{B1C2_29,jdbcType=VARCHAR}
+			,#{B1C2_30,jdbcType=VARCHAR}
+			,#{B1C2_31,jdbcType=VARCHAR}
+			,#{B1C2_32,jdbcType=VARCHAR}
+			,#{B1C2_33,jdbcType=VARCHAR}
+			,#{B1C2_33T,jdbcType=VARCHAR}
+			,#{B2_1,jdbcType=VARCHAR}
+			,#{B2_2,jdbcType=VARCHAR}
+			,#{B2_3,jdbcType=VARCHAR}
+			,#{B2_4,jdbcType=VARCHAR}
+			,#{B2E,jdbcType=VARCHAR}
+			,#{B2S1_1,jdbcType=VARCHAR}
+			,#{B2S1_2,jdbcType=VARCHAR}
+			,#{B2S1_3,jdbcType=VARCHAR}
+			,#{B2S2_1T,jdbcType=VARCHAR}
+			,#{B2S2_2T,jdbcType=VARCHAR}
+			,#{B2S2_1,jdbcType=VARCHAR}
+			,#{B2S2_2,jdbcType=VARCHAR}
+			,#{B2S2_3,jdbcType=VARCHAR}
+			,#{B2S2_4,jdbcType=VARCHAR}
+			,#{B2S2E,jdbcType=VARCHAR}
+			,#{B2S3C1,jdbcType=NUMERIC}
+			,#{B2S3C2,jdbcType=NUMERIC}
+			,#{B2S4_1,jdbcType=VARCHAR}
+			,#{B2S4_2,jdbcType=VARCHAR}
+			,#{B2S4_3,jdbcType=VARCHAR}
+			,#{B2S4_4,jdbcType=VARCHAR}
+			,#{C1,jdbcType=VARCHAR}
+			,#{C2S1R1C0,jdbcType=VARCHAR}
+			,#{C2S1R1C1,jdbcType=NUMERIC}
+			,#{C2S1R1C2,jdbcType=NUMERIC}
+			,#{C2S1R1C3,jdbcType=NUMERIC}
+			,#{C2S1R1C4_1,jdbcType=VARCHAR}
+			,#{C2S1R1C4_2,jdbcType=VARCHAR}
+			,#{C2S1R1C4_3,jdbcType=VARCHAR}
+			,#{C2S1R1C4_4,jdbcType=VARCHAR}
+			,#{C2S1R1C5,jdbcType=VARCHAR}
+			,#{C2S1R2C0,jdbcType=VARCHAR}
+			,#{C2S1R2C1,jdbcType=NUMERIC}
+			,#{C2S1R2C2,jdbcType=NUMERIC}
+			,#{C2S1R2C3,jdbcType=NUMERIC}
+			,#{C2S1R2C4_1,jdbcType=VARCHAR}
+			,#{C2S1R2C4_2,jdbcType=VARCHAR}
+			,#{C2S1R2C4_3,jdbcType=VARCHAR}
+			,#{C2S1R2C4_4,jdbcType=VARCHAR}
+			,#{C2S1R2C5,jdbcType=VARCHAR}
+			,#{C2S1R3C0,jdbcType=VARCHAR}
+			,#{C2S1R3C1,jdbcType=NUMERIC}
+			,#{C2S1R3C2,jdbcType=NUMERIC}
+			,#{C2S1R3C3,jdbcType=NUMERIC}
+			,#{C2S1R3C4_1,jdbcType=VARCHAR}
+			,#{C2S1R3C4_2,jdbcType=VARCHAR}
+			,#{C2S1R3C4_3,jdbcType=VARCHAR}
+			,#{C2S1R3C4_4,jdbcType=VARCHAR}
+			,#{C2S1R3C5,jdbcType=VARCHAR}
+			,#{C2S1R4C0,jdbcType=VARCHAR}
+			,#{C2S1R4C1,jdbcType=NUMERIC}
+			,#{C2S1R4C2,jdbcType=NUMERIC}
+			,#{C2S1R4C3,jdbcType=NUMERIC}
+			,#{C2S1R4C4_1,jdbcType=VARCHAR}
+			,#{C2S1R4C4_2,jdbcType=VARCHAR}
+			,#{C2S1R4C4_3,jdbcType=VARCHAR}
+			,#{C2S1R4C4_4,jdbcType=VARCHAR}
+			,#{C2S1R4C5,jdbcType=VARCHAR}
+			,#{C2S1R5C0,jdbcType=VARCHAR}
+			,#{C2S1R5C1,jdbcType=NUMERIC}
+			,#{C2S1R5C2,jdbcType=NUMERIC}
+			,#{C2S1R5C3,jdbcType=NUMERIC}
+			,#{C2S1R5C4_1,jdbcType=VARCHAR}
+			,#{C2S1R5C4_2,jdbcType=VARCHAR}
+			,#{C2S1R5C4_3,jdbcType=VARCHAR}
+			,#{C2S1R5C4_4,jdbcType=VARCHAR}
+			,#{C2S1R5C5,jdbcType=VARCHAR}
+			,#{C2S1R6C0,jdbcType=VARCHAR}
+			,#{C2S1R6C1,jdbcType=NUMERIC}
+			,#{C2S1R6C2,jdbcType=NUMERIC}
+			,#{C2S1R6C3,jdbcType=NUMERIC}
+			,#{C2S1R6C4_1,jdbcType=VARCHAR}
+			,#{C2S1R6C4_2,jdbcType=VARCHAR}
+			,#{C2S1R6C4_3,jdbcType=VARCHAR}
+			,#{C2S1R6C4_4,jdbcType=VARCHAR}
+			,#{C2S1R6C5,jdbcType=VARCHAR}
+			,#{C2S1R7C0,jdbcType=VARCHAR}
+			,#{C2S1R7C1,jdbcType=NUMERIC}
+			,#{C2S1R7C2,jdbcType=NUMERIC}
+			,#{C2S1R7C3,jdbcType=NUMERIC}
+			,#{C2S1R7C4_1,jdbcType=VARCHAR}
+			,#{C2S1R7C4_2,jdbcType=VARCHAR}
+			,#{C2S1R7C4_3,jdbcType=VARCHAR}
+			,#{C2S1R7C4_4,jdbcType=VARCHAR}
+			,#{C2S1R7C5,jdbcType=VARCHAR}
+			,#{C2S2R1C0,jdbcType=VARCHAR}
+			,#{C2S2R1C1,jdbcType=NUMERIC}
+			,#{C2S2R1C2,jdbcType=NUMERIC}
+			,#{C2S2R1C3,jdbcType=NUMERIC}
+			,#{C2S2R1C4,jdbcType=NUMERIC}
+			,#{C2S2R1C5,jdbcType=NUMERIC}
+			,#{C2S2R1C6,jdbcType=NUMERIC}
+			,#{C2S2R1C7,jdbcType=NUMERIC}
+			,#{C2S2R1C8,jdbcType=NUMERIC}
+			,#{C2S2R1C9,jdbcType=NUMERIC}
+			,#{C2S2R1C10,jdbcType=NUMERIC}
+			,#{C2S2R1C11,jdbcType=NUMERIC}
+			,#{C2S2R1C12,jdbcType=NUMERIC}
+			,#{C2S2R2C0,jdbcType=VARCHAR}
+			,#{C2S2R2C1,jdbcType=NUMERIC}
+			,#{C2S2R2C2,jdbcType=NUMERIC}
+			,#{C2S2R2C3,jdbcType=NUMERIC}
+			,#{C2S2R2C4,jdbcType=NUMERIC}
+			,#{C2S2R2C5,jdbcType=NUMERIC}
+			,#{C2S2R2C6,jdbcType=NUMERIC}
+			,#{C2S2R2C7,jdbcType=NUMERIC}
+			,#{C2S2R2C8,jdbcType=NUMERIC}
+			,#{C2S2R2C9,jdbcType=NUMERIC}
+			,#{C2S2R2C10,jdbcType=NUMERIC}
+			,#{C2S2R2C11,jdbcType=NUMERIC}
+			,#{C2S2R2C12,jdbcType=NUMERIC}
+			,#{C2S2R3C0,jdbcType=VARCHAR}
+			,#{C2S2R3C1,jdbcType=NUMERIC}
+			,#{C2S2R3C2,jdbcType=NUMERIC}
+			,#{C2S2R3C3,jdbcType=NUMERIC}
+			,#{C2S2R3C4,jdbcType=NUMERIC}
+			,#{C2S2R3C5,jdbcType=NUMERIC}
+			,#{C2S2R3C6,jdbcType=NUMERIC}
+			,#{C2S2R3C7,jdbcType=NUMERIC}
+			,#{C2S2R3C8,jdbcType=NUMERIC}
+			,#{C2S2R3C9,jdbcType=NUMERIC}
+			,#{C2S2R3C10,jdbcType=NUMERIC}
+			,#{C2S2R3C11,jdbcType=NUMERIC}
+			,#{C2S2R3C12,jdbcType=NUMERIC}
+			,#{C2S2R4C0,jdbcType=VARCHAR}
+			,#{C2S2R4C1,jdbcType=NUMERIC}
+			,#{C2S2R4C2,jdbcType=NUMERIC}
+			,#{C2S2R4C3,jdbcType=NUMERIC}
+			,#{C2S2R4C4,jdbcType=NUMERIC}
+			,#{C2S2R4C5,jdbcType=NUMERIC}
+			,#{C2S2R4C6,jdbcType=NUMERIC}
+			,#{C2S2R4C7,jdbcType=NUMERIC}
+			,#{C2S2R4C8,jdbcType=NUMERIC}
+			,#{C2S2R4C9,jdbcType=NUMERIC}
+			,#{C2S2R4C10,jdbcType=NUMERIC}
+			,#{C2S2R4C11,jdbcType=NUMERIC}
+			,#{C2S2R4C12,jdbcType=NUMERIC}
+			,#{C2S2R5C0,jdbcType=VARCHAR}
+			,#{C2S2R5C1,jdbcType=NUMERIC}
+			,#{C2S2R5C2,jdbcType=NUMERIC}
+			,#{C2S2R5C3,jdbcType=NUMERIC}
+			,#{C2S2R5C4,jdbcType=NUMERIC}
+			,#{C2S2R5C5,jdbcType=NUMERIC}
+			,#{C2S2R5C6,jdbcType=NUMERIC}
+			,#{C2S2R5C7,jdbcType=NUMERIC}
+			,#{C2S2R5C8,jdbcType=NUMERIC}
+			,#{C2S2R5C9,jdbcType=NUMERIC}
+			,#{C2S2R5C10,jdbcType=NUMERIC}
+			,#{C2S2R5C11,jdbcType=NUMERIC}
+			,#{C2S2R5C12,jdbcType=NUMERIC}
+			,#{C2S2R6C0,jdbcType=VARCHAR}
+			,#{C2S2R6C1,jdbcType=NUMERIC}
+			,#{C2S2R6C2,jdbcType=NUMERIC}
+			,#{C2S2R6C3,jdbcType=NUMERIC}
+			,#{C2S2R6C4,jdbcType=NUMERIC}
+			,#{C2S2R6C5,jdbcType=NUMERIC}
+			,#{C2S2R6C6,jdbcType=NUMERIC}
+			,#{C2S2R6C7,jdbcType=NUMERIC}
+			,#{C2S2R6C8,jdbcType=NUMERIC}
+			,#{C2S2R6C9,jdbcType=NUMERIC}
+			,#{C2S2R6C10,jdbcType=NUMERIC}
+			,#{C2S2R6C11,jdbcType=NUMERIC}
+			,#{C2S2R6C12,jdbcType=NUMERIC}
+			,#{C2S2R7C0,jdbcType=VARCHAR}
+			,#{C2S2R7C1,jdbcType=NUMERIC}
+			,#{C2S2R7C2,jdbcType=NUMERIC}
+			,#{C2S2R7C3,jdbcType=NUMERIC}
+			,#{C2S2R7C4,jdbcType=NUMERIC}
+			,#{C2S2R7C5,jdbcType=NUMERIC}
+			,#{C2S2R7C6,jdbcType=NUMERIC}
+			,#{C2S2R7C7,jdbcType=NUMERIC}
+			,#{C2S2R7C8,jdbcType=NUMERIC}
+			,#{C2S2R7C9,jdbcType=NUMERIC}
+			,#{C2S2R7C10,jdbcType=NUMERIC}
+			,#{C2S2R7C11,jdbcType=NUMERIC}
+			,#{C2S2R7C12,jdbcType=NUMERIC}
+			,#{C2S3R1C0,jdbcType=VARCHAR}
+			,#{C2S3R1C1,jdbcType=NUMERIC}
+			,#{C2S3R1C2,jdbcType=NUMERIC}
+			,#{C2S3R1C3,jdbcType=NUMERIC}
+			,#{C2S3R1C4,jdbcType=NUMERIC}
+			,#{C2S3R1C5,jdbcType=NUMERIC}
+			,#{C2S3R1C6,jdbcType=NUMERIC}
+			,#{C2S3R1C7,jdbcType=NUMERIC}
+			,#{C2S3R1C8,jdbcType=NUMERIC}
+			,#{C2S3R1C9,jdbcType=NUMERIC}
+			,#{C2S3R1C10,jdbcType=NUMERIC}
+			,#{C2S3R1C11,jdbcType=NUMERIC}
+			,#{C2S3R1C12,jdbcType=NUMERIC}
+			,#{C2S3R2C0,jdbcType=VARCHAR}
+			,#{C2S3R2C1,jdbcType=NUMERIC}
+			,#{C2S3R2C2,jdbcType=NUMERIC}
+			,#{C2S3R2C3,jdbcType=NUMERIC}
+			,#{C2S3R2C4,jdbcType=NUMERIC}
+			,#{C2S3R2C5,jdbcType=NUMERIC}
+			,#{C2S3R2C6,jdbcType=NUMERIC}
+			,#{C2S3R2C7,jdbcType=NUMERIC}
+			,#{C2S3R2C8,jdbcType=NUMERIC}
+			,#{C2S3R2C9,jdbcType=NUMERIC}
+			,#{C2S3R2C10,jdbcType=NUMERIC}
+			,#{C2S3R2C11,jdbcType=NUMERIC}
+			,#{C2S3R2C12,jdbcType=NUMERIC}
+			,#{C2S3R3C0,jdbcType=VARCHAR}
+			,#{C2S3R3C1,jdbcType=NUMERIC}
+			,#{C2S3R3C2,jdbcType=NUMERIC}
+			,#{C2S3R3C3,jdbcType=NUMERIC}
+			,#{C2S3R3C4,jdbcType=NUMERIC}
+			,#{C2S3R3C5,jdbcType=NUMERIC}
+			,#{C2S3R3C6,jdbcType=NUMERIC}
+			,#{C2S3R3C7,jdbcType=NUMERIC}
+			,#{C2S3R3C8,jdbcType=NUMERIC}
+			,#{C2S3R3C9,jdbcType=NUMERIC}
+			,#{C2S3R3C10,jdbcType=NUMERIC}
+			,#{C2S3R3C11,jdbcType=NUMERIC}
+			,#{C2S3R3C12,jdbcType=NUMERIC}
+			,#{C2S3R4C0,jdbcType=VARCHAR}
+			,#{C2S3R4C1,jdbcType=NUMERIC}
+			,#{C2S3R4C2,jdbcType=NUMERIC}
+			,#{C2S3R4C3,jdbcType=NUMERIC}
+			,#{C2S3R4C4,jdbcType=NUMERIC}
+			,#{C2S3R4C5,jdbcType=NUMERIC}
+			,#{C2S3R4C6,jdbcType=NUMERIC}
+			,#{C2S3R4C7,jdbcType=NUMERIC}
+			,#{C2S3R4C8,jdbcType=NUMERIC}
+			,#{C2S3R4C9,jdbcType=NUMERIC}
+			,#{C2S3R4C10,jdbcType=NUMERIC}
+			,#{C2S3R4C11,jdbcType=NUMERIC}
+			,#{C2S3R4C12,jdbcType=NUMERIC}
+			,#{C2S3R5C0,jdbcType=VARCHAR}
+			,#{C2S3R5C1,jdbcType=NUMERIC}
+			,#{C2S3R5C2,jdbcType=NUMERIC}
+			,#{C2S3R5C3,jdbcType=NUMERIC}
+			,#{C2S3R5C4,jdbcType=NUMERIC}
+			,#{C2S3R5C5,jdbcType=NUMERIC}
+			,#{C2S3R5C6,jdbcType=NUMERIC}
+			,#{C2S3R5C7,jdbcType=NUMERIC}
+			,#{C2S3R5C8,jdbcType=NUMERIC}
+			,#{C2S3R5C9,jdbcType=NUMERIC}
+			,#{C2S3R5C10,jdbcType=NUMERIC}
+			,#{C2S3R5C11,jdbcType=NUMERIC}
+			,#{C2S3R5C12,jdbcType=NUMERIC}
+			,#{C2S3R6C0,jdbcType=VARCHAR}
+			,#{C2S3R6C1,jdbcType=NUMERIC}
+			,#{C2S3R6C2,jdbcType=NUMERIC}
+			,#{C2S3R6C3,jdbcType=NUMERIC}
+			,#{C2S3R6C4,jdbcType=NUMERIC}
+			,#{C2S3R6C5,jdbcType=NUMERIC}
+			,#{C2S3R6C6,jdbcType=NUMERIC}
+			,#{C2S3R6C7,jdbcType=NUMERIC}
+			,#{C2S3R6C8,jdbcType=NUMERIC}
+			,#{C2S3R6C9,jdbcType=NUMERIC}
+			,#{C2S3R6C10,jdbcType=NUMERIC}
+			,#{C2S3R6C11,jdbcType=NUMERIC}
+			,#{C2S3R6C12,jdbcType=NUMERIC}
+			,#{C2S3R7C0,jdbcType=VARCHAR}
+			,#{C2S3R7C1,jdbcType=NUMERIC}
+			,#{C2S3R7C2,jdbcType=NUMERIC}
+			,#{C2S3R7C3,jdbcType=NUMERIC}
+			,#{C2S3R7C4,jdbcType=NUMERIC}
+			,#{C2S3R7C5,jdbcType=NUMERIC}
+			,#{C2S3R7C6,jdbcType=NUMERIC}
+			,#{C2S3R7C7,jdbcType=NUMERIC}
+			,#{C2S3R7C8,jdbcType=NUMERIC}
+			,#{C2S3R7C9,jdbcType=NUMERIC}
+			,#{C2S3R7C10,jdbcType=NUMERIC}
+			,#{C2S3R7C11,jdbcType=NUMERIC}
+			,#{C2S3R7C12,jdbcType=NUMERIC}
+			,#{C2S3T,jdbcType=VARCHAR}
+			,#{C3S1C1,jdbcType=VARCHAR}
+			,#{C3S1C2,jdbcType=VARCHAR}
+			,#{C3S2,jdbcType=VARCHAR}
+			,#{C3S3,jdbcType=VARCHAR}
+			,#{C3S4,jdbcType=NUMERIC}
+			,#{C3S4A,jdbcType=NUMERIC}
+			,#{C3S5_R1,jdbcType=VARCHAR}
+			,#{C3S5_R2,jdbcType=VARCHAR}
+			,#{C3S5T,jdbcType=VARCHAR}
+			,#{D1_1,jdbcType=VARCHAR}
+			,#{D1_2,jdbcType=VARCHAR}
+			,#{D1_3,jdbcType=VARCHAR}
+			,#{D1_4,jdbcType=VARCHAR}
+			,#{D1_4T,jdbcType=VARCHAR}
+			,#{D2R1C1,jdbcType=VARCHAR}
+			,#{D2R1C2,jdbcType=NUMERIC}
+			,#{D2R1C3,jdbcType=NUMERIC}
+			,#{D2R2C1,jdbcType=VARCHAR}
+			,#{D2R2C2,jdbcType=NUMERIC}
+			,#{D2R2C3,jdbcType=NUMERIC}
+			,#{D2R3C1,jdbcType=VARCHAR}
+			,#{D2R3C2,jdbcType=NUMERIC}
+			,#{D2R3C3,jdbcType=NUMERIC}
+			,#{D2R4C1,jdbcType=VARCHAR}
+			,#{D2R4C2,jdbcType=NUMERIC}
+			,#{D2R4C3,jdbcType=NUMERIC}
+			,#{D2R5C1,jdbcType=VARCHAR}
+			,#{D2R5C2,jdbcType=NUMERIC}
+			,#{D2R5C3,jdbcType=NUMERIC}
+			,#{D2R6C1,jdbcType=VARCHAR}
+			,#{D2R6C2,jdbcType=NUMERIC}
+			,#{D2R6C3,jdbcType=NUMERIC}
+			,#{D2R7C1,jdbcType=VARCHAR}
+			,#{D2R7C2,jdbcType=NUMERIC}
+			,#{D2R7C3,jdbcType=NUMERIC}
+			,#{D3R1C1,jdbcType=NUMERIC}
+			,#{D3R1C2,jdbcType=NUMERIC}
+			,#{D3R1C3,jdbcType=NUMERIC}
+			,#{D3R1C4,jdbcType=NUMERIC}
+			,#{D3R1C5,jdbcType=NUMERIC}
+			,#{D3R2C1,jdbcType=NUMERIC}
+			,#{D3R2C3,jdbcType=NUMERIC}
+			,#{D3R2C5,jdbcType=NUMERIC}
+			,#{D3R3C1,jdbcType=NUMERIC}
+			,#{D3R3C3,jdbcType=NUMERIC}
+			,#{D3R3C5,jdbcType=NUMERIC}
+			,#{D3A_1,jdbcType=VARCHAR}
+			,#{D3A_2,jdbcType=VARCHAR}
+			,#{D3A_3,jdbcType=VARCHAR}
+			,#{D3AE,jdbcType=VARCHAR}
+			,#{D4,jdbcType=VARCHAR}
+			,#{D4R1,jdbcType=NUMERIC}
+			,#{D4R2_1,jdbcType=VARCHAR}
+			,#{D4R2_2,jdbcType=VARCHAR}
+			,#{D4R2_3,jdbcType=VARCHAR}
+			,#{D4R2_4,jdbcType=VARCHAR}
+			,#{D4R2_5,jdbcType=VARCHAR}
+			,#{D4R2_6,jdbcType=VARCHAR}
+			,#{D4R2_6T,jdbcType=VARCHAR}
+			,#{D4R3_1,jdbcType=VARCHAR}
+			,#{D4R3_2,jdbcType=VARCHAR}
+			,#{D4R3_3,jdbcType=VARCHAR}
+			,#{D4R3_4,jdbcType=VARCHAR}
+			,#{D4R3_4T,jdbcType=VARCHAR}
+			,#{D5,jdbcType=VARCHAR}
+			,#{D5R1,jdbcType=NUMERIC}
+			,#{D5R2_1,jdbcType=VARCHAR}
+			,#{D5R2_2,jdbcType=VARCHAR}
+			,#{D5R2_3,jdbcType=VARCHAR}
+			,#{D5R2_4,jdbcType=VARCHAR}
+			,#{D5R2_5,jdbcType=VARCHAR}
+			,#{D5R2_6,jdbcType=VARCHAR}
+			,#{D5R2_6T,jdbcType=VARCHAR}
+			,#{D6,jdbcType=VARCHAR}
+			,#{D6R1,jdbcType=NUMERIC}
+			,#{D6R2_1,jdbcType=VARCHAR}
+			,#{D6R2_2,jdbcType=VARCHAR}
+			,#{D6R2_3,jdbcType=VARCHAR}
+			,#{D6R2_4,jdbcType=VARCHAR}
+			,#{D6R2_5,jdbcType=VARCHAR}
+			,#{D6R2_6,jdbcType=VARCHAR}
+			,#{D7A,jdbcType=VARCHAR}
+			,#{D7B,jdbcType=VARCHAR}
+			,#{D7AR1C0,jdbcType=VARCHAR}
+			,#{D7AR1C1,jdbcType=NUMERIC}
+			,#{D7AR1C2,jdbcType=NUMERIC}
+			,#{D7AR1C3,jdbcType=NUMERIC}
+			,#{D7AR1C4,jdbcType=NUMERIC}
+			,#{D7AR1C5,jdbcType=NUMERIC}
+			,#{D7AR2C0,jdbcType=VARCHAR}
+			,#{D7AR2C1,jdbcType=NUMERIC}
+			,#{D7AR2C2,jdbcType=NUMERIC}
+			,#{D7AR2C3,jdbcType=NUMERIC}
+			,#{D7AR2C4,jdbcType=NUMERIC}
+			,#{D7AR2C5,jdbcType=NUMERIC}
+			,#{D7AR3C0,jdbcType=VARCHAR}
+			,#{D7AR3C1,jdbcType=NUMERIC}
+			,#{D7AR3C2,jdbcType=NUMERIC}
+			,#{D7AR3C3,jdbcType=NUMERIC}
+			,#{D7AR3C4,jdbcType=NUMERIC}
+			,#{D7AR3C5,jdbcType=NUMERIC}
+			,#{D7AR4C0,jdbcType=VARCHAR}
+			,#{D7AR4C1,jdbcType=NUMERIC}
+			,#{D7AR4C2,jdbcType=NUMERIC}
+			,#{D7AR4C3,jdbcType=NUMERIC}
+			,#{D7AR4C4,jdbcType=NUMERIC}
+			,#{D7AR4C5,jdbcType=NUMERIC}
+			,#{D7AR5C0,jdbcType=VARCHAR}
+			,#{D7AR5C1,jdbcType=NUMERIC}
+			,#{D7AR5C2,jdbcType=NUMERIC}
+			,#{D7AR5C3,jdbcType=NUMERIC}
+			,#{D7AR5C4,jdbcType=NUMERIC}
+			,#{D7AR5C5,jdbcType=NUMERIC}
+			,#{D7AR6C0,jdbcType=VARCHAR}
+			,#{D7AR6C1,jdbcType=NUMERIC}
+			,#{D7AR6C2,jdbcType=NUMERIC}
+			,#{D7AR6C3,jdbcType=NUMERIC}
+			,#{D7AR6C4,jdbcType=NUMERIC}
+			,#{D7AR6C5,jdbcType=NUMERIC}
+			,#{D7AR7C0,jdbcType=VARCHAR}
+			,#{D7AR7C1,jdbcType=NUMERIC}
+			,#{D7AR7C2,jdbcType=NUMERIC}
+			,#{D7AR7C3,jdbcType=NUMERIC}
+			,#{D7AR7C4,jdbcType=NUMERIC}
+			,#{D7AR7C5,jdbcType=NUMERIC}
+			,#{D7AR8C0,jdbcType=VARCHAR}
+			,#{D7AR8C1,jdbcType=NUMERIC}
+			,#{D7AR8C2,jdbcType=NUMERIC}
+			,#{D7AR8C3,jdbcType=NUMERIC}
+			,#{D7AR8C4,jdbcType=NUMERIC}
+			,#{D7AR8C5,jdbcType=NUMERIC}
+			,#{D7AR9C0,jdbcType=VARCHAR}
+			,#{D7AR9C1,jdbcType=NUMERIC}
+			,#{D7AR9C2,jdbcType=NUMERIC}
+			,#{D7AR9C3,jdbcType=NUMERIC}
+			,#{D7AR9C4,jdbcType=NUMERIC}
+			,#{D7AR9C5,jdbcType=NUMERIC}
+			,#{D7AR10C0,jdbcType=VARCHAR}
+			,#{D7AR10C1,jdbcType=NUMERIC}
+			,#{D7AR10C2,jdbcType=NUMERIC}
+			,#{D7AR10C3,jdbcType=NUMERIC}
+			,#{D7AR10C4,jdbcType=NUMERIC}
+			,#{D7AR10C5,jdbcType=NUMERIC}
+			,#{D7AR11C0,jdbcType=VARCHAR}
+			,#{D7AR11C1,jdbcType=NUMERIC}
+			,#{D7AR11C2,jdbcType=NUMERIC}
+			,#{D7AR11C3,jdbcType=NUMERIC}
+			,#{D7AR11C4,jdbcType=NUMERIC}
+			,#{D7AR11C5,jdbcType=NUMERIC}
+			,#{D7AR12C0,jdbcType=VARCHAR}
+			,#{D7AR12C1,jdbcType=NUMERIC}
+			,#{D7AR12C2,jdbcType=NUMERIC}
+			,#{D7AR12C3,jdbcType=NUMERIC}
+			,#{D7AR12C4,jdbcType=NUMERIC}
+			,#{D7AR12C5,jdbcType=NUMERIC}
+			,#{D7BR1C0,jdbcType=VARCHAR}
+			,#{D7BR1C1,jdbcType=NUMERIC}
+			,#{D7BR1C2,jdbcType=NUMERIC}
+			,#{D7BR1C3,jdbcType=NUMERIC}
+			,#{D7BR1C4,jdbcType=NUMERIC}
+			,#{D7BR1C5,jdbcType=NUMERIC}
+			,#{D7BR2C0,jdbcType=VARCHAR}
+			,#{D7BR2C1,jdbcType=NUMERIC}
+			,#{D7BR2C2,jdbcType=NUMERIC}
+			,#{D7BR2C3,jdbcType=NUMERIC}
+			,#{D7BR2C4,jdbcType=NUMERIC}
+			,#{D7BR2C5,jdbcType=NUMERIC}
+			,#{D7BR3C0,jdbcType=VARCHAR}
+			,#{D7BR3C1,jdbcType=NUMERIC}
+			,#{D7BR3C2,jdbcType=NUMERIC}
+			,#{D7BR3C3,jdbcType=NUMERIC}
+			,#{D7BR3C4,jdbcType=NUMERIC}
+			,#{D7BR3C5,jdbcType=NUMERIC}
+			,#{D7BR4C0,jdbcType=VARCHAR}
+			,#{D7BR4C1,jdbcType=NUMERIC}
+			,#{D7BR4C2,jdbcType=NUMERIC}
+			,#{D7BR4C3,jdbcType=NUMERIC}
+			,#{D7BR4C4,jdbcType=NUMERIC}
+			,#{D7BR4C5,jdbcType=NUMERIC}
+			,#{D7BR5C0,jdbcType=VARCHAR}
+			,#{D7BR5C1,jdbcType=NUMERIC}
+			,#{D7BR5C2,jdbcType=NUMERIC}
+			,#{D7BR5C3,jdbcType=NUMERIC}
+			,#{D7BR5C4,jdbcType=NUMERIC}
+			,#{D7BR5C5,jdbcType=NUMERIC}
+			,#{D7BR6C0,jdbcType=VARCHAR}
+			,#{D7BR6C1,jdbcType=NUMERIC}
+			,#{D7BR6C2,jdbcType=NUMERIC}
+			,#{D7BR6C3,jdbcType=NUMERIC}
+			,#{D7BR6C4,jdbcType=NUMERIC}
+			,#{D7BR6C5,jdbcType=NUMERIC}
+			,#{D7BR7C0,jdbcType=VARCHAR}
+			,#{D7BR7C1,jdbcType=NUMERIC}
+			,#{D7BR7C2,jdbcType=NUMERIC}
+			,#{D7BR7C3,jdbcType=NUMERIC}
+			,#{D7BR7C4,jdbcType=NUMERIC}
+			,#{D7BR7C5,jdbcType=NUMERIC}
+			,#{D7BR8C0,jdbcType=VARCHAR}
+			,#{D7BR8C1,jdbcType=NUMERIC}
+			,#{D7BR8C2,jdbcType=NUMERIC}
+			,#{D7BR8C3,jdbcType=NUMERIC}
+			,#{D7BR8C4,jdbcType=NUMERIC}
+			,#{D7BR8C5,jdbcType=NUMERIC}
+			,#{D7BR9C0,jdbcType=VARCHAR}
+			,#{D7BR9C1,jdbcType=NUMERIC}
+			,#{D7BR9C2,jdbcType=NUMERIC}
+			,#{D7BR9C3,jdbcType=NUMERIC}
+			,#{D7BR9C4,jdbcType=NUMERIC}
+			,#{D7BR9C5,jdbcType=NUMERIC}
+			,#{D7BR10C0,jdbcType=VARCHAR}
+			,#{D7BR10C1,jdbcType=NUMERIC}
+			,#{D7BR10C2,jdbcType=NUMERIC}
+			,#{D7BR10C3,jdbcType=NUMERIC}
+			,#{D7BR10C4,jdbcType=NUMERIC}
+			,#{D7BR10C5,jdbcType=NUMERIC}
+			,#{D7BR11C0,jdbcType=VARCHAR}
+			,#{D7BR11C1,jdbcType=NUMERIC}
+			,#{D7BR11C2,jdbcType=NUMERIC}
+			,#{D7BR11C3,jdbcType=NUMERIC}
+			,#{D7BR11C4,jdbcType=NUMERIC}
+			,#{D7BR11C5,jdbcType=NUMERIC}
+			,#{D7BR12C0,jdbcType=VARCHAR}
+			,#{D7BR12C1,jdbcType=NUMERIC}
+			,#{D7BR12C2,jdbcType=NUMERIC}
+			,#{D7BR12C3,jdbcType=NUMERIC}
+			,#{D7BR12C4,jdbcType=NUMERIC}
+			,#{D7BR12C5,jdbcType=NUMERIC}
+			,#{DM1,jdbcType=VARCHAR}
+			,#{DM2,jdbcType=NUMERIC}
+			,#{DM3,jdbcType=VARCHAR}
+			,#{DM4,jdbcType=VARCHAR}
+			,#{DM5,jdbcType=NUMERIC}
+			,#{DM6,jdbcType=VARCHAR}
+    	)
+    </insert>
+    
+    <select id="searchCombo" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	/* 종류 콤보 조회 */
+    	SELECT CD_ID, CD_NM
+		  FROM TB_CM_CODE
+		 WHERE GP_ID = 'FLOWER_KIND'
+		 ORDER BY SEQ
+    </select>
+</mapper>

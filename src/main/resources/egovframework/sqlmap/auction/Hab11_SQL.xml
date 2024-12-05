@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hab11.mapper.Hab11Mapper">
+
+   	<resultMap id="resultInfo" type="java.util.HashMap">
+		<result property="cdId" column="CD_ID"/>
+		<result property="cdNm" column="CD_NM"/>
+		<result property="totAmt" column="TOT_AMT"/>
+		<result property="totQty" column="TOT_QTY"/>
+		<result property="maxAmt" column="MAX_AMT"/>
+		<result property="minAmt" column="MIN_AMT"/>
+		<result property="avgAmt" column="AVG_AMT"/>
+
+	</resultMap>
+
+	<select id="selectList" parameterType="java.util.HashMap" resultMap="resultInfo">
+		<![CDATA[
+			SELECT /* com.fpdisys.dist.hab11.mapper.Hab11Mapper.selectList */
+			      '1'                           	AS CD_ID
+			    , '조건1'                      		AS CD_NM
+			    , ROUND(SUM(X.TOT_AMT), 0)  AS TOT_AMT
+			    , ROUND(SUM(X.TOT_QTY), 0)   AS TOT_QTY
+			    , ROUND(MAX(X.MAX_AMT), 0)  AS MAX_AMT
+			    , ROUND(MIN(X.MIN_AMT), 0)  AS MIN_AMT
+			    , ROUND(ROUND(SUM(X.TOT_AMT), 0) / ROUND(SUM(X.TOT_QTY), 0), 0)  AS AVG_AMT
+			  FROM (SELECT SALE_DATE
+			    		 , TOT_AMT
+			    		 , TOT_QTY
+			    		 , MAX_AMT
+			    		 , MIN_AMT
+			    		 , FLOWER_GUBN
+			    		 , CMP_CD
+			    		 , CASE WHEN CMP_CD = '0000000001' THEN DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) ELSE PUM_NAME END AS PUM_NAME
+			    		 , GOOD_NAME
+			  		  FROM T_SALE_DATE) X
+			 WHERE X.SALE_DATE BETWEEN #{saleDate1From, jdbcType=VARCHAR} AND #{saleDate1To, jdbcType=VARCHAR}
+		]]>
+			<if test="flowerCtgrList1 != null and flowerCtgrList1.size > 0">
+			   AND X.FLOWER_GUBN IN
+				<foreach item="flower" collection="flowerCtgrList1" open="(" separator="," close=")">
+		        	#{flower, jdbcType=VARCHAR}
+		 		</foreach>
+			</if>
+			<if test="marketList1 != null and marketList1.size != 0">
+				AND X.CMP_CD IN
+				<foreach item="item" collection="marketList1" open="(" separator="," close=")">
+				        #{item}
+				</foreach>
+			</if>
+			<if test="itemList1 != null and itemList1.size != 0">
+				AND X.PUM_NAME IN
+				<foreach item="item" collection="itemList1" open="(" separator="," close=")">
+				        #{item}
+				</foreach>
+			</if>
+			<if test="itemDtlList1 != null and itemDtlList1.size != 0">
+				AND X.GOOD_NAME IN
+				<foreach item="item" collection="itemDtlList1" open="(" separator="," close=")">
+				        #{item}
+				</foreach>
+			</if>
+
+		<![CDATA[
+			UNION ALL
+			SELECT
+			
+			      '2'                           	AS CD_ID
+			    , '조건2'                     		AS CD_NM
+			    , ROUND(SUM(X.TOT_AMT), 0)  AS TOT_AMT
+			    , ROUND(SUM(X.TOT_QTY), 0)   AS TOT_QTY
+			    , ROUND(MAX(X.MAX_AMT), 0)  AS MAX_AMT
+			    , ROUND(MIN(X.MIN_AMT), 0)  AS MIN_AMT
+			    , ROUND(ROUND(SUM(X.TOT_AMT), 0) / ROUND(SUM(X.TOT_QTY), 0), 0)  AS AVG_AMT
+			  FROM (SELECT SALE_DATE
+			    		 , TOT_AMT
+			    		 , TOT_QTY
+			    		 , MAX_AMT
+			    		 , MIN_AMT
+			    		 , FLOWER_GUBN
+			    		 , CMP_CD
+			    		 , CASE WHEN CMP_CD = '0000000001' THEN DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) ELSE PUM_NAME END AS PUM_NAME
+			    		 , GOOD_NAME
+			  		  FROM T_SALE_DATE) X
+			 WHERE X.SALE_DATE BETWEEN #{saleDate2From, jdbcType=VARCHAR} AND #{saleDate2To, jdbcType=VARCHAR}
+		]]>
+			<if test="flowerCtgrList2 != null and flowerCtgrList2.size > 0">
+			   AND X.FLOWER_GUBN IN
+				<foreach item="flower" collection="flowerCtgrList2" open="(" separator="," close=")">
+		        	#{flower, jdbcType=VARCHAR}
+		 		</foreach>
+			</if>
+			<if test="marketList2 != null and marketList2.size != 0">
+				AND X.CMP_CD IN
+				<foreach item="item" collection="marketList2" open="(" separator="," close=")">
+				        #{item}
+				</foreach>
+			</if>
+			<if test="itemList2 != null and itemList2.size != 0">
+				AND X.PUM_NAME IN
+				<foreach item="item" collection="itemList2" open="(" separator="," close=")">
+				        #{item}
+				</foreach>
+			</if>
+			<if test="itemDtlList2 != null and itemDtlList2.size != 0">
+				AND X.GOOD_NAME IN
+				<foreach item="item" collection="itemDtlList2" open="(" separator="," close=")">
+				        #{item}
+				</foreach>
+			</if>
+
+		<![CDATA[
+			 ORDER BY CD_ID
+		]]>
+	</select>
+</mapper>

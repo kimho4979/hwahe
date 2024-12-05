@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.haa06.mapper.Haa06_Mapper">
+	<select id="selectHaa06ChartJson1" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT SALE_MONTH, SUM(TOT_QTY) as TOT_QTY
+		FROM T_SALE_MONTH
+		WHERE SUBSTR(SALE_MONTH, 1, 4) BETWEEN #{searchStrDate} AND #{searchEndDate}
+		AND CMP_CD = '0000000001'
+		AND FLOWER_GUBN IN ('1', '2', '3')
+		GROUP BY SALE_MONTH
+	</select>
+	
+	<select id="selectHaa06ChartJson2" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT YYYY, MEJANG, PUM_NAME, SUM(TOT_QTY) AS TOT_QTY
+		FROM
+		(
+		    SELECT YYYY, MEJANG
+		    , CASE WHEN EXISTS (SELECT 1
+		                                FROM
+		                                (
+		                                    SELECT MEJANG, PUM_NAME, SUM(QTY) AS TOT_QTY, RANK() OVER (PARTITION BY MEJANG ORDER BY MEJANG, SUM(QTY) DESC, PUM_NAME DESC) AS QTY_RANK
+		                                      FROM (SELECT GOOD_NAME
+									          			 , CMP_GOOD
+									          			 , QTY
+									          			 , TOT_QTY
+									          			 , CASE WHEN CMP_CD = '0000000001' THEN DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) ELSE PUM_NAME END AS PUM_NAME
+									          			 , CMP_CD
+									          			 , SALE_DATE
+									          			 , MEJANG
+									                   FROM T_SALE
+									               ) 
+		                                    WHERE SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+		                                    AND CMP_CD = '0000000001'
+		                                    AND MEJANG IN ('1', '2', '3')
+		                                    GROUP BY MEJANG, PUM_NAME
+		                                ) B
+		                                WHERE B.QTY_RANK <![CDATA[<=]]> 20
+		                                AND A.PUM_NAME = B.PUM_NAME
+		                                AND A.MEJANG = B.MEJANG) THEN PUM_NAME
+		                                                             ELSE '기타' END AS PUM_NAME
+		    , TOT_QTY
+		    FROM
+		    (
+		        SELECT SUBSTR(SALE_DATE, 1, 4) AS YYYY, MEJANG, PUM_NAME, SUM(QTY) AS TOT_QTY
+		          FROM (SELECT GOOD_NAME
+		          			 , CMP_GOOD
+		          			 , QTY
+		          			 , TOT_QTY
+		          			 , CASE WHEN CMP_CD = '0000000001' THEN DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) ELSE PUM_NAME END AS PUM_NAME
+		          			 , CMP_CD
+		          			 , SALE_DATE
+		          			 , MEJANG
+		                   FROM T_SALE
+		               ) A
+		        WHERE ((SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}) OR (SALE_DATE BETWEEN #{searchPreStrDate} AND #{searchPreEndDate}))
+		        AND CMP_CD = '0000000001'
+		        AND MEJANG IN ('1', '2', '3')
+		        GROUP BY SUBSTR(SALE_DATE, 1, 4), MEJANG, PUM_NAME
+		    ) A
+		)
+		GROUP BY YYYY, MEJANG, PUM_NAME
+		ORDER BY YYYY, MEJANG, TOT_QTY DESC
+	</select>
+	
+	<select id="selectHaa06ChartJson3" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		WITH TOP_KIND AS 
+		(
+		    SELECT MEJANG, PUM_NAME, TOT_QTY, RANK
+		    FROM
+		    (
+		        SELECT MEJANG, PUM_NAME, TOT_QTY, RANK() OVER (PARTITION BY MEJANG ORDER BY MEJANG, TOT_QTY DESC, PUM_NAME) AS RANK
+		        FROM(
+		            SELECT MEJANG
+		                 , PUM_NAME
+		                 , SUM(QTY) AS TOT_QTY
+		            FROM (SELECT MEJANG
+		             		  , CASE WHEN CMP_CD = '0000000001' THEN DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) ELSE PUM_NAME END AS PUM_NAME
+		             		  , QTY
+		             		  , CMP_CD
+		             		  , SALE_DATE
+		                    FROM T_SALE
+		                 )
+		            WHERE SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+		            AND CMP_CD = '0000000001'
+		            AND MEJANG IN ('1', '2', '3')
+		            GROUP BY MEJANG, PUM_NAME
+		        )
+		    ) B
+		    WHERE B.RANK <![CDATA[<=]]> 20
+		)
+		SELECT A.MEJANG, A.PUM_NAME, A.TOT_QTY, A.RANK, B.RGB_CODE
+		FROM TOP_KIND A
+		LEFT OUTER JOIN (
+		    SELECT MEJANG, PUM_NAME, RGB_CODE
+		    FROM
+		    (
+		        SELECT A.MEJANG, A.PUM_NAME, A.GOOD_NAME, A.CMP_GOOD, A.TOT_QTY, B.RGB_CODE, RANK() OVER (PARTITION BY MEJANG, PUM_NAME ORDER BY TOT_QTY DESC, GOOD_NAME) AS RANK
+		        FROM
+		        (
+		            SELECT A.MEJANG
+		                 , A.PUM_NAME
+		                 , A.GOOD_NAME
+		                 , A.CMP_GOOD
+		                 , SUM(A.QTY) AS TOT_QTY
+		              FROM (SELECT GOOD_NAME
+			          			 , CMP_GOOD
+			          			 , QTY
+			          			 , TOT_QTY
+			          			 , CASE WHEN CMP_CD = '0000000001' THEN DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) ELSE PUM_NAME END AS PUM_NAME
+			          			 , CMP_CD
+			          			 , SALE_DATE
+			          			 , MEJANG
+			                   FROM T_SALE
+			               ) A
+		            WHERE SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+		            AND CMP_CD = '0000000001'
+		            AND MEJANG IN ('1', '2', '3')
+		            AND EXISTS (SELECT 1
+		                        FROM TOP_KIND B
+		                        WHERE B.MEJANG = A.MEJANG
+		                        AND B.PUM_NAME = A.PUM_NAME)
+		            GROUP BY MEJANG, PUM_NAME, GOOD_NAME, CMP_GOOD
+		        ) A
+		        INNER JOIN (
+		            SELECT PUM_CODE, P_JONG_NAME, RGB_CODE
+		            FROM A_PUM_JONG_INFO
+		            WHERE RGB_CODE IS NOT NULL
+		        ) B
+		        ON A.CMP_GOOD = B.PUM_CODE
+		    )
+		    WHERE RANK = 1
+		) B
+		ON A.PUM_NAME = B.PUM_NAME
+		AND A.MEJANG = B.MEJANG
+	</select>
+	
+	<select id="selectHaa06ChartJson4" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT ROWNUM, GOOD_NAME AS PUM_NAME, CMP_GOOD, TOT_QTY, RANK, B.RGB_CODE, A.PUM_NAME2
+		FROM
+		(
+		    SELECT GOOD_NAME, CMP_GOOD, TOT_QTY, RANK() OVER (ORDER BY TOT_QTY DESC, GOOD_NAME) AS RANK, PUM_NAME2
+		    FROM(
+		        SELECT GOOD_NAME, CMP_GOOD, SUM(QTY) AS TOT_QTY, MAX(PUM_NAME) AS PUM_NAME2
+		          FROM (SELECT GOOD_NAME
+		          			 , CMP_GOOD
+		          			 , QTY
+		          			 , TOT_QTY
+		          			 , CASE WHEN CMP_CD = '0000000001' THEN DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) ELSE PUM_NAME END AS PUM_NAME
+		          			 , CMP_CD
+		          			 , SALE_DATE
+		          			 , MEJANG
+		                  FROM T_SALE
+		                ) 
+		        WHERE SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+		        AND CMP_CD = '0000000001'
+		        AND MEJANG = '1'
+		        GROUP BY GOOD_NAME, CMP_GOOD
+		    )
+		) A 
+		LEFT OUTER JOIN (
+		    SELECT PUM_CODE, P_JONG_NAME, RGB_CODE
+		    FROM A_PUM_JONG_INFO
+		    WHERE RGB_CODE IS NOT NULL
+		) B
+		ON A.CMP_GOOD = B.PUM_CODE
+		WHERE A.RANK <![CDATA[<=]]> 50	
+		ORDER BY A.TOT_QTY DESC
+	</select>
+</mapper>

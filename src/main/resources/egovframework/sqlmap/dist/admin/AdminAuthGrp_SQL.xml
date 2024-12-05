@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.group.mapper.AdminAuthGrpMapper">
+    <resultMap id="grpAuthResultMap" type="com.fpdisys.admin.group.domain.AdminAuthGrpVO">
+	    <result property="grpAuthCd" column="GRP_AUTH_CD"/>
+	    <result property="grpAuthNm" column="GRP_AUTH_NM"/>
+	    <result property="remark" column="REMARK"/>
+	    <result property="useYn" column="USE_YN"/>
+	    <result property="regDt" column="INS_DT"/>
+        <result property="insId" column="INS_ID"/>
+        <result property="uptSDt" column="UPT_DT"/>
+        <result property="uptId" column="UPT_ID"/>    
+    </resultMap>
+    
+    <select id="selectAdminAuthGrpAll" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="grpAuthResultMap">
+      SELECT A.GRP_AUTH_CD,
+	       A.GRP_AUTH_NM,
+	       A.REMARK,
+	       A.USE_YN,
+	       A.INS_DT,
+	       A.INS_ID,
+	       A.UPT_DT,
+	       A.UPT_ID
+	  FROM T_AUTH_GRP A
+        
+    </select>
+    
+    <select id="selectAdminAuthGrpSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="grpAuthResultMap">
+	 SELECT A.GRP_AUTH_CD,
+	       A.GRP_AUTH_NM,
+	       A.REMARK,
+	       A.USE_YN,
+	       A.INS_DT,
+	       A.INS_ID,
+	       A.UPT_DT,
+	       A.UPT_ID
+	  FROM T_AUTH_GRP A
+	  WHERE 1=1 
+	  <if  test ="searchParams!=null and searchParams!='' " >
+	  	AND A.GRP_AUTH_CD LIKE '%'|| #{searchParams, jdbcType=VARCHAR}||'%' OR  A.GRP_AUTH_NM LIKE '%'|| #{searchParams, jdbcType=VARCHAR}||'%'
+	  </if>
+	  ORDER BY A.GRP_AUTH_CD ,A.GRP_AUTH_NM        
+    </select>
+     
+    <select id="selectAdminAuthGrpSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="grpAuthResultMap">
+       SELECT data.* 
+	  FROM 
+	       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+	              ROWNUM ROW_NUM, 
+	              ROWNUM LINENUM, 
+	              data.* 
+	         FROM 
+	              (      
+	              
+	                	 SELECT A.GRP_AUTH_CD,
+							       A.GRP_AUTH_NM,
+							       A.REMARK,
+							       A.USE_YN,
+							       A.INS_DT,
+							       A.INS_ID,
+							       A.UPT_DT,
+							       A.UPT_ID
+							  FROM T_AUTH_GRP A
+							  WHERE 1=1 
+							  <if  test ="searchParams!=null and searchParams!='' " >
+							  AND A.GRP_AUTH_CD LIKE '%'|| #{searchParams, jdbcType=VARCHAR}||'%' OR  A.GRP_AUTH_NM LIKE '%'|| #{searchParams, jdbcType=VARCHAR}||'%'
+							  </if>
+							  ORDER BY A.GRP_AUTH_CD ,A.GRP_AUTH_NM        
+    
+	        	  			  
+				) data 
+       		) data 
+ 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+</select>    
+        
+  <select id="getAdminAuthGrpOne"  parameterType="java.util.HashMap" statementType="PREPARED" resultMap="grpAuthResultMap">
+    SELECT A.GRP_AUTH_CD,
+       A.GRP_AUTH_NM,
+       A.REMARK,
+       A.USE_YN,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_AUTH_GRP A
+  WHERE 1=1 
+  AND A.GRP_AUTH_CD =  #{grpAuthCd, jdbcType=VARCHAR}
+    
+  </select> 
+  <insert id="insertAdminAuthGrp" parameterType="java.util.HashMap"  >
+      INSERT INTO T_AUTH_GRP 
+       ( 
+           GRP_AUTH_CD,
+           GRP_AUTH_NM,
+           REMARK,
+           USE_YN,
+           INS_DT,
+           INS_ID,
+           UPT_DT,
+           UPT_ID 
+       ) 
+       VALUES 
+       ( 
+           #{grpAuthCd , jdbcType=VARCHAR },
+            #{grpAuthNm , jdbcType=VARCHAR },
+            #{remark , jdbcType=VARCHAR },
+            #{useYn , jdbcType=VARCHAR },
+           SYSDATE,
+            #{userId , jdbcType=VARCHAR }
+       )  
+      
+  </insert> 
+  
+   <update id="updateAdminAuthGrp" parameterType="java.util.HashMap"  >
+       UPDATE T_AUTH_GRP 
+	       SET GRP_AUTH_NM =  #{grpAuthNm , jdbcType=VARCHAR },
+	       REMARK = #{remark , jdbcType=VARCHAR }, 
+	       USE_YN = #{useYn , jdbcType=VARCHAR },
+	       UPT_DT = SYSDATE, 
+	       UPT_ID = #{userId , jdbcType=VARCHAR }
+	 WHERE GRP_AUTH_CD = #{grpAuthCd , jdbcType=VARCHAR } 
+       
+   </update> 
+    <update id="getMargeAdminAuthGrp"  parameterType="java.util.HashMap" >
+          <![CDATA[ 
+          
+                  			MERGE INTO T_AUTH_GRP a
+       			USING DUAL
+       			ON (
+       			      a.GRP_AUTH_CD = #{grpAuthCd     , jdbcType=VARCHAR}
+       				)
+       			WHEN MATCHED THEN
+       				UPDATE SET 
+                 GRP_AUTH_NM =  #{grpAuthNm , jdbcType=VARCHAR },
+                 REMARK = #{remark , jdbcType=VARCHAR }, 
+                 USE_YN = #{useYn , jdbcType=VARCHAR },
+                 UPT_DT = SYSDATE, 
+                 UPT_ID = #{userId , jdbcType=VARCHAR }
+                 
+            WHEN NOT MATCHED THEN
+                INSERT 
+           ( 
+               GRP_AUTH_CD,
+               GRP_AUTH_NM,
+               REMARK,
+               USE_YN,
+               INS_DT,
+               INS_ID
+           ) 
+           VALUES 
+           ( 
+               #{grpAuthCd , jdbcType=VARCHAR },
+                #{grpAuthNm , jdbcType=VARCHAR },
+                #{remark , jdbcType=VARCHAR },
+                #{useYn , jdbcType=VARCHAR },
+               SYSDATE,
+                #{userId , jdbcType=VARCHAR }
+           )  
+          
+          
+             	]]>
+       </update>  
+    
+    </mapper>

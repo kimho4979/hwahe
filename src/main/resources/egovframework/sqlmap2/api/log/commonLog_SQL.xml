@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.egovapi.mapper.CommonApiLogMapper">
+	
+	<!-- 실패 로그 -->
+	<insert id="insertFailLog" parameterType="java.util.HashMap">
+		INSERT INTO TB_JOB_FAIL(
+			JOB_ID
+			,LOG_SEQ
+			,FAIL_SEQ
+			,FAIL_DATA
+			,FAIL_DETAIL
+		)VALUES(
+			#{jobId}
+			,#{logSeq}
+			,(SELECT NVL(MAX(FAIL_SEQ),0)+1 FROM TB_JOB_FAIL)
+			,#{data}
+			,#{detail}
+		)
+	</insert>
+	
+	<!-- 스케쥴러 시작해 해당스케쥴러에대한 로그 등록, 상태값 변경은 차후 돌아감 -->
+	<insert id="startJobLog" parameterType="java.util.HashMap">
+		<selectKey keyProperty="logSeq" resultType="String" order="BEFORE">
+			SELECT NVL(MAX(LOG_SEQ),0)+1 FROM TB_JOB_LOG
+		</selectKey>
+		INSERT INTO TB_JOB_LOG(
+			JOB_ID
+			,LOG_SEQ
+			,LOG_STAT
+			,LOG_FAIL_RESN
+			,JOB_PRCD_NM
+			,LOG_DT
+			,LOG_GUBN
+		)VALUES(
+			#{jobId}
+			,#{logSeq}
+			,'1'
+			,NULL
+			,NULL
+			,SYSDATE
+			,#{logGubun}
+		)
+	</insert>
+	
+	<!-- 오류 한건 이상 발생시 로그 데이터 오류로 변경 -->
+	<update id="updateLog" parameterType="java.util.HashMap">
+		UPDATE TB_JOB_LOG SET
+			LOG_STAT = #{result}
+			,LOG_FAIL_RESN = #{errorDetail} 
+		WHERE 
+			JOB_ID = #{jobId}
+			AND LOG_SEQ = #{logSeq}
+	</update>
+	
+	<!-- 최종갱신시간 변경 -->
+	<update id="updateJobList" parameterType="java.util.HashMap">
+		UPDATE TB_JOB_LIST
+		SET UPT_DT=SYSDATE,
+		UPT_STAT=#{logStat}
+		WHERE JOB_ID=#{jobId}
+	</update>
+	
+	
+	
+</mapper>

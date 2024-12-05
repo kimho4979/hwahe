@@ -1,0 +1,328 @@
+/***헤더***/
+
+
+
+
+
+
+/***서브 텝1_1***/
+
+/***공통 서브 타이틀***/
+.sub_sns{max-width:1300px; margin:0 auto; overflow:hidden; }
+.sub_sns ul.sns_box{float:right; margin-top:20px;}
+.sub_sns ul.sns_box li{display:inline-block; float: left;}
+.sub_title{max-width:1300px; margin:0 auto; margin-bottom: 50px;  margin-top: 50px; }
+.sub_title .title_box{    text-align: center;
+    padding-bottom: 35px;
+    background-image: linear-gradient(to right, gainsboro 33%, rgba(255,255,255,0) 0%);
+    background-position: bottom;
+    background-size: 7px 2px;
+    background-repeat: repeat-x;}
+.sub_title .title_box h2{font-weight:bold; font-size:34px; color:#303030; }
+.sub_title .title_box p{display:none; color:#777; margin-top:17px;  font-size:20px;}
+.sub_title .title_box img{display:none;}
+
+/***공통 tab 컨텐츠**
+.sub_contents{max-width:1300px; margin:0 auto; margin-bottom:40px;}
+.sub_content{}
+.sub_content .sub_tab{overflow:hidden;     display:flex; height:60px}
+.sub_content .sub_tab li.s_on{background:#009e5d; color:#fff; box-sizing:border-box;}
+.sub_content .sub_tab li.s_on a{color:#fff;}
+.sub_content .sub_tab li{line-height: 60px; text-align: center; width:16.6%;float:left; box-sizing:border-box; border-bottom:1px solid #dcdcdc;  border-top:1px solid #dcdcdc; border-right:1px solid #dcdcdc;}
+.sub_content .sub_tab li:nth-child(1){}
+.sub_content .sub_tab li a{font-size:18px; color:#777; letter-spacing: -3px;display:block; }
+.sub_content .sub_tab li a:hover{background:#009e5d; color:#fff; border:1px solid #009e5d; box-sizing:border-box;}
+*/
+.sub_contents{max-width:1300px; margin:0 auto; }
+.sub_content{}
+.sub_content .sub_tab{overflow:hidden; display:flex; }
+.sub_content .sub_tab li.s_on{}
+.sub_content .sub_tab li.s_on a{background:#4d6bed; color:#fff;}
+.sub_content .sub_tab li{ box-sizing:border-box;  text-align: center; width:14.28%; border-right:1px solid #dcdcdc; border-top:1px solid #dcdcdc; border-bottom:1px solid #dcdcdc;}/*텝 사이즈*/
+/*실시간 경매정보 텝 사이즈*/
+.sub_content .sub_tab li:nth-child(1){border-left:1px solid #dcdcdc; }
+.sub_content .sub_tab li a{font-size:18px; display:block; line-height: 60px; color:#000000; line-height:24px;  padding:10px 0; }
+.sub_content .sub_tab li a:hover{background:#4d6bed; color:#fff;}
+
+/*텝 공통 2개*/
+.sub_content{}
+.sub_content .sub_tab_02{overflow:hidden; display:flex; height:60px; border:1px solid #dcdcdc;}
+.sub_content .sub_tab_02 li.s_on{}
+.sub_content .sub_tab_02 li.s_on a{background:#009e5d; color:#fff;}
+.sub_content .sub_tab_02 li{ box-sizing:border-box; border-left:1px solid #dcdcdc; text-align: center; width:50%; }/*텝 사이즈*/
+.sub_content .sub_tab_02 li:nth-child(1){border-left:none; }
+.sub_content .sub_tab_02 li a{font-size:18px; display:block; line-height: 60px; color:#777;}
+.sub_content .sub_tab_02 li a:hover{background:#009e5d; color:#fff;}
+
+/*텝 공통 4개*/
+.sub_content{}
+.sub_content .sub_tab_04{overflow:hidden; width:100%; height:auto;}
+.sub_content .sub_tab_04 li.s_on{}
+.sub_content .sub_tab_04 li.s_on a{background:#009e5d; color:#fff;}
+.sub_content .sub_tab_04 li{float:left; box-sizing:border-box; border:1px solid #dcdcdc; text-align: center; width:25%; line-height:24px;}/*텝 사이즈*/
+/* .sub_content .sub_tab_04 li:nth-child(1){border-left:none; } */
+
+.sub_content .sub_tab_04 li a{font-size:18px; display:block; color:#777; line-height: 24px; padding: 10px 0;}
+.sub_content .sub_tab_04 li a:hover{background:#009e5d; color:#fff;}
+
+/* 꽃리스트 */
+.sub_tab_yangjae{margin-top: 20px; }
+.yangjae_list{ }
+.yangjae_list .sub_fw_btn{overflow: hidden;  }
+.yangjae_list .sub_fw_btn li{float:left; width: 25%; box-sizing:border-box; }
+.yangjae_list .sub_fw_btn li a,
+.yangjae_list .sub_fw_btn_02 li a,
+.yangjae_list .sub_fw_btn_03 li a{display:block; width:calc(100% - 5px); margin:0 auto;  height:100px; text-align:center; font-size:28px; color:#777777; line-height:98px; }
+
+.yangjae_list .sub_fw_btn li:hover a,
+.yangjae_list .sub_fw_btn li.on a,
+.yangjae_list .sub_fw_btn_02 li:hover a,
+.yangjae_list .sub_fw_btn_02 li.on a,
+.yangjae_list .sub_fw_btn_03 li:hover a,
+.yangjae_list .sub_fw_btn_03 li.on a{border-bottom:2px solid #4d6bed; color:#4d6bed;}
+
+
+
+/* .yangjae_list .sub_fw_btn li a img{width:100%} */
+/* 꽃리스트 2개 */
+.yangjae_list .sub_fw_btn_02{overflow: hidden;  }
+.yangjae_list .sub_fw_btn_02 li{float:left; width:50%; box-sizing:border-box; }
+/* .yangjae_list .sub_fw_btn_02 li a img{width:100%} */
+/* 꽃리스트 3개 */
+.yangjae_list .sub_fw_btn_03{overflow: hidden;  }
+.yangjae_list .sub_fw_btn_03 li{float:left; width:33.3%; box-sizing:border-box; }
+/* .yangjae_list .sub_fw_btn_03 li a img{width:100%} */
+
+
+
+/* 리스트조회창 */
+.search_box{height:70px; background:#eee; margin-top:20px; padding-right:10px;}
+
+
+ul.search_box01 li.calendar{ position:relative;}
+ul.search_box01{overflow:hidden;float:right;}
+ul.search_box01 li{float:left; margin-top:12px; padding-bottom:1px;}
+ul.search_box01 li p.search_01_txt{color:#6b6b6b; padding:0px 10px 0px 10px; display:inline-block; vertical-align:middle;}
+ul.search_box01 li.calendar input{color:#6b6b6b; font-size: 16px; width:170px; height:45px; border: 1px solid #aaaaaa; border-radius: 4px; padding-top:2px;}
+ul.search_box01 li.calendar input.except{width:140px!important;}
+ul.search_box01 li select{width:170px!important; height:45px; color:#6b6b6b;}
+ul.search_box01 li select.except{width:140px!important;}
+ul.search_box01 li select#searchTime{width:90px!important; height:45px; color:#6b6b6b;}
+.ui-datepicker-trigger{position:absolute; top:7px; right:10px; cursor:pointer; }
+/* ul.search_box01 li.search_btn{margin-right: 30px; margin-left: 20px; width:120px; text-align:center; height:45px; background:#888888;} */
+ul.search_box01 li.search_btn{margin-right: 30px; margin-left: 20px; width:64px; text-align:center; height:45px; background:#4d6bed; border-radius:4px;}
+ul.search_box01 li.search_btn a{display:block; color:#fff; font-size:18px; line-height:45px;}
+ul.search_box01 li.search_btn a img{vertical-align: sub;}
+/* 2022-12-17 추가*/
+/* ul.search_box01 li.search_btn02{margin-right: 30px; margin-left: 20px; width:224px; text-align:center; height:45px; background:#4d6bed; border-radius:4px;}
+ul.search_box01 li.search_btn02 a{display:block; color:#fff; font-size:18px; line-height:45px;}
+ul.search_box01 li.search_btn02 a img{vertical-align: sub;} */
+
+
+
+/*** 성우경 추가 ***/
+/* 검색박스 따로 */
+.btn_search_box{position:relative; overflow:hidden;}
+.btn_search_box a{display:block; color:#fff; font-size:18px; float:right; line-height:45px; width:120px; text-align:center; height:45px; background:#888888; margin-top:20px;}
+.btn_search_box a img{vertical-align: sub;}
+/*** 성우경 추가 ***/
+
+@media screen and (max-width: 1440px) { 
+
+/*** 푸터 ***/
+.footer{}
+.m_footer{width:100%; height:500px; background:#dcdcdc; display:block; }
+.m_footer_in{width:100%; margin:0 auto; box-sizing:border-box; height:100%; text-align:center;}
+.m_footer_in .m_f_menu{width: 100%; margin-left:0;}
+.m_footer_in .m_f_menu .m_f_menu_list{padding-top:60px; }
+.m_footer_in .m_f_menu .m_f_menu_list a{display:inline-block; font-size:32px; color:#535353; font-weight:bold;}
+.m_footer_in .m_f_menu .m_f_menu_list .m_f_bar{display:inline-block; content:""; width:2px; height:40px; margin:0 20px;  background:#535353; vertical-align:-40%;}
+.m_footer_in .m_f_menu .m_f_menu_address{margin-top:48px;}
+.m_footer_in .m_f_menu .m_f_menu_address p{font-size:32px; line-height:60px; color:#535353; }
+.m_footer_in .m_f_menu .m_f_menu_address p:last-child{font-size:24px;}
+ /* 꽃리스트 */
+    .yangjae_list a{}
+    .yangjae_list a img{width:100%;}
+}
+@media screen and (max-width: 1100px) {
+.sub_content .sub_tab li a{font-size:18px;}
+.sub_content .sub_tab li{width:100%;}
+/*공통텝 2개*/
+.sub_content .sub_tab_02 li a{font-size:16px;}
+.sub_content .sub_tab_02 li{width:100%;}
+ul.search_box01 li p.search_01_txt{padding: 0px 10px 0px 10px;}
+ul.search_box01 li select{width:130px;}
+input[type="text"]{padding:0 8px;}
+ul.search_box01 li.search_btn{margin-right:5px; width:100px; margin-left:5px;}
+
+
+}
+
+@media screen and (max-width: 990px) { 
+.sub_contents{margin:0 15px;}
+.sub_sns{display:none;}
+.sub_sns ul.sns_box li a img{display:inline-block; width:80px;}
+
+/* 꽃리스트 2개 */
+.yangjae_list .sub_fw_btn_02 li{width:50%;}
+/* 꽃리스트 3개 */
+.yangjae_list .sub_fw_btn_03 li{width:33.33%;}
+/* .yangjae_list .sub_fw_btn_03 li:last-child{left: 50%; transform: translateX(50%); } */
+
+
+/*서브 경매정보 공통*/
+.sub_title{margin-top:0 !important; padding:0;}
+/* .sub_title .title_box{text-align:left; margin: 0 30px;} */
+.sub_title .title_box h2{letter-spacing:-3px; font-size:30px; margin-top:60px;}
+.sub_title .title_box p{font-size:28px;}
+.sub_content .sub_tab{display:block;  margin:0px; border:none;}
+.sub_content .sub_tab li{width:33.3%; float: left;}
+.sub_content .sub_tab li:nth-child(4){clear:both;}
+.sub_content .sub_tab li:nth-child(1), .sub_content .sub_tab li:nth-child(2)
+, .sub_content .sub_tab li:nth-child(3), .sub_content .sub_tab li:nth-child(3){border-bottom:none;}
+.sub_content .sub_tab li:nth-child(4), .sub_content .sub_tab li:nth-child(7){border-left:1px solid #dcdcdc;}
+.sub_content .sub_tab li:nth-child(7){border-top:none;}
+.sub_content .sub_tab li a{line-height:22px; font-size:14px;}
+/*공통텝 2개 */
+.sub_content .sub_tab_02{display:block; height:60px; }
+.sub_content .sub_tab_02 li{width:50%; border-bottom:none; border-bottom:2px solid #009e5d; float:left;}
+/*공통 텝 4개*/
+.sub_content .sub_tab_04 li{width:50%!important; }
+ul.search_box01 li p.search_01_txt{font-size:18px}
+/**서브 공통 텝 박스**/
+/* .sub_contents .sub_content{padding: 0 15px 0;} */
+/*이름이 4개입니다*/
+.sub_content .sub_tab_04 li a{font-size:14px; line-height:22px;}
+/**서브 공통 꽃(절화 난 관엽 춘란)**/
+.yangjae_list a.step_03{clear:both; }
+.yangjae_list a{width:50%;  background:none;}
+.yangjae_list{margin: 20px 0px 0;}
+.yangjae_list a.step_01{background-size:cover;}
+.yangjae_list a.step_01:hover{background-size:cover;}
+.yangjae_list a.step_02{background-size:cover;}
+.yangjae_list a.step_02:hover{background-size:cover;}
+.yangjae_list a.step_03{background-size:cover;}
+.yangjae_list a.step_03:hover{background-size:cover;}
+.yangjae_list a.step_04{background-size:cover;}
+.yangjae_list a.step_04:hover{background-size:cover;}
+
+/**서브 공통 셀렉 박스**/
+.search_box{height:100%;}
+ul.search_box01 li{margin-top:5px;}
+ul.search_box01 li.calendar{width:100%; margin-top:5px!important;}
+ul.search_box01 li{clear:both; width:100%; }
+.ui-datepicker-trigger{top:5px; right:10px; }
+ul.search_box01 li.calendar input{width:80%;}
+ul.search_box01 li.calendar input.except{width:calc(100% - 104px)!important;}
+.select2-container{width:86%  !important;}
+ul.search_box01 li select{width:76%}
+ul.search_box01 li select.except{width:calc(100% - 104px)!important;}
+ul.search_box01{overflow:hidden;float:none; padding:10px;}
+ul.search_box01 li.search_btn{width:100%; margin-left:0; }
+ul.search_box01 li{float:none;}
+
+ul.search_box01 li:first-child{margin-top:0;}
+/* ul.search_box01 li:last-child{margin:20px 0 20px 40px;} */
+ul.search_box01 li.last_sel{margin:20px 0 20px 0px;}
+
+/*** 공지사항페이지 ***/
+
+/* .sub_contents{width:100%; margin:0 15px; overflow:unset;} */
+.btn_search_box a{width:100%;}
+}
+
+
+
+
+
+
+@media screen and (max-width: 800px) { 
+.yangjae_list a{clear:both; width:100%; background-size:cover; height:100px; margin-bottom:10px; font-size:20px;}
+.yangjae_list .sub_fw_btn li a{height:80px; line-height:80px; font-size:22px;}
+}
+
+@media screen and (max-width: 767px){
+.sub_content{width:100%!important;}
+}
+@media screen and (max-width: 600px) {
+ul.search_box01 li.calendar input.except{width:calc(100% - 100px)!important;}
+ul.search_box01 li select.except{width:calc(100% - 104px)!important;}
+ul.search_box01 li.search_btn{width:100%; margin-left: 0;}
+
+
+}
+ @media screen and (max-width: 550px) { 
+.sub_content .sub_tab{height:100%;}
+.sub_content .sub_tab li{line-height:20px; width:33.3%;}
+.sub_content .sub_tab li a span{display:block; }
+.sub_content .sub_tab li a{display:block; padding:10px 0; line-height:20px;}
+
+ul.search_box01 li.calendar input.except{width:calc(100% - 95px)!important;}
+ul.search_box01 li select.except{width:calc(100% - 96px)!important;}
+
+/*공통텝 2개*/
+.sub_content .sub_tab_02{height:100%;}
+.sub_content .sub_tab_02 li{line-height:60px; width:50%;}
+.sub_content .sub_tab_02 li a span{display:block; }
+.sub_content .sub_tab_02 li a{display:block; padding:10px 0; }
+.sub_content .sub_tab_04 li a{ padding:10px 0; line-height:20px; }
+
+/*** 공지사항 테이블 ***/
+.table_type_02 tbody tr td .ellipsis{width:70px;}
+ }
+
+ @media screen and (max-width: 400px) { 
+    .sub_contents{margin:0 5px;}
+    .sub_guide{padding:0 5px!important;}
+    .guide{margin:0 5px!important;}
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     

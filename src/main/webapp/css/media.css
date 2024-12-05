@@ -1,0 +1,414 @@
+@charset "utf-8";
+
+/* 
+메인 화면 css
+Site : "화훼유통정보시스템3차"
+Author : "김주연"
+Version : "2018.07"
+*/
+ /**************** 신규 **************/
+ .header01 { height:70px; }
+.logo { position:static; width:214px; height:70px; /* margin:0 auto; */  }
+.logo a { background:url("../images/common/m_logo.png") 10% 0 no-repeat; }
+.nav { display:none; }
+
+/*모바일네비*/
+#header { position: static; }
+.login_btn { display:none; }
+.custom_btn { display:none; }
+.logout_btn  { display:none; }
+.mb_naviBar { display:block; }
+ 
+.sub_header h3 { width:100%;  text-indent: 7%; line-height:66px; font-size: 28px; }
+
+/* ul list table  */
+.ulTable01 { border-right:1px solid #ddd;   }
+.ulTable01 .tbody.td2.last { background:none; }
+.ulTable01 {   }
+.tableList3.height172 { height:auto !important;  }
+.weather_txt { font-size: 25px;} 
+.weather_txt span { font-size: 25px;  }
+.weather_txt .weather_subTxt {top:27px;  font-size: 11px; }
+.weather_icon { width: 35%; }
+
+.address { width:90%; margin:0 auto;  }
+
+ 
+ /**************** 기존 **************/
+/* header */
+.lp_container { width:97%; }
+.container { width:97%; margin:0 auto;  }
+.pcverWrap { display:none; }
+.mbverWrap .selectWrap { display:block; width:100%; }
+
+
+/* content */
+.content { width:32.45% }
+.section h4 {    padding: 19px 0 19px; font-size:18px;  }
+.sub_content {    width: 97%; }
+
+/* 경매날짜선택 */
+.content.ct01 .dd > li {  padding: 0 10px; }
+.dd_ct .search input[type="text"] { width: 55%; }
+.dd_ct .search .calender,.search .ui-datepicker-trigger {     left: 51%;}
+.dd_ct .search .item_searchBtn {    width: 71px;  }
+.searchBtn01 { width:100%;  }
+
+/* 실시간 경매정보 */
+.realtime thead { line-height: 21px; }
+.realtime thead th .br { display:block; }
+
+/* 경매정보분석 */
+.analysis { margin: 20px 10px; }
+.analysis .txt { width: 49.75%; }
+.analysis .txt02 { font-size:22px; }
+.analysis .txt03 { padding: 5px 0; line-height: 30px; }
+.analysis .txt03 span { display:block; line-height:27px; }
+.boxWrap.hab01 .analysis { margin: 11px 10px 20px; }
+
+/* 공지사항 */
+.content2 { width:32.19% }
+.notice {  margin: 0 10px; }
+.notice .tit { max-width: 60%; padding-left: 7px; font-size: 15px; }
+.notice .day { font-size: 13px; }
+
+/* 출하물량 등  */
+.content4 { width:32.19% }
+
+/* 서브페이지 */
+/* .hd_gnb {  width: 52.5%;  margin-left: 47.5%; } */
+
+.ct_gnb li {  width: 32.9%; }
+.ct_gnb .li01 { margin-bottom:5px; }
+.ct_gnb .li02 { margin-bottom:5px; }
+.ct_gnb .li03 { margin-right:0; margin-bottom:5px;   }
+
+.section { top:170px;  }
+
+.box01 { width: 25%; height: 176px;  }
+.box01 img { max-width:134px; max-height:176px; }
+.box02 { width:68%; margin-left:2.5%; }
+.box02 dl dd { height:140px; }
+
+/* .gridWrap96 { width:96% !important; margin-right:0;} */
+.gridWrap { width:98% !important; margin-right:0;}
+.gridWrap.height442 { height:auto !important; padding-bottom:20px; }
+.graphWrap { width:100% ; margin-top: 15px; }
+.graphWrap.graph02 {     height: 360px; margin-top: 0 ; }
+.graphWrap.graph02 .box02 dl { width:99.5%; }
+
+.gridList01 li  { font-size:14px; }
+.gridList01 li span { font-size:14px; }
+.gridList01 li strong { display:block; font-size:14px; }
+.gridList01 .tit_img { text-align: right;  }
+.gridList01 .tit_img.img01 {background-color: #518c70; }
+.gridList01 .tit_img.img02 {background-color: #c85353; }
+.gridList01 .tit_img.img03 {background-color: #9d7828; }
+.gridList01 .tit_img.img04 {background-color: #3399a8; }
+.gridList01 .tit_img.img05 {background-color: #34a631; }
+.gridList01 .tit_img img { max-height: 75px;     max-width: 129px; }
+
+.graphWrap.graph02 .box02 dl dd { height: 307px;}
+.graphWrap.graph04 { width:100%;margin-right: 0%; margin-bottom:15px; }
+
+/* 맞춤정보설정 */
+.sub_titP { width: 90%;  margin: 0 auto; font-size: 15px; }
+.customWrap { width: 60%; }
+.loginList { float: none; width: 100% ; margin-bottom: 15px;}
+.customWrap.passFind .loginList { float:left;  width: 76%; }
+
+.customWrap .btnWrap { float: none; width: 100%; padding-left:0; text-align: center; }
+.customWrap .btnWrap .btn07 { max-width: 120px; height: 60px;  }
+.customWrap .btnWrap .btn08 {  max-width: 120px; margin-right: 0; height: 60px; }
+
+/* 서브 상단 컨텐츠 헤드 */
+.mb_ctHead { margin-bottom:20px; padding-top: 7px;  box-sizing: border-box;  border: 1px solid #3d8187; }
+.mb_ctHead .selectWrap { padding-left: 22px; margin-bottom: 5px; }
+.mb_ctHead .selectWrap li:first-child { width:80px; }
+.mb_ctHead .selectbox{ border: 1px solid #b1b1b1; }
+.mbverWrap .btnWrap { padding-top: 2px; padding-left: 20px; text-align:left; background-color:#fff;  }
+.mbverWrap .btnWrap li {  display:block; margin-bottom: 8px;  }
+/* .mbverWrap .btnWrap .li01 { margin-bottom:5px; }
+.mbverWrap .btnWrap .li02 { margin-bottom:5px; }
+.mbverWrap .btnWrap .li03 { margin-bottom:5px; }
+.mbverWrap .btnWrap .li04 { margin-bottom:5px; } */
+.mbverWrap .btnWrap li label {  display:inline-block;  width: 75px;  font-size: 14px; }
+.mbverWrap input[type="text"].calender { width:180px; height:30px; margin-left: 12px; border: 1px solid #b1b1b1; background-color:#fff; }
+.mbverWrap input[type="text"].searchInput { width:160px; height:30px; border: 1px solid #b1b1b1; background-color:#fff; }
+.mbverWrap .calenIcon, .ui-datepicker-trigger { top: 5px; left: 230px; }
+.mbverWrap .btn01 { width: 80px; height:30px; }
+.mbverWrap .btn09 { width: 253px; height:30px; margin-top: 15px; margin-left: 0; margin-right:0;}
+
+/* 코드검색 추가 */
+.mbverWrap .select2-container .select2-selection--single {width:180px; height:32px;  border:1px solid #b1b1b1;  line-height:32px;  text-indent: 17px; text-align:left; background-color:#fff;}
+.mbverWrap .select2-container--default .select2-selection--single{width:180px; height:32px;  border:1px solid #b1b1b1;   line-height:32px; text-indent: 17px; text-align:left; background-color:#fff;}
+.mbverWrap .select2-container--default .select2-selection--single .select2-selection__rendered { font-size: 13px; color:#666;  line-height:32px; }
+.mbverWrap .select2-container--default .select2-selection--single .select2-selection__arrow { height: 32px; }
+.mbverWrap .select2-container {height: 32px; margin-left: 12px; }
+
+/* 서브탭*/
+.tit_tabList { width:97%;  }
+.tit_tabList li a { font-size: 20px; }
+.tit_tabList li a span { font-size: 20px; }
+
+/* 맞춤정보설정 정보수정 */
+.custom01 .btnWrap2.txtRt { text-align:left !important; }
+.custom01 .subCon_tit { margin-bottom:0; }
+
+/* 사이트맵 */
+.box_sitemap { width:32%; margin-bottom:20px; }
+.box_sitemap.box4 { clear:both; width:49%; }
+.box_sitemap.box5 { width:49%; }
+
+/* 즐겨찾기버튼 */
+.messageBtn { width: 40px; height: 133px; }
+
+/* 장미가격예측 */
+.rosePrice_txt span { font-size: 4vw; }
+.rosePrice_txt .main { text-indent: 20px; text-align: center; }
+.ulTable01 .ulthead { font-size:15px; }
+.rosePrice_txt .subTxt { font-size: 19px; }
+.rosePrice_txt .subTxt2 { font-size: 19px; }
+
+
+@media ( max-width:909px ){ 
+		/* 장미가격예측 */
+	.rosePrice_txt .subTxt { width:35%; }
+	.rosePrice_txt .subTxt2 { width:35%; }
+}
+
+@media ( max-width:782px ){ 
+	.mb_width90p { width:90% !important; }
+	.table03 .selectWrap li { margin-bottom:10px;  }
+	.ulTable01 .ulthead { font-size:14px; }
+	.rosePrice_txt .subTxt {width:35%; padding-right:0; font-size: 19px; }
+	.rosePrice_txt .subTxt2 {width:35%; padding-right:0; font-size: 18px; }
+	
+}
+
+@media ( max-width:767px ){
+	
+	/**** 3차신규 begin ****/
+	/* 헤더 */
+	.mb_naviBar { width: 85px; right: 10px; }
+	.mb_naviBar a { font-size: 15px; }
+	.logo { text-align:left; text-indent:10px; }
+	.visualList { width: 75%; margin-top: 15vh; }
+
+	.tableList3 > li { width:100%; margin-bottom:20px;  }
+	.tableList3 .ulTable01 .tbody.td2 { text-align:center; text-indent: -31%;  }
+	.weather_txt {width:200px;  font-size: 30px; /* right: 7% ; */ top: -6px; text-indent: 0;}
+	.weather_txt .weather_subTxt  {text-align: center;}
+	.weather_txt span { font-size: 30px; }
+	.weather_icon { width: 100px;  }
+
+
+	/**** 3차신규 end ****/
+	
+	.contentWrap { padding-bottom:130px; }
+	
+	.section.sec04 {/*  padding-bottom:140px;  */}
+		
+	.analysis .tit { margin-top: 20px;}
+
+	.btnWrap { text-align:left; padding-left:10px;  }
+	.btnWrap label { font-size:14px; }
+	.btnWrap .li01 { margin-bottom:8px;  }
+	input[type="text"].calender { width:120px; text-indent: 10px; }
+	input[type="text"].searchInput{ width:120px;  }
+	.btn01, .btn01.on {  width: 80px;  height: 35px;  margin-right: 5px;}
+	.btn09, .btn09.on {  width: 80px;  height: 35px;  margin-right: 5px;}
+	.tab_btn01 a { width:99%; }
+	.boxWrap02 .tit { font-size:16px; }
+
+
+	.content {  float: none;  width: 95%;  margin: 0 auto;margin-bottom:10px; }
+	.content.ct02 { width: 95%; height: auto; }
+	.content.ct03 { margin:0 auto; }
+	.analysis { margin: 0;  margin: 20px; }
+	.boxWrap.hab01 .analysis { margin: 11px 20px 20px; }
+
+	.content2 {  width: 95%;  margin: 0 auto;  float: none;  margin-top: 10px; }
+	.content2.ct06 { margin:10px auto; }
+	.content3.ct07 {  width: 95%;  margin: 0 auto;  float: none;  margin-top: 10px;  }
+	.content4 {  width: 95%;  margin: 0 auto;  float: none;  margin-top: 10px; }
+	.content4.ct10 { margin:10px auto; }
+	
+	/* 서브페이지 */
+		/* 서브상단경로표출 */
+	
+	.hd_gnb { /* display:none;  */ height: 40px; }
+	.hd_gnb li { float:left; display:block; padding-left: 9px; padding-right: 15px; line-height: 40px;  font-size: 12px; }
+	.hd_gnb li:first-child { padding-right: 15px; padding-left: 9px;}
+	
+	.sub_header h3 { line-height: 59px; font-size: 22px; }
+	.sub_tit, .sub_tit02, .sub_tit03, .sub_tit04, .sub_tit05, .sub_tit06 {    font-size: 23px;  background-size: 85px; text-indent: 10px;}
+	.sub_content { width: 95%; }
+	.section { top: 270px; }
+	.ct_gnb { padding-bottom:5px; }
+	.ct_gnb li { width:48.5%; margin-right:2% ; margin-bottom:5px;  }
+	.ct_gnb .li02 {margin-right:0; }
+	.ct_gnb .li03 {margin-right:2%; }
+	.ct_gnb .li04 {margin-right:0; }
+	.ct_gnb .li06 {margin-right:0; }
+
+	.boxWrap { float:none; width:100%; /* margin-bottom:15px; */}
+	.mbverWrap .btnWrap { margin-bottom:0; }
+	.gridList01 { float: none; width: 100%;  }
+	.gridList01 .tit_img { width:100%;  }
+	.gridList01 .tit_img img { max-height: 140px;  max-width: 265px;}
+	.graphWrap.graph02 { margin-top: 10px; width: 100% !important; }
+
+	.lp_content .btnWrap .btn02 { margin-right:5px; }
+
+	.customWrap, .customWrap02 { width: 90%; margin-top:25px; }
+	.sub_titP { font-size:14px;  }
+	.sub_titP span { font-size:14px;  }
+	.infoTxt { width: 88%;  margin: 0 auto; text-indent:0;}
+	.custom_nav { margin-right:15px; }
+
+	.checkWrap02.tb_cell { display:block; }
+	
+	.customWrap.passFind .loginList { width:100%; margin-bottom:0; }
+	.customWrap.passFind .loginList li { margin-left: 7%; }
+	.customWrap.passFind .btnWrap { width:100%; }
+	.customWrap.passFind .infoTxt { width: 100%; }
+	
+	/* 공공데이터 개방 신청 팝업 */
+	.sub0501popup .lp_content .boxList input[type="text"].txtInput { width:50%; }
+	.sub0501popup .lp_content .boxList input[type="text"].numInput { width:20%; }
+	.sub0501popup .numSelect { width:20%; }
+	
+	/* 맞춤정보설정 정보수정 */
+	.custom01 .tit_tabList { margin-top: 25px; margin-bottom: 10px; }
+	.custom01 .btnWrap2.txtRt { margin-bottom:10px;  }
+	
+	/* 정보수정 상단탭 */
+	.mainInfoMod .tit_tabList { }
+	.mainInfoMod .tit_tabList li a { line-height: normal; font-size:16px;}
+	.mainInfoMod .tit_tabList li a .mbBr { font-size:16px;}
+	.mainInfoMod .tit_tabList li a .mbBr { display:block; }
+	
+	/* 엑셀 저장 등 저장 영역 */
+	.saveDt li .excelSaveBtn { width: 76px;  font-size:15px; }
+	.saveDt li button { padding: 0 9px; font-size:15px; }
+	.saveDd .bookMark { width: 250px; height: 68px; padding: 10px 0; line-height: 30px; }
+	.saveDd .bookMark .txt { display: inline-block;  width: 100%; font-size: 14px;}
+	.saveDd .share { right: 34px; width: 170px; height: 85px; }
+	.saveDd li .saveDdBtn { padding-right: 0; padding: 0 10px; }
+	
+	/* 등록하기 팝업 */
+	#upload_popup input[type="password"] { width: 50%; }
+	#upload_popup .textarea01 { width: 90%; }
+	
+	/* 비밀번호 입력하기 팝업 */
+	#password_popup { width: 90%; }
+
+	/* 사이트맵 */
+	.box_sitemap { width:49%; margin-bottom:20px; }
+	.box_sitemap.box1 { width:100%; margin-right:0; }
+	.box_sitemap.box2 {  clear:both;   margin-right:2%;}
+	.box_sitemap.box3 { margin-right:0; }
+	.box_sitemap.box4 { clear:both; width:49%;  margin-right:2%;}
+	.box_sitemap.box5 { width:49%;  margin-right:0; }
+	
+	/* 즐겨찾기버튼 */
+	.messageBtn { width: 33px; height: 111px; }
+	
+	#footer {height:165px;}	
+	
+		/* 장미가격예측 */
+	.rosePrice_txt span { font-size: 7vw; }
+	.rosePrice_txt .subTxt { width:21%; }
+	.rosePrice_txt .subTxt2 { width:21%; }
+
+	/* 푸터 */
+	.ft_gnb {  }
+	.logo_goodContents { position: static; padding-left: 0;text-align:center;  }
+	.logo_goodContents img { width:93px;  }
+
+}
+
+@media ( max-width:420px ){
+	
+	/* 날씨  */
+	.tableList3 .ulTable01 .tbody.td2 {text-indent: -62%;}
+	.weather_icon { width:27%; padding-top: 6px;}
+	.weather_txt {  font-size: 27px;  }
+	.weather_txt span {  font-size: 27px;  }
+	
+	/* 서브상단경로표출 */
+	.hd_gnb li { padding-left: 5px; padding-right: 10px;  background-size: 7px; }
+	.hd_gnb li:first-child { padding-right: 10px; }
+	.hd_gnb li:first-child img { width:15px; padding-bottom:3px; } 
+	
+	/* 서브 상단 컨텐츠 헤드 */
+	.mbverWrap .btnWrap { width:90%; }
+	.mbverWrap input[type="text"].calender { width:180px;  margin-left: 0;   margin-right: 0; }
+	.mbverWrap input[type="text"].searchInput { width: 180px; }
+	.mbverWrap .btn01 { width: 100%; height: 35px; margin-top: 4px; margin-left: 0;  }
+	.mbverWrap .btn09 { width: 100%; height: 35px; margin-top: 4px; margin-left: 0;  }
+	.mb_ctHead .selectWrap li:first-child { width: 75px; }
+	.mbverWrap .btnWrap li label { width: 80px;  }
+	.mbverWrap .calenIcon, .ui-datepicker-trigger { top: 4px; left: 230px; }
+	.mbverWrap .selectbox label { text-indent: 7px; }
+	
+	/* 코드검색 추가 */
+	.mbverWrap .select2-container .select2-selection--single {width:100%; height:32px;  border:1px solid #b1b1b1;  line-height:32px;  text-indent: 17px; text-align:left; background-color:#fff;}
+	.mbverWrap .select2-container--default .select2-selection--single{width:100%; height:32px;  border:1px solid #b1b1b1;   line-height:32px; text-indent: 17px; text-align:left; background-color:#fff;}
+	.mbverWrap .select2-container--default .select2-selection--single .select2-selection__rendered { font-size: 13px; color:#666;  line-height:32px; }
+	.mbverWrap .select2-container--default .select2-selection--single .select2-selection__arrow { height: 32px; }
+	.mbverWrap .select2-container {width:180px !important; height: 32px; margin-left:0;  }
+		
+	.ft_gnb { margin-top: 10px; margin-bottom: 10px; }
+	
+	.tit_tabList li a { font-size:16px; }
+	/* .mb_ctHead .selectbox { width:50% !important; }
+	.mbverWrap .btnWrap li label { width:35%;  }
+	.btnWrap .li01 { margin-right:0; }
+	.btnWrap .li02 { margin-right:0; }
+	.mb_ctHead .selectWrap li:first-child {  width: 28%; }
+	.mbverWrap .calenIcon, .ui-datepicker-trigger { right: 21px; left: unset;}  */
+	
+	/* 공공데이터 개방 신청 팝업 */
+	.sub0501popup .lp_content .boxList input[type="text"].txtInput { width:90%; }
+	.sub0501popup .lp_content .boxList input[type="text"].numInput { width:26%; }
+	.sub0501popup .numSelect { width:23%; }
+	.boxList tbody tr td span.dash { /* display:inline-block; width:2%;  */ font-size:8px; }
+	/* 엑셀 저장 등 저장 영역 */
+	.bookmarkP .txt { width: 54%; text-indent:0; }
+	
+	/* 등록하기 팝업 */
+	#upload_popup input[type="password"] { width: 90%; }
+	
+	/* 비밀번호 입력하기 팝업 */
+	#password_popup input[type="password"] { width: 90%; }
+	
+	/* 사이트맵 */
+	.box_sitemap { width:100%; margin-bottom:20px; margin-right:0; }
+	.box_sitemap.box4 {width:100%; margin-right:0;}
+	.box_sitemap.box5 {width:100%; }
+	
+	/* 장미가격예측 */
+	.rosePrice_txt span { font-size: 9vw; }
+
+	#footer {height:180px;}	
+	
+	/* 정보수정 상단탭 */
+	.mainInfoMod .tit_tabList { }
+	.mainInfoMod .tit_tabList li a { font-size:15px;}
+	.mainInfoMod .tit_tabList li a .mbBr { font-size:15px;}
+	
+	}
+	
+	@media ( max-width:350px ){
+	.mb_ctHead .selectWrap { padding-left: 10px; }
+	.mbverWrap .selectWrap li {}	
+	.mb_ctHead .selectWrap li:first-child { margin-bottom:5px; }
+	.mbverWrap .btnWrap { padding-left: 10px; }
+	.mbverWrap .btnWrap li label { margin-bottom:5px;  }
+	.mbverWrap .calenIcon, .ui-datepicker-trigger { top:unset; bottom: 6px;  left: auto; }
+	
+	#footer {height:180px;}
+		
+	}

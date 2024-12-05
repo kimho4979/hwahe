@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hga01.mapper.Hga01Mapper">
+
+	<resultMap id="resultHga01Map" type="com.fpdisys.dist.hga01.domain.Hga01VO">
+		<result property="dtNew" 	column="DT_NEW"/>
+		<result property="dtAgo" 	column="DT_AGO"/>
+		<result property="dtmm" 	column="DTMM"/>
+		<result property="expWgt1"	column="EXP_WGT1"/>
+		<result property="expPrc2" 	column="EXP_PRC2"/>
+		<result property="impWgt3" 	column="IMP_WGT3"/>
+		<result property="impPrc4" 	column="IMP_PRC4"/>
+		<result property="expWgt5" 	column="EXP_WGT5"/>
+		<result property="expPrc6" 	column="EXP_PRC6"/>
+		<result property="impWgt7" 	column="IMP_WGT7"/>
+		<result property="impPrc8" 	column="IMP_PRC8"/>
+		<result property="balPay" 	column="BAL_PAY"/>
+		<result property="yyyymm" 	column="YYYYMM"/>
+		<result property="hsCd" 	column="HS_CD"/>
+		<result property="statKor" 	column="STAT_KOR"/>
+		<result property="expWgt" 	column="EXP_WGT"/>
+		<result property="expPrc" 	column="EXP_PRC"/>
+		<result property="impWgt" 	column="IMP_WGT"/>
+		<result property="impPrc" 	column="IMP_PRC"/>
+		<result property="regDt" 	column="REG_DT"/>
+	</resultMap>
+
+	<!-- 화훼 수출입 동향분석 :: MAX 날짜 가져오기 -->
+	<select id="selectGetDate" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT MAX(TO_CHAR(TO_DATE(YYYYMM,'YYYY-MM'),'YYYY-MM')) AS YYYYMM FROM TB_IMPEXP_RAW
+	</select>
+	
+	<!-- 화훼 수출입 동향분석 :: 품목 List -->
+	<select id="selectGetItem" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT HS_CD, HS_NM, ORDERING
+		FROM
+		(
+		    SELECT SUBSTR(YYYYMM, 0,4) YYYY
+		       , SUBSTR(YYYYMM, 5,2) MM
+		       , DECODE(B.HS_CD, NULL, A.HS_CD,'-',A.HS_CD, B.HS_CD) HS_CD
+		       , DECODE(B.HS_NM, NULL, STAT_KOR,'-',STAT_KOR, B.HS_NM) HS_NM,
+		       EXP_WGT, EXP_PRC, IMP_WGT, 
+		       IMP_PRC, BAL_PAY, A.REG_DT, 1 ORDERING
+		    FROM TB_IMPEXP_RAW A, 
+		    (
+		        SELECT 
+		        HS_CD, HS_NM, USE_YN, 
+		           REG_DT, UPT_DT
+		        FROM TB_IMPEXP_HSCD
+		        WHERE USE_YN='Y'
+		    ) B
+		    WHERE 1=1
+		    AND A.HS_CD  <![CDATA[<>]]> '-'
+		    AND A.HS_CD = B.HS_CD(+)
+		    AND LENGTH(A.HS_CD) = 10
+		    AND LENGTH(B.HS_CD) = 10
+		)
+		WHERE HS_NM LIKE '%절화%'
+		GROUP BY HS_CD, HS_NM, ORDERING
+		UNION ALL
+		SELECT HS_CD, HS_NM, ORDERING
+		FROM
+		(
+		    SELECT SUBSTR(YYYYMM, 0,4) YYYY
+		       , SUBSTR(YYYYMM, 5,2) MM
+		       , DECODE(B.HS_CD, NULL, A.HS_CD,'-',A.HS_CD, B.HS_CD) HS_CD
+		       , DECODE(B.HS_NM, NULL, STAT_KOR,'-',STAT_KOR, B.HS_NM) HS_NM,
+		       EXP_WGT, EXP_PRC, IMP_WGT, 
+		       IMP_PRC, BAL_PAY, A.REG_DT, 2 ORDERING   
+		    FROM TB_IMPEXP_RAW A, 
+		    (
+		        SELECT 
+		        HS_CD, HS_NM, USE_YN, 
+		           REG_DT, UPT_DT
+		        FROM TB_IMPEXP_HSCD
+		        WHERE USE_YN='Y'
+		    ) B
+		    WHERE 1=1
+		    AND A.HS_CD  <![CDATA[<>]]> '-'
+		    AND A.HS_CD = B.HS_CD(+)
+		    AND LENGTH(A.HS_CD) = 10
+		    AND LENGTH(B.HS_CD) = 10
+		)
+		WHERE HS_NM NOT LIKE '%절화%'
+		GROUP BY HS_CD, HS_NM, ORDERING
+		ORDER BY ORDERING, HS_CD, HS_NM
+	</select>
+	
+	<!-- 화훼 수출입 동향분석 List -->
+	<select id="selectTrendAnalysisList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		WITH TEMP_DATA AS (
+		    SELECT
+		        T1.YYYYMM
+		        , T1.HS_CD
+		        , T1.EXP_WGT
+		        , T1.EXP_PRC
+		        , T1.IMP_WGT
+		        , T1.IMP_PRC
+		    FROM TB_IMPEXP_RAW T1
+		    WHERE 1=1
+		    AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+		    AND LENGTH(T1.HS_CD) <![CDATA[>=]]> 6
+		    <if test="itemCd != null and itemCd != ''">
+					AND T1.HS_CD = #{itemCd}
+			</if>
+		)
+		
+		SELECT
+			SUBSTR(AB.DT,0,4)||'-'||SUBSTR(AB.DT,5,2) AS DT_NEW
+			, CD.DT AS DT_AGO
+			, AB.DTMM
+			, NVL(MAX(AB.EXP_WGT1),'0') AS EXP_WGT1
+			, NVL(MAX(AB.EXP_PRC2),'0') AS EXP_PRC2
+			, NVL(MAX(AB.IMP_WGT3),'0') AS IMP_WGT3
+			, NVL(MAX(AB.IMP_PRC4),'0') AS IMP_PRC4
+			, NVL(MAX(CD.EXP_WGT1),'0') AS EXP_WGT5
+			, NVL(MAX(CD.EXP_PRC2),'0') AS EXP_PRC6
+			, NVL(MAX(CD.IMP_WGT3),'0') AS IMP_WGT7
+			, NVL(MAX(CD.IMP_PRC4),'0') AS IMP_PRC8
+			, NVL (MAX (AB.EXP_PRC2), '0')-NVL (MAX (AB.IMP_PRC4), '0') AS BAL_PAY
+		FROM 
+		(
+			SELECT
+			B.DT
+			,B.DTMM
+			, A.*
+			FROM
+			(
+				SELECT
+					NVL(T1.YYYYMM,'-') AS YYYYMM
+					, NVL(SUBSTR(T1.YYYYMM, 0,4),'-') AS YYYY
+					, SUBSTR(T1.YYYYMM, 5,2) AS MM
+					, ROUND(SUM(T1.EXP_WGT)/1000,0) AS EXP_WGT1
+					, ROUND(SUM(T1.EXP_PRC)/1000,0) AS EXP_PRC2
+					, ROUND(SUM(T1.IMP_WGT)/1000,0) AS IMP_WGT3
+					, ROUND(SUM(T1.IMP_PRC)/1000,0) AS IMP_PRC4
+				FROM TEMP_DATA T1
+				LEFT OUTER JOIN TB_IMPEXP_HSCD T2 ON T1.HS_CD = T2.HS_CD
+				WHERE 1=1
+				AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+                AND LENGTH(T1.HS_CD)  <![CDATA[>]]> 6
+				GROUP BY T1.YYYYMM, SUBSTR(T1.YYYYMM, 0,4), SUBSTR(T1.YYYYMM, 5,2)
+			) A,
+			(
+				SELECT 
+					TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'YYYYMM') AS DT
+					, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'YYYY') AS DTYY
+					, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'MM') AS DTMM
+				FROM DUAL
+				CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),LEVEL-24))
+			) B
+			WHERE A.YYYYMM(+) = B.DT
+			) AB,
+		    (
+				SELECT 
+					D.DT
+					, D.DTMM
+					, C.*
+				FROM
+				(
+					SELECT
+						NVL(T1.YYYYMM,'-') AS YYYYMM
+						, NVL(SUBSTR(T1.YYYYMM, 0,4),'-') AS YYYY
+						, SUBSTR(T1.YYYYMM, 5,2) AS MM
+						, ROUND(SUM(T1.EXP_WGT)/1000,0) AS EXP_WGT1
+						, ROUND(SUM(T1.EXP_PRC)/1000,0) AS EXP_PRC2
+						, ROUND(SUM(T1.IMP_WGT)/1000,0) AS IMP_WGT3
+						, ROUND(SUM(T1.IMP_PRC)/1000,0) AS IMP_PRC4
+                    FROM TEMP_DATA T1
+					LEFT OUTER JOIN TB_IMPEXP_HSCD T2 ON T1.HS_CD = T2.HS_CD
+					WHERE 1=1
+					AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+                    AND LENGTH(T1.HS_CD)  <![CDATA[>]]> 6                  
+					group by T1.YYYYMM, SUBSTR(T1.YYYYMM, 0,4), SUBSTR(T1.YYYYMM, 5,2)
+				) C,
+				(
+					SELECT 
+						TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-24),'YYYYMM') AS DT
+						, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-24),'YYYY') AS DTYY
+						, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-24),'MM') AS DTMM
+					FROM DUAL
+					CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),LEVEL-24))
+				) D
+			WHERE C.YYYYMM(+) = D.DT
+			) CD
+		WHERE 1=1 
+		AND AB.DTMM(+) = CD.DTMM
+		GROUP BY AB.DT, CD.DT, AB.DTMM
+		ORDER BY AB.DT
+	</select>
+	
+	<!-- 화훼 수출입 동향분석 List :: Excel -->
+	<select id="selectTrendAnalysisListExcel" resultType="com.fpdisys.dist.hga01.domain.Hga01VO" resultMap="resultHga01Map">
+		WITH TEMP_DATA AS (
+		    SELECT
+		        T1.YYYYMM
+		        , T1.HS_CD
+		        , T1.EXP_WGT
+		        , T1.EXP_PRC
+		        , T1.IMP_WGT
+		        , T1.IMP_PRC
+		    FROM TB_IMPEXP_RAW T1
+		    WHERE 1=1
+		    AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+		    AND LENGTH(T1.HS_CD) <![CDATA[>=]]> 6
+		    <if test="itemCd != null and itemCd != ''">
+				AND T1.HS_CD = #{itemCd}
+			</if>
+		)
+		
+		SELECT
+			SUBSTR(AB.DT,0,4)||'-'||SUBSTR(AB.DT,5,2) AS DT_NEW
+			, CD.DT AS DT_AGO
+			, AB.DTMM
+			, NVL(MAX(AB.EXP_WGT1),'0') AS EXP_WGT1
+			, NVL(MAX(AB.EXP_PRC2),'0') AS EXP_PRC2
+			, NVL(MAX(AB.IMP_WGT3),'0') AS IMP_WGT3
+			, NVL(MAX(AB.IMP_PRC4),'0') AS IMP_PRC4
+			, NVL(MAX(CD.EXP_WGT1),'0') AS EXP_WGT5
+			, NVL(MAX(CD.EXP_PRC2),'0') AS EXP_PRC6
+			, NVL(MAX(CD.IMP_WGT3),'0') AS IMP_WGT7
+			, NVL(MAX(CD.IMP_PRC4),'0') AS IMP_PRC8
+			, NVL (MAX (AB.EXP_PRC2), '0')-NVL (MAX (AB.IMP_PRC4), '0') AS BAL_PAY
+		FROM 
+		(
+			SELECT
+			B.DT
+			,B.DTMM
+			, A.*
+			FROM
+			(
+				SELECT
+					NVL(T1.YYYYMM,'-') AS YYYYMM
+					, NVL(SUBSTR(T1.YYYYMM, 0,4),'-') AS YYYY
+					, SUBSTR(T1.YYYYMM, 5,2) AS MM
+					, ROUND(SUM(T1.EXP_WGT)/1000,0) AS EXP_WGT1
+					, ROUND(SUM(T1.EXP_PRC)/1000,0) AS EXP_PRC2
+					, ROUND(SUM(T1.IMP_WGT)/1000,0) AS IMP_WGT3
+					, ROUND(SUM(T1.IMP_PRC)/1000,0) AS IMP_PRC4
+				FROM TEMP_DATA T1
+				LEFT OUTER JOIN TB_IMPEXP_HSCD T2 ON T1.HS_CD = T2.HS_CD
+				WHERE 1=1
+				AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+                AND LENGTH(T1.HS_CD)  <![CDATA[>]]> 6
+				GROUP BY T1.YYYYMM, SUBSTR(T1.YYYYMM, 0,4), SUBSTR(T1.YYYYMM, 5,2)
+			) A,
+			(
+				SELECT 
+					TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'YYYYMM') AS DT
+					, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'YYYY') AS DTYY
+					, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-12),'MM') AS DTMM
+				FROM DUAL
+				CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),LEVEL-24))
+			) B
+			WHERE A.YYYYMM(+) = B.DT
+			) AB,
+		    (
+				SELECT 
+					D.DT
+					, D.DTMM
+					, C.*
+				FROM
+				(
+					SELECT
+						NVL(T1.YYYYMM,'-') AS YYYYMM
+						, NVL(SUBSTR(T1.YYYYMM, 0,4),'-') AS YYYY
+						, SUBSTR(T1.YYYYMM, 5,2) AS MM
+						, ROUND(SUM(T1.EXP_WGT)/1000,0) AS EXP_WGT1
+						, ROUND(SUM(T1.EXP_PRC)/1000,0) AS EXP_PRC2
+						, ROUND(SUM(T1.IMP_WGT)/1000,0) AS IMP_WGT3
+						, ROUND(SUM(T1.IMP_PRC)/1000,0) AS IMP_PRC4
+                    FROM TEMP_DATA T1
+					LEFT OUTER JOIN TB_IMPEXP_HSCD T2 ON T1.HS_CD = T2.HS_CD
+					WHERE 1=1
+					AND T1.YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYY-MM'),-23),'YYYYMM') AND REPLACE(#{searchDate},'-','')
+                    AND LENGTH(T1.HS_CD)  <![CDATA[>]]> 6                  
+					group by T1.YYYYMM, SUBSTR(T1.YYYYMM, 0,4), SUBSTR(T1.YYYYMM, 5,2)
+				) C,
+				(
+					SELECT 
+						TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-23),'YYYYMM') AS DT
+						, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-23),'YYYY') AS DTYY
+						, TO_CHAR(ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'), LEVEL-23),'MM') AS DTMM
+					FROM DUAL
+					CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),ADD_MONTHS(TO_DATE(REPLACE(#{searchDate},'-',''),'YYYYMM'),LEVEL-24))
+				) D
+			WHERE C.YYYYMM(+) = D.DT
+			) CD
+		WHERE 1=1 
+		AND AB.DTMM(+) = CD.DTMM
+		GROUP BY AB.DT, CD.DT, AB.DTMM
+		ORDER BY AB.DT
+	</select>
+	
+</mapper>

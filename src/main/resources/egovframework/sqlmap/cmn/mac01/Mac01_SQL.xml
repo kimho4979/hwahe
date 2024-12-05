@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mac01.mapper.Mac01Mapper">
+	<resultMap id="Mac01ResultMap" type="com.fpminput.mntr.mac01.domain.Mac01VO">
+		<result property="seqNo"		column="SEQ_NO"/>
+		<result property="regDate"		column="REG_DATE"/>
+		<result property="pumName"		column="PUM_NAME"/>
+		<result property="goodName"		column="GOOD_NAME"/>
+		<result property="cmpCd"		column="CMP_CD"/>
+		<result property="chulNo"		column="CHUL_NO"/>
+		<result property="area"			column="AREA"/>
+		<result property="status"		column="STATUS"/>
+		<result property="bigo"			column="BIGO"/>
+		<result property="useYn"		column="USE_YN"/>
+		<result property="sanCd"		column="SAN_CD"/>
+		<result property="regDt"		column="REG_DT"/>
+		<result property="uptDt"		column="UPT_DT"/>
+	</resultMap>
+
+	<select id="selectCtvtTrendInput" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT REG_DATE
+			,SEQ_NO
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,CHUL_NO
+			,AREA
+			,STATUS
+			,CASE WHEN STATUS =1 THEN '증가'
+			WHEN STATUS =2 THEN '비슷'
+			ELSE '감소' END AS STATUS_NAME 
+			,NVL(BIGO, ' ') AS BIGO
+			,REG_DT
+      		,UPT_DT
+      		,USE_YN
+		FROM T_CULTIVATION_TREND
+		WHERE USE_YN='Y'
+		<if test="CHUL_NO!=99999999">
+			AND CHUL_NO=#{CHUL_NO, jdbcType=VARCHAR}
+		</if>
+		<if test="REG_DATE1 != null and REG_DATE1 != ''">
+			AND TO_DATE(REG_DATE, 'YYYY-MM-DD' ) <![CDATA[>=]]> TO_DATE(#{REG_DATE1} , 'yyyy-mm-dd')
+		</if>
+		<if test="REG_DATE2 != null and REG_DATE2 != ''">
+			AND TO_DATE(REG_DATE, 'YYYY-MM-DD' ) <![CDATA[<=]]> TO_DATE(#{REG_DATE2} , 'yyyy-mm-dd')
+		</if>
+		<if test="PUM_NAME != null and PUM_NAME != ''">
+			AND PUM_NAME = #{PUM_NAME}
+		</if>
+		<if test="GOOD_NAME != null and GOOD_NAME != ''">
+			AND GOOD_NAME = #{GOOD_NAME}
+		</if>
+		<if test="STATUS != null and STATUS != ''">
+			AND STATUS = #{STATUS}
+		</if>
+		ORDER BY SEQ_NO DESC, REG_DATE DESC, GOOD_NAME
+	</select>
+	
+	<select id="selectCtvtTrendInputAll" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT REG_DATE
+			,SEQ_NO
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,CHUL_NO
+			,AREA
+			,STATUS
+			,CASE WHEN STATUS =1 THEN '증가'
+			WHEN STATUS =2 THEN '비슷'
+			ELSE '감소' END AS STATUS_NAME 
+			,NVL(BIGO, ' ') AS BIGO
+			,REG_DT
+      		,UPT_DT
+      		,USE_YN
+		FROM T_CULTIVATION_TREND
+		WHERE USE_YN='Y'
+		ORDER BY SEQ_NO DESC, REG_DATE DESC, GOOD_NAME
+	</select>
+	
+	<select id="selectCtvtTrendInputSeq" parameterType="com.fpminput.mntr.mac01.domain.Mac01VO" resultMap="Mac01ResultMap">
+		SELECT REG_DATE
+			,SEQ_NO
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,CHUL_NO
+			,AREA
+			,STATUS
+			,CASE WHEN STATUS =1 THEN '증가'
+			WHEN STATUS =2 THEN '비슷'
+			ELSE '감소' END AS STATUS_NAME 
+			,NVL(BIGO, ' ') AS BIGO
+			,REG_DT
+      		,UPT_DT
+      		,USE_YN
+		FROM T_CULTIVATION_TREND
+		WHERE USE_YN='Y'
+		AND SEQ_NO = #{seqNo}
+		ORDER BY SEQ_NO DESC, REG_DATE DESC, GOOD_NAME
+	</select>
+
+	<insert id="insertCtvtTrendInput" parameterType="java.util.HashMap">
+		INSERT INTO T_CULTIVATION_TREND
+		(
+			SEQ_NO
+			,REG_DATE
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,CHUL_NO
+			,AREA
+			,STATUS
+			,BIGO
+			,SAN_CD
+			,REG_DT
+			,UPT_DT
+		)
+		VALUES
+		( 
+			CULT_SEQ.NEXTVAL
+			,#{REG_DATE, jdbcType=VARCHAR}
+			,#{PUM_NAME, jdbcType=VARCHAR}
+			,#{GOOD_NAME, jdbcType=VARCHAR}
+			,#{CMP_CD, jdbcType=VARCHAR}
+			,#{CHUL_NO, jdbcType=VARCHAR}
+			,#{AREA, jdbcType=VARCHAR}
+			,#{STATUS, jdbcType=VARCHAR}
+			,#{BIGO, jdbcType=VARCHAR}
+			,#{SAN_CD, jdbcType=VARCHAR}
+			,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+			,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		)
+	</insert>
+
+	<update id="updateCtvtTrendInput" parameterType="java.util.HashMap">
+		UPDATE T_CULTIVATION_TREND SET
+			REG_DATE = #{REG_DATE, jdbcType=VARCHAR},
+			PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR},
+			GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR},
+			STATUS = #{STATUS, jdbcType=VARCHAR},
+			AREA = #{AREA, jdbcType=VARCHAR},
+			BIGO = #{BIGO, jdbcType=VARCHAR},
+			UPT_DT = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		WHERE SEQ_NO =#{SEQ_NO, jdbcType=VARCHAR} 
+		AND CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}
+	
+		<!-- 
+		UPDATE T_CULTIVATION_TREND SET
+			AREA = #{AREA, jdbcType=VARCHAR}
+			,BIGO =#{BIGO, jdbcType=VARCHAR}
+			,STATUS = #{STATUS, jdbcType=VARCHAR}
+		WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+		AND PUM_NAME=#{PUM_NAME, jdbcType=VARCHAR}
+		AND GOOD_NAME=#{GOOD_NAME, jdbcType=VARCHAR}
+		AND CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}
+		AND SEQ_NO =#{SEQ_NO, jdbcType=VARCHAR} -->
+	</update>
+
+	<update id="deleteCtvtTrendInput" parameterType="java.util.HashMap">
+		UPDATE T_CULTIVATION_TREND SET
+			USE_YN= 'N'
+		WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+		AND PUM_NAME=#{PUM_NAME, jdbcType=VARCHAR}
+		AND GOOD_NAME=#{GOOD_NAME, jdbcType=VARCHAR}
+		AND CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}
+		AND SEQ_NO =#{SEQ_NO, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

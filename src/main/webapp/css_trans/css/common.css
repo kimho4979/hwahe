@@ -1,0 +1,47 @@
+﻿*{margin:0; padding:0; font-family:nanumFont;}
+
+@font-face{
+	font-family:'nanumFont';
+	src:url('../../font/NanumGothic.eot');
+	}
+	
+
+img{border:0; vertical-align: top;} 
+
+h2{font-size:18px; color:#2c2c2c; margin-bottom:3px; font-weight:700;}
+
+h5{font-size:16px; color:#2c2c2c; margin:10px; font-weight:700;}
+
+ul,ol,dl,dns {list-style:none}
+
+caption {position:absolute;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;overflow:hidden;}
+
+a{text-decoration:none; }
+
+
+
+.skip {position:absolute;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;overflow:hidden;}
+
+label{position:absolute;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;overflow:hidden;}
+
+.blind{position:absolute;left:-9999px;width:1px;height:1px;font-size:0;line-height:0;overflow:hidden;}
+
+.hw_clear{clear:both}
+
+<!--ellipsis  글자가 넘쳐날때 자동으로 짤리는 기능 --!>
+.ellipsis{white-space:nowrap; overflow:hidden; text-overflow: ellipsis;}
+ 
+
+
+
+/*푸터*/
+#footer{width:100%; background:#f0f0f0;  height:100px; margin:0 auto; }
+.footer_box{width:1150px; margin:0 auto; text-align:center; font-size:13px; color:gray; font-weight:700; padding-top:10px; }
+.logo_g{width:250px; float:left; background-color:bule; margin-top:15px; }
+
+.adress{width:600px; font-size:13px; float:left; margin-top:20px; color:gray;}
+
+
+
+/*추가 입력_ 하세용*/
+.hw_logo_system{width:445px; float:left; margin-left:90px; }

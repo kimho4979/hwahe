@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpditrans.trans.login.mapper.TranLoginMapper">
+	<resultMap id="saleResultMap" type="com.fpditrans.trans.login.domain.UserVO">
+	   <result property="userId" column="USER_ID"/>
+	    <result property="compCode" column="COMP_CODE"/>
+	    <result property="userPasswd" column="USER_PASSWD"/>
+	    <result property="email" column="EMAIL"/>
+	    <result property="userType" column="USER_TYPE"/>
+	    <result property="lastLoginDate" column="LAST_LOGIN_DATE"/>
+	    <result property="passwdUpdateDate" column="PASSWD_UPDATE_DATE"/>
+	    <result property="remark" column="REMARK"/>
+	    <result property="useYn" column="USE_YN"/>
+	    <result property="passErrNum" column="PASS_ERR_NUM"/>
+	    <result property="insDt" column="INS_DT"/>
+	    <result property="insId" column="INS_ID"/>
+	    <result property="uptDt" column="UPT_DT"/>
+	    <result property="uptId" column="UPT_ID"/>
+	</resultMap> 
+
+	<select id="selectLogin" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT MAX(A.USER_ID) AS USER_ID
+		  , '' || COUNT(1) AS  ID_CNT	
+	      , MAX(A.COMP_CODE) AS COMP_CODE
+	      , MAX(A.USER_TYPE) AS USER_TYPE
+	      , MAX(A.LAST_LOGIN_DATE) AS LAST_LOGIN_DATE
+	      , MAX(A.REMARK) AS REMARK
+	      , MAX(A.USE_YN) AS USE_YN
+	      , MAX(A.PASS_ERR_NUM) AS PASS_ERR_NUM
+	      , MAX(B.GRP_AUTH_CODE) AS GRP_AUTH_CODE
+	  FROM T_USER A, T_USER_AUTH B
+	  	WHERE A.USER_ID = B.USER_ID 
+	  	AND A.USER_ID =#{loginId,jdbcType=VARCHAR}
+	  	AND A.USE_YN ='Y'  
+	  	AND 1=1
+	</select>	
+</mapper>

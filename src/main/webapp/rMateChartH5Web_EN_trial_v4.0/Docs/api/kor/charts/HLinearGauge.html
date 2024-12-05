@@ -1,0 +1,395 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="HLinearGauge,kor.charts.HLinearGauge" name="keywords">
+<title>kor.charts.HLinearGauge</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'HLinearGauge - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?kor/charts/HLinearGauge.html&amp;kor/charts/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;HLinearGauge</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class HLinearGauge"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor.charts</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class HLinearGauge</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">HLinearGauge <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../images/inherit-arrow.gif"> <a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+</table>
+<p></p>
+   HLinearGauge 클래스는 가로 막대 모양으로 목표값과 실적값을 표현합니다.
+   <p>선으로 목표값을 설정하고, 막대로 실적값을 설정하면 목표값 대비 실적값을 직관적으로 표현할 수 있습니다.</p>
+     <p>HLinearGauge는 다음과 같은 기능 및 특징이 있습니다.</p>
+     <ul>
+   <li> 선으로 목표값을 설정하고, 막대로 목표값에 얼마나 도달했는지 또는 목표값을 넘었는지를 표현할 수 있습니다.</li>
+   <li> 목표값, 실적값을 자유롭게 조정할 수 있습니다.<li>
+   <li> 막대 색상 및 배경 색상을 변경 할 수 있습니다.</li>
+   <li> 막대의 넓이를 조절하여, 배경과 간격을 주어 좀 더 직관적으로 실적값을 표현할 수 있습니다.</li>
+   <li> 실적값(막대가 가르키는 값)을 텍스트로 표시할 수 있으며, 텍스트의 모양 및 위치 조정이 가능합니다.</li>
+   </ul>
+     <p>레이아웃은 아래와 같이 작성합니다.</p>
+     <pre>
+  &lt;rMateChart backgroundColor="0xFFFFFF" paddingTop="50" horizontalAlign="center" verticalScrollPolicy="off" verticalAlign="middle" borderRadius="12" borderStyle="solid"&gt;
+  &lt;HLinear
+   width="400"
+   height="150"
+   minimum="0"
+   maximum="200"
+   labels="[0,20,40,60,80,100,120,140,160,180,200]"
+   tickInterval="20"
+   value="160"
+   targetMark="120"
+   snapInterval="1"
+   valueLabelJsFunction="labelFunc"
+   valueLabelStyleName="valueLabel"
+   /&gt;
+   &lt;Style&gt;
+    .valueLabel{
+     fontSize:11;
+     fontWeight:bold;
+    }
+   &lt;/Style&gt;
+  &lt;/rMateChart&gt;
+  </pre>
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<div class="showHideLinks">
+<div class="hideInheritedStyle" id="hideInheritedStyle">
+<a onclick="javascript:setInheritedVisible(false,'Style');" href="#styleSummary" class="showHideLink"><img src="../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Styles</a>
+</div>
+<div class="showInheritedStyle" id="showInheritedStyle">
+<a onclick="javascript:setInheritedVisible(true,'Style');" href="#styleSummary" class="showHideLink"><img src="../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Styles</a>
+</div>
+</div>
+<table id="summaryTableStyle" class="summaryTable hideInheritedStyle" cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:innerTipJsFunction">innerTipJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>안쪽 게이지의 데이터 팁을 표시하는 자바스크립트 함수명을 지정합니다.<br/>
+  원하는 형태로 데이터 팁을 표시할 수 있도록 하는 사용자 정의 함수를 설정할 수 있습니다.</p>
+    <p><code>innerTipJsFunction</code> 함수 시그너쳐(signature)는 아래와 같습니다.</p>
+    <pre>
+  <i>function_name</i>(value) { ...</td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearAlpha">linearAlpha</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+ <p>막대(안쪽) 색상의 투명도를 지정합니다.</p>
+   </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearBgAlpha">linearBgAlpha</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+   <p>막대 배경색의 투명도를 지정합니다.</p>
+      </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearBgBorderAlpha">linearBgBorderAlpha</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number &nbsp; <span class="label">CSS Inheritance: </span>no<br>
+  <p>배경색의 테두리 투명도를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearBgBorderColor">linearBgBorderColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>uint<br>
+  <p>배경색의 테두리 색상을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearBgColor">linearBgColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+  <p>막대의 배경색을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearBgRatio">linearBgRatio</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+  <p>막대 배경색의 그리기 영역을 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearBorderAlpha">linearBorderAlpha</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>막대(안쪽)의 테두리 투명도를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearBorderColor">linearBorderColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>uint<br>
+  <p>막대(안쪽)의 테두리 색상을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearColor">linearColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+  <p>막대(안쪽)의 색상을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearColumnWidth">linearColumnWidth</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>number<br>
+  <p>막대의 넓이(폭)를 지정합니다.<br/>
+  유효값은 0 과 1 사이의 값입니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:linearRatio">linearRatio</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+  <p>막대(안쪽)의 그리기 영역을 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:offsetOfthumb">offsetOfthumb</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>thumb 와 게이지의 여백 크기를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:showDataTip">showDataTip</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>마우스 오버 시 게이지의 데이터 팁에 대한 표시 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:showTargetMark">showTargetMark</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>목표값 기둥 표시 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:showTrackHighlight">showTrackHighlight</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>안쪽 기둥 표시 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:showValueLabel">showValueLabel</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>게이지 값(라벨)을 표시할 지 여부를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:targetMark">targetMark</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>목표값의 위치를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:targetMarkAlpha">targetMarkAlpha</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+  <p>목표값을 나타내는 선의 투명도를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:targetMarkBorderAlpha">targetMarkBorderAlpha</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number &nbsp; <span class="label">CSS Inheritance: </span>no<br>
+  <p>목표값의 테두리 투명도를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:targetMarkBorderColor">targetMarkBorderColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>uint<br>
+  <p>목표값의 테두리 색상을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:targetMarkColor">targetMarkColor</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+  <p>목표값을 나타내는 선의 색상을 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:targetMarkRatio">targetMarkRatio</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+  <p>목표값을 나타내는 선의 그리기 영역을 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:targetMarkThickness">targetMarkThickness</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>number<br>
+  <p>목표값를 나타내는 선의 두께를 지정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:targetTipJsFunction">targetTipJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>목표 라인 게이지의 데이터 팁 출력 시 실행될 자바스크립트 함수명을 지정합니다.<br/>
+  원하는 형태 표시할 수 있도록 하는 사용자 정의 함수를 설정할 수 있습니다.</p>
+    <p><code>targetTipJsFunction</code> 함수 시그너쳐(signature)는 아래와 같습니다.</p>
+    <pre>
+  <i>function_name</i>(value) { ...</td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:thumbVisible">thumbVisible</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>thumb 에 대한 숨기기 여부를 설정합니다.</p>
+    </td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:tickJsFunction">tickJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>눈금 라벨이 출력 시 실행될 자바스크립트 함수명을 지정합니다.<br/>
+  원하는 형태 표시할 수 있도록 하는 사용자 정의 함수를 설정할 수 있습니다.</p>
+    <p><code>tickJsFunction</code> 함수 시그너쳐(signature)는 아래와 같습니다.</p>
+    <pre>
+  <i>function_name</i>(value) { ...</td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:valueLabelJsFunction">valueLabelJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>게이지 값(라벨)을 표시하는 자바스크립트 함수명을 지정합니다.<br/>
+  함수는 게이지 값을 인수로 받아서 사용자가 원하는 표현을 가능하게 하는 양식을 스트링 형태로 반환합니다.</p>
+    <p><code>valueLabelJsFunction</code> 함수 시그너쳐(signature)는 아래와 같습니다.</p>
+    <pre>
+  <i>function_name</i>(value) { ...</td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:valueLabelXOffset">valueLabelXOffset</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 값(라벨) 위치의 X 오프셋 값을 지정합니다.</td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="VLinearGauge.html#style:valueLabelYOffset">valueLabelYOffset</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>게이지 값(라벨) 위치의 Y 오프셋 값을 지정합니다.</td><td class="summaryTableOwnerCol"><a href="VLinearGauge.html">VLinearGauge</a></td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

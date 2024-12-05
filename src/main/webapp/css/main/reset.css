@@ -1,0 +1,177 @@
+@charset "utf-8";
+/* 
+Reset & Set Stylesheet
+v1.0.1
+First Updated: 2016-08-01
+Last Updated: 2016-08-05
+Author: OBS
+*/
+
+/***** RESET *****/
+
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video{
+margin:0; 
+padding:0; 
+border:0; 
+font-size:100%; 
+font:inherit; 
+font-family:'Noto Sans KR', 고딕, san-serif, IcoMoon,dashicons, FontAwesome!important;
+word-break:normal;
+letter-spacing:-1px;
+}
+sup {
+margin:0; 
+padding:0; 
+border:0; 
+font-size:100%; 
+font:inherit; 
+
+word-break:normal;
+}
+
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {display:block}
+/*html, body {height:100%;}*/
+body {line-height:1; word-break:break-all; -ms-word-break:break-all; -webkit-text-size-adjust:none; height:100%; }
+ol, ul, dl, li, menu {list-style:none; padding:0; margin:0;}
+blockquote, q {quotes:none;}
+blockquote:before, blockquote:after, q:before, q:after {content:''; content:none}
+table {border-collapse:collapse; border-spacing:0; }
+textarea {overflow:auto}
+input, select, textarea, button, optgroup {font-size:100%; vertical-align:middle;  color:#444444; -webkit-border-radius:0; -moz-border-radius:0; border-radius:0; margin:0; }
+em, address{font-style:normal;}
+button {border:none 0; cursor:pointer;}
+select option{font-size:14px;}
+/* Hyper Link */
+
+a, a:link, a:active, a:hover, a:visited{text-decoration:none; color:#303030; }
+/* Form Type (html5 & 모바일 적용) */
+input[type='tel'],input[type='number'],input[type='email'],input[type='text'],input[type='password'],input[type='submit'],input[type='search'],input[type='submit'],input[type='reset'],input[type='file']{-webkit-appearance:none; border-top-left-radius:0; border-top-right-radius:0; border-bottom-left-radius:0; border-bottom-right-radius:0; height: 30px; border:0;  padding:0 10px; outline-color:none; /* margin-top:3px; */}
+;;-webkit-input-placeholder
+input[type='checkbox']{-webkit-appearance:checkbox}
+input[type='radio']{-webkit-appearance:radio}
+input[type='number']{-webkit-appearance:none}
+input[type='search']::-webkit-search-cancel-button{-webkit-appearance:none}
+input:focus{outline:none;}
+textarea{resize:none; padding:0px; border:none; margin:10px 0; font-family:'NotoSansCJKkr-DemiLight'}
+textarea:focus{outline:none;}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button
+{
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number]
+{
+  -moz-appearance: textfield;
+}
+
+
+input[type="checkbox"],
+input[type="radio"]{
+	display:none;
+}
+
+input[type="checkbox"] + label,
+input[type="radio"] + label{
+	color:#000;
+}
+
+input[type="checkbox"] + label span{
+	display:inline-block;
+	width:18px;
+	height:18px;
+	background:url("../img/btn_check_box_off.png")no-repeat;
+	cursor:pointer;
+	vertical-align:-5%;
+	margin-right:5px;
+}
+
+input[type="checkbox"]:checked + label span{
+	background:url("../img/btn_check_box_on.png")no-repeat;
+	width:18px;
+	height:18px;
+}
+
+
+input[type="radio"] + label span{
+	display:inline-block;
+	width:18px;
+	height:18px;
+	background:url("../img/btn_check_off.png")no-repeat;
+	cursor:pointer;
+	vertical-align:-5%;
+	margin-right:5px;
+}
+
+input[type="radio"]:checked + label span{
+	background:url("../img/btn_check_on.png")no-repeat;
+	width:18px;
+	height:18px;
+}
+
+input[type="checkbox"] + label span.mt,
+input[type="radio"] + label span.mt{margin-top:5px;}
+
+
+input[type="text"]{height:40px; border:1px solid #cecece; font-size:20px; box-sizing:border-box;}
+
+/* placeholder font*/
+::-webkit-input-placeholder{font-family:"NanumGothic"}
+:-moz-placeholder{font-family:"NanumGothic"}
+::-moz-placeholder{font-family:"NanumGothic"}
+:-ms-input-placeholder {font-family:"NanumGothic"}
+
+
+
+/*/셀렉트박스/*/
+select{-webkit-appearance: none;  /* 네이티브 외형 감추기 */
+-moz-appearance: none;
+appearance: none;
+background:#fff url("../../images/2020/select_arrow.png") no-repeat 95% 50%;/* 화살표 모양의 이미지 */
+width:100px; /* 원하는 너비설정 */
+height:40px;
+padding:0px 3%;
+font-size:20px;
+-webkit-appearance: none; /* 네이티브 외형 감추기 */
+-moz-appearance: none;
+appearance: none;
+border:1px solid #cecece;
+}
+/* IE 10, 11의 네이티브 화살표 숨기기 */
+select::-ms-expand {
+    display:none;
+}
+
+select.sel_type_02{-webkit-appearance: none;  /* 네이티브 외형 감추기 */
+-moz-appearance: none;
+appearance: none;
+background:#fff url("../../images/2020/select_arrow_02.png") no-repeat 95% 50%;/* 화살표 모양의 이미지 */
+width:100px; /* 원하는 너비설정 */
+height:40px;
+padding:0px 1.5%;
+font-size:20px;
+-webkit-appearance: none; /* 네이티브 외형 감추기 */
+-moz-appearance: none;
+appearance: none;
+border:1px solid #cecece;
+}
+/* IE 10, 11의 네이티브 화살표 숨기기 */
+select::-ms-expand {
+	display:none;
+}
+
+/* a:link { color: red; text-decoration: none;}
+a:visited { color: black; text-decoration: none;} */
+
+
+
+
+/* blind */
+.blind{overflow:hidden; position:absolute; top:-1px; left:-1px; z-index:-1; width:1px; height:0px; font-size:0; line-height:0; white-space:nowrap;text-indent: -9000px;}
+caption,legend{overflow:hidden;height:0px; font-size:0; line-height:0; white-space:nowrap;text-indent: -9000px;}
+
+

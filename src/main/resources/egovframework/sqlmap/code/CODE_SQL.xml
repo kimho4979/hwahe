@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpditrans.trans.cmmn.mapper.CodeMapper">
+
+    
+ 	<select id="selectDanListAll" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	  SELECT A.DAN_CD  AS CODE,
+	       A.DAN_NAME AS CODE_NAME,
+	       A.DAN_X    AS BIGO
+	  FROM T_DANCD A
+ 	</select>    
+ 	
+ 	<select id="selectDanListSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	      SELECT A.DAN_CD  AS CODE,
+		       A.DAN_NAME AS CODE_NAME,
+		       A.DAN_X    AS BIGO
+		  FROM T_DANCD A
+   		 WHERE 1=1
+	 
+ 	</select> 
+ 	<select id="selectDanListSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	    	SELECT data.* 
+		  FROM 
+		       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+		              ROWNUM ROW_NUM, 
+		              ROWNUM LINENUM, 
+		              data.* 
+		         FROM 
+		              (
+ 	    
+				 	      SELECT A.DAN_CD  AS CODE,
+						       A.DAN_NAME AS CODE_NAME,
+						       A.DAN_X    AS BIGO
+						  FROM T_DANCD A
+				   		 WHERE 1=1
+					   
+					          
+		              ) data 
+	       		) data 
+	 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	  
+	       
+ 	</select>   
+ 	
+ 	 	<select id="selectLevelListAll" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	  SELECT A.LV_CD  AS CODE,
+	       A.LV_NAME AS CODE_NAME, 
+	       ''  AS BIGO
+	  FROM T_LEVEL A
+
+ 	</select>    
+ 	
+ 	<select id="selectLevelListSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	       SELECT A.LV_CD  AS CODE,
+		       A.LV_NAME AS CODE_NAME, 
+		       ''  AS BIGO
+		  	FROM T_LEVEL A
+	   		 WHERE 1=1
+	 
+ 	</select> 
+ 	<select id="selectLevelListSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	    	SELECT data.* 
+		  FROM 
+		       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+		              ROWNUM ROW_NUM, 
+		              ROWNUM LINENUM, 
+		              data.* 
+		         FROM 
+		              (
+ 	    
+				 	      SELECT A.LV_CD  AS CODE,
+						       A.LV_NAME AS CODE_NAME, 
+						       ''  AS BIGO
+						  FROM T_LEVEL A
+				   		 WHERE 1=1
+					   
+					          
+		              ) data 
+	       		) data 
+	 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	  
+	       
+ 	</select> 
+ 	
+ 	<select id="selectPojoListAll" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+		 	    SELECT A.POJ_CD AS CODE,
+			       A.POJ_NAME AS CODE_NAME,
+			       ''  AS BIGO 
+		  		FROM T_POJ A
+
+ 	</select>    
+ 	
+ 	<select id="selectPojoListSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	       SELECT A.POJ_CD AS CODE,
+			       A.POJ_NAME AS CODE_NAME,
+			       ''  AS BIGO
+		  		FROM T_POJ A
+	   		 WHERE 1=1
+	 
+ 	</select> 
+ 	<select id="selectPojoListSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	    	SELECT data.* 
+		  FROM 
+		       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+		              ROWNUM ROW_NUM, 
+		              ROWNUM LINENUM, 
+		              data.* 
+		         FROM 
+		              (
+ 	    
+				 	     	SELECT A.POJ_CD AS CODE,
+							    A.POJ_NAME AS CODE_NAME,
+							   ''  AS BIGO
+						  	FROM T_POJ A
+				   		 	WHERE 1=1
+					   
+					          
+		              ) data 
+	       		) data 
+	 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	  
+	       
+ 	</select>
+ 	
+ 	<select id="selectSizeListAll" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+		 	    SELECT A.SIZE_CD  AS CODE,
+				       A.SIZE_NAME AS CODE_NAME,
+				       '' AS BIGO 
+				  FROM T_SIZE A
+
+ 	</select>    
+ 	
+ 	<select id="selectSizeListSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	      SELECT A.SIZE_CD  AS CODE,
+				       A.SIZE_NAME AS CODE_NAME,
+				       '' AS BIGO 
+				  FROM T_SIZE A
+	   		 WHERE 1=1
+	 
+ 	</select> 
+ 	<select id="selectSizeListSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 	    	SELECT data.* 
+		  FROM 
+		       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+		              ROWNUM ROW_NUM, 
+		              ROWNUM LINENUM, 
+		              data.* 
+		         FROM 
+		              (
+ 	    
+				 	     	 SELECT A.SIZE_CD  AS CODE,
+							       A.SIZE_NAME AS CODE_NAME,
+							       '' AS BIGO 
+							  FROM T_SIZE A
+				   		 	WHERE 1=1
+					   
+					          
+		              ) data 
+	       		) data 
+	 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	  
+	       
+ 	</select>    
+ 
+</mapper>

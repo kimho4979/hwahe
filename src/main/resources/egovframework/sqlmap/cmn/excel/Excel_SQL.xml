@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpditrans.base.mapper.ExcelMapper">
+	<!-- <resultMap id="ItemResultMap" type="com.fpminput.mntr.cmmn.domain.ItemVO">
+		<result property="itemCd" 		column="ITEM_CD"/>
+		<result property="gubnCd" 		column="GUBN_CD"/>
+		<result property="gubnName" 	column="GUBN_NAME"/>
+		<result property="largeCd" 		column="LARGE_CD"/>
+		<result property="largeName" 	column="LARGE_NAME"/>
+		<result property="smallCd" 		column="SMALL_CD"/>
+		<result property="smallName" 	column="SMALL_NAME"/>
+		<result property="useYn" 		column="USE_YN"/>
+		<result property="regDate" 		column="REG_DATE"/>
+		<result property="regUser" 		column="REG_USER"/>
+		
+		and SUBSTR(ad_cd_indst_idv_cd,0,2) LIKE '37'  1 level
+		and substr(ad_cd_indst_idv_cd,5,1) > 0    3 level
+		
+	</resultMap> -->
+	<resultMap id="kosisMap" type="java.util.Map">
+    </resultMap>
+	<select id="callKosisData" statementType="CALLABLE" >
+		{
+			CALL SP_KOSIS_FLOWER_DATA(
+				#{year, mode=IN, jdbcType=VARCHAR}, 
+				#{locDo, mode=IN, jdbcType=VARCHAR}, 
+				#{locSi, mode=IN, jdbcType=VARCHAR}, 
+				#{locGu, mode=IN, jdbcType=VARCHAR}, 
+				#{gubun1, mode=IN, jdbcType=VARCHAR}, 
+				#{gubun2, mode=IN, jdbcType=VARCHAR}, 
+				#{gubun3, mode=IN, jdbcType=VARCHAR}, 
+				 
+				#{o_cursor, jdbcType=CURSOR, mode=OUT, javaType=java.sql.ResultSet, resultMap=kosisMap}
+			)
+		} 
+	</select>
+	
+	<select id="getDataList" resultType="java.util.Map" parameterType="java.util.Map">
+		with vselect as (SELECT row_number() over (order by ad_cd_indst_idv_cd) rnum,(select count(*) from kosis_flower_company) totCount ,kfc.*
+		FROM KOSIS_FLOWER_COMPANY kfc
+		WHERE 1=1
+	 
+		
+		<if test="year != null and year != ''">
+			AND YEAR = #{year}
+		</if>
+		
+		<if test="loc != null and loc != ''">
+			AND cpnm1 = #{loc}
+		</if>
+		<if test="indst != null and indst != ''">
+			AND indst_nm like '%' ||  #{indst} || '%'
+		</if>
+		
+		<if test="location != null and location != ''">
+			AND substr(ad_cd_indst_idv_cd,0,2) = #{location}
+		</if>
+		
+		<if test="lvl != null and lvl != ''">
+			<if test='lvl == "1" and locDo != "al" '>
+				AND substr(ad_cd_indst_idv_cd,0,2) = #{locDo} 
+				AND lvl in(1,2,3)
+			</if>
+			<if test='lvl == "1" and locDo == "al" '>
+				AND lvl in(1)
+			</if>
+			<if test='lvl == "2"'>
+				AND lvl in(2,3)
+			</if>
+			<if test='lvl == "3"'>
+				AND lvl in(3)
+			</if>
+		</if>
+		)
+		select * from vselect 
+		where 1=1 
+		AND rnum BETWEEN #{startCount} AND #{endCount}
+		order by rnum 
+	</select>
+	
+	<select id="getLocation" resultType="java.util.Map" parameterType="java.util.Map">
+		select cpnm1,min(ad_cd_indst_idv_cd) cd,lvl
+		from kosis_flower_company
+		where 1=1
+		and year = #{year}
+		<if test="loc != null and loc != ''">
+			and substr(ad_cd_indst_idv_cd,0,2) = #{loc}
+		</if>
+		group by cpnm1, lvl 
+	</select>
+	
+	<update id="updateCompanyData" parameterType="java.util.Map" >
+		update kosis_flower_company set
+		C1 = #{C1},
+		C2 = #{C2},
+		C3 = #{C3},
+		C4 = #{C4},
+		C5 = #{C5},
+		C6 = #{C6},
+		C7 = #{C7},
+		C8 = #{C8},
+		C9 = #{C9},
+		C10 = #{C10},
+		C11 = #{C11},
+		C12 = #{C12},
+		C13 = #{C13},
+		C14 = #{C14},
+		C15 = #{C15},
+		C16 = #{C16},
+		C17 = #{C17},
+		C18 = #{C18},
+		C19 = #{C19},
+		C20 = #{C20},
+		C21 = #{C21},
+		C22 = #{C22},
+		C23 = #{C23},
+		C24 = #{C24},
+		C25 = #{C25},
+		C26 = #{C26},
+		C27 = #{C27},
+		C28 = #{C28},
+		C29 = #{C29},
+		C30 = #{C30},
+		C31 = #{C31},
+		C32 = #{C32},
+		C33 = #{C33},
+		C34 = #{C34},
+		C35 = #{C35},
+		C36 = #{C36},
+		C37 = #{C37},
+		C38 = #{C38},
+		C39 = #{C39},
+		C40 = #{C40},
+		C41 = #{C41},
+		C42 = #{C42},
+		C43 = #{C43},
+		C44 = #{C44},
+		C45 = #{C45},
+		RPRG_GNR1_ESTM_CNT = #{RPRG_GNR1_ESTM_CNT},
+		RPRG_GNR1_WOKE_SUM = #{RPRG_GNR1_WOKE_SUM},
+		RPRG_GNR2_ESTM_CNT = #{RPRG_GNR2_ESTM_CNT},
+		RPRG_GNR2_WOKE_SUM = #{RPRG_GNR2_WOKE_SUM},
+		RPRG_GNR3_ESTM_CNT = #{RPRG_GNR3_ESTM_CNT},
+		RPRG_GNR3_WOKE_SUM = #{RPRG_GNR3_WOKE_SUM},
+		RPRG_GNR4_ESTM_CNT = #{RPRG_GNR4_ESTM_CNT},
+		RPRG_GNR4_WOKE_SUM = #{RPRG_GNR4_WOKE_SUM},
+		RPRG_GNR5_ESTM_CNT = #{RPRG_GNR5_ESTM_CNT},
+		RPRG_GNR5_WOKE_SUM = #{RPRG_GNR5_WOKE_SUM},
+		RPRG_GNR6_ESTM_CNT = #{RPRG_GNR6_ESTM_CNT},
+		RPRG_GNR6_WOKE_SUM = #{RPRG_GNR6_WOKE_SUM}
+		where 1=1
+		and AD_CD_INDST_IDV_CD = #{AD_CD_INDST_IDV_CD}
+	</update>
+	
+	<insert id="insertExcelDataFlowerCompanyOne" parameterType="java.util.Map" >
+		INSERT INTO KOSIS_FLOWER_COMPANY 
+			( 
+				YEAR
+				,AD_CD_INDST_IDV_CD
+				,CPNM1
+				,INDST_NM
+				,C1
+				,C2
+				,C3
+				,C4
+				,C5
+				,C6
+				,C7
+				,C8
+				,C9
+				,C10
+				,C11
+				,C12
+				,C13
+				,C14
+				,C15
+				,C16
+				,C17
+				,C18
+				,C19
+				,C20
+				,C21
+				,C22
+				,C23
+				,C24
+				,C25
+				,C26
+				,C27
+				,C28
+				,C29
+				,C30
+				,C31
+				,C32
+				,C33
+				,C34
+				,C35
+				,C36
+				,C37
+				,C38
+				,C39
+				,C40
+				,C41
+				,C42
+				,C43
+				,C44
+				,C45
+				,RPRG_GNR1_ESTM_CNT
+				,RPRG_GNR1_WOKE_SUM
+				,RPRG_GNR2_ESTM_CNT
+				,RPRG_GNR2_WOKE_SUM
+				,RPRG_GNR3_ESTM_CNT
+				,RPRG_GNR3_WOKE_SUM
+				,RPRG_GNR4_ESTM_CNT
+				,RPRG_GNR4_WOKE_SUM
+				,RPRG_GNR5_ESTM_CNT
+				,RPRG_GNR5_WOKE_SUM
+				,RPRG_GNR6_ESTM_CNT
+				,RPRG_GNR6_WOKE_SUM
+				,IN_DT
+				,LVL
+			) VALUES (
+			#{YEAR}
+			,#{AD_CD_INDST_IDV_CD}
+			,#{CPNM1}
+			,#{INDST_NM}
+			,#{C1}
+			,#{C2}
+			,#{C3}
+			,#{C4}
+			,#{C5}
+			,#{C6}
+			,#{C7}
+			,#{C8}
+			,#{C9}
+			,#{C10}
+			,#{C11}
+			,#{C12}
+			,#{C13}
+			,#{C14}
+			,#{C15}
+			,#{C16}
+			,#{C17}
+			,#{C18}
+			,#{C19}
+			,#{C20}
+			,#{C21}
+			,#{C22}
+			,#{C23}
+			,#{C24}
+			,#{C25}
+			,#{C26}
+			,#{C27}
+			,#{C28}
+			,#{C29}
+			,#{C30}
+			,#{C31}
+			,#{C32}
+			,#{C33}
+			,#{C34}
+			,#{C35}
+			,#{C36}
+			,#{C37}
+			,#{C38}
+			,#{C39}
+			,#{C40}
+			,#{C41}
+			,#{C42}
+			,#{C43}
+			,#{C44}
+			,#{C45}
+			,#{RPRG_GNR1_ESTM_CNT}
+			,#{RPRG_GNR1_WOKE_SUM}
+			,#{RPRG_GNR2_ESTM_CNT}
+			,#{RPRG_GNR2_WOKE_SUM}
+			,#{RPRG_GNR3_ESTM_CNT}
+			,#{RPRG_GNR3_WOKE_SUM}
+			,#{RPRG_GNR4_ESTM_CNT}
+			,#{RPRG_GNR4_WOKE_SUM}
+			,#{RPRG_GNR5_ESTM_CNT}
+			,#{RPRG_GNR5_WOKE_SUM}
+			,#{RPRG_GNR6_ESTM_CNT}
+			,#{RPRG_GNR6_WOKE_SUM}
+			,SYSDATE
+			,#{lvl})
+				
+			
+	</insert>
+	
+	<insert id="insertExcelDataFlowerCompany" parameterType="java.util.Map" >
+		
+		INSERT INTO KOSIS_FLOWER_COMPANY 
+		( 
+			YEAR
+			,AD_CD_INDST_IDV_CD
+			,CPNM1
+			,INDST_NM
+			,C1
+			,C2
+			,C3
+			,C4
+			,C5
+			,C6
+			,C7
+			,C8
+			,C9
+			,C10
+			,C11
+			,C12
+			,C13
+			,C14
+			,C15
+			,C16
+			,C17
+			,C18
+			,C19
+			,C20
+			,C21
+			,C22
+			,C23
+			,C24
+			,C25
+			,C26
+			,C27
+			,C28
+			,C29
+			,C30
+			,C31
+			,C32
+			,C33
+			,C34
+			,C35
+			,C36
+			,C37
+			,C38
+			,C39
+			,C40
+			,C41
+			,C42
+			,C43
+			,C44
+			,C45
+			,RPRG_GNR1_ESTM_CNT
+			,RPRG_GNR1_WOKE_SUM
+			,RPRG_GNR2_ESTM_CNT
+			,RPRG_GNR2_WOKE_SUM
+			,RPRG_GNR3_ESTM_CNT
+			,RPRG_GNR3_WOKE_SUM
+			,RPRG_GNR4_ESTM_CNT
+			,RPRG_GNR4_WOKE_SUM
+			,RPRG_GNR5_ESTM_CNT
+			,RPRG_GNR5_WOKE_SUM
+			,RPRG_GNR6_ESTM_CNT
+			,RPRG_GNR6_WOKE_SUM
+			,IN_DT
+			,LVL
+		)
+		<foreach collection="list" item="item"  separator=" UNION ALL " open="" close="">
+		 SELECT 
+ 			#{item.YEAR}
+			,#{item.AD_CD_INDST_IDV_CD}
+			,#{item.CPNM1}
+			,#{item.INDST_NM}
+			,#{item.C1}
+			,#{item.C2}
+			,#{item.C3}
+			,#{item.C4}
+			,#{item.C5}
+			,#{item.C6}
+			,#{item.C7}
+			,#{item.C8}
+			,#{item.C9}
+			,#{item.C10}
+			,#{item.C11}
+			,#{item.C12}
+			,#{item.C13}
+			,#{item.C14}
+			,#{item.C15}
+			,#{item.C16}
+			,#{item.C17}
+			,#{item.C18}
+			,#{item.C19}
+			,#{item.C20}
+			,#{item.C21}
+			,#{item.C22}
+			,#{item.C23}
+			,#{item.C24}
+			,#{item.C25}
+			,#{item.C26}
+			,#{item.C27}
+			,#{item.C28}
+			,#{item.C29}
+			,#{item.C30}
+			,#{item.C31}
+			,#{item.C32}
+			,#{item.C33}
+			,#{item.C34}
+			,#{item.C35}
+			,#{item.C36}
+			,#{item.C37}
+			,#{item.C38}
+			,#{item.C39}
+			,#{item.C40}
+			,#{item.C41}
+			,#{item.C42}
+			,#{item.C43}
+			,#{item.C44}
+			,#{item.C45}
+			,#{item.RPRG_GNR1_ESTM_CNT}
+			,#{item.RPRG_GNR1_WOKE_SUM}
+			,#{item.RPRG_GNR2_ESTM_CNT}
+			,#{item.RPRG_GNR2_WOKE_SUM}
+			,#{item.RPRG_GNR3_ESTM_CNT}
+			,#{item.RPRG_GNR3_WOKE_SUM}
+			,#{item.RPRG_GNR4_ESTM_CNT}
+			,#{item.RPRG_GNR4_WOKE_SUM}
+			,#{item.RPRG_GNR5_ESTM_CNT}
+			,#{item.RPRG_GNR5_WOKE_SUM}
+			,#{item.RPRG_GNR6_ESTM_CNT}
+			,#{item.RPRG_GNR6_WOKE_SUM}
+			,SYSDATE
+			,#{item.lvl}
+			FROM DUAL 
+		</foreach>
+	</insert>
+	
+	<select id="getRmateLocation" resultType="java.util.Map">
+		select * from TB_KOSIS_LOCATION		
+	</select>
+	
+</mapper>

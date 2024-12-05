@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.image.mapper.CommonMapper">
+	<select id="getFlowerCode" resultType="java.util.Map">
+		<![CDATA[
+		SELECT 'F' AS cmnGbn,A.* FROM FLOWER.TB_GEN_CODE A WHERE GP_ID = 'FLOWER_GUBN'
+		UNION ALL
+		SELECT 'C' AS cmnGbn,B.* FROM FLOWER.TB_GEN_CODE B WHERE GP_ID = 'FLOW_KIND'
+		]]>
+	</select>
+
+	<select id="getMokCode" resultType="java.util.Map">
+		SELECT P_MOK_CODE
+		,P_MOK_NAME
+		FROM A_PUM_MOK_INFO
+		WHERE FLOWER_CODE IN ( '1','3') 
+		
+	</select>	
+
+	<select id="getJongCode" resultType="java.util.Map">
+		SELECT PUM_CODE
+		,P_MOK_CODE
+		,P_JONG_CODE
+		,P_JONG_NAME
+		FROM A_PUM_JONG_INFO
+		WHERE FLOWER_CODE IN ( '1','3')
+		
+	</select>	
+	
+	<select id="getJongCodeP" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT PUM_CODE
+		,P_MOK_CODE
+		,P_JONG_CODE
+		,P_JONG_NAME
+		FROM A_PUM_JONG_INFO
+		WHERE FLOWER_CODE IN ( '1','3')
+		AND P_MOK_CODE = #{mok}
+	</select>
+	
+	<update id="deletePumImage" parameterType="java.util.Map">
+		UPDATE A_PUM_JONG_INFO SET
+			RGB_CODE = null
+			,COLOR_NAME = null
+			,ORIGIN_NAME = null
+			,FILE_ID = null
+			WHERE PUM_CODE = #{pumCd}
+	</update>
+	
+	<update id="updatePumImage" parameterType="java.util.Map">
+			<if test="type != null and type != '' and type == 'upt'">
+				UPDATE A_PUM_JONG_INFO SET
+				RGB_CODE = #{rgb}
+				,COLOR_NAME = #{color}
+				,L_U_DT = SYSDATE
+				WHERE PUM_CODE = #{pumCd}
+			</if>
+			<if test="type == null or type == ''">
+				UPDATE A_PUM_JONG_INFO SET
+				FILE_ID = #{ramdomFileName}
+				,ORIGIN_NAME = #{originFileName}
+				,RGB_CODE = #{rgbColor}
+				,COLOR_NAME = #{colorTxt}
+				,L_U_DT = SYSDATE
+				WHERE PUM_CODE = #{IDX}
+			</if>
+	</update>
+	
+	
+	<update id="updatePumImage2" parameterType="java.util.Map">
+			UPDATE A_PUM_JONG_INFO SET
+			RGB_CODE = #{rgb}
+			,COLOR_NAME = #{color}
+			,L_U_DT = SYSDATE
+			WHERE PUM_CODE = #{pumCd}
+	</update>
+	
+	<select id="getImgList" parameterType="java.util.Map" resultType="java.util.Map">
+		with vselect as (SELECT row_number() over (order by A.L_U_DT DESC) rnum,(select count(*) FROM A_PUM_JONG_INFO WHERE FLOWER_CODE IN ('1','3')) totCount ,
+		PUM_CODE
+		,ORIGIN_NAME
+		,A.FLOWER_CODE
+		,A.P_MOK_CODE
+		,B.P_MOK_NAME 
+		,A.P_JONG_CODE
+		,A.P_JONG_NAME
+		,TO_CHAR(TO_DATE(A.L_U_DT,'yyyy-mm-dd')) AS L_U_DT
+		,FILE_ID
+		,RGB_CODE
+		,COLOR_NAME 
+		FROM A_PUM_JONG_INFO A
+		JOIN A_PUM_MOK_INFO B 
+		ON A.P_MOK_CODE = B.P_MOK_CODE
+		AND A.FLOWER_CODE = B.FLOWER_CODE 
+		WHERE A.FLOWER_CODE IN ( '1','3')
+		<if test="type == 'mok'">
+			<if test="value != null and value != ''">
+				AND P_MOK_NAME LIKE '%' || #{value} || '%'
+			</if>
+		</if>
+		<if test="type == 'jong'">
+			<if test="value != null and value != ''">
+				AND P_JONG_NAME LIKE '%' || #{value} || '%'
+			</if>
+		</if>
+		<if test="type == 'color'">
+			<if test="value != null and value != ''">
+				AND COLOR_NAME LIKE '%' || #{value} || '%'
+			</if>
+		</if>
+		<if test="type == 'all'">
+			<if test="value != null and value != ''">
+				AND (P_JONG_NAME LIKE '%' || #{value} || '%' OR P_MOK_NAME LIKE '%' || #{value} || '%' OR COLOR_NAME LIKE '%' || #{value} || '%')
+			</if>
+		</if>
+		<if test="isGallery != null and isGallery != ''">
+			AND A.FILE_ID IS NOT NULL
+		</if>
+		<if test="searchJongNm != null and searchJongNm != ''">
+			AND A.P_JONG_NAME like '%' ||  #{searchJongNm}  || '%'
+		</if>
+		<if test="searchMokNm != null and searchMokNm != ''">
+			AND B.P_MOK_NAME like '%' ||  #{searchMokNm}  || '%'
+		</if>
+		<if test="searchColorNm != null and searchColorNm != ''">
+			AND A.COLOR_NAME like '%' ||  #{searchColorNm}  || '%'
+		</if>
+		ORDER BY A.L_U_DT DESC 
+		)
+		select * from vselect
+		where 1=1
+		<if test="startCount != null and startCount != ''">
+			AND rnum BETWEEN #{startCount} AND #{endCount}
+		</if>
+		ORDER BY L_U_DT DESC 
+	</select>
+	<insert id="testInsert" parameterType="java.util.Map">
+		insert into TB_KOSIS_LOCATION (CODE,LABEL) VALUES (#{code},#{label})
+	</insert>
+	
+	
+</mapper>
+

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.apiCall.mapper.ApiCallMapper">
+
+	<resultMap id="resultCheckMap" type="com.fpdisys.dist.apiCall.domain.ApiCallVO">
+		<result property="serviceKey" 	column="SERVICE_KEY"/>
+		<result property="reqDataCd" 	column="REQ_DATA_CD"/>
+		<result property="openStrDt" 	column="OPEN_STR_DT"/>
+		<result property="openEndDt" 	column="OPEN_END_DT"/>
+		<result property="useYn" 		column="USE_YN"/>
+		<result property="regDt" 		column="REG_DT"/>
+		<result property="sysFmt" 		column="SYS_FMT"/>
+		<result property="useInfo" 		column="USE_INFO"/>
+		<result property="delYn" 		column="DEL_YN"/>
+		<result property="resultDt" 	column="RESULT_DT"/>
+		<result property="callDt" 		column="CALL_DT"/>
+		<result property="callCnt" 		column="CALL_CNT"/>
+		<result property="ip" 			column="IP"/>
+		<result property="dataType" 	column="DATA_TYPE"/>
+		<result property="parameter" 	column="PARAMETER"/>
+		<result property="callTime" 	column="CALL_TIME"/>
+		<result property="resultCnt" 	column="RESULT_CNT"/>
+		<result property="resultCallDt"	column="RESULT_CALL_DT"/>
+	</resultMap>
+	
+	<resultMap id="resultCheckYuchalMap" type="com.fpdisys.dist.apiCall.domain.ApiCallYuchalVO">
+		<result property="flowerGubn" 		column="FLOWER_GUBN"/>
+		<result property="saleDate" 	column="SALE_DATE"/>
+		<result property="pumName" 		column="PUM_NAME"/>
+		<result property="goodName" 	column="GOOD_NAME"/>
+		<result property="totCnt" 		column="TOT_CNT"/>
+		<result property="yuchalCnt" 	column="YUCHAL_CNT"/>
+	</resultMap>
+	
+	<resultMap id="resultCheckSaleDateMap" type="com.fpdisys.dist.apiCall.domain.ApiCallSaleDateVO">
+		<result property="saleDate" 	column="SALE_DATE"/>
+		<result property="flowerGubn" 	column="FLOWER_GUBN"/>
+		<result property="pumName" 		column="PUM_NAME"/>
+		<result property="goodName" 	column="GOOD_NAME"/>
+		<result property="lvNm" 		column="LV_NM"/>
+		<result property="maxAmt" 		column="MAX_AMT"/>
+		<result property="minAmt" 		column="MIN_AMT"/>
+		<result property="avgAmt" 		column="AVG_AMT"/>
+		<result property="totAmt" 		column="TOT_AMT"/>
+		<result property="totQty" 		column="TOT_QTY"/>
+	</resultMap>
+
+	<!-- 공공데이터 URL 조회 시 Validation Check1 :: 사용자 정보 조회 -->
+	<select id="selectCheckList" parameterType="com.fpdisys.dist.apiCall.domain.ApiCallVO" resultMap="resultCheckMap">
+		SELECT
+			T4.*
+			, (CASE WHEN T4.CALL_CNT <![CDATA[>]]> T5.MAX_CALL_CNT THEN 'false' 
+			        WHEN T4.CALL_CNT <![CDATA[<=]]> T5.MAX_CALL_CNT THEN 'true'
+			        ELSE '' 
+			END) AS RESULT_CNT
+		FROM(
+			SELECT
+				T2.USR_ID
+				, T1.SERVICE_KEY
+				, T1.REQ_DATA_CD
+				, T1.OPEN_STR_DT
+				, T1.OPEN_END_DT
+				, (CASE WHEN SYSDATE <![CDATA[<]]> T1.OPEN_STR_DT OR SYSDATE <![CDATA[>]]> T1.OPEN_END_DT THEN 'false'
+				        WHEN SYSDATE <![CDATA[>=]]> T1.OPEN_STR_DT AND SYSDATE <![CDATA[<=]]> T1.OPEN_END_DT THEN 'true'
+				        ELSE '' END) AS RESULT_DT
+				, T1.USE_YN
+				, T1.DEL_YN
+				<!-- , NVL(MAX(T3.CALL_CNT),0) AS CALL_CNT -->
+				, (SELECT NVL(MAX(CALL_CNT),0)
+					 FROM TB_API_LOG
+					WHERE CALL_DT=TO_CHAR(SYSDATE,'YYYYMMDD')
+					AND SERVICE_KEY=#{serviceKey, jdbcType=VARCHAR}
+				  ) AS CALL_CNT
+				, NVL(MAX(T3.CALL_DT),TO_CHAR(SYSDATE, 'YYYYMMDD')) AS CALL_DT
+				, (CASE WHEN TO_CHAR(SYSDATE,'YYYYMMDD') <![CDATA[=]]> MAX(T3.CALL_DT) THEN 'true' 
+				        WHEN TO_CHAR(SYSDATE,'YYYYMMDD') <![CDATA[<>]]> MAX(T3.CALL_DT) THEN 'false' 
+						ELSE 'false' 
+				END) AS RESULT_CALL_DT
+				<!-- , T3.DATA_TYPE
+				, T3.PARAMETER -->
+			FROM TB_API_OPEN T1
+			LEFT OUTER JOIN TB_API_USER T2 ON T1.SERVICE_KEY = T2.SERVICE_KEY
+			LEFT OUTER JOIN TB_API_LOG T3 ON T1.SERVICE_KEY = T3.SERVICE_KEY AND T1.REQ_DATA_CD = T3.REQ_DATA_CD
+			WHERE 1=1
+			<if test = "userId != null and userId != ''">
+				AND T2.USR_ID = #{userId}
+			</if>
+			<if test = "serviceKey != null and serviceKey != ''">
+				AND T1.SERVICE_KEY = #{serviceKey}
+			</if>
+			<if test = "reqDateCd != null and reqDataCd != ''">
+				AND T1.REQ_DATA_CD = #{reqDataCd}
+			</if>
+			<if test = "kind != null and kind != ''">
+				AND T1.REQ_DATA_CD = #{kind}
+			</if>
+			GROUP BY T2.USR_ID, T1.SERVICE_KEY, T1.REQ_DATA_CD, T1.OPEN_STR_DT, T1.OPEN_END_DT, T1.USE_YN, T1.DEL_YN<!-- , T3.DATA_TYPE, T3.PARAMETER -->
+		)T4, TB_API_SETTING T5
+		ORDER BY CALL_DT DESC
+	</select>
+	
+	<!-- 공공데이터 URL 조회 :: 일자별 경매정보 -->
+	<select id="selectSaleDateList" parameterType="egovframework.rte.psl.dataaccess.util.EgovMap" resultMap="resultCheckSaleDateMap">
+		<!-- 
+		SELECT * FROM(
+			SELECT
+				ROWNUM AS RN
+				, SALE_DATE
+				, DECODE(FLOWER_GUBN,'1','절화','3','난','2','관엽','4','춘란') AS FLOWER_GUBN
+				, PUM_NAME
+				, GOOD_NAME
+				,(SELECT LV_NAME FROM T_LEVEL WHERE LV_CD =TRIM(A.LV_CD)) AS LV_NM
+				, ROUND(MAX_AMT,0) AS MAX_AMT
+				, ROUND(MIN_AMT,0) AS MIN_AMT
+				, ROUND(AVG_AMT,0) AS AVG_AMT
+				, SUM(TOT_QTY) AS TOT_QTY
+				, SUM(TOT_AMT) AS TOT_AMT
+			FROM T_SALE_DATE A
+			WHERE 1=1
+			AND CMP_CD = '0000000001'
+			AND SALE_DATE = #{baseDate}
+			AND FLOWER_GUBN = #{flowerGubn}
+			<if test="pumName != null and pumName != ''">
+				AND PUM_NAME LIKE '%'||#{pumName}||'%'
+			</if>
+			<if test="goodName != null and goodName != ''">
+				AND GOOD_NAME LIKE '%'||#{goodName}||'%'
+			</if>
+			GROUP BY ROWNUM, SALE_DATE, DECODE(FLOWER_GUBN,'1','절화','3','난','2','관엽','4','춘란'), ROUND(MAX_AMT,0), PUM_NAME, GOOD_NAME, LV_CD, ROUND(MIN_AMT,0), ROUND(AVG_AMT,0)
+			ORDER BY ROWNUM ASC, SALE_DATE DESC, TOT_QTY DESC
+		) WHERE RN BETWEEN #{start} AND #{end} -->
+		
+		SELECT * FROM(
+			SELECT rownum AS RN, A.*
+			FROM(SELECT SALE_DATE
+	             , DECODE(FLOWER_GUBN,'1','절화','3','난','2','관엽','4','춘란') AS FLOWER_GUBN
+	             , PUM_NAME
+	             , GOOD_NAME
+	             , B.LV_NAME AS LV_NM
+	             , ROUND(MAX(MAX_AMT),0) AS MAX_AMT
+	             , ROUND(MIN(MIN_AMT),0) AS MIN_AMT
+	             , ROUND(SUM(TOT_AMT) / SUM(TOT_QTY),0) AS AVG_AMT
+	             , SUM(TOT_QTY) AS TOT_QTY
+	             , SUM(TOT_AMT) AS TOT_AMT
+	          FROM T_SALE_DATE A
+	             , T_LEVEL     B
+	         WHERE 1=1
+	           AND CMP_CD = '0000000001'
+	           AND SALE_DATE = #{baseDate}
+	           AND FLOWER_GUBN = #{flowerGubn}
+	           <if test="pumName != null and pumName != ''">
+					AND PUM_NAME LIKE '%'||#{pumName}||'%'
+				</if>
+				<if test="goodName != null and goodName != ''">
+					AND GOOD_NAME LIKE '%'||#{goodName}||'%'
+				</if>
+	           AND B.LV_CD = TRIM(A.LV_CD)
+	         GROUP BY SALE_DATE, DECODE(FLOWER_GUBN,'1','절화','3','난','2','관엽','4','춘란'), PUM_NAME, GOOD_NAME, B.LV_NAME
+	         ORDER BY SALE_DATE DESC, TOT_QTY DESC ) A
+         )
+		 WHERE RN BETWEEN #{start} AND #{end} 
+		
+	</select>
+	
+	<!-- 공공데이터 URL 조회 :: 유찰정보 -->
+	<select id="selectPassedInList" parameterType="egovframework.rte.psl.dataaccess.util.EgovMap" resultMap="resultCheckYuchalMap">
+		SELECT
+			DECODE(BUN_CHK,'N','절화','Y','난','C','관엽','G','춘란') AS FLOWER_GUBN
+            , SALE_DATE
+            , MOK_NAME PUM_NAME
+            , JONG_NAME GOOD_NAME
+			, TOT_CNT
+			, YUCHAL_CNT
+		FROM(
+			SELECT
+				ROWNUM AS RN
+				, BUN_CHK
+				, SALE_DATE
+				, MOK_NAME
+				, JONG_NAME
+				, SUM(TOT_CNT) AS TOT_CNT
+				, SUM(YUCHAL_CNT) AS YUCHAL_CNT
+			FROM TB_YUCHAL
+			WHERE 1=1
+			<if test="serviceKey != null">
+		    	<choose>
+			    	<when test="serviceKey == 'sample'">
+			    		AND SALE_DATE = REPLACE(#{baseDate},'-','')
+			    	</when>
+			    	<otherwise>
+			    		AND SALE_DATE BETWEEN TO_CHAR((SYSDATE-7), 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			    		AND SALE_DATE = REPLACE(#{baseDate},'-','')
+					</otherwise>
+		    	</choose>
+		    </if>
+			AND BUN_CHK = #{bunChk}
+			<if test="pumName != null and pumName != ''">
+				AND MOK_NAME LIKE '%'||#{pumName}||'%'
+			</if>
+			<if test="goodName != null and goodName != ''">
+				AND JONG_NAME LIKE '%'||#{goodName}||'%'
+			</if>
+			GROUP BY ROWNUM, BUN_CHK, SALE_DATE, MOK_NAME, JONG_NAME
+			ORDER BY MOK_NAME ASC, JONG_NAME ASC
+		)WHERE RN BETWEEN #{start} AND #{end}
+	</select>
+	
+	<!-- 공공데이터 LOG INSERT -->
+	<insert id="insertLogList" parameterType="java.util.HashMap">
+		INSERT INTO TB_API_LOG(
+			SERVICE_KEY
+			, REQ_DATA_CD
+			, CALL_DT
+			, CALL_CNT
+			, IP
+			, DATA_TYPE
+			, PARAMETER
+			, REG_DT
+			, CALL_TIME
+		)VALUES(
+			<if test="userId != null and userId != ''">
+				(SELECT SERVICE_KEY FROM TB_API_USER WHERE 1=1 AND USR_ID = #{userId})
+			</if>
+			<if test="serviceKey != null and serviceKey != ''">
+				#{serviceKey}
+			</if>
+			<if test="reqDataCd != null and reqDataCd != ''">
+			, #{reqDataCd}
+			</if>
+			<if test="kind != null and kind != ''">
+			, #{kind}
+			</if>
+			, TO_CHAR(SYSDATE,'YYYYMMDD')
+			, '1'
+			, '127.0.0.1'
+			, 'JSON'
+			, #{param}
+			, SYSDATE
+			, TO_CHAR(SYSDATE,'HH24:MI:SS')
+		)
+	</insert>
+	
+	<!-- 공공데이터 LOG UPDATE -->
+	<update id="updateLogList" parameterType="java.util.HashMap">
+		UPDATE TB_API_LOG SET
+			CALL_CNT = CALL_CNT+1
+			, IP = '127.0.0.1'
+			, PARAMETER = #{param}
+			, CALL_TIME = TO_CHAR(SYSDATE,'HH24:MI:SS')
+		WHERE 1=1
+		AND SERVICE_KEY = #{serviceKey}
+		<if test="reqDataCd != null and reqDataCd != ''">
+			AND REQ_DATA_CD = #{reqDataCd}
+		</if>
+		<if test="kind != null and kind != ''">
+			AND REQ_DATA_CD = #{kind}
+		</if>
+		AND REG_DT = (SELECT MAX(REG_DT) AS REG_DT FROM TB_API_LOG WHERE 1=1 AND SERVICE_KEY = #{serviceKey} <if test="reqDataCd != null and reqDataCd != ''">AND REQ_DATA_CD = #{reqDataCd}</if><if test="kind != null and kind != ''">AND REQ_DATA_CD = #{kind}</if>)
+	</update>
+	
+</mapper>

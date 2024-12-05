@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.monitor.mapper.Maa01MonitorSobiMapper">
+ <select id="maa01MonitorSobi" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+        
+	select * from (
+		SELECT
+		T1.COMP_CODE AS COMP_CODE
+		,ROWNUM AS RNUM
+                 ,USER_ID AS USER_ID
+                  ,COUNT(*) OVER() AS TOTAL_COUNT
+                 ,(SELECT COUNT(*) FROM T_CONSUMPTION_TREND   T     WHERE T.CHUL_NO=T1.COMP_CODE AND
+		SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND USE_YN='Y') AS JAKWANG
+		,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+		,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+                  FROM
+                  
+               		 T_USER T1
+                  
+                  WHERE
+               	    T1.USER_TYPE='M'
+               	    AND T1.USE_YN='Y'
+                  AND USER_ID NOT IN('at99999999')
+                  		)
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+</select>
+<select id="maa01MonitorSobiDetail" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+			SELECT 
+       B.USER_ID,
+       A.SEQ_NO,
+       SUBSTR(A.REG_DATE ,'1','7')  AS REG_DATE1,
+       REG_DATE,
+       A.PUM_NAME,
+       A.GOOD_NAME,
+       A.CHUL_NO,
+       A.FLOWER_GUBN,
+       A.QTY,
+       A.BIGO,
+       A.USE_YN,
+       A.SAN_CD,
+       A.REG_DT
+  FROM T_CONSUMPTION_TREND A, T_USER B
+  WHERE 1=1
+  AND A.CHUL_NO =B.COMP_CODE
+   AND B.USER_TYPE ='M'
+  AND B.USE_YN ='Y'
+  AND B.USER_ID NOT IN ('at99999999')
+  AND A.USE_YN ='Y'
+  AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')   =#{F_DATE}
+  
+  AND B.COMP_CODE = #{COMP_CODE}
+  
+</select>
+  <update id="Maa01MonitorSobiPopupUpdate"  parameterType="java.util.HashMap">
+
+		UPDATE T_CONSUMPTION_TREND  SET QTY =#{QTY},BIGO =#{BIGO}	 				
+				 WHERE REG_DATE = #{REG_DATE}
+				 AND PUM_NAME =#{PUM_NAME}
+				 AND GOOD_NAME =#{GOOD_NAME} 	  
+				 AND CHUL_NO = #{CHUL_NO}
+				 AND SEQ_NO = #{SEQ_NO}
+	  
+  </update>
+  
+  <update id="deleteMonitorSobitDetail"  parameterType="java.util.HashMap" >
+UPDATE T_CONSUMPTION_TREND  SET 					                 
+        USE_YN='N'		
+ WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+ AND	 PUM_NAME =#{PUM_NAME, jdbcType=VARCHAR}
+ AND	 GOOD_NAME =#{GOOD_NAME, jdbcType=VARCHAR} 	  
+ AND CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR}
+ AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+  </update>  
+  
+  <select id="maa01MonitorSobi_Date" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   select * from (
+		SELECT
+		T1.COMP_CODE AS COMP_CODE
+		,ROWNUM AS RNUM
+        ,USER_ID AS USER_ID
+        ,COUNT(*) OVER() AS TOTAL_COUNT
+        ,(SELECT COUNT(*) FROM T_CONSUMPTION_TREND   T     WHERE T.CHUL_NO=T1.COMP_CODE AND
+		SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND USE_YN='Y') AS JAKWANG
+		,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+		,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+                  FROM
+                  
+               		 T_USER T1
+                  
+                  WHERE
+               	    T1.USER_TYPE='M'
+               	    AND T1.USE_YN='Y'
+                  AND USER_ID NOT IN('at99999999')
+                       		)
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+</select>
+
+   <select id="Maa01MonitorSobiPopupInsert" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+  INSERT INTO T_CONSUMPTION_TREND
+       (   SEQ_NO
+           ,REG_DATE
+           ,PUM_NAME
+           ,GOOD_NAME                    
+           ,CHUL_NO  
+           ,FLOWER_GUBN              
+           ,QTY           
+           ,BIGO  
+           ,SAN_CD    
+           ,REG_DT
+       ) 
+       VALUES 
+       (    CONS_SEQ.NEXTVAL
+            ,#{REG_DATE, jdbcType=VARCHAR}
+            ,#{PUM_NAME, jdbcType=VARCHAR}
+            ,#{GOOD_NAME, jdbcType=VARCHAR}           
+            ,#{COMP_CODE, jdbcType=VARCHAR}        
+            ,'1'                          
+            ,#{QTY, jdbcType=VARCHAR}            
+            ,#{BIGO, jdbcType=VARCHAR}    
+            ,#{SAN_CD, jdbcType=VARCHAR}       
+            ,(select to_char(sysdate,'yyyy-mm-dd') from dual)   
+       ) 
+</select>
+  
+	
+
+</mapper>

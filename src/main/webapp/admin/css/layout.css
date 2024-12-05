@@ -1,0 +1,360 @@
+@import url( board.css );
+@import url( table_layout.css );
+@font-face {
+	font-family: NanumGothicWeb;
+	src: local("※"), url(../font/NanumGothic.woff) format("woff"), url(../font/NanumGothic.ttf) format("truetype"), url(../font/NanumGothic.ttf) format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+html {
+	font-family: "나눔고딕",NanumGothic,NanumGothicWeb,"돋움",Dotum,Arial,Helvetica,sans-serif;
+}
+body {
+	font-family: "나눔고딕",NanumGothic,NanumGothicWeb,"돋움",Dotum,Arial,Helvetica,sans-serif;
+}
+table {
+	font-family: "나눔고딕",NanumGothic,NanumGothicWeb,"돋움",Dotum,Arial,Helvetica,sans-serif;
+}
+input {
+	font-family: "나눔고딕",NanumGothic,NanumGothicWeb,"돋움",Dotum,Arial,Helvetica,sans-serif;
+}
+textarea {
+	font-family: "나눔고딕",NanumGothic,NanumGothicWeb,"돋움",Dotum,Arial,Helvetica,sans-serif;
+}
+button {
+	font-family: "나눔고딕",NanumGothic,NanumGothicWeb,"돋움",Dotum,Arial,Helvetica,sans-serif;
+}
+select {
+	font-family: "나눔고딕",NanumGothic,NanumGothicWeb,"돋움",Dotum,Arial,Helvetica,sans-serif;
+}
+#skip_navi {
+	left: 22px; top: 0px; position: absolute;
+}
+#skip_navi a {
+	top: -9999px; position: absolute;
+}
+
+article {
+	display: block;
+}
+aside {
+	display: block;
+}
+details {
+	display: block;
+}
+figcaption {
+	display: block;
+}
+figure {
+	display: block;
+}
+footer {
+	display: block;
+}
+header {
+	display: block;
+}
+hgroup {
+	display: block;
+}
+menu {
+	display: block;
+}
+nav {
+	display: block;
+}
+section {
+	display: block;
+}
+html {
+	margin: 0px; padding: 0px; height: 100%; color: rgb(34, 34, 34); line-height: 1.2; font-size: 12px; min-width: 1253px;
+}
+body {
+	margin: 0px; padding: 0px; height: 100%; color: rgb(34, 34, 34); line-height: 1.2; font-size: 12px; min-width: 1253px;
+}
+dl {
+	margin: 0px; padding: 0px;
+}
+dt {
+	margin: 0px; padding: 0px;
+}
+dd {
+	margin: 0px; padding: 0px;
+}
+ul {
+	margin: 0px; padding: 0px;
+}
+ol {
+	margin: 0px; padding: 0px;
+}
+li {
+	margin: 0px; padding: 0px;
+}
+h1 {
+	margin: 0px; padding: 0px;
+}
+h2 {
+	margin: 0px; padding: 0px;
+}
+h3 {
+	margin: 0px; padding: 0px;
+}
+h4 {
+	margin: 0px; padding: 0px;
+}
+h5 {
+	margin: 0px; padding: 0px;
+}
+h6 {
+	margin: 0px; padding: 0px;
+}
+pre {
+	margin: 0px; padding: 0px;
+}
+form {
+	margin: 0px; padding: 0px;
+}
+fieldset {
+	margin: 0px; padding: 0px;
+}
+input {
+	margin: 0px; padding: 0px;
+}
+textarea {
+	margin: 0px; padding: 0px;
+}
+p {
+	margin: 0px; padding: 0px;
+}
+blockquote {
+	margin: 0px; padding: 0px;
+}
+tbody {
+	margin: 0px; padding: 0px;
+}
+tfoot {
+	margin: 0px; padding: 0px;
+}
+thead {
+	margin: 0px; padding: 0px;
+}
+th {
+	margin: 0px; padding: 0px;
+}
+td {
+	margin: 0px; padding: 0px;
+}
+input {
+	font-size: 12px;
+}
+textarea {
+	font-size: 12px;
+}
+select {
+	font-size: 12px;
+}
+td {
+	font-size: 12px;
+}
+th {
+	font-size: 12px;
+}
+table {
+	border-collapse: collapse; border-spacing: 0;
+}
+ol {
+	list-style: none;
+}
+ul {
+	list-style: none;
+}
+li {
+	list-style: none;
+}
+h1 {
+	font-size: 100%;
+}
+h2 {
+	font-size: 100%;
+}
+h3 {
+	font-size: 100%;
+}
+h4 {
+	font-size: 100%;
+}
+h5 {
+	font-size: 100%;
+}
+h6 {
+	font-size: 100%;
+}
+abbr {
+	border: 0px currentColor;
+}
+acronym {
+	border: 0px currentColor;
+}
+hr {
+	left: -3000px; top: 0px; width: 0.1%; height: 0.1%; line-height: 0.1%; overflow: hidden; font-size: 0.1%; visibility: hidden; position: absolute;
+}
+legend {
+	left: -3000px; top: 0px; width: 0.1%; height: 0.1%; line-height: 0.1%; overflow: hidden; font-size: 0.1%; visibility: hidden; position: absolute;
+}
+img {
+	border: 0px currentColor;
+}
+fieldset {
+	border: 0px currentColor;
+}
+label {
+	cursor: pointer;
+}
+a {
+	color: rgb(0, 0, 0); text-decoration: none;
+}
+a:link {
+	color: rgb(34, 34, 34); text-decoration: none;
+}
+a:visited {
+	color: rgb(34, 34, 34); text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+}
+a:active {
+	text-decoration: none;
+}
+#accessibility {
+	left: -5000px; width: 0px; height: 0px; line-height: 0; overflow: hidden; font-size: 0px; visibility: hidden; position: absolute;
+}
+hr {
+	left: -5000px; width: 0px; height: 0px; line-height: 0; overflow: hidden; font-size: 0px; visibility: hidden; position: absolute;
+}
+legend {
+	left: -5000px; width: 0px; height: 0px; line-height: 0; overflow: hidden; font-size: 0px; visibility: hidden; position: absolute;
+}
+.hidden {
+	left: -5000px; width: 0px; height: 0px; line-height: 0; overflow: hidden; font-size: 0px; visibility: hidden; position: absolute;
+}
+caption {
+	display: none;
+}
+button {
+	background: none; padding: 0px; border: currentColor; color: rgb(112, 112, 112); cursor: pointer;
+}
+input[type='submit'] {
+	background: none; padding: 0px; border: currentColor; color: rgb(112, 112, 112); cursor: pointer;
+}
+#content {
+	height: 1%; zoom: 1;
+}
+
+* html #body {
+	height: 100%;
+}
+
+/**************Main left************************/
+#wrap {width: 1250px;  }
+.top_all{width:100%; height:30px; background:#51b949;}
+.top{height:30px;  width:1250px; background:#003545;  }
+.top li{float:right; line-height:30px; padding-left:30px; margin-right:10px;}
+.top li a{color:#fff	;}
+
+
+/******네비 컨텐츠 감싸는부분*********/
+.content_wrap{width: 100%; background:gold;}
+.navarea{width:250px; background:#eff1f2; float:left;}
+.logo{text-align:center;}
+
+
+
+
+
+#accordian {
+	background: #333333;
+	width: 250px;
+	margin: 0px auto 0 auto;
+	color: white;
+	box-shadow: 
+		0 5px 15px 1px rgba(0, 0, 0, 0.6), 
+		0 0 200px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* 메뉴 스타일 */
+#accordian h3 {
+	font-size: 12px;
+	line-height: 34px;
+	padding: 0 10px;
+	cursor: pointer;
+	background: #064461;
+	background: linear-gradient(#003040, #002535);
+}
+#accordian h3:hover {
+	text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);
+}
+
+/* 아이콘폰트 스타일 */
+#accordian h3 span {
+	font-size: 16px;
+	margin-right: 10px;
+}
+#accordian li {
+	list-style-type: none;
+}
+
+#accordian li a{
+	list-style-type: none;
+	color:#fff;
+}
+
+/* 서브메뉴 스타일 */
+#accordian ul ul li a {
+	color: white;
+	text-decoration: none;
+	font-size: 11px;
+	line-height: 27px;
+	display: block;
+	padding: 0 15px;
+	-webkit-transition: all 0.15s;
+	-moz-transition: all 0.15s;
+	-o-transition: all 0.15s;
+	-ms-transition: all 0.15s;
+	transition: all 0.15s;
+}
+#accordian ul ul li a:hover {
+	background: #003545;
+	border-left: 5px solid #09c;
+
+}
+
+/* active 클래스 외에 것은 보이지 않게 하기 */
+#accordian ul ul {
+	display: none;
+}
+#accordian li.active ul {
+	display: block;
+}
+	
+
+
+
+
+
+
+
+
+
+.sub_contents{float:left; width:500px;}
+.sub_contents_title{ font-size:20px; font-weight:blod; border-left:5px solid #51b849; margin-left:10px; padding-left:10px;   margin-top:22px; }
+.real_contents{width:1003px; background-color:#f0f0f0; margin-top:27px}
+/**공통 **/
+.hw_clear{clear:both;}
+
+/**푸터 **/
+.footer_box{margin:0 auto; text-align:center; font-size:13px; color:gray; font-weight:700; padding-top:15px;  background:#f0f0f0; height:85px;}
+.mainContents
+
+
+

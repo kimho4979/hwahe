@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpdisys.dist.auth.mapper.AuthGroupMenuMapper">
+ 
+
+    <resultMap id="authGroupMenuResultMap" type="com.fpdisys.dist.menu.domain.AuthGroupMenu">
+        <result property="grpAuthCd" column="GRP_AUTH_CD"/>
+        <result property="grpAuthNm" column="GRP_AUTH_NM"/>
+        <result property="mnuCd" column="MNU_CD"/>
+        <result property="mnuNm" column="MNU_NM"/>
+        <result property="schAh" column="SCH_AH"/>
+        <result property="savAh" column="SAV_AH"/>
+        <result property="exlAh" column="EXL_AH"/>
+        <result property="fn1Ah" column="FN1_AH"/>
+        <result property="fn2Ah" column="FN2_AH"/>
+        <result property="fn3Ah" column="FN3_AH"/>
+        <result property="fn4Ah" column="FN4_AH"/>
+        <result property="fn5Ah" column="FN5_AH"/>
+        <result property="insDt" column="INS_DT"/>
+        <result property="insId" column="INS_ID"/>
+        <result property="uptDt" column="UPT_DT"/>
+        <result property="uptId" column="UPT_ID"/>
+    </resultMap>
+
+    <select id="findByGrpAuthCd" resultMap="authGroupMenuResultMap" parameterType="java.util.HashMap" statementType="PREPARED">
+	    SELECT A.GRP_AUTH_CD,
+		   B.GRP_AUTH_NM,
+	       A.MNU_CD,
+	       A.INS_DT,
+	       A.INS_ID,
+	       A.UPT_DT,
+	       A.UPT_ID,
+	       A.SCH_AH,
+	       A.SAV_AH,
+	       A.EXL_AH,
+	       A.FN1_AH,
+	       A.FN2_AH,
+	       A.FN3_AH,
+	       A.FN4_AH,
+	       A.FN5_AH
+	  FROM T_GRP_AUTH A,
+	       T_AUTH_GRP B,
+	       T_MNU C
+	 WHERE  A.GRP_AUTH_CD = B.GRP_AUTH_CD
+	 AND A.MNU_CD = C.MNU_CD
+	 AND A.GRP_AUTH_CD =#{grpAuthCd     , jdbcType=VARCHAR}
+    </select>
+    
+    <select id="findByGrpAuthCdPageAble" resultMap="authGroupMenuResultMap" parameterType="java.util.HashMap" statementType="PREPARED">
+	 
+	          
+  SELECT data.* 
+  FROM 
+       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+              ROWNUM ROW_NUM, 
+              ROWNUM LINENUM, 
+              data.* 
+         FROM 
+              (
+	 
+	 
+	 
+			    SELECT A.GRP_AUTH_CD,
+				   B.GRP_AUTH_NM,
+			       A.MNU_CD,
+			       A.INS_DT,
+			       A.INS_ID,
+			       A.UPT_DT,
+			       A.UPT_ID,
+			       A.SCH_AH,
+			       A.SAV_AH,
+			       A.EXL_AH,
+			       A.FN1_AH,
+			       A.FN2_AH,
+			       A.FN3_AH,
+			       A.FN4_AH,
+			       A.FN5_AH
+			  FROM T_GRP_AUTH A,
+			       T_AUTH_GRP B,
+			       T_MNU C
+			 WHERE  A.GRP_AUTH_CD = B.GRP_AUTH_CD
+			 AND A.MNU_CD = C.MNU_CD
+			 AND A.GRP_AUTH_CD =#{grpAuthCd     , jdbcType=VARCHAR}
+			 
+	     ) data 
+       ) data 
+ 	<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+  
+    </select>
+    
+     
+    
+     <insert id="insertAuthGroupMenu" parameterType="java.util.HashMap"  >
+    INSERT INTO T_GRP_AUTH 
+       ( 
+           GRP_AUTH_CD,
+           MNU_CD,
+           INS_DT,
+           INS_ID,
+           SCH_AH,
+           SAV_AH,
+           EXL_AH,
+           FN1_AH,
+           FN2_AH,
+           FN3_AH,
+           FN4_AH,
+           FN5_AH 
+       ) 
+       VALUES 
+       (
+           #{grpAuthCd     , jdbcType=VARCHAR},
+           #{mnuCd     , jdbcType=VARCHAR},
+           sysdate,
+           #{userId    , jdbcType=VARCHAR},
+           #{schAh     , jdbcType=VARCHAR},
+           #{savAh     , jdbcType=VARCHAR},
+		   #{exlAh     , jdbcType=VARCHAR},
+		   #{fn1Ah     , jdbcType=VARCHAR},
+		   #{fn2Ah     , jdbcType=VARCHAR},
+		   #{fn3Ah     , jdbcType=VARCHAR},
+		   #{fn4Ah     , jdbcType=VARCHAR},
+		   #{fn5Ah     , jdbcType=VARCHAR},
+       ) 
+     
+     </insert>
+     
+      <insert id="saveAuthGroupMenu" parameterType="com.fpdisys.dist.menu.domain.AuthGroupMenu"  >
+    INSERT INTO T_GRP_AUTH 
+       ( 
+           GRP_AUTH_CD,
+           MNU_CD,
+           INS_DT,
+           INS_ID,
+           SCH_AH,
+           SAV_AH,
+           EXL_AH,
+           FN1_AH,
+           FN2_AH,
+           FN3_AH,
+           FN4_AH,
+           FN5_AH 
+       ) 
+       VALUES 
+       (
+           #{grpAuthCd     , jdbcType=VARCHAR},
+           #{mnuCd     , jdbcType=VARCHAR},
+           sysdate,
+           #{insUser    , jdbcType=VARCHAR},
+           #{schAh     , jdbcType=VARCHAR},
+           #{savAh     , jdbcType=VARCHAR},
+		   #{exlAh     , jdbcType=VARCHAR},
+		   #{fn1Ah     , jdbcType=VARCHAR},
+		   #{fn2Ah     , jdbcType=VARCHAR},
+		   #{fn3Ah     , jdbcType=VARCHAR},
+		   #{fn4Ah     , jdbcType=VARCHAR},
+		   #{fn5Ah     , jdbcType=VARCHAR},
+       ) 
+     
+     </insert>
+     
+      <update id="updateAuthGroupMenu" parameterType="java.util.HashMap"  >
+      UPDATE T_GRP_AUTH
+	  SET UPT_DT = sysdate, 
+		UPT_ID = #{userId    , jdbcType=VARCHAR}, 
+		SCH_AH =   #{schAh     , jdbcType=VARCHAR},
+		SAV_AH =   #{savAh     , jdbcType=VARCHAR},
+		EXL_AH =   #{exlAh     , jdbcType=VARCHAR}, 
+		FN1_AH =   #{fn1Ah     , jdbcType=VARCHAR}, 
+		FN2_AH =   #{fn2Ah     , jdbcType=VARCHAR}, 
+		FN3_AH =   #{fn3Ah     , jdbcType=VARCHAR}, 
+		FN4_AH =   #{fn4Ah     , jdbcType=VARCHAR}, 
+		FN5_AH =   #{fn5Ah     , jdbcType=VARCHAR}, 
+		WHERE GRP_AUTH_CD = #{grpAuthCd     , jdbcType=VARCHAR}
+		AND  MNU_CD = #{mnuCd     , jdbcType=VARCHAR}
+      
+      </update>
+      
+      <delete id="deleteByGrpAuthCd" parameterType="java.util.HashMap">
+         DELETE FROM T_GRP_AUTH
+         WHERE GRP_AUTH_CD = #{grpAuthCd     , jdbcType=VARCHAR}
+      </delete>
+      
+      <delete id="deleteByGrpAuthCdAndMnuCd" parameterType="java.util.HashMap">
+         DELETE FROM T_GRP_AUTH
+         WHERE GRP_AUTH_CD = #{grpAuthCd     , jdbcType=VARCHAR}
+		 AND  MNU_CD = #{mnuCd     , jdbcType=VARCHAR}
+      </delete>
+      
+       <select id="findByMnuCd" resultMap="authGroupMenuResultMap" parameterType="java.util.HashMap" statementType="PREPARED">
+              SELECT A.GRP_AUTH_CD,
+		   B.GRP_AUTH_NM,
+	       A.MNU_CD,
+	       A.INS_DT,
+	       A.INS_ID,
+	       A.UPT_DT,
+	       A.UPT_ID,
+	       A.SCH_AH,
+	       A.SAV_AH,
+	       A.EXL_AH,
+	       A.FN1_AH,
+	       A.FN2_AH,
+	       A.FN3_AH,
+	       A.FN4_AH,
+	       A.FN5_AH
+	  FROM T_GRP_AUTH A,
+	       T_AUTH_GRP B,
+	       T_MMU C
+	 WHERE  A.GRP_AUTH_CD = B.GRP_AUTH_CD
+	 AND A.MNU_CD = C.MNU_CD
+	 AND A.MNU_CD =#{mnuCd     , jdbcType=VARCHAR}
+       
+       </select>
+      
+      
+     
+</mapper>

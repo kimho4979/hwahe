@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpminput.mntr.mce01.mapper.Mce01Mapper">
+
+	<!-- 게시판관리 행상일정관리 등록처리 -->
+	<insert id="inputEventProc" parameterType="java.util.HashMap">
+		INSERT INTO T_EVENT_CALENDAR(
+			EVENT_SEQ
+			,START_DT
+			,END_DT
+			,EVENT_NM
+			,EVENT_TYPE
+			,EVENT_COLOR
+			,REMARKS
+			,INS_DT
+			,INS_ID
+		)VALUES(
+			(SELECT NVL(MAX(EVENT_SEQ),0)+1 FROM T_EVENT_CALENDAR)
+			,TO_DATE(#{START_DT})
+			,TO_DATE(#{END_DT})
+			,#{EVENT_NM}
+			,#{EVENT_TYPE}
+			,#{EVENT_COLOR}
+			,#{REMARKS}
+			,SYSDATE
+			,#{SESSION_USER_ID}
+		)
+	</insert>
+	
+	<!-- 게시판관리 행상일정관리 행사달력 데이터 조회 -->
+	<select id="selectEventCalendarList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+			EVENT_SEQ
+			,TO_CHAR(START_DT, 'YYYY-MM-DD') AS "start"
+			,TO_CHAR(END_DT, 'YYYY-MM-DD') AS "end"
+			,EVENT_NM AS "title"
+			,EVENT_TYPE
+			,EVENT_COLOR AS "color"
+			,REMARKS
+			,INS_DT
+			,INS_ID
+			,UPT_DT
+			,UPT_ID
+		FROM 
+		T_EVENT_CALENDAR
+		WHERE 
+			START_DT <![CDATA[>=]]> TO_DATE(#{start},'YYYY-MM-DD')
+			AND END_DT <![CDATA[<=]]> TO_DATE(#{end},'YYYY-MM-DD')
+	</select>
+	
+	
+	<!-- 게시판관리 행사일정관리 행사 상세내용 조회 -->
+	<select id="selectEventDetail" parameterType="java.util.HashMap" resultType="HashMap">
+		SELECT
+			EVENT_SEQ
+			,TO_CHAR(START_DT, 'YYYY-MM-DD') AS START_DT
+			,TO_CHAR(END_DT, 'YYYY-MM-DD') AS END_DT
+			,EVENT_NM
+			,EVENT_TYPE
+			,EVENT_COLOR
+			,REMARKS
+			,INS_DT
+			,INS_ID
+			,UPT_DT
+			,UPT_ID
+		FROM 
+		T_EVENT_CALENDAR
+		WHERE 
+			EVENT_SEQ = #{EVENT_SEQ}
+	</select>
+	
+	<!-- 게시판관리 행상일정관리 수정처리 -->
+	<update id="updateEventProc" parameterType="java.util.HashMap">
+		UPDATE T_EVENT_CALENDAR SET
+			START_DT     = #{START_DT}
+			,END_DT      = #{END_DT}
+			,EVENT_NM    = #{EVENT_NM}
+			,EVENT_TYPE  = #{EVENT_TYPE}
+			,EVENT_COLOR = #{EVENT_COLOR}
+			,REMARKS     = #{REMARKS}
+			,UPT_DT      = SYSDATE
+			,UPT_ID      = #{SESSION_USER_ID}
+		WHERE
+			EVENT_SEQ = #{EVENT_SEQ}
+	</update>
+	
+	<!-- 게시판관리 행사일정관리 삭제처리 -->
+	<delete id="deleteEventProc" parameterType="java.util.HashMap">
+		DELETE FROM T_EVENT_CALENDAR
+		WHERE
+			EVENT_SEQ = #{EVENT_SEQ}
+	</delete>
+	
+	
+</mapper>

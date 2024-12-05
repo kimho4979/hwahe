@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.codeManage.mapper.CodeManageMapper">
+
+	
+	<!-- 실시간 데이터 관리 :: List -->
+	<select id="selectRealCodeList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT T2.*
+			 , F_GET_MARKET_NAME(T2.CMP_CD) AS CMP_NM
+		FROM (
+			SELECT T1.*
+				 , COUNT(*) OVER() AS TOT_COUNT
+				 , ROW_NUMBER() OVER (ORDER BY CMP_CD ASC) RNUM
+			FROM (
+				SELECT CMP_CD
+					 , MEJANG
+					 , CMP_GOOD
+					 , PUM_NAME
+					 , GOOD_NAME
+				FROM T_REAL
+				WHERE 1=1
+				AND SALE_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+				<if test="searchPumNm != null and searchPumNm != ''">
+					AND PUM_NAME LIKE '%' || #{searchPumNm} || '%'
+				</if>
+				<if test="searchGoodNm != null and searchGoodNm != ''">
+					AND GOOD_NAME LIKE '%' || #{searchGoodNm} || '%'
+				</if>
+				<if test="searchMejang != null and searchMejang != ''">
+					AND MEJANG = #{searchMejang}
+				</if>
+				GROUP BY CMP_CD, MEJANG, CMP_GOOD, PUM_NAME, GOOD_NAME, MM_CD
+				ORDER BY CMP_CD ASC
+			) T1
+		) T2
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+	</select>
+	
+	
+	<!-- 실시간 데이터 관리 UPDATE -->
+	<update id="updateRealCode" parameterType="java.util.HashMap">
+		UPDATE T_REAL SET
+			MEJANG = #{changeMejang}
+		WHERE CMP_CD = #{cmpCd}
+		AND CMP_GOOD = #{cmpGood}
+	</update>
+
+	<!-- 정산 데이터 관리 :: List -->
+	<select id="selectSaleCodeList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		WITH V_SALE as (select 'sale' as txtSale, cmp_cd, mejang, cmp_good, pum_name, good_name from t_sale 
+			WHERE SALE_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+			AND  LENGTH(CMP_GOOD) IN (8,9,10,11,12)
+			<if test="searchPumNm != null and searchPumNm != ''">
+				AND PUM_NAME LIKE '%' || #{searchPumNm} || '%'
+			</if>
+			<if test="searchGoodNm != null and searchGoodNm != ''">
+				AND GOOD_NAME LIKE '%' || #{searchGoodNm} || '%'
+			</if>
+			<if test="searchMejang != null and searchMejang != ''">
+				AND MEJANG = #{searchMejang}
+			</if>
+			GROUP BY CMP_CD, MEJANG, CMP_GOOD, PUM_NAME, GOOD_NAME)
+		,V_REAL as (select 'real' as txtReal, cmp_cd, mejang, cmp_good, pum_name, good_name FROM t_real
+			where SALE_DATE BETWEEN REPLACE(#{searchStartDate},'-','') AND REPLACE(#{searchEndDate},'-','')
+				AND LENGTH(CMP_GOOD) IN (8,9,10,11,12)
+				<if test="searchPumNm != null and searchPumNm != ''">
+					AND PUM_NAME LIKE '%' || #{searchPumNm} || '%'
+				</if>
+				<if test="searchGoodNm != null and searchGoodNm != ''">
+					AND GOOD_NAME LIKE '%' || #{searchGoodNm} || '%'
+				</if>
+				<if test="searchMejang != null and searchMejang != ''">
+					AND MEJANG = #{searchMejang}
+				</if>
+			GROUP BY CMP_CD, MEJANG, CMP_GOOD, PUM_NAME, GOOD_NAME)
+		,REAL_SALE AS ( select txtSale,txtReal,NVL(rr.CMP_CD, ss.CMP_CD) AS CMP_CD 
+			  , NVL(ss.MEJANG, rr.MEJANG) AS MEJANG
+			  , NVL(ss.CMP_GOOD, rr.CMP_GOOD) AS CMP_GOOD
+			  , NVL(ss.PUM_NAME, rr.PUM_NAME) AS PUM_NAME
+			  , NVL(ss.GOOD_NAME, rr.GOOD_NAME) AS GOOD_NAME
+			  FROM V_SALE ss FULL OUTER JOIN V_REAL rr ON ss.cmp_cd=rr.cmp_cd AND ss.cmp_good = rr.cmp_good
+				)
+		, V_MAPPING as ( select  im.flower_gubn, im.flower_code, im.market_cd, im.cmp_good, im.item_cd, tii.item_nm, im.kind_cd, ik.kind_nm
+				 FROM t_int_mapping im
+				 LEFT JOIN t_int_item tii ON im.flower_gubn = tii.flower_gubn AND im.flower_code=tii.flower_code and im.item_cd= tii.item_cd
+				 LEFT JOIN t_int_kind ik ON im.flower_gubn = ik.flower_gubn AND im.flower_code=ik.flower_code AND im.kind_cd = ik.kind_cd AND im.item_cd = ik.item_cd
+				 GROUP BY im.flower_gubn, im.flower_code, im.market_cd, im.cmp_good, im.item_cd, tii.item_nm, im.kind_cd, ik.kind_nm
+				)
+		, V_JOIN_MAP_RS as ( select  txtSale, txtReal, rs.cmp_cd, vm.market_cd, rs.mejang, vm.flower_gubn, vm.flower_code, rs.cmp_good , vm.cmp_good cmp_good2 ,
+							vm.item_cd, rs.pum_name , vm.kind_cd , rs.good_name
+				FROM REAL_SALE rs 
+				LEFT JOIN t_int_mapping vm ON rs.cmp_cd=vm.market_cd AND rs.cmp_good = vm.cmp_good
+				<if test="searchMejang != null and searchMejang != ''">
+					AND MEJANG = #{searchMejang}
+				</if>
+				GROUP BY txtSale, txtReal, rs.cmp_cd, vm.market_cd, rs.mejang, vm.flower_gubn, vm.flower_code, rs.cmp_good , vm.cmp_good , vm.item_cd, rs.pum_name , vm.kind_cd , rs.good_name							
+				)
+		, V_JOIN_RSRS AS ( select txtSale, txtReal, rs.cmp_cd, rs.market_cd, rs.mejang, rs.flower_gubn, rs.flower_code, rs.cmp_good, rs.cmp_good2, rs.pum_name, vm.item_cd, vm.item_nm, rs.good_name,vm.kind_cd, vm.kind_nm							
+				FROM V_JOIN_MAP_RS rs
+				LEFT JOIN V_MAPPING  vm ON rs.market_cd=vm.market_cd AND rs.flower_gubn=vm.flower_gubn AND rs.flower_code=vm.flower_code AND rs.item_cd = vm.item_cd AND rs.kind_cd=vm.kind_cd
+				GROUP BY txtSale, txtReal, rs.cmp_cd, rs.market_cd, rs.mejang, rs.flower_gubn, rs.flower_code, rs.cmp_good, rs.cmp_good2, rs.pum_name, vm.item_cd, vm.item_nm, rs.good_name,vm.kind_cd, vm.kind_nm  
+				)
+		,V_JOIN_ITEM_NAME as ( select  txtSale, txtReal , jr.cmp_cd, jr.market_cd, jr.mejang, tii.flower_gubn , tii.flower_code, jr.cmp_good, jr.cmp_good2 , jr.pum_name as pum_name2,
+					NVL( SUBSTR(PUM_NAME, 1, INSTR(PUM_NAME, '(')-1), jr.PUM_NAME) as pum_name ,jr.good_name , tii.item_nm, tii.item_cd,ik.kind_cd, ik.kind_nm 
+				FROM V_JOIN_RSRS jr 
+				LEFT JOIN t_int_item tii ON ( (tii.item_nm = NVL( SUBSTR(PUM_NAME, 1, INSTR(PUM_NAME, '(')-1), jr.PUM_NAME)) OR (tii.item_cd=jr.item_cd) )
+				LEFT JOIN t_int_kind ik ON ik.kind_cd= jr.kind_cd AND ik.item_cd=jr.item_cd
+				 AND jr.flower_gubn=ik.flower_gubn AND jr.flower_code = ik.flower_code
+				GROUP BY txtSale,txtReal , jr.cmp_cd, jr.market_cd, jr.mejang, tii.flower_gubn, tii.flower_code, jr.cmp_good, jr.cmp_good2 , jr.pum_name, pum_name ,jr.good_name , tii.item_nm, tii.item_cd,ik.kind_cd, ik.kind_nm 
+				)
+		,V_JOIN_KIND_NAME as ( select txtSale,txtReal, ii.cmp_cd, ii.market_cd, ii.mejang, ii.flower_gubn,
+				 CASE ii.flower_gubn WHEN '1' THEN '절화'
+					WHEN '2' THEN '관엽'
+					WHEN '3' THEN '난'
+					WHEN '4' THEN '춘란'
+					ELSE '미분류' END FLOWER_GUBN1
+				,ii.flower_code, ii.cmp_good, ii.cmp_good2, ii.pum_name2, ii.pum_name, ii.good_name, ii.item_nm, ii.item_cd 
+				,NVL(ik.kind_cd, ii.kind_cd) kind_cd, NVL(ik.kind_nm, ii.kind_nm) kind_nm
+				,F_GET_MARKET_NAME(ii.CMP_CD) AS CMP_NM
+				,COUNT(*) OVER() AS TOT_COUNT
+				FROM V_JOIN_ITEM_NAME ii
+				LEFT JOIN T_INT_KIND ik ON ii.item_cd = ik.item_cd AND ii.flower_gubn = ik.flower_gubn AND ii.flower_code=ik.flower_code AND ii.good_name = ik.kind_nm
+				GROUP BY txtSale,txtReal,  ii.cmp_cd, ii.market_cd, ii.mejang, ii.flower_gubn,ii.flower_code, ii.cmp_good, ii.cmp_good2, ii.pum_name2, ii.pum_name, ii.good_name, ii.item_nm, ii.item_cd,NVL(ik.kind_cd, ii.kind_cd) , NVL(ik.kind_nm, ii.kind_nm) 
+				ORDER BY CMP_CD, PUM_NAME, GOOD_NAME
+							)
+		, V_SELECT as( SELECT AA.* 
+				 , ROW_NUMBER() OVER (ORDER BY AA.cmp_cd  ASC) RNUM
+			FROM V_JOIN_KIND_NAME AA
+			)						
+		SELECT * FROM V_SELECT 
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount} 
+		ORDER BY rnum
+					  
+	</select>
+	<!-- 정산 데이터 관리 UPDATE -->
+	<update id="updateSaleCode" parameterType="java.util.HashMap">
+		UPDATE T_SALE SET
+			MEJANG = #{changeMejang}
+		WHERE CMP_CD = #{cmpCd}
+		AND CMP_GOOD = #{cmpGood}
+	</update>
+	
+	
+	<delete id="deleteSaleCodeDate"  parameterType="java.util.HashMap"> 
+		DELETE FROM T_SALE_DATE
+		WHERE CMP_CD = #{cmpCd , jdbcType=VARCHAR }	  
+		AND PUM_NAME = #{pumName , jdbcType=VARCHAR }
+		AND GOOD_NAME = #{goodName , jdbcType=VARCHAR }
+	</delete>
+	
+	
+	<insert id="insertSaleCodeDate" parameterType="java.util.HashMap" >
+	INSERT INTO T_SALE_DATE(SALE_DATE
+					  ,CMP_CD
+					  ,FLOWER_GUBN
+					  ,PUM_NAME
+					  ,GOOD_NAME
+					  ,MM_CD
+					  ,DANQ
+					  ,DAN_CD
+					  ,POJ_CD
+					  ,SIZE_CD
+					  ,LV_CD
+					  ,SAN_CD
+					  ,TOT_QTY
+					  ,TOT_AMT
+					  ,MIN_AMT
+					  ,MAX_AMT
+					  ,AVG_AMT
+					  )
+	SELECT B.SALE_DATE
+		  ,B.CMP_CD
+		  ,B.MEJANG
+		  ,B.PUM_NAME
+		  ,B.GOOD_NAME
+		  ,B.MM_CD
+		  ,B.DANQ
+		  ,B.DAN_CD
+		  ,B.POJ_CD
+		  ,B.SIZE_CD
+		  ,B.LV_CD
+		  ,B.SAN_CD
+		  ,SUM(B.TOT_QTY)
+		  ,SUM(B.TOT_AMT)
+		  ,MIN(B.COST)
+		  ,MAX(B.COST)
+		  ,AVG(B.COST)
+	FROM T_SALE B
+	WHERE CMP_CD = #{cmpCd , jdbcType=VARCHAR }	  
+	AND PUM_NAME = #{pumName , jdbcType=VARCHAR }
+	AND GOOD_NAME = #{goodName , jdbcType=VARCHAR }
+	GROUP BY B.SALE_DATE 
+		 ,B.CMP_CD 
+		 ,B.MEJANG 
+		 ,B.PUM_NAME 
+		 ,B.GOOD_NAME 
+		 ,B.MM_CD 
+		 ,B.DANQ 
+		 ,B.DAN_CD 
+		 ,B.POJ_CD 
+		 ,B.SIZE_CD 
+		 ,B.LV_CD 
+		 ,B.SAN_CD
+	</insert>
+	
+	
+	<delete id="deleteSaleCodeMonth"  parameterType="java.util.HashMap"> 
+		DELETE FROM T_SALE_MONTH 
+		WHERE CMP_CD = #{cmpCd , jdbcType=VARCHAR }	  
+		AND PUM_NAME = #{pumName , jdbcType=VARCHAR }
+		AND GOOD_NAME = #{goodName , jdbcType=VARCHAR } 
+	</delete>
+	
+	<insert id="insertSaleCodeMonth" parameterType="java.util.HashMap" >
+	<![CDATA[
+	 INSERT INTO T_SALE_MONTH(SALE_MONTH
+					   ,CMP_CD
+					   ,FLOWER_GUBN
+					   ,PUM_NAME
+					   ,GOOD_NAME
+					   ,MM_CD
+					   ,DANQ
+					   ,DAN_CD
+					   ,POJ_CD
+					   ,SIZE_CD
+					   ,LV_CD
+					   ,SAN_CD
+					   ,TOT_QTY
+					   ,TOT_AMT
+					   ,MIN_AMT
+					   ,MAX_AMT
+					   ,AVG_AMT
+					   )
+	SELECT SUBSTR(C.SALE_DATE, 1, 7)
+		  ,C.CMP_CD
+		  ,NVL(C.FLOWER_GUBN,0) AS FLOWER_GUBN
+		  ,C.PUM_NAME
+		  ,C.GOOD_NAME
+		  ,C.MM_CD
+		  ,C.DANQ
+		  ,C.DAN_CD
+		  ,C.POJ_CD
+		  ,C.SIZE_CD
+		  ,C.LV_CD
+		  ,C.SAN_CD
+		  ,SUM(C.TOT_QTY)
+		  ,SUM(C.TOT_AMT)
+		  ,MIN(C.MIN_AMT)
+		  ,MAX(C.MAX_AMT)
+		  ,NVL(SUM(C.TOT_AMT), 0) / CASE NVL(SUM(C.TOT_QTY2), 1) WHEN 0 THEN 1 ELSE NVL(SUM(C.TOT_QTY2), 1) END
+	  FROM (SELECT A.SALE_DATE
+				  ,A.CMP_CD
+				  ,A.FLOWER_GUBN
+				  ,A.PUM_NAME
+				  ,A.GOOD_NAME
+				  ,A.MM_CD
+				  ,A.DANQ
+				  ,A.DAN_CD
+				  ,A.POJ_CD
+				  ,A.SIZE_CD
+				  ,A.LV_CD
+				  ,A.SAN_CD
+				  ,A.TOT_QTY
+				  ,A.TOT_AMT
+				  ,NVL(A.TOT_QTY, 0) * 1000 / CASE NVL(A.DANQ, 0) * NVL(D.DAN_X, 0) WHEN 0 THEN 1 ELSE NVL(A.DANQ, 0) * NVL(D.DAN_X, 0) END AS TOT_QTY2
+				  ,A.MIN_AMT
+				  ,A.MAX_AMT
+			  FROM T_SALE_DATE A
+				   LEFT OUTER JOIN T_DANCD D
+								ON A.DAN_CD = D.DAN_CD
+			WHERE CMP_CD = #{cmpCd , jdbcType=VARCHAR }	  
+			AND PUM_NAME = #{pumName , jdbcType=VARCHAR }
+			AND GOOD_NAME = #{goodName , jdbcType=VARCHAR }
+		   ) C
+	  GROUP BY SUBSTR(C.SALE_DATE, 1, 7)
+			,C.CMP_CD
+			 ,C.FLOWER_GUBN
+			 ,C.PUM_NAME
+			 ,C.GOOD_NAME
+			 ,C.MM_CD
+			 ,C.DANQ
+			 ,C.DAN_CD
+			 ,C.POJ_CD
+			 ,C.SIZE_CD
+			 ,C.LV_CD
+			 ,C.SAN_CD
+	]]>
+	</insert>
+	
+	
+	<update id="mergeFlowerGubnNong"  parameterType="java.util.HashMap" >
+		  <![CDATA[
+		  		MERGE INTO T_FLOWER_NONG a
+	   			USING DUAL
+	   			ON (
+	   				  a.MARKET_CD = #{cmpCd	 , jdbcType=VARCHAR}
+	   				 AND a.PUM_CODE = #{cmpGood	 , jdbcType=VARCHAR} 
+	   				)
+	   			WHEN MATCHED THEN
+	   				UPDATE SET
+	   				   FLOWER_GUBN = #{changeMejang	 , jdbcType=VARCHAR} 
+					 , USE_YN = 'Y'
+	   			WHEN NOT MATCHED THEN
+	   			 INSERT
+			   ( 
+			   		MARKET_CD
+				  , PUM_CODE
+				  , FLOWER_GUBN
+				  , USE_YN 
+			   ) 
+			   VALUES 
+			   ( 
+					#{cmpCd	 , jdbcType=VARCHAR}
+				  , #{cmpGood	 , jdbcType=VARCHAR}
+				  , #{changeMejang	 , jdbcType=VARCHAR}
+				  , 'Y'
+			   ) 
+		  	
+		   	]]>
+	</update>
+	<update id="mergeMappingTable" parameterType="java.util.HashMap">
+		<![CDATA[
+		MERGE INTO T_INT_MAPPING IM1
+		USING DUAL
+		ON (IM1.FLOWER_GUBN = #{changeMejang, jdbcType=VARCHAR}
+			AND IM1.ITEM_CD= #{itemCd, jdbcType=VARCHAR}
+			AND IM1.FLOWER_CODE= decode(#{changeMejang, jdbcType=VARCHAR},1,1,2,8,3,6,4,5)
+			AND IM1.KIND_CD= #{kindCd, jdbcType=VARCHAR}
+			AND IM1.MARKET_CD= #{cmpCd, jdbcType=VARCHAR}
+			AND IM1.CMP_GOOD = #{cmpGood, jdbcType=VARCHAR}
+		   )
+		WHEN NOT MATCHED THEN
+		INSERT (
+			MAPPING_ID,FLOWER_GUBN, FLOWER_CODE, ITEM_CD, KIND_CD, MARKET_CD, CMP_GOOD, USE_YN, REG_IP, REG_DT, REG_ID
+		) VALUES (
+			(SELECT MAX(MAPPING_ID)+1 FROM T_INT_MAPPING) ,
+			#{changeMejang, jdbcType=VARCHAR},
+			decode(#{changeMejang, jdbcType=VARCHAR},1,1,2,8,3,6,4,5),
+			#{itemCd, jdbcType=VARCHAR},
+			#{kindCd, jdbcType=VARCHAR},
+			#{cmpCd, jdbcType=VARCHAR},
+			#{cmpGood, jdbcType=VARCHAR},
+			'Y',
+			#{regIp, jdbcType=VARCHAR},
+			SYSDATE,
+			#{userId, jdbcType=VARCHAR}
+		)]]>
+	</update>
+	<insert id="insertCodeUpdateLog" parameterType="java.util.HashMap" >
+			INSERT INTO T_CODE_CH_LOG(
+					LOG_SEQ
+				  , TEXT
+				  , IP
+				  , INS_DT
+				  , INS_ID
+			)VALUES( 
+					T_CODE_CH_LOG_SEQ.NEXTVAL
+				  , #{text	 , jdbcType=VARCHAR}
+				  , #{ip	 , jdbcType=VARCHAR}
+				  , SYSDATE
+				  , #{userId	 , jdbcType=VARCHAR}
+			   )
+			
+	</insert>
+	<select id="selectToIntSaleData" parameterType="java.util.HashMap">
+	SELECT * FROM T_SALE 
+	WHERE SALE_DATE BETWEEN #{searchStartDate} AND #{searchEndDate}
+	<if test="pumName != null and pumName != ''">
+		AND PUM_NAME LIKE '%' || #{pumName, jdbcType=VARCHAR} || '%'
+	</if>
+	<if test="goodNm != null and goodNm != ''">
+		AND GOOD_NAME LIKE '%' || #{goodNm, jdbcType=VARCHAR} || '%'
+	</if>
+	<if test="changeMejang != null and changeMejang != ''">
+		AND MEJANG = #{changeMejang, jdbcType=VARCHAR}
+	</if>
+	<if test="cmpCd != null and cmpCd!=''">
+		AND CMP_CD=#{cmpCd, jdbcType=VARCHAR}
+	</if>
+	<if test="cmpGood != null and cmpGood!=''">
+		AND CMP_GOOD=#{cmpGood, jdbcType=VARCHAR}
+	</if>
+	
+	</select>
+	<delete id="deleteRaw"  parameterType="java.util.HashMap"> 
+		DELETE FROM T_INT_SALE_RAW T1
+		WHERE 1=1
+		
+		  AND T1.MAPPING_ID IN (
+				SELECT MAPPING_ID FROM T_INT_MAPPING T2
+				WHERE T2.MARKET_CD = #{cmpCd , jdbcType=VARCHAR}
+				AND PUM_NAME = #{pumName2 , jdbcType=VARCHAR }
+				AND GOOD_NAME = #{goodName , jdbcType=VARCHAR }
+				AND FLOWER_GUBN = #{flowerGubn, jdbcType=VARCHAR}  )
+	</delete>
+	<insert id="insertIntoTIntSale" parameterType="java.util.HashMap">
+		<![CDATA[
+			/* com.fpdisys.dist.trans.mapper.TsaleMapper.insertsaleRaw */
+			INSERT INTO T_INT_SALE_RAW
+			WITH V_DATA AS (
+				SELECT B.MAPPING_ID
+					, B.FLOWER_GUBN
+					, B.FLOWER_CODE
+					, B.ITEM_CD, B.KIND_CD
+					, A.KIND_NM
+					, B.MARKET_CD, B.CMP_GOOD
+				FROM T_INT_MAPPING B INNER JOIN T_INT_KIND A
+					ON A.FLOWER_GUBN = B.FLOWER_GUBN AND A.FLOWER_CODE = B.FLOWER_CODE AND A.ITEM_CD = B.ITEM_CD AND A.KIND_CD = B.KIND_CD
+				WHERE MARKET_CD = #{cmpCd, jdbcType=VARCHAR} AND B.USE_YN='Y'
+			)
+				SELECT B.SALE_DATE
+					, A.MAPPING_ID
+					, B.SEQ, B.NO1, B.NO2, A.CMP_GOOD, B.PUM_NAME, B.GOOD_NAME 
+					, B.DANQ, B.LARGE, B.MID, B.SMALL, B.LV_CD
+					, B.DAN_CD, B.POJ_CD, B.SIZE_CD, B.SAN_CD, B.QTY, B.COST, B.NAK_TIME, B.TOT_QTY, B.TOT_AMT, B.IN_TIME, B.CH_CD
+					, CHUL_NO, B.FARM_NAME, B.CH_DATE, B.GUBN, B.LV_ETC_CD, REPLACE(B.GOOD_NAME, A.KIND_NM, '') LV_ETC_NM, 'Y'
+				FROM V_DATA A
+					INNER JOIN T_SALE B
+						ON A.FLOWER_GUBN = B.MEJANG
+							AND A.MARKET_CD = B.CMP_CD
+							AND A.CMP_GOOD = B.CMP_GOOD
+				
+				AND PUM_NAME = #{pumName2 , jdbcType=VARCHAR }
+				AND GOOD_NAME = #{goodName , jdbcType=VARCHAR }
+				AND FLOWER_GUBN = #{flowerGubn, jdbcType=VARCHAR}  
+				AND B.SEQ IS NOT NULL
+				AND B.NO1 IS NOT NULL
+		]]>
+	</insert>
+	
+	<select id="procTranCodeSms" parameterType="java.util.HashMap">
+		{CALL TRAN_CODE_SMS()}
+	</select>
+	
+	<!-- select 박스의 itemNm 리스트 가져오는 것 -->
+	<select id="selectItemList" parameterType="com.fpminput.mntr.codeManage.domain.CodeManageVO" resultType="java.util.HashMap">
+
+		SELECT distinct ITEM_NM as itemNm,
+		tii.ITEM_CD as itemCd,
+		tii.FLOWER_GUBN as flowerGubn,
+		tii.FLOWER_CODE as flowerCode		
+		FROM T_INT_ITEM tii
+		JOIN T_INT_MAPPING im ON tii.ITEM_CD=im.ITEM_CD
+	
+		WHERE 1=1 
+
+		<if test="itemCd!='null'">
+			AND tii.ITEM_CD=#{itemCd, jdbcType=VARCHAR}
+		</if>
+		<if test="flowerGubn!='null'">
+			AND tii.FLOWER_GUBN=#{flowerGubn, jdbcType=VARCHAR}
+		</if>
+		<if test="flowerCode!='null'">
+			AND tii.FLOWER_CODE=#{flowerCode, jdbcType=VARCHAR}
+		</if>
+
+		order by item_nm asc
+
+	</select>
+	<!-- select 박스의 kindNm 리스트 가져오는 것 -->
+	<select id="selectKindList" parameterType="com.fpminput.mntr.codeManage.domain.CodeManageVO" resultType="java.util.HashMap"> 
+		<![CDATA[
+			SELECT DISTINCT KIND_NM,
+			TII.ITEM_CD,
+			TIK.KIND_CD,
+			TIK.FLOWER_GUBN,
+			TIK.FLOWER_CODE
+			FROM T_INT_KIND TIK 
+			JOIN T_INT_ITEM TII ON TIK.FLOWER_GUBN = TII.FLOWER_GUBN AND TIK.ITEM_CD=TII.ITEM_CD
+			JOIN T_INT_MAPPING  IM ON IM.FLOWER_GUBN = TIK.FLOWER_GUBN 
+			AND TII.ITEM_CD = IM.ITEM_CD AND TIK.KIND_CD = IM.KIND_CD
+			WHERE 1=1
+		]]><if test="itemCd!='null'">
+			<![CDATA[AND TIK.ITEM_CD=#{itemCd, jdbcType=VARCHAR}]]>
+		</if>
+		<if test="flowerGubn!='null'">
+			AND TIK.FLOWER_GUBN=#{flowerGubn, jdbcType=VARCHAR}
+		</if>
+		<if test="flowerCode!='null'">
+			AND TIK.FLOWER_CODE=#{flowerCode, jdbcType=VARCHAR}
+		</if>
+		<![CDATA[
+			ORDER BY KIND_NM ASC
+		]]>
+	</select>
+
+	<insert id="insertIntoKind" parameterType="java.util.HashMap">
+		INSERT INTO T_INT_KIND (
+			FLOWER_GUBN,
+			FLOWER_CODE,
+			ITEM_CD,
+			KIND_CD,
+			KIND_NM,
+			USE_YN,
+			REG_IP,
+			REG_DT,
+			REG_ID
+		)	VALUES	( 
+			<if test="flowerGubn!=null and flowerCd!=''">
+				#{flowerGubn, jdbcType=VARCHAR},
+				DECODE(#{flowerGubn, jdbcType=VARCHAR},1,1,2,8,3,6,4,5),
+			</if>
+			<if test="itemCd!=null and itemCd!=''">
+				#{itemCd, jdbcType=VARCHAR},
+			</if>
+			<if test="itemCd==null and itemCd==''">
+				'505',
+			</if>
+			<if test="kindCd!=null and kindCd!=''">
+				#{kindCd, jdbcType=VARCHAR},
+			</if>
+			<if test="kindCd==''">
+				(SELECT LPAD(NVL(MAX(KIND_CD)+1, 1), 5,'0')
+					FROM T_INT_KIND 
+					WHERE ITEM_CD=#{itemCd, jdbcType=VARCHAR}
+					AND FLOWER_GUBN=#{flowerGubn, jdbcType=VARCHAR}
+					AND FLOWER_CODE=DECODE(#{flowerGubn, jdbcType=VARCHAR},1,1,2,8,3,6,4,5)
+				),
+			</if>
+	
+			<if test="kindNm!=null and kindNm!=''">
+				#{kindNm, jdbcType=VARCHAR}, 
+			</if>
+
+			'Y',
+			<if test="userIp!=null and userIp!=''">
+				#{userIp, jdbcType=VARCHAR},
+			</if>
+			SYSDATE,
+			<if test="userId!=null and userId!=''">
+				#{userId, jdbcType=VARCHAR}
+			</if>
+		)
+	</insert>
+	
+	<insert id="insertIntoMapping" parameterType="java.util.HashMap" >
+		INSERT INTO T_INT_MAPPING (
+			MAPPING_ID,
+			FLOWER_GUBN,
+			FLOWER_CODE,
+			ITEM_CD,
+			KIND_CD,
+			MARKET_CD,
+			CMP_GOOD,
+			USE_YN,
+			REG_IP,
+			REG_DT,
+			REG_ID
+		)	VALUES	(
+			(SELECT MAX(MAPPING_ID)+1 FROM T_INT_MAPPING),
+			<if test="flowerCd!=null and flowerCd!=''">
+				#{flowerCd, jdbcType=VARCHAR},
+				DECODE(#{flowerCd, jdbcType=VARCHAR},1,1,2,8,3,6,4,5),
+			</if>
+			<if test="itemCd!=null and itemCd!=''">
+				#{itemCd, jdbcType=VARCHAR},
+			</if>
+			<if test="itemCd==''">
+				'505',
+			</if>
+			<if test="kindCd!=null and kindCd!=''">
+				#{kindCd, jdbcType=VARCHAR},
+			</if>
+			<if test="kindCd==''">
+				(SELECT KIND_CD 
+					FROM T_INT_KIND
+					WHERE ITEM_CD=#{itemCd, jdbcType=VARCHAR}
+					AND FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+					AND FLOWER_CODE=DECODE(#{flowerCd, jdbcType=VARCHAR},1,1,2,8,3,6,4,5)
+				),
+			</if>
+			
+			<if test="cmpCd!=null and cmpCd!='' and cmpCd!='5'">
+				#{cmpCd, jdbcType=VARCHAR},
+			</if>
+			<if test="cmpGood!=null and cmpGood!=''">
+				#{cmpGood, jdbcType=VARCHAR},
+			</if>
+			'Y',
+			<if test="userIp!=null and userIp!=''">
+				#{userIp, jdbcType=VARCHAR},
+			</if>
+			SYSDATE,
+			<if test="userId!=null and userId!=''">
+				#{userId, jdbcType=VARCHAR}
+			</if>
+		)
+	</insert>
+	<insert id="insertIntoMapping2" parameterType="java.util.HashMap" >
+		INSERT INTO T_INT_MAPPING (
+			MAPPING_ID,
+			FLOWER_GUBN,
+			FLOWER_CODE,
+			ITEM_CD,
+			KIND_CD,
+			MARKET_CD,
+			CMP_GOOD,
+			USE_YN,
+			REG_IP,
+			REG_DT,
+			REG_ID
+		)	VALUES	(
+			(SELECT MAX(MAPPING_ID)+1 FROM T_INT_MAPPING),
+			<if test="flowerGubn!=null and flowerGubn!=''">
+				#{flowerGubn, jdbcType=VARCHAR},
+				DECODE(#{flowerGubn, jdbcType=VARCHAR},1,1,2,8,3,6,4,5),
+			</if>
+			<if test="itemCd!=null and itemCd!=''">
+				#{itemCd, jdbcType=VARCHAR},
+			</if>
+			<if test="itemCd==''">
+				'505',
+			</if>
+			<if test="kindCd!=null and kindCd!=''">
+				#{kindCd, jdbcType=VARCHAR},
+			</if>
+			<if test="kindCd==''">
+				(SELECT MAX(KIND_CD)
+					FROM T_INT_KIND
+					WHERE ITEM_CD=#{itemCd, jdbcType=VARCHAR}
+					AND FLOWER_GUBN = #{flowerGubn, jdbcType=VARCHAR}
+					AND FLOWER_CODE=DECODE(#{flowerGubn, jdbcType=VARCHAR},1,1,2,8,3,6,4,5)
+				),
+			</if>
+			
+			<if test="cmpCd!=null and cmpCd!='' and cmpCd!='5'">
+				#{cmpCd, jdbcType=VARCHAR},
+			</if>
+			<if test="cmpGood!=null and cmpGood!=''">
+				#{cmpGood, jdbcType=VARCHAR},
+			</if>
+			'Y',
+			<if test="userIp!=null and userIp!=''">
+				#{userIp, jdbcType=VARCHAR},
+			</if>
+			SYSDATE,
+			<if test="userId!=null and userId!=''">
+				#{userId, jdbcType=VARCHAR}
+			</if>
+		)
+	</insert>
+</mapper>
+
+
+
+

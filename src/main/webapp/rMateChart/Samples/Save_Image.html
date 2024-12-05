@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+</head>
+<body>
+<body>	
+	<div class="wrapper">
+		<div class="header">
+			<div class="headerTitle">서버로 이미지 전송</div>
+		</div>
+		<div class="description">
+			<span class="warn">- IE7,8 에서는 이미지 변환 및 전송기능이 지원되지 않습니다.<br>
+			자세한 사항은 html 소스를 참고하시기 바랍니다.</span>
+		</div>
+		<div id="updater">
+			<div>Layout과 Data를 수정 후 적용 할 수 있습니다.</div>
+			<div id="updaterTab">
+				<ul id="updaterTabUl">
+					<li id="updaterTabUlSource" class="active_tab">Source</li>
+					<li id="updaterTabUlLayout" class="non_active_li">Layout</li>
+					<li id="updaterTabUlData" class="non_active_li">Data</li>
+					<li id="updaterTabUlBlank">
+						<span id="btn_update">수정적용</span>
+					</li>
+				</ul>
+			</div>
+			<div id="updaterTarea">
+				<pre id="updaterTareaSource" class="brush:js toolbar:false" name="updaterTareaSource"></pre>
+				<textarea id="updaterTareaLayout" class="updaterTextarea" spellcheck="false"></textarea>
+				<textarea id="updaterTareaData" class="updaterTextarea" spellcheck="false"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

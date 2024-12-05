@@ -1,0 +1,828 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.haa03.mapper.Haa03Mapper">
+
+	<resultMap id="resultHaa03ExcelMap" type="com.fpdisys.dist.haa03.domain.Haa03ExcelVO">
+		<result property="cmpCd" 		column="CMP_CD"/>
+		<result property="saleDate" 	column="SALE_DATE"/>
+		<result property="mmCd" 		column="MM_CD"/>
+		<result property="danCd" 		column="DAN_CD"/>
+		<result property="pojCd" 		column="POJ_CD"/>
+		<result property="lvCd" 		column="LV_CD"/>
+		<result property="danq" 		column="DANQ"/>
+		<result property="maxAmt" 		column="MAX_AMT"/>
+		<result property="minAmt" 		column="MIN_AMT"/>
+		<result property="avgAmt" 		column="AVG_AMT"/>
+		<result property="regDate" 		column="REG_DATE"/>
+		<result property="updDate" 		column="UPD_DATE"/>
+		<result property="sizeCd" 		column="SIZE_CD"/>
+		<result property="sanCd" 		column="SAN_CD"/>
+		<result property="totAmt" 		column="TOT_AMT"/>
+		<result property="totQty" 		column="TOT_QTY"/>
+		<result property="flowerGubn" 	column="FLOWER_GUBN"/>
+		<result property="pumName" 		column="PUM_NAME"/>
+		<result property="goodName" 	column="GOOD_NAME"/>
+		<result property="lvEtcNm" 		column="LV_ETC_NM"/>
+	</resultMap>
+
+   <select id="selectListaTFlower" parameterType="java.util.HashMap" statementType="PREPARED"  resultType="egovframework.rte.psl.dataaccess.util.EgovMap">  
+		SELECT 
+             RNUM
+            , SALE_DATE
+            , CMP_CD
+            , PUM_NAME
+            , GOOD_NAME
+            , TOT_QTY
+            , MIN_AMT
+            , MAX_AMT
+            , AVG_AMT
+        FROM
+        (
+            SELECT 
+                ROW_NUMBER () OVER (PARTITION BY SALE_DATE, CMP_CD ORDER BY TOT_QTY DESC, TOT_AMT DESC) AS RNUM
+                , CMP_CD
+                , SALE_DATE
+                , PUM_NAME
+                , GOOD_NAME
+                , NVL(TOT_QTY,0) AS TOT_QTY
+                , NVL(TOT_AMT,0) AS TOT_AMT
+                , NVL(MIN_AMT,0) AS MIN_AMT
+                , NVL(MAX_AMT,0) AS MAX_AMT
+                , NVL(AVG_AMT,0) AS AVG_AMT
+            FROM
+            (
+                SELECT 
+                A.SALE_DATE,
+                A.CMP_CD,
+                PUM_NAME,
+                GOOD_NAME,
+                SUM (TOT_QTY) AS TOT_QTY,
+                SUM(TOT_AMT) AS TOT_AMT,
+                MIN (MIN_AMT) AS MIN_AMT,
+                MAX (MAX_AMT) AS MAX_AMT,
+                TRUNC (AVG (AVG_AMT), 0) AS AVG_AMT
+                FROM T_SALE_DATE A,
+                (
+                    SELECT CMP_CD, MAX (SALE_DATE) AS SALE_DATE
+                    FROM T_SALE_DATE
+                    WHERE     1 = 1
+                    AND SALE_DATE BETWEEN TO_CHAR (ADD_MONTHS (SYSDATE,#{searchRegDt, jdbcType=VARCHAR}),'YYYY-MM-DD') AND TO_CHAR (SYSDATE,'YYYY-MM-DD')
+                    AND FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+                    GROUP BY  CMP_CD
+                ) B
+                WHERE A.CMP_CD=B.CMP_CD
+                AND A.SALE_DATE=B.SALE_DATE
+                AND FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+                GROUP BY A.SALE_DATE, A.CMP_CD, PUM_NAME, GOOD_NAME
+                ORDER BY TOT_QTY DESC, PUM_NAME, GOOD_NAME
+            )
+        )
+        WHERE RNUM <![CDATA[<=]]> 6
+   </select>
+   
+   <select id="selectListaTFlowerGraph" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap"> 
+   
+   WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-20,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD') AND CMP_CD = '0000000001' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '0000000001'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT T1.SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '0000000001'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -1),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY T1.SALE_DATE, T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE
+         
+   </select>
+   
+    <select id="selectListBuSanFlowerGraph" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap"> 
+
+   WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-20,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD') AND CMP_CD = '1508500020' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '1508500020'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT T1.SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '1508500020'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -1),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY T1.SALE_DATE, T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE
+	    
+	        
+   </select>
+
+ 
+    <select id="selectListBukyoungFlowerGraph" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap"> 
+   WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-20,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD') AND CMP_CD = '6068207466' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '6068207466'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT T1.SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '6068207466'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -1),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY T1.SALE_DATE, T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE    
+    
+   </select>
+   
+   <select id="selectListKwangJuFlowerGraph" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap"> 
+   WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-20,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD') AND CMP_CD = '4108212335' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '4108212335'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT T1.SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '4108212335'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -1),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY T1.SALE_DATE, T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE 
+         
+   </select>
+
+<select id="selectListHanKookUmFlowerGraph" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap"> 
+
+   WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-20,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD') AND CMP_CD = '3848200087' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '3848200087'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT T1.SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '3848200087'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -1),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY T1.SALE_DATE, T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE 
+
+         
+   </select>   
+   
+   <select id="selectListHanKookBonFlowerGraph" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap"> 
+ 
+    WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-20,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD') AND CMP_CD = '1288202296' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '1288202296'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT T1.SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '1288202296'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -1),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY T1.SALE_DATE, T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE 
+ 
+   
+   </select> 
+
+ <select id="selectListaTFlowerMonth" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+
+    WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE CMP_CD = '0000000001' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '0000000001'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT SUBSTR(T1.SALE_DATE,0,7) AS SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '0000000001'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, #{searchRegDt, jdbcType=VARCHAR}),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY SUBSTR(T1.SALE_DATE,0,7), T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE 
+         
+   </select>
+   
+   <select id="selectListBuSanFlowerMonth" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap"> 
+   
+       WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE CMP_CD = '1508500020' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '1508500020'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT SUBSTR(T1.SALE_DATE,0,7) AS SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '1508500020'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, #{searchRegDt, jdbcType=VARCHAR}),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY SUBSTR(T1.SALE_DATE,0,7), T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE  
+   
+   </select>
+   
+   <select id="selectListBukyoungFlowerMonth" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">  
+
+   	WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE CMP_CD = '6068207466' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '6068207466'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT SUBSTR(T1.SALE_DATE,0,7) AS SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '6068207466'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, #{searchRegDt, jdbcType=VARCHAR}),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY SUBSTR(T1.SALE_DATE,0,7), T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE  
+
+         
+   </select>
+  
+  <select id="selectListKwangJuFlowerMonth" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">  
+      
+   	WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE CMP_CD = '4108212335' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '4108212335'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT SUBSTR(T1.SALE_DATE,0,7) AS SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '4108212335'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, #{searchRegDt, jdbcType=VARCHAR}),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY SUBSTR(T1.SALE_DATE,0,7), T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE  
+         
+   </select>
+   
+    <select id="selectListHanKookUmFlowerMonth" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">  
+    
+   	WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE CMP_CD = '3848200087' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '3848200087'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT SUBSTR(T1.SALE_DATE,0,7) AS SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '3848200087'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, #{searchRegDt, jdbcType=VARCHAR}),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY SUBSTR(T1.SALE_DATE,0,7), T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE      
+    
+   </select>
+   
+   <select id="selectListHanKookBonFlowerMonth" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">  
+
+   	WITH SUB AS ( SELECT GOOD_NAME, ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RANK_QTY
+                 FROM T_SALE_DATE
+                 WHERE SALE_DATE = (SELECT MAX(SALE_DATE) FROM T_SALE_DATE WHERE CMP_CD = '1288202296' AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR})
+                 AND CMP_CD = '1288202296'
+                 AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                 GROUP BY GOOD_NAME)
+	SELECT SALE_DATE
+	     , TRUNC(SUM(AVG_AMT_ONE),0) AS AVG_AMT_ONE
+	     , TRUNC(SUM(AVG_AMT_TWO),0) AS AVG_AMT_TWO
+	     , TRUNC(SUM(AVG_AMT_THR),0) AS AVG_AMT_THR
+	     , TRUNC(SUM(AVG_AMT_FOU),0) AS AVG_AMT_FOU
+	     , TRUNC(SUM(AVG_AMT_FIV),0) AS AVG_AMT_FIV
+	     , TRUNC(SUM(AVG_AMT_SIX),0) AS AVG_AMT_SIX
+	     FROM (
+	        SELECT SALE_DATE
+	             , GOOD_NAME
+	             , CASE WHEN RANK_QTY = 1 THEN AVG_AMT ELSE 0 END AS AVG_AMT_ONE
+	             , CASE WHEN RANK_QTY = 2 THEN AVG_AMT ELSE 0 END AS AVG_AMT_TWO
+	             , CASE WHEN RANK_QTY = 3 THEN AVG_AMT ELSE 0 END AS AVG_AMT_THR
+	             , CASE WHEN RANK_QTY = 4 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FOU
+	             , CASE WHEN RANK_QTY = 5 THEN AVG_AMT ELSE 0 END AS AVG_AMT_FIV
+	             , CASE WHEN RANK_QTY = 6 THEN AVG_AMT ELSE 0 END AS AVG_AMT_SIX  
+	             , SUM_QTY
+	             , RANK_QTY
+	           FROM (       
+	           SELECT SALE_DATE
+	             , GOOD_NAME
+	             , AVG_AMT
+	             , SUM_QTY
+	             , RANK_QTY
+	            FROM(    
+	            SELECT SUBSTR(T1.SALE_DATE,0,7) AS SALE_DATE
+	                 , T1.GOOD_NAME
+	                 , AVG(T1.AVG_AMT) AS AVG_AMT
+	                 , SUM(T1.TOT_QTY) AS SUM_QTY
+	                 , T2.RANK_QTY AS RANK_QTY
+	            FROM T_SALE_DATE T1, SUB T2
+	            WHERE CMP_CD = '1288202296'
+	            AND T1.GOOD_NAME = T2.GOOD_NAME
+	            AND T1.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+	            AND T1.GOOD_NAME IN (
+	             SELECT GOOD_NAME 
+	             FROM SUB
+	             WHERE RANK_QTY &lt;= 6
+	            )
+	            AND SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, #{searchRegDt, jdbcType=VARCHAR}),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+	            GROUP BY SUBSTR(T1.SALE_DATE,0,7), T1.GOOD_NAME, T2.RANK_QTY
+	            )
+	        )
+	    )
+	    GROUP BY SALE_DATE
+	    ORDER BY SALE_DATE      
+
+   </select>
+
+	<!-- 품종경락가격 :: Excel -->
+	<select id="selectListFlowerExcel" resultType="com.fpdisys.dist.haa03.domain.Haa03ExcelVO" resultMap="resultHaa03ExcelMap">  
+		SELECT 
+             RNUM
+            , SALE_DATE
+            , CMP_CD
+            , PUM_NAME
+            , GOOD_NAME
+            , TOT_QTY
+            , MIN_AMT
+            , MAX_AMT
+            , AVG_AMT
+        FROM
+        (
+            SELECT 
+                ROW_NUMBER () OVER (PARTITION BY SALE_DATE, CMP_CD ORDER BY TOT_QTY DESC, TOT_AMT DESC) AS RNUM
+                , CMP_CD
+                , SALE_DATE
+                , PUM_NAME
+                , GOOD_NAME
+                , NVL(TOT_QTY,0) AS TOT_QTY
+                , NVL(TOT_AMT,0) AS TOT_AMT
+                , NVL(MIN_AMT,0) AS MIN_AMT
+                , NVL(MAX_AMT,0) AS MAX_AMT
+                , NVL(AVG_AMT,0) AS AVG_AMT
+            FROM
+            (
+                SELECT 
+                A.SALE_DATE,
+                A.CMP_CD,
+                PUM_NAME,
+                GOOD_NAME,
+                SUM (TOT_QTY) AS TOT_QTY,
+                SUM(TOT_AMT) AS TOT_AMT,
+                MIN (MIN_AMT) AS MIN_AMT,
+                MAX (MAX_AMT) AS MAX_AMT,
+                TRUNC (AVG (AVG_AMT), 0) AS AVG_AMT
+                FROM T_SALE_DATE A,
+                (
+                    SELECT CMP_CD, MAX (SALE_DATE) AS SALE_DATE
+                    FROM T_SALE_DATE
+                    WHERE     1 = 1
+                    AND SALE_DATE BETWEEN TO_CHAR (ADD_MONTHS (SYSDATE,#{searchRegDt, jdbcType=VARCHAR}),'YYYY-MM-DD') AND TO_CHAR (SYSDATE,'YYYY-MM-DD')
+                    AND FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+                    GROUP BY  CMP_CD
+                ) B
+                WHERE A.CMP_CD=B.CMP_CD
+                AND A.SALE_DATE=B.SALE_DATE
+                AND FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+                AND A.CMP_CD = #{cmpCd}
+                GROUP BY A.SALE_DATE, A.CMP_CD, PUM_NAME, GOOD_NAME
+                ORDER BY TOT_QTY DESC, PUM_NAME, GOOD_NAME
+            )
+        )
+        WHERE RNUM <![CDATA[<=]]> 6
+   </select>
+
+</mapper>

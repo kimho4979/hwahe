@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="serviceMethod" expression="execution(* egovframework.rte.sample..impl.*Impl.*(..))" />
+		<aop:pointcut id="serviceMethod" expression="execution(* com.fpdisys.*.*.service.*Service.*(..))" />
+		<aop:pointcut id="serviceMethod" expression="execution(* com.fpminput.*.*.*.*(..))" />
+		<aop:pointcut id="serviceMethod" expression="execution(* com.at.*.*.*(..))" />
+		<aop:pointcut id="serviceMethod" expression="execution(* com.egovapi.*.*.*(..))" />
+		<aop:aspect ref="exceptionTransfer">
+			<aop:after-throwing throwing="exception" pointcut-ref="serviceMethod" method="transfer" />
+		</aop:aspect>
+	</aop:config>
+	
+	<bean id="exceptionTransfer" class="egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer">
+		<property name="exceptionHandlerService">
+			<list>
+				<ref bean="defaultExceptionHandleManager" />
+				<ref bean="otherExceptionHandleManager" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="defaultExceptionHandleManager" class="egovframework.rte.fdl.cmmn.exception.manager.DefaultExceptionHandleManager">
+		<property name="reqExpMatcher">
+			<ref bean="antPathMater"/>
+		</property>
+		<property name="patterns">
+			<list>
+				<value>**service.impl.*</value>
+			</list>
+		</property>
+		<property name="handlers">
+			<list>
+				<ref bean="egovHandler" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="otherExceptionHandleManager" class="egovframework.rte.fdl.cmmn.exception.manager.DefaultExceptionHandleManager">
+		<property name="reqExpMatcher">
+			<ref bean="antPathMater"/>
+		</property>
+		<property name="patterns">
+			<list>
+				<value>**service.impl.*</value>
+			</list>
+		</property>
+		<property name="handlers">
+			<list>
+				<ref bean="otherHandler" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="contentNegotiationManager">
+            <bean class="org.springframework.web.accept.ContentNegotiationManager">
+                <constructor-arg>
+                    <bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+                        <constructor-arg>
+                            <map>
+								<entry key="json" value="application/json;charset=UTF-8" />
+								<entry key="jsonp" value="application/javascript;charset=UTF-8" />
+								<entry key="xml" value="application/xml;charset=UTF-8" />
+								<entry key="api" value="text/plain;charset=UTF-8" />
+                            </map>
+                        </constructor-arg>
+                    </bean>
+                </constructor-arg>
+            </bean>
+        </property>
+
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+                	<property name="prefixJson" value="false" />
+            	</bean>
+            </list>
+        </property>
+	</bean>
+	
+	<bean id="egovHandler" class="com.fpdisys.base.EgovSampleExcepHndlr" />
+	<bean id="otherHandler" class="com.fpdisys.base.EgovSampleOthersExcepHndlr" />	
+	
+</beans>

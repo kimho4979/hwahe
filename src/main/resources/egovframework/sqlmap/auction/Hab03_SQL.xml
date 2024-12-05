@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hab03.mapper.Hab03Mapper">
+ <resultMap id="resultHab03Map" type="com.fpdisys.dist.hab03.domain.Hab03VO">
+	<result property="maxamt1" column="MAXAMT1"/>
+	<result property="maxamt2" column="MAXAMT2"/>
+	<result property="maxamt3" column="MAXAMT3"/>
+	<result property="maxamt4" column="MAXAMT4"/>
+	<result property="maxamt5" column="MAXAMT5"/>	
+	<result property="maxamt6" column="MAXAMT6"/>
+	<result property="maxamt7" column="MAXAMT7"/>
+	<result property="maxamt8" column="MAXAMT8"/>
+	<result property="maxamt9" column="MAXAMT9"/>
+	<result property="maxamt10" column="MAXAMT10"/>
+	<result property="maxamt11" column="MAXAMT11"/>
+	<result property="maxamt12" column="MAXAMT12"/>	
+	<result property="avgamt1" column="AVGAMT1"/>
+	<result property="avgamt2" column="AVGAMT2"/>
+	<result property="avgamt3" column="AVGAMT3"/>
+	<result property="avgamt4" column="AVGAMT4"/>
+	<result property="avgamt5" column="AVGAMT5"/>
+	<result property="avgamt6" column="AVGAMT6"/>
+	<result property="avgamt7" column="AVGAMT7"/>
+	<result property="avgamt8" column="AVGAMT8"/>
+	<result property="avgamt9" column="AVGAMT9"/>
+	<result property="avgamt10" column="AVGAMT10"/>
+	<result property="avgamt11" column="AVGAMT11"/>
+	<result property="avgamt12" column="AVGAMT12"/>
+	<result property="flowerGubnNm" column="FLOWER_GUBN_NM"/>
+	<result property="pumName" column="PUM_NAME"/>
+	<result property="goodName" column="GOOD_NAME"/>
+	</resultMap>
+	
+	<select id="selectHab03" parameterType="com.fpdisys.dist.hab03.domain.Hab03VO" resultMap="resultHab03Map">
+	<![CDATA[
+		SELECT PUM_NAME, RNUM,
+		MAX(DECODE (M_MONTH, '01', MAX_AMT, 0)) AS MAXAMT1,
+		MAX(DECODE (M_MONTH, '02', MAX_AMT, 0)) AS MAXAMT2,
+		MAX(DECODE (M_MONTH, '03', MAX_AMT, 0)) AS MAXAMT3,
+		MAX(DECODE (M_MONTH, '04', MAX_AMT, 0)) AS MAXAMT4,
+		MAX(DECODE (M_MONTH, '05', MAX_AMT, 0)) AS MAXAMT5,
+		MAX(DECODE (M_MONTH, '06', MAX_AMT, 0)) AS MAXAMT6,
+		MAX(DECODE (M_MONTH, '07', MAX_AMT, 0)) AS MAXAMT7,
+		MAX(DECODE (M_MONTH, '08', MAX_AMT, 0)) AS MAXAMT8,
+		MAX(DECODE (M_MONTH, '09', MAX_AMT, 0)) AS MAXAMT9,
+		MAX(DECODE (M_MONTH, '10', MAX_AMT, 0)) AS MAXAMT10,
+		MAX(DECODE (M_MONTH, '11', MAX_AMT, 0)) AS MAXAMT11,
+		MAX(DECODE (M_MONTH, '12', MAX_AMT, 0)) AS MAXAMT12,
+		MAX(DECODE (M_MONTH, '01', AVG_AMT, 0)) AS AVGAMT1,
+		MAX(DECODE (M_MONTH, '02', AVG_AMT, 0)) AS AVGAMT2,
+		MAX(DECODE (M_MONTH, '03', AVG_AMT, 0)) AS AVGAMT3,
+		MAX(DECODE (M_MONTH, '04', AVG_AMT, 0)) AS AVGAMT4,
+		MAX(DECODE (M_MONTH, '05', AVG_AMT, 0)) AS AVGAMT5,
+		MAX(DECODE (M_MONTH, '06', AVG_AMT, 0)) AS AVGAMT6,
+		MAX(DECODE (M_MONTH, '07', AVG_AMT, 0)) AS AVGAMT7,
+		MAX(DECODE (M_MONTH, '08', AVG_AMT, 0)) AS AVGAMT8,
+		MAX(DECODE (M_MONTH, '09', AVG_AMT, 0)) AS AVGAMT9,
+		MAX(DECODE (M_MONTH, '10', AVG_AMT, 0)) AS AVGAMT10,
+		MAX(DECODE (M_MONTH, '11', AVG_AMT, 0)) AS AVGAMT11,
+		MAX(DECODE (M_MONTH, '12', AVG_AMT, 0)) AS AVGAMT12,
+		MAX(DECODE (M_MONTH, '01', MIN_AMT, 0)) AS MINAMT1,
+		MAX(DECODE (M_MONTH, '02', MIN_AMT, 0)) AS MINAMT2,
+		MAX(DECODE (M_MONTH, '03', MIN_AMT, 0)) AS MINAMT3,
+		MAX(DECODE (M_MONTH, '04', MIN_AMT, 0)) AS MINAMT4,
+		MAX(DECODE (M_MONTH, '05', MIN_AMT, 0)) AS MINAMT5,
+		MAX(DECODE (M_MONTH, '06', MIN_AMT, 0)) AS MINAMT6,
+		MAX(DECODE (M_MONTH, '07', MIN_AMT, 0)) AS MINAMT7,
+		MAX(DECODE (M_MONTH, '08', MIN_AMT, 0)) AS MINAMT8,
+		MAX(DECODE (M_MONTH, '09', MIN_AMT, 0)) AS MINAMT9,
+		MAX(DECODE (M_MONTH, '10', MIN_AMT, 0)) AS MINAMT10,
+		MAX(DECODE (M_MONTH, '11', MIN_AMT, 0)) AS MINAMT11,
+		MAX(DECODE (M_MONTH, '12', MIN_AMT, 0)) AS MINAMT12
+		FROM
+		(
+		    SELECT 
+		        A.SALE_MONTH,
+		        SUBSTR (A.SALE_MONTH, 6, 2) AS M_MONTH,
+		        TRIM (A.PUM_NAME) AS PUM_NAME,
+		        MAX (A.MAX_AMT) AS MAX_AMT,
+		        MIN (A.MIN_AMT) AS MIN_AMT,
+		        ROUND (AVG (A.AVG_AMT), 0) AS AVG_AMT,
+		        RNUM	
+		    FROM
+		    (
+		        SELECT SALE_MONTH, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME) PUM_NAME, GOOD_NAME, MAX_AMT, MIN_AMT, AVG_AMT, TOT_AMT, TOT_QTY
+		        FROM T_SALE_MONTH C
+		        WHERE     1 = 1
+		        AND C.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+		        AND C.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+		        AND SUBSTR (C.SALE_MONTH, 0, 4) = #{searchYear, jdbcType=VARCHAR}
+		    ) A,
+		    (
+		        SELECT PUM_NAME, RNUM	
+		        FROM
+		        (
+		            SELECT  DECODE(A.PUM_NAME,'팔레높시스','호접란',A.PUM_NAME) PUM_NAME,
+		                RANK () OVER (ORDER BY SUM (A.TOT_AMT) DESC, SUM (A.TOT_QTY) DESC)AS RNUM
+		            FROM T_SALE_MONTH A
+		            WHERE 1 = 1
+		            AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		            AND A.CMP_CD = #{searchCmpCd, jdbcType=VARCHAR} 
+		            AND SUBSTR (A.SALE_MONTH, 0, 4) =#{searchYear, jdbcType=VARCHAR}
+		            AND A.TOT_AMT <> 0
+		            GROUP BY DECODE(A.PUM_NAME,'팔레높시스','호접란',A.PUM_NAME)
+		        )
+		        WHERE RNUM <= 20
+		    ) B
+		    WHERE A.PUM_NAME = B.PUM_NAME
+		    GROUP BY A.SALE_MONTH, A.PUM_NAME, RNUM	
+		)
+		GROUP BY PUM_NAME, RNUM
+		ORDER BY RNUM
+	]]>
+	</select>
+	
+	<select id="selectPumJong" parameterType="com.fpdisys.dist.hab03.domain.Hab03VO" resultMap="resultHab03Map">
+	<![CDATA[	
+		SELECT PUM_NAME,GOOD_NAME, RNUM,
+		MAX(DECODE (M_MONTH, '01', MAX_AMT, 0)) AS MAXAMT1,
+		MAX(DECODE (M_MONTH, '02', MAX_AMT, 0)) AS MAXAMT2,
+		MAX(DECODE (M_MONTH, '03', MAX_AMT, 0)) AS MAXAMT3,
+		MAX(DECODE (M_MONTH, '04', MAX_AMT, 0)) AS MAXAMT4,
+		MAX(DECODE (M_MONTH, '05', MAX_AMT, 0)) AS MAXAMT5,
+		MAX(DECODE (M_MONTH, '06', MAX_AMT, 0)) AS MAXAMT6,
+		MAX(DECODE (M_MONTH, '07', MAX_AMT, 0)) AS MAXAMT7,
+		MAX(DECODE (M_MONTH, '08', MAX_AMT, 0)) AS MAXAMT8,
+		MAX(DECODE (M_MONTH, '09', MAX_AMT, 0)) AS MAXAMT9,
+		MAX(DECODE (M_MONTH, '10', MAX_AMT, 0)) AS MAXAMT10,
+		MAX(DECODE (M_MONTH, '11', MAX_AMT, 0)) AS MAXAMT11,
+		MAX(DECODE (M_MONTH, '12', MAX_AMT, 0)) AS MAXAMT12,
+		MAX(DECODE (M_MONTH, '01', AVG_AMT, 0)) AS AVGAMT1,
+		MAX(DECODE (M_MONTH, '02', AVG_AMT, 0)) AS AVGAMT2,
+		MAX(DECODE (M_MONTH, '03', AVG_AMT, 0)) AS AVGAMT3,
+		MAX(DECODE (M_MONTH, '04', AVG_AMT, 0)) AS AVGAMT4,
+		MAX(DECODE (M_MONTH, '05', AVG_AMT, 0)) AS AVGAMT5,
+		MAX(DECODE (M_MONTH, '06', AVG_AMT, 0)) AS AVGAMT6,
+		MAX(DECODE (M_MONTH, '07', AVG_AMT, 0)) AS AVGAMT7,
+		MAX(DECODE (M_MONTH, '08', AVG_AMT, 0)) AS AVGAMT8,
+		MAX(DECODE (M_MONTH, '09', AVG_AMT, 0)) AS AVGAMT9,
+		MAX(DECODE (M_MONTH, '10', AVG_AMT, 0)) AS AVGAMT10,
+		MAX(DECODE (M_MONTH, '11', AVG_AMT, 0)) AS AVGAMT11,
+		MAX(DECODE (M_MONTH, '12', AVG_AMT, 0)) AS AVGAMT12,
+		MAX(DECODE (M_MONTH, '01', MIN_AMT, 0)) AS MINAMT1,
+		MAX(DECODE (M_MONTH, '02', MIN_AMT, 0)) AS MINAMT2,
+		MAX(DECODE (M_MONTH, '03', MIN_AMT, 0)) AS MINAMT3,
+		MAX(DECODE (M_MONTH, '04', MIN_AMT, 0)) AS MINAMT4,
+		MAX(DECODE (M_MONTH, '05', MIN_AMT, 0)) AS MINAMT5,
+		MAX(DECODE (M_MONTH, '06', MIN_AMT, 0)) AS MINAMT6,
+		MAX(DECODE (M_MONTH, '07', MIN_AMT, 0)) AS MINAMT7,
+		MAX(DECODE (M_MONTH, '08', MIN_AMT, 0)) AS MINAMT8,
+		MAX(DECODE (M_MONTH, '09', MIN_AMT, 0)) AS MINAMT9,
+		MAX(DECODE (M_MONTH, '10', MIN_AMT, 0)) AS MINAMT10,
+		MAX(DECODE (M_MONTH, '11', MIN_AMT, 0)) AS MINAMT11,
+		MAX(DECODE (M_MONTH, '12', MIN_AMT, 0)) AS MINAMT12
+		FROM
+		(
+		    SELECT 
+		        A.SALE_MONTH,
+		        SUBSTR (A.SALE_MONTH, 6, 2) AS M_MONTH,
+		        TRIM (A.PUM_NAME) AS PUM_NAME,
+		        TRIM (A.GOOD_NAME) AS GOOD_NAME,
+		        MAX (A.MAX_AMT) AS MAX_AMT,
+		        MIN (A.MIN_AMT) AS MIN_AMT,
+		        ROUND (AVG (A.AVG_AMT), 0) AS AVG_AMT,
+		        RNUM
+		    FROM
+		    (
+		        SELECT SALE_MONTH, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME) PUM_NAME, GOOD_NAME, MAX_AMT, MIN_AMT, AVG_AMT, TOT_AMT, TOT_QTY
+		        FROM T_SALE_MONTH C
+		        WHERE     1 = 1
+		        AND C.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+		        AND C.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+		        AND SUBSTR (C.SALE_MONTH, 0, 4) = #{searchYear, jdbcType=VARCHAR}
+		    ) A,
+		    (
+		        SELECT PUM_NAME, GOOD_NAME, RNUM
+		        FROM
+		        (
+		            SELECT DECODE(A.PUM_NAME,'팔레높시스','호접란',A.PUM_NAME) PUM_NAME, GOOD_NAME,
+		                RANK () OVER (ORDER BY SUM (A.TOT_AMT) DESC, SUM (A.TOT_QTY) DESC)AS RNUM
+		            FROM T_SALE_MONTH A
+		            WHERE 1 = 1
+		            AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		            AND A.CMP_CD = #{searchCmpCd, jdbcType=VARCHAR} 
+		            AND SUBSTR (A.SALE_MONTH, 0, 4) =#{searchYear, jdbcType=VARCHAR}
+		            AND A.TOT_AMT <> 0
+		            GROUP BY DECODE(A.PUM_NAME,'팔레높시스','호접란',A.PUM_NAME), GOOD_NAME
+		        )
+		        WHERE RNUM <= 20
+		    ) B
+		    WHERE A.PUM_NAME = B.PUM_NAME
+		    AND A.GOOD_NAME = B.GOOD_NAME
+		    GROUP BY A.SALE_MONTH, A.PUM_NAME, A.GOOD_NAME, RNUM
+		)
+		GROUP BY PUM_NAME, GOOD_NAME, RNUM
+		ORDER BY RNUM	
+	]]>
+	</select>
+	
+</mapper>

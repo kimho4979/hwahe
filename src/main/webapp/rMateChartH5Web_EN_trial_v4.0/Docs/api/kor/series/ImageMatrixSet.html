@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="ImageMatrixSet,kor.series.ImageMatrixSet" name="keywords">
+<title>kor.series.ImageMatrixSet</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'ImageMatrixSet - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?kor/series/ImageMatrixSet.html&amp;kor/series/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;ImageMatrixSet</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class ImageMatrixSet"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor.series</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class ImageMatrixSet</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">ImageMatrixSet <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../images/inherit-arrow.gif"> <a href="Series.html">Series</a></td>
+</tr>
+</table>
+<p></p>
+  ImageMatrixSet 클래스는 다중의 ImageMatrixSeries 클래스 인스턴스를 하나의 대표 시리즈로 표현합니다.
+    <p>ImageMatrixSet 으로 대표되는 복수의 ImageMatrixSeries 는 마치 하나의 시리즈와 같이 작동됩니다.</p>
+  
+  <p>레이아웃은 다음과 같은 형식으로 작성됩니다.</p>
+    &lt;rMateChart&gt;
+   &lt;ImageMatrixChart ... &gt;
+    &lt;series&gt;
+     &lt;ImageMatrixSet&gt;
+      &lt;series&gt;
+       &lt;ImageMatrixSeries ... /&gt;
+       &lt;ImageMatrixSeries ... /&gt;
+      &lt;/series&gt;
+     &lt;/ImageMatrixSet&gt;
+    &lt;/series&gt;
+   &lt;/ImageMatrixChart&gt;
+  &lt;/rMateChart&gt;
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<div class="showHideLinks">
+<div class="hideInheritedStyle" id="hideInheritedStyle">
+<a onclick="javascript:setInheritedVisible(false,'Style');" href="#styleSummary" class="showHideLink"><img src="../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Styles</a>
+</div>
+<div class="showInheritedStyle" id="showInheritedStyle">
+<a onclick="javascript:setInheritedVisible(true,'Style');" href="#styleSummary" class="showHideLink"><img src="../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Styles</a>
+</div>
+</div>
+<table id="summaryTableStyle" class="summaryTable hideInheritedStyle" cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:displayName">displayName</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>시리즈의 이름을 지정합니다.<br/>
+  설정된 값은 기본적으로 데이터팁(툴팁)에서 보여지게 되고 범례의 항목으로 표시됩니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:fill">fill</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+   <p>시리즈 아이템렌더러의 채우기 색을 지정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:fillJsFunction">fillJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>사용자 정의 색상을 설정하는 자바스크립트 함수명을 지정합니다.<br/>
+  차트 레이아웃 설정시 Series 클래스 인스턴스의 fillJsFunction 속성값에 자바스크립트 함수명을 지정합니다.</p>
+  
+  <pre>
+  예) &lt;Column2DSeries yField="Profit" fillJsFunction="fillJsFunc"&gt;
+  </pre>
+  
+  <p><code>fillJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+  
+  <pre>
+  <i>function_name</i>(seriesId, index, data, values) { ...</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:fills">fills</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Array<br>
+   <p>시리즈에서 각각의 아이템렌더러의 fill 컬러를 지정하는 fill 객체 배열을 정의합니다.<br/>
+   만약 시리즈의 모든 아이템렌더러에 충분한 fill 컬러를 지정하지 않았다면 지정된 색깔이 반복됩니다.<br/>
+   예를 들어, 시리즈의 아이템이 10개 인 경우 5개의 fill 컬러를 지정하였다면 5개를 칠한 후 다시 5개를 칠하게 됩니다.</p>
+  
+    <pre>
+     &lt;...2DSeries ...</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:formatter">formatter</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>숫자값을 원하는 숫자(통화, 날짜) 형식으로 표현하기 위한 포맷터(NumberFormatter, CurrencyFormatter, DateFormatter)를 지정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:id">id</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>식별자(Identifier)를 설정합니다.</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:styleName">styleName</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>Style 노드에서 정의한 스타일 이름을 지정합니다.</p>
+  </td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:userElementJsFunction">userElementJsFunction</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>차트의 데이터 아이템들 중에서 설정된 조건을 만족하는 데이터 아이템에 대해서 실핼될 자바스크립트 함수명을 지정합니다.<br/>
+  차트 레이아웃 설정시 Series 클래스 인스턴스의 userElementJsFunction 속성값에 자바스크립트 함수명을 지정합니다.</p>
+  
+  <pre>
+  예) &lt;Column2DSeries yField="Profit" userElementJsFunction="userElementFunc"&gt;
+  </pre>
+  
+  <p><code>userElementJsFunction</code> 함수 시그너쳐(signature)는 다음과 같습니다.</p>
+  
+  <pre>
+  <i>function_name</i>(seriesId, index, data, values) { ...</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+<tr class="hideInheritedStyle">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="Series.html#style:visible">visible</a>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Boolean<br>
+  <p>시리즈를 차트에 출력할 지 여부를 설정합니다.</td><td class="summaryTableOwnerCol"><a href="Series.html">Series</a></td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

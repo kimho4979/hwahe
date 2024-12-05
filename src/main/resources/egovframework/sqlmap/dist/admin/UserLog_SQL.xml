@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpdisys.admin.log.mapper.UserLogMapper">
+	 <resultMap id="logResultMap" type="com.fpdisys.admin.log.domain.UserLogVO">
+	 
+	    <result property="USER_IP" column="USER_IP"/>
+	    <result property="MENU_ID" column="MENU_ID"/>
+	    <result property="INS_DT" column="INS_DT"/>
+	    <result property="INS_DT" column="INS_DT"/>
+        <result property="INS_ID" column="INS_ID"/>
+        <result property="UPT_DT" column="UPT_DT"/>
+        <result property="UPT_ID" column="UPT_ID"/>
+        <result property="TOTAL_COUNT" column="TOTAL_COUNT"/>        
+        
+    </resultMap>
+    <select id="selectUserLogAll" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="logResultMap">
+    SELECT A.USER_IP,
+       A.MENU_ID,
+        TO_CHAR(A.INS_DT,'YYYY-MM-DD') AS INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_USER_LOG A
+    </select>
+     <select id="selectUserLogSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="logResultMap">
+    SELECT A.USER_IP,
+       A.MENU_ID,
+       TO_CHAR(A.INS_DT,'YYYY-MM-DD') AS INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_USER_LOG A
+  WHERE 1=1
+ AND TO_CHAR(A.INS_DT,'YYYY-MM-DD') &gt;= #{searchRegDtStart , jdbcType=VARCHAR }
+  AND  TO_CHAR(A.INS_DT,'YYYY-MM-DD') &lt;= #{serchRegDtEnd , jdbcType=VARCHAR }
+  ORDER BY A.INS_DT DESC
+    </select>
+    
+     <select id="selectUserLogSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="logResultMap">
+      SELECT data.* 
+	  FROM 
+	       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+	              ROWNUM ROW_NUM, 
+	              ROWNUM LINENUM, 
+	              data.* 
+	         FROM 
+	              (      
+     SELECT A.USER_IP,
+       A.MENU_ID,
+       TO_CHAR(A.INS_DT,'YYYY-MM-DD') AS INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+		  FROM T_USER_LOG A
+		  WHERE 1=1
+		 AND TO_CHAR(A.INS_DT,'YYYY-MM-DD') &gt;= #{searchRegDtStart , jdbcType=VARCHAR }
+		  AND  TO_CHAR(A.INS_DT,'YYYY-MM-DD') &lt;= #{serchRegDtEnd , jdbcType=VARCHAR }
+		  ORDER BY A.INS_DT DESC
+		  	) data 
+       		) data 
+ 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+    </select>
+    
+    
+ 
+ 
+<insert id="InsertLog"  parameterType="java.util.HashMap" >
+ 	  INSERT INTO T_USER_LOG
+       ( 
+       
+            USER_IP 
+           ,MENU_ID 
+           ,INS_DT 
+           ,INS_ID                     
+           ,UPT_DT   
+           ,UPT_ID
+           ,SEQ   
+       ) 
+       VALUES 
+       (  
+             #{USER_IP, jdbcType=VARCHAR}
+            ,#{MENU_ID, jdbcType=VARCHAR}
+            ,SYSDATE   
+            ,#{INS_ID, jdbcType=VARCHAR}              
+            ,#{UPT_DT, jdbcType=VARCHAR}        
+            ,#{UPT_ID, jdbcType=VARCHAR}
+            ,LOG_SEQ.NEXTVAL       
+               
+       ) 
+       </insert>
+  <select id="userLogList" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="logResultMap">
+			SELECT seq
+					,TOTAL_COUNT
+					,USER_IP 
+					,MENU_ID
+					,INS_DT AS INS_DT
+					,INS_ID 
+					,UPT_DT ,UPT_ID 
+					,RM
+					FROM(
+					SELECT  A.*, ROWNUM RM FROM (
+					SELECT COUNT(*) OVER() AS TOTAL_COUNT
+					,seq
+					,USER_IP 
+					,MENU_ID
+					,INS_DT AS INS_DT
+					,INS_ID 
+					,UPT_DT ,UPT_ID 
+					FROM T_USER_LOG
+			WHERE 1=1 
+	<if test="l_DATE==null">
+		AND INS_DT=TO_DATE(#{F_DATE},'YY/MM/DD')
+	</if>
+	<if test="l_DATE!=null">
+		AND INS_DT&lt;=TO_DATE(#{F_DATE},'YY/MM/DD')
+		AND INS_DT&gt;=TO_DATE(#{L_DATE},'YY/MM/DD')
+	</if>
+
+order by seq  desc
+)A
+)WHERE 
+ RM BETWEEN #{startCount} AND  #{endCount}	
+</select>
+
+</mapper>

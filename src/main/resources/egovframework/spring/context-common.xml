@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+						 http://www.springframework.org/schema/context
+						 http://www.springframework.org/schema/context/spring-context-4.0.xsd
+						 http://www.springframework.org/schema/mvc
+						 http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<context:component-scan base-package="com">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:/egovframework/message/message-common</value>
+				<value>classpath:/egovframework/rte/fdl/idgnr/messages/idgnr</value>
+				<value>classpath:/egovframework/rte/fdl/property/messages/properties</value>
+			</list>
+		</property>
+		<property name="cacheSeconds">
+			<value>60</value>
+		</property>
+	</bean>
+	
+	<bean id="leaveaTrace" class="egovframework.rte.fdl.cmmn.trace.LeaveaTrace">
+		<property name="traceHandlerServices">
+			<list>
+				<ref bean="traceHandlerService" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="traceHandlerService" class="egovframework.rte.fdl.cmmn.trace.manager.DefaultTraceHandleManager">
+		<property name="reqExpMatcher">
+			<ref bean="antPathMater" />
+		</property>
+		<property name="patterns">
+			<list>
+				<value>*</value>
+			</list>
+		</property>
+		<property name="handlers">
+			<list>
+				<ref bean="defaultTraceHandler" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="antPathMater" class="org.springframework.util.AntPathMatcher" />
+	<bean id="defaultTraceHandler" class="egovframework.rte.fdl.cmmn.trace.handler.DefaultTraceHandler" />
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+
+	<bean id="jsonViewArray" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"  >
+<!-- 	 <property name="objectMapper" ref="objectMapper" />	-->
+<!-- 	 <property name="modelKey" value="result" /> -->
+	<property name="extractValueFromSingleKeyModel" value="true" />
+	</bean> 
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- <mvc:mapping path="/maa01/maa01*.do" />
+			<mvc:mapping path="/maa01/sug*.do" /> -->
+			<mvc:mapping path="/customInfo/mainInfoModForm.do" />
+			<bean class="com.fpdisys.admin.log.controller.LoginInterceptor" /> 
+
+		</mvc:interceptor>
+	</mvc:interceptors>
+		
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**/*.do" />
+				<bean class="com.fpdisys.admin.log.controller.LogInterceptor" />
+			
+		</mvc:interceptor>
+	</mvc:interceptors>
+		
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/mntr/**/*" />
+			<mvc:mapping path="/code/**/*" />
+			<mvc:mapping path="/calculate/**/*" />
+			<mvc:mapping path="/login/loginForm.do" />
+			<bean class="com.fpminput.base.login.LoginInterceptor" /> 
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<mvc:interceptors>
+	    <mvc:interceptor>
+	        <mvc:mapping path="/customInfo/customInfoRegForm2.do"/>
+	        <mvc:mapping path="/customInfo/customInfoRegForm3.do"/>
+	        <bean class="com.fpdisys.dist.customInfo.controller.AuthInterceptor" />
+	    </mvc:interceptor>
+	</mvc:interceptors>
+	<bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="100000000" />
+	</bean>
+</beans>

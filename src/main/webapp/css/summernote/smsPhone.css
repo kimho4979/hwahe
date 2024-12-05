@@ -1,0 +1,133 @@
+@charset "utf-8";
+/* CSS Document */
+
+.cursor-link{cursor: pointer;}
+.cursor-none{cursor: default;}
+
+/* 텍스트 정렬 모음 */
+.text-center{text-align: center !important;}
+.text-left{text-align: left !important;}
+.text-right{text-align: right !important;}
+.text-v-top{vertical-align: top !important;}
+.text-v-mid{vertical-align: middle !important;}
+.text-v-bot{vertical-align: bottom !important;}
+.v-align-m{vertical-align: middle !important;}
+
+
+/* 버튼 색깔모음 */
+.searchBtn{background-color: #ffffff; border-color: #1ab394; }
+
+
+/* 글자색 */
+.t-c-mute{color: #f3f3f4;}
+.t-c-mute2{color: #6c6c6c;}
+.t-c-red{color: #ff0000;}
+
+
+.over-hidden-text{white-space: nowrap; text-overflow: ellipsis; overflow: hidden; padding: 0 5px;}
+.imgCss{max-width: 100%;max-height: 100%;}
+
+
+/* 메뉴관리 */
+#menuTree { overflow:auto; }
+#groupAuthList, .ibox-content { overflow-x:auto; }
+/*  */
+.form-horizontal .form-group { margin-right:0 !important; margin-left:0 important; }
+
+/* 게시판관리 */
+.table-bordered { margin-bottom:15px !important; }
+.table.table-bordered tbody tr th{ min-width:80px;  }
+
+/* 사진등록*/
+.dropzone .dz-preview .dz-progress { top:60% !important; }
+
+/* 글쓰기 등  등록 관련 */
+#fileEl .fileinput.input-group { display:block !important; }
+#fileEl .input-group .form-control, #fileEl .input-group-btn { display:inline-block; width: 72%;}
+#fileEl .fileinput.input-group>.btn-file { width: auto;border-left:1px solid #E5E6E7; }
+#fileEl .input-group-addon.btn{width: auto; line-height: 20px;}
+
+#mainContCreateFrm2 #fileData1 .col-xs-10 {width: 100%; padding-right:0; }
+#mainContCreateFrm2 #fileData1 .col-xs-10 .form-control { width:100%;  }
+
+.col-sm-6.col-sm-offset-8 { margin-left: 0; }
+#groupUserUpdateFrm .btn.btn-w-m.btn-default.searchBtn{ margin-top: 10px; margin-bottom: 10px; }
+
+.form-horizontal { padding-left: 10px; }
+
+/* 작황정보  */
+
+.imgDiv {overflow: hidden; width: 195px; height: 150px;margin: 0 auto;   }
+.imgDiv > img { width: 100%;min-height:100%;  }
+
+/* sms 전송 */
+.sms_gray { color:#585858;  }
+.sms_red { color:#f2452e; }
+.phonWrap { width: 710px ; height: 580px; margin:0 auto;  }
+.phonArea { position:relative;  float: left; width:340px; height:580px;  background-color:#f3f3f4;  }
+/* .phonArea:after { content:""; display:block; position:absolute; width:340px; height:580px; top:0; left:0; background:url("/images/content/phone_form.png") 0 0 no-repeat; } */
+.phonArea.pArea01 { margin-right:30px;  }
+.phonArea.pArea01:before { content:""; display:block; position:absolute; width:340px; height:580px; top:0; left:0; background:url("/images/content/phone_form.png") 0 0 no-repeat; }
+.phonArea.pArea02:before { content:""; display:block; position:absolute; width:340px; height:580px; top:0; left:0; background:url("/images/content/phone_form.png") 0 0 no-repeat; }
+
+.phonArea .ct_phon {     width: 300px;   position: absolute; top: 52px; left: 19px; }
+.phonArea .ct_phon .tit_phon { width:100%; height:30px; line-height:27px; color:#fff; text-indent:11px; font-size:16px; font-weight:bold;   background-color:#2f4050;   }
+.phonArea .ct_phon .ct_sms {width:100%; height:290px; border:1px solid #ababab; box-sizing:border-box;  }
+.phonArea .ct_phon .sms_p100p { width:100%; text-align:center; font-size:16px;  }
+.phonArea .ct_phon .sms_p100p span { font-size:16px;  }
+.smsInput { width:100%; height:40px;  border:1px solid #ababab; box-sizing:border-box; text-indent:5px;  }
+.phonArea.pArea02 { }
+.phonArea .ct_phon .btnAdd { width:100%; height:38px; margin-top:10px; margin-bottom:10px;  border:0 none; border-radius:2px;  line-height:38px; font-size:16px; font-weight:bold; color:#fff;  background-color:#ed5565; }
+.numList { list-style-type: none; overflow: hidden;  overflow-y: auto;  width:100%; height:70px; padding: 0;   border:1px solid #ababab; box-sizing:border-box;  background-color: #fff; }
+.numList li { height:30px; }
+.numList li a { display:block; width:100%; height:100%;  line-height:30px; text-indent:10px;  color:#585858;  }
+/* .numList li a:hover, .numList li a:focus, .numList li a:active, .numList li a.on { color:#000; background-color:#dddddd;  } */
+.numList li a:hover, .numList li a:focus, .numList li a:active { color:#000; background-color:#f8f6f6;  }
+.numList li a.on { color:#000; background-color:#dddddd;  }
+.phonArea .ct_phon .btnAddDel { float:left;  width:140px; height:38px; margin-bottom:20px;  border:0 none; border-radius:2px;  line-height:38px; font-size:16px; font-weight:bold; color:#fff;  background-color:#ed5565; }
+.phonArea .ct_phon .sms_p50p { float:left; width:50%; text-align:right; font-size:16px;}
+.phonArea .ct_phon .sms_p50p span { font-size:16px;  }
+.timeWrap { width:100%; margin-bottom:10px;   }
+.phonArea .ct_phon .i-checks { clear:both; margin-bottom:8px;  }
+.phonArea .ct_phon .smsSend { width:100%;  height:48px; margin-bottom:20px;  border:0 none; border-radius:2px;  line-height:48px; font-size:16px; font-weight:bold; color:#fff;  background-color:#1ab394; }
+.phonArea .ct_phon .timeWrap .dropdown-menu { max-height: 145px; overflow-y: auto;}
+
+
+@media (max-width: 1131px) {
+	#fileEl .input-group .form-control, #fileEl .input-group-addon, #fileEl .input-group-btn {width:50%;}
+	}
+	@media (max-width: 785px) {
+	#fileEl .input-group .form-control, #fileEl .input-group-addon, #fileEl .input-group-btn {width:100%;}
+	/* #fileEl  */.input-group-addon.btn, /* #fileEl */ .btn-file>input{border-left:1px solid #E5E6E7;}
+	
+}
+
+/* 모바일 */
+@media (max-width: 1120px) {
+	.carousel-inner { height: 400px;}
+}
+@media (max-width: 1000px) {
+	.carousel-inner { height: 290px;}
+}
+@media (max-width: 768px) {
+	/* header 부분  */
+	.top-navigation.body-small .wrapper.wrapper-content, .body-small .top-navigation .wrapper.wrapper-content { padding-top:75px !important; }
+	.top-navigation .navbar-right { margin-right:0 !important; }
+	.navbar-top-links li a {padding: 20px 6px !important; }
+	.top-navigation .navbar-right { text-align:right; }
+	.wrapper-content { padding-bottom:60px !important;}
+
+	/* 버튼부분 */
+	.float-e-margins .btn.btn-white { float:right; }
+	.float-e-margins .btn { margin-bottom: 12px; }
+}
+@media (max-width: 670px) {
+	.carousel-inner { height: 150px;}
+	/*오른쪽 네비게이션*/
+	.nav.navbar-top-links.navbar-right { display:none; }
+	.top-navigation .nav.navbar-top-links.navbar-right { display:block; }
+	body.fixed-nav #wrapper .navbar-static-side, body.fixed-nav #wrapper #page-wrapper {margin-top: 51px !important;}
+}
+@media (max-width: 480px) {
+	.tabs-container .tab-pane .panel-body { padding-left:0; padding-right:0; }
+	}

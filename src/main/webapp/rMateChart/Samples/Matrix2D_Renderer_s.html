@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>rMate Chart for HTML5 - Matrix chart</title>
+<!-- rMateChartH5 에서 사용하는 스타일 -->
+<link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/>
+
+<!-- IE7, 8 에서 차트 생성하고자 하는 경우 -->
+<!--[if IE]><script language="javascript" type="text/javascript" src="../rMateChartH5/JS/excanvas.js"></script><![endif]-->
+
+<!-- rMateChartH5 라이센스 -->
+<script language="javascript" type="text/javascript" src="../LicenseKey/rMateChartH5License.js"></script>
+
+<!-- 실제적인 rMateChartH5 라이브러리 -->
+<script language="javascript" type="text/javascript" src="../rMateChartH5/JS/rMateMatrixChartH5.js"></script>
+
+<!-- rMateChartH5 테마 js -->
+<script type="text/javascript" src="../rMateChartH5/Assets/Theme/theme.js"></script>
+
+<script type="text/javascript">
+
+// -----------------------차트 설정 시작-----------------------
+
+// rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.
+var chartVars = "rMateOnLoadCallFunction=chartReadyHandler";
+
+// rMateChart 를 생성합니다.
+// 파라메터 (순서대로) 
+//  1. 차트의 id ( 임의로 지정하십시오. ) 
+//  2. 차트가 위치할 div 의 id (즉, 차트의 부모 div 의 id 입니다.)
+//  3. 차트 생성 시 필요한 환경 변수들의 묶음인 chartVars
+//  4. 차트의 가로 사이즈 (생략 가능, 생략 시 100%)
+//  5. 차트의 세로 사이즈 (생략 가능, 생략 시 100%)
+rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+
+// 차트의 속성인 rMateOnLoadCallFunction 으로 설정된 함수.
+// rMate 차트 준비가 완료된 경우 이 함수가 호출됩니다.
+// 이 함수를 통해 차트에 레이아웃과 데이터를 삽입합니다.
+// 파라메터 : id - rMateChartH5.create() 사용 시 사용자가 지정한 id 입니다.
+function chartReadyHandler(id) {
+	document.getElementById(id).setLayout(layoutStr);
+	document.getElementById(id).setData(chartData);
+}
+
+// 스트링 형식으로 레이아웃 정의.
+var layoutStr = 
+				'<rMateChart backgroundColor="#FFFFFF"  borderStyle="none">'
+					+'<Options>'
+						+'<Caption text="Renderer 종류" fontFamily="맑은 고딕"/>'
+						+'<Legend useVisibleCheck="false" horizontalGap="1" defaultMouseOverAction="true" fontFamily="맑은 고딕"/>'
+					+'</Options>'
+					+'<SeriesSlide id="ss"/>'
+					+'<Matrix2DChart showDataTips="true" type="renderer" drawType="radius" legendOver="true"  fontFamily="맑은 고딕">'
+						+'<backgroundElements>'
+							+'<GridLines direction="horizontal" horizontalChangeCount="2">'
+								+'<horizontalStroke>'
+									+'<Stroke color="#f1f1f1"/>'
+								+'</horizontalStroke>'
+							+'</GridLines>'
+						+'</backgroundElements>'
+						+'<verticalAxis>'
+							+'<LinearAxis id="vAxis" interval="0.5" maximum="6" labelJsFunction="vertiJsFunc"/>'
+						+'</verticalAxis>'
+						+'<horizontalAxis>'
+							+'<LinearAxis id="hAxis" interval="0.5" maximum="3" labelJsFunction="horiJsFunc"/>'
+						+'</horizontalAxis>'
+						+'<series>'
+							+'<Matrix2DSeries xField="Data1_x" yField="Data1_y" zField="Data1" renderer="rectangle" showDataEffect="{ss}" displayName="rectangle">'
+								+'<fill>'
+									+'<SolidColor color="#5587a2"/>'
+								+'</fill>'
+							+'</Matrix2DSeries>'
+							+'<Matrix2DSeries xField="Data2_x" yField="Data2_y" zField="Data2" renderer="circle" showDataEffect="{ss}" displayName="circle">'
+								+'<fill>'
+									+'<SolidColor color="#074d81"/>'
+								+'</fill>'
+							+'</Matrix2DSeries>'
+							+'<Matrix2DSeries xField="Data3_x" yField="Data3_y" zField="Data3" renderer="diamond" showDataEffect="{ss}" displayName="diamond">'
+								+'<fill>'
+									+'<SolidColor color="#20cbc2"/>'
+								+'</fill>'
+							+'</Matrix2DSeries>'
+							+'<Matrix2DSeries xField="Data4_x" yField="Data4_y" zField="Data4" renderer="upTriangle" showDataEffect="{ss}" displayName="upTriangle">'
+								+'<fill>'
+									+'<SolidColor color="#f6a54c"/>'
+								+'</fill>'
+							+'</Matrix2DSeries>'
+							+'<Matrix2DSeries xField="Data5_x" yField="Data5_y" zField="Data5" renderer="downTriangle" showDataEffect="{ss}" displayName="downTriangle">'
+								+'<fill>'
+									+'<SolidColor color="#d1af94"/>'
+								+'</fill>'
+							+'</Matrix2DSeries>'
+							+'<Matrix2DSeries xField="Data6_x" yField="Data6_y" zField="Data6" renderer="star" showDataEffect="{ss}" displayName="star">'
+								+'<fill>'
+									+'<SolidColor color="#96d5de"/>'
+								+'</fill>'
+							+'</Matrix2DSeries>'
+						+'</series>'
+						+'<verticalAxisRenderers>'
+							+'<Axis2DRenderer axis="{vAxis}"/>'
+						+'</verticalAxisRenderers>'
+						+'<horizontalAxisRenderers>'
+							+'<Axis2DRenderer axis="{hAxis}" showLine="true" tickPlacement="none" styleName="font" minorTickPlacement="none"/>'
+						+'</horizontalAxisRenderers>'
+					+'</Matrix2DChart>'
+					+'<Style>'
+						+'.font{fontSize:11;}'
+					+'</Style>'
+				+'</rMateChart>';
+
+// 차트 데이터
+var chartData = [{"Data1_x":0.5,"Data1_y":5.5,"Data1":1,"Data2_x":0.5,"Data2_y":4.5,"Data2":1,"Data3_x":0.5,"Data3_y":3.5,"Data3":1,"Data4_x":0.5,"Data4_y":2.5,"Data4":1,"Data5_x":0.5,"Data5_y":1.5,"Data5":1,"Data6_x":0.5,"Data6_y":0.5,"Data6":1},
+				{"Data1_x":1.5,"Data1_y":5.5,"Data1":2,"Data2_x":1.5,"Data2_y":4.5,"Data2":2,"Data3_x":1.5,"Data3_y":3.5,"Data3":2,"Data4_x":1.5,"Data4_y":2.5,"Data4":2,"Data5_x":1.5,"Data5_y":1.5,"Data5":2,"Data6_x":1.5,"Data6_y":0.5,"Data6":2},
+				{"Data1_x":2.5,"Data1_y":5.5,"Data1":3,"Data2_x":2.5,"Data2_y":4.5,"Data2":3,"Data3_x":2.5,"Data3_y":3.5,"Data3":3,"Data4_x":2.5,"Data4_y":2.5,"Data4":3,"Data5_x":2.5,"Data5_y":1.5,"Data5":3,"Data6_x":2.5,"Data6_y":0.5,"Data6":3}];
+
+/*
+// ------------------------- Y축 라벨 사용자 정의 함수 -----------------------------------------------------
+// X, Y 축이 존재하는 데카르트 좌표계열 차트에서 축 라벨을 사용자 정의 합니다.
+// layout XML 에서 축 렌더러 속성을 넣을때 labelJsFunction 주고, 만든 javascript 함수명을 넣어줍니다
+// 예) <verticalAxis>
+//			<LinearAxis displayName="금액" labelJsFunction="axisLabelFunc"/> 
+//     </verticalAxis>
+//
+//
+// 파라메터 설명
+// value : 현재 아이템에 맞는 축의 라벨 값 
+*/
+function vertiJsFunc(id, value)
+{
+		return "";
+}
+
+/*
+// ------------------------- X축 라벨 사용자 정의 함수 -----------------------------------------------------
+// X, Y 축이 존재하는 데카르트 좌표계열 차트에서 축 라벨을 사용자 정의 합니다.
+// layout XML 에서 축 렌더러 속성을 넣을때 labelJsFunction 주고, 만든 javascript 함수명을 넣어줍니다
+// 예)<horizontalAxis>
+//	     	<CategoryAxis id="hAxis" categoryField="Month" labelJsFunction="axisLabelFunc"/>
+//	  </horizontalAxis>
+//
+// 파라메터 설명
+// value : 현재 아이템에 맞는 축의 라벨 값 
+*/
+function horiJsFunc(id, value)
+{
+		return "";
+}
+
+/**
+ * rMateChartH5 3.0이후 버전에서 제공하고 있는 테마기능을 사용하시려면 아래 내용을 설정하여 주십시오.
+ * 테마 기능을 사용하지 않으시려면 아래 내용은 삭제 혹은 주석처리 하셔도 됩니다.
+ *
+ * -- rMateChartH5.themes에 등록되어있는 테마 목록 --
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * -------------------------------------------------
+ *
+ * rMateChartH5.themes 변수는 theme.js에서 정의하고 있습니다.
+ */
+rMateChartH5.registerTheme(rMateChartH5.themes);
+
+/**
+ * 샘플 내의 테마 버튼 클릭 시 호출되는 함수입니다.
+ * 접근하는 차트 객체의 테마를 변경합니다.
+ * 파라메터로 넘어오는 값
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * - default
+ *
+ * default : 테마를 적용하기 전 기본 형태를 출력합니다.
+ */
+function rMateChartH5ChangeTheme(theme){
+	document.getElementById("chart1").setTheme(theme);
+}
+
+// -----------------------차트 설정 끝 -----------------------
+
+</script>
+<!-- 샘플 작동을 위한 css와 js -->
+<script type="text/javascript" src="./Web/JS/common.js"></script>
+<script type="text/javascript" src="./Web/JS/sample_util.js"></script>
+<link rel="stylesheet" type="text/css" href="./Web/sample.css"/>
+
+<!-- SyntaxHighlighter -->
+<script type="text/javascript" src="./Web/syntax/shCore.js"></script>
+<script type="text/javascript" src="./Web/syntax/shBrushJScript.js"></script>
+<link type="text/css" rel="stylesheet" href="./Web/syntax/shCoreDefault.css"/>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">
+			<div class="headerTitle">Matrix 렌더러 종류</div>
+			<!--<div class="themeButtons">
+				<div class="button theme_default" onclick="rMateChartH5ChangeTheme('default')">Default</div>
+				<div class="button theme_pastel" onclick="rMateChartH5ChangeTheme('pastel')"></div>
+				<div class="button theme_simple" onclick="rMateChartH5ChangeTheme('simple')"></div>
+			</div>-->
+		</div>
+		<div id="content">
+			<!-- 차트가 삽입될 DIV -->
+			<div id="chartHolder"></div>
+		</div>
+		<div id="updater">
+			<div>Layout과 Data를 수정 후 적용 할 수 있습니다.</div>
+			<div id="updaterTab">
+				<ul id="updaterTabUl">
+					<li id="updaterTabUlSource" class="active_tab">Source</li>
+					<li id="updaterTabUlLayout" class="non_active_li">Layout</li>
+					<li id="updaterTabUlData" class="non_active_li">Data</li>
+					<li id="updaterTabUlBlank">
+						<span id="btn_update">수정적용</span>
+					</li>
+				</ul>
+			</div>
+			<div id="updaterTarea">
+				<pre id="updaterTareaSource" class="brush:js toolbar:false" name="updaterTareaSource"></pre>
+				<textarea id="updaterTareaLayout" class="updaterTextarea" spellcheck="false"></textarea>
+				<textarea id="updaterTareaData" class="updaterTextarea" spellcheck="false"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

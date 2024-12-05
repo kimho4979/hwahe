@@ -1,0 +1,85 @@
+/* 
+메인 화면 css
+Site : "화훼유통정보시스템3차"
+Author : "김주연"
+Version : "2018.07"
+*/
+#wrap { width:100%; height:100%; }
+.main article { height:calc(100% - 210px);  }
+.visualWrap { overflow: hidden; width:100%; height: 100%; background:url("../images/content/bg_mainvisual.jpg") no-repeat;     background-position:50% 0; }
+.visualList { width:70%; margin:0 auto; margin-top:23vh; }
+.visualList li { float:left; width:49%; height:100px;  }
+.visualList .li01 { margin-right:2%; margin-bottom:30px; }
+.visualList .li02 { margin-bottom:30px; }
+.visualList .li03 { margin-right:2%; }
+.visualList .li04 { }
+.visualList li a { display:block; width:100%; height:100%; line-height:98px; text-align:center; font-size:40px; font-weight:bold; color:#fff; }
+.visualList .li01 a { background:url("../images/content/bg_visualList01.png") 0 0 repeat; }
+.visualList .li02 a { background:url("../images/content/bg_visualList02.png") 0 0 repeat; }
+.visualList .li03 a { background:url("../images/content/bg_visualList01.png") 0 0 repeat; }
+.visualList .li04 a { background:url("../images/content/bg_visualList02.png") 0 0 repeat; }
+
+/* 공지사항 */
+.noticeWrap { position: absolute; top: 71vh; width:100%; }
+.noticeList {overflow:hidden; width:70%; height:70px; margin:0 auto; background:url("../images/content/bg_noticeList.png") 0 0 repeat;}
+.noticeList li { width:100%; height:100%; line-height:70px; color:#fff;  }
+.noticeList li a { display:block; width:100%; height:100%; background:url("../images/btn/bg_noticeIcon.png") 0 50% no-repeat; }
+.noticeList .tit { display:block; font-size:16px; color:#fff; text-indent:115px;  }
+
+/* 공지사항 컨트롱롤러 */
+.notice-controll > div {position: absolute; right: 15%;  top: 15px;  height: 40px; width: 132px; margin-right: 20px; z-index: 100; }
+.notice-down-contorl {display:table; width:100%; height:100%; bottom: 0; }
+.notice-down-contorl > span{display: table-cell; width: 78px; background-color:#313946; text-align:center; color:#ffffff; line-height:1; vertical-align: middle; }
+.notice-down-contorl > button{display:table-cell; width:30px; height:40px; border:0; border-left:1px solid #6f7572; vertical-align: middle; font-size: 0; background: url("../images/btn/btn-rollingcontrol.png") no-repeat 7px 10px #313946;}
+.notice-up-contorl {display:table;width:100%;height:100%;bottom: 60px;}
+.notice-up-contorl > button {display:table-cell;  float: left; height:40px; border:0; vertical-align: middle; font-size: 0; background-image: url("../images/btn/btn-rollingcontrol.png"); background-repeat: no-repeat ; background-color:#989898;}
+.notice-up-contorl > .left {width:40px; margin-right: 5px; background-position: 0 0; }
+.notice-up-contorl > .control {width:40px; margin-right: 5px; background-position:0 -120px; }
+.notice-up-contorl > .play {margin-right: 5px; background-position:0 -80px !important; }
+.notice-up-contorl > .right {width:40px; background-position: 0 -40px; }
+
+
+/* @media ( max-width:1155px ){
+
+	메인비주얼
+	.visualWrap { background:url("../images/content/bg_mainvisual.jpg") no-repeat;     background-position:20% 0; }
+	.visualList { margin-top: 15vh; }
+	.visualList li { width:100%; }
+	.visualList .li01 { margin-right:0%; }
+	.visualList .li03 { margin-right:0%; margin-bottom:30px; }
+
+}
+ */
+@media ( max-width:1023px ){
+	/* 메인비주얼 */
+	.visualWrap { background:url("../images/content/bg_mainvisual.jpg") no-repeat;     background-position:20% 0; }
+	.visualList { margin-top: 15vh; }
+	.visualList li { width:100%; }
+	.visualList .li01 { margin-right:0%; }
+	.visualList .li03 { margin-right:0%; margin-bottom:30px; }
+	
+	.main article {   height: auto; }
+	.visualWrap { overflow-y: auto; }
+	.main #footer {    position: static; }
+	.visualWrap {  overflow-y: auto;  padding-bottom: 50px; }
+
+	}
+
+@media ( max-width:767px ){
+
+	#wrap { height:auto; }
+	.main article { height:966px; }
+	.visualList li a { font-size:29px; }
+	
+}
+
+@media ( max-width:450px ){
+
+	.main article { height: 765px; }
+	
+	.visualList li { height:80px;  }
+	.visualList li a { font-size:25px;     line-height: 78px;}
+
+	
+}
+

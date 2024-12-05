@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hfc01.mapper.Hfc01Mapper">
+
+	<!-- 게시판관리 행상일정관리 행사달력 데이터 조회 -->
+	<select id="selectEventCalendarList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+			EVENT_SEQ
+			,TO_CHAR(START_DT, 'YYYY-MM-DD') AS "start"
+			,TO_CHAR(END_DT, 'YYYY-MM-DD') AS "end"
+			,EVENT_NM AS "title"
+			,EVENT_TYPE
+			,EVENT_COLOR AS "color"
+			,REMARKS
+			,INS_DT
+			,INS_ID
+			,UPT_DT
+			,UPT_ID
+		FROM 
+		T_EVENT_CALENDAR
+		WHERE 
+			START_DT <![CDATA[>=]]> TO_DATE(#{start})
+			AND END_DT <![CDATA[<=]]> TO_DATE(#{end})
+	</select>
+	
+	<select id="flowerMainBackUpSchedule" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	
+		 SELECT TITLE
+     		  , STARTDT
+	     FROM (
+		       SELECT EVENT_SEQ
+		            ,TO_CHAR(START_DT, 'YYYY-MM-DD') AS STARTDT
+		            ,TO_CHAR(END_DT, 'YYYY-MM-DD') AS ENDDT
+		            ,EVENT_NM AS TITLE
+		            ,EVENT_TYPE
+		            ,EVENT_COLOR AS COLOR
+		            ,REMARKS
+		            ,INS_DT
+		            ,INS_ID
+		            ,UPT_DT
+		            ,UPT_ID
+		        FROM T_EVENT_CALENDAR
+		        WHERE START_DT <![CDATA[>=]]>  SYSDATE
+		        ORDER BY START_DT
+	     )WHERE ROWNUM <![CDATA[<=]]>  #{rowcnt}  			
+	</select>
+	
+	
+	
+	<!-- 여기서부터 작업중 월요일 이어서 해야함 -->
+	<!-- rowspan 용 월별 타입별 이벤트 개수 -->
+	<select id="selectYearEventCnt" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+			a.MM
+			,NVL(b.CRI_CNT, 0) AS CRI_CNT
+			,NVL(c.BU_CNT, 0) AS BU_CNT
+			,NVL(d.CAT_CNT, 0) AS CAT_CNT
+			,NVL(e.WEEK_CNT, 0) AS WEEK_CNT
+			,NVL(f.ETC_CNT, 0) AS ETC_CNT
+			,GREATEST(NVL(b.CRI_CNT,0), NVL(c.BU_CNT,0), NVL(d.CAT_CNT,0), NVL(e.WEEK_CNT,0), NVL(f.ETC_CNT,0) ) as ROW_SPAN
+		FROM 
+			(SELECT LEVEL MM FROM dual CONNECT BY LEVEL <![CDATA[<=]]> 12) a
+			,(SELECT
+					a.MM, COUNT(1) as CRI_CNT
+				FROM
+					(SELECT LEVEL MM FROM dual CONNECT BY LEVEL <![CDATA[<=]]> 12) a
+					,(SELECT * FROM T_EVENT_CALENDAR WHERE EVENT_TYPE = '1'
+						AND (TO_CHAR(START_DT,'YYYY') = #{searchYear} or TO_CHAR(END_DT,'YYYY') = #{searchYear})    ) b
+				WHERE
+					a.MM = TO_NUMBER(TO_CHAR(b.START_DT, 'MM')) OR a.MM = TO_NUMBER(TO_CHAR(b.END_DT, 'MM'))
+				GROUP BY a.MM
+				) b
+			,(SELECT
+					a.MM, COUNT(1) as BU_CNT
+				FROM
+					(SELECT LEVEL MM FROM dual CONNECT BY LEVEL <![CDATA[<=]]> 12) a
+					,(SELECT * FROM T_EVENT_CALENDAR WHERE EVENT_TYPE = '2'
+						AND (TO_CHAR(START_DT,'YYYY') = #{searchYear} or TO_CHAR(END_DT,'YYYY') = #{searchYear})    ) b
+				WHERE
+					a.MM = TO_NUMBER(TO_CHAR(b.START_DT, 'MM')) OR a.MM = TO_NUMBER(TO_CHAR(b.END_DT, 'MM'))
+				GROUP BY a.MM
+				) c
+			,(SELECT
+				 	a.MM, COUNT(1) as CAT_CNT
+				FROM
+					(SELECT LEVEL MM FROM dual CONNECT BY LEVEL <![CDATA[<=]]> 12) a
+					,(SELECT * FROM T_EVENT_CALENDAR WHERE EVENT_TYPE = '3'
+						AND (TO_CHAR(START_DT,'YYYY') = #{searchYear} or TO_CHAR(END_DT,'YYYY') = #{searchYear})    ) b
+				WHERE
+					a.MM = TO_NUMBER(TO_CHAR(b.START_DT, 'MM')) OR a.MM = TO_NUMBER(TO_CHAR(b.END_DT, 'MM'))
+				GROUP BY a.MM
+				) d
+			,(SELECT
+					a.MM, COUNT(1) as WEEK_CNT
+				FROM
+					(SELECT LEVEL MM FROM dual CONNECT BY LEVEL <![CDATA[<=]]> 12) a
+					,(SELECT * FROM T_EVENT_CALENDAR WHERE EVENT_TYPE = '4'
+						AND (TO_CHAR(START_DT,'YYYY') = #{searchYear} or TO_CHAR(END_DT,'YYYY') = #{searchYear})    ) b
+				WHERE
+					a.MM = TO_NUMBER(TO_CHAR(b.START_DT, 'MM')) OR a.MM = TO_NUMBER(TO_CHAR(b.END_DT, 'MM'))
+				GROUP BY a.MM
+				) e
+			,(SELECT
+					a.MM, COUNT(1) as ETC_CNT
+				FROM
+					(SELECT LEVEL MM FROM dual CONNECT BY LEVEL <![CDATA[<=]]> 12) a
+					,(SELECT * FROM T_EVENT_CALENDAR WHERE EVENT_TYPE = '5'
+						AND (TO_CHAR(START_DT,'YYYY') = #{searchYear} or TO_CHAR(END_DT,'YYYY') = #{searchYear})    ) b
+				WHERE
+					a.MM = TO_NUMBER(TO_CHAR(b.START_DT, 'MM')) OR a.MM = TO_NUMBER(TO_CHAR(b.END_DT, 'MM'))
+				GROUP BY a.MM
+				) f
+		WHERE
+			a.MM = b.MM(+) AND a.MM = c.MM(+) AND a.MM = d.MM(+) AND a.MM = e.MM(+) AND a.MM = f.MM(+)
+		
+		ORDER BY a.MM
+	</select>
+	<!-- 교회력 이벤트 조회 -->
+	<select id="selectYearEventOfType" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+		  	EVENT_SEQ
+			,START_DT
+			,TO_CHAR(START_DT, 'DY','NLS_DATE_LANGUAGE=korean') AS START_WEEK
+			,END_DT
+			,TO_CHAR(END_DT, 'DY','NLS_DATE_LANGUAGE=korean') AS END_WEEK
+			,CASE WHEN START_DT = END_DT THEN 
+	        		TO_CHAR(START_DT, 'MM"월"DD"일"') || '(' || TO_CHAR(START_DT, 'DY','NLS_DATE_LANGUAGE=korean') || ')'
+	        	ELSE
+	            	CASE WHEN TO_CHAR(START_DT,'MM') = TO_CHAR(END_DT,'MM') THEN 
+	                	TO_CHAR(START_DT, 'MM"월"DD"일"') || '(' || TO_CHAR(START_DT, 'DY','NLS_DATE_LANGUAGE=korean') || ')'
+	                	|| '~' || TO_CHAR(END_DT, 'DD"일"') || '(' || TO_CHAR(END_DT, 'DY','NLS_DATE_LANGUAGE=korean') || ')'
+	                ELSE
+	                	TO_CHAR(START_DT, 'MM"월"DD"일"') || '(' || TO_CHAR(START_DT, 'DY','NLS_DATE_LANGUAGE=korean') || ')'
+	                	|| '~' || TO_CHAR(END_DT, 'MM"월"DD"일"') || '(' || TO_CHAR(END_DT, 'DY','NLS_DATE_LANGUAGE=korean') || ')'
+	           		END
+	        	END AS E_DATE
+			,EVENT_NM
+			,REMARKS
+		FROM
+		(SELECT LEVEL MM FROM dual CONNECT BY LEVEL <![CDATA[<=]]> 12) a
+		,(SELECT * FROM T_EVENT_CALENDAR WHERE EVENT_TYPE = #{eventType}
+						AND (TO_CHAR(START_DT,'YYYY') = #{searchYear} or TO_CHAR(END_DT,'YYYY') = #{searchYear})    ) b
+		WHERE
+		a.MM = TO_NUMBER(TO_CHAR(b.START_DT, 'MM')) OR a.MM = TO_NUMBER(TO_CHAR(b.END_DT, 'MM'))
+		ORDER BY b.START_DT
+	</select>
+	
+	
+</mapper>

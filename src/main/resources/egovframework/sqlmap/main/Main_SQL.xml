@@ -1,0 +1,1913 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.main.mapper.MainMapper">
+<resultMap id="MainResultMap" type="com.fpdisys.dist.main.domain.MainVO">	
+	
+</resultMap>
+	<resultMap id="resultHab06Map" type="com.fpdisys.dist.hab06.domain.Hab06VO">
+	<result property="cmpCd" column="CMP_CD"/>
+	<result property="cmpCdNm" column="CMP_CD_NM"/>
+	<result property="saleMonth" column="SALE_MONTH"/>
+	<result property="saleYear" column="SALE_YEAR"/>
+	<result property="flowerGubn" column="FLOWER_GUBN"/>
+	<result property="flowerGubnNm" column="FLOWER_GUBN_NM"/>	
+	<result property="pumName" column="PUM_NAME"/>
+	<result property="goodName" column="GOOD_NAME"/>
+	<result property="mmCd" column="MM_CD"/>
+	<result property="mmCdNm" column="MM_CD_NM"/>
+	<result property="danCd" column="DAN_CD"/>
+	<result property="danCdNm" column="DAN_CD_NM"/>
+	<result property="pojCd" column="POJ_CD"/>
+	<result property="pojCdNm" column="POJ_CD_NM"/>
+	<result property="lvCd" column="LV_CD"/>
+	<result property="lvCdNm" column="LV_CD_NM"/>
+    <result property="danQ" column="DANQ"/> 
+    <result property="sizeCd" column="SIZE_CD"/>
+	<result property="sizeCdNm" column="SIZE_CD_NM"/>
+	<result property="sanCd" column="SAN_CD"/>
+	<result property="sanCdNm" column="SAN_CD_NM"/>	
+	<result property="maxAmt" column="MAX_AMT"/> 
+	<result property="minAmt" column="MIN_AMT"/>
+	<result property="avgAmt" column="AVG_AMT"/>  
+	<result property="totAmt" column="TOT_AMT"/>  
+	<result property="totQty" column="TOT_QTY"/>	
+	<result property="oldMaxAmt" column="OLD_MAX_AMT"/> 
+	<result property="oldMinAmt" column="OLD_MIN_AMT"/>
+	<result property="oldAvgAmt" column="OLD_AVG_AMT"/>  
+	<result property="oldTotAmt" column="OLD_TOT_AMT"/>  
+	<result property="oldTotQty" column="OLD_TOT_QTY"/>  
+	<result property="perTotAmt" column="PER_TOT_AMT"/> 
+	<result property="perAmtCol" column="PER_AMT_COL"/>
+	<result property="perTotQty" column="PER_TOT_QTY"/>  
+	<result property="perQtyCol" column="PER_QTY_COL"/>
+	</resultMap>
+	
+	<select id="selectAuctionDate" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	   	SELECT SALE_DATE, MIN(PUM_NAME) AS PUM_NAME FROM T_SALE_DATE
+		WHERE  SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-12), 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+		AND  CMP_CD =#{CMP_CD, jdbcType=VARCHAR}	
+		AND FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}	
+		GROUP BY SALE_DATE
+		ORDER BY SALE_DATE DESC   		  
+	</select>
+	
+		<select id="selectFlowerMain" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	          	SELECT SALE_DATE
+       ,PUM_NAME
+       ,GOOD_NAME
+       ,SUM(TOT_QTY) AS TOT_QTY
+       ,MAX(MAX_AMT) AS MAX_AMT
+       ,MIN(MIN_AMT) AS MIN_AMT   
+       ,TRUNC(AVG(AVG_AMT),0) AS AVG_AMT               
+		FROM T_SALE_DATE
+		WHERE CMP_CD =#{CMP_CD, jdbcType=VARCHAR}	
+		AND FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}	
+		AND SALE_DATE=#{SALE_DATE, jdbcType=VARCHAR}	
+		AND PUM_NAME LIKE #{ITEM_CD, jdbcType=VARCHAR}
+		AND TOT_AMT != 0
+		GROUP BY SALE_DATE, PUM_NAME,GOOD_NAME
+		ORDER BY TOT_QTY DESC	       		   		   		  
+	</select>
+	
+	
+	<select id="getPumInfo" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT MIN(DECODE(F.rNUM,1,F.AVG_AMT))  AS AVG_AMT
+			,MIN(DECODE(F.rNUM,1,F.TOT_AMT))  AS TOT_AMT
+			,MIN(DECODE(F.rNUM,1,F.TOT_QTY))  AS TOT_QTY
+			,NVL(ABS(ROUND(100 -(MIN(DECODE(F.rNUM,1,F.AVG_AMT)) / MIN(DECODE(F.rNUM,2,F.AVG_AMT))*100),2)),0) AS PER_TOT_AMT
+			,(
+			CASE
+			  WHEN MIN(DECODE(F.rNUM,1,F.AVG_AMT)) &gt; MIN(DECODE(F.rNUM,2,F.AVG_AMT)) THEN 'ft_red'
+			  WHEN MIN(DECODE(F.rNUM,1,F.AVG_AMT)) &lt; MIN(DECODE(F.rNUM,2,F.AVG_AMT)) THEN 'ft_blue'
+			  ELSE 'ft_green' 
+			  END ) AS  PER_AMT_COL
+			 ,NVL(ABS(ROUND(100 -(MIN(DECODE(F.rNUM,1,F.TOT_QTY)) / MIN(DECODE(F.rNUM,2,F.TOT_QTY))*100),2)),0) AS PER_TOT_QTY
+			 ,(
+			 CASE
+			WHEN MIN(DECODE(F.rNUM,1,F.TOT_QTY)) &gt; MIN(DECODE(F.rNUM,2,F.TOT_QTY)) THEN 'ft_red'
+			WHEN MIN(DECODE(F.rNUM,1,F.TOT_QTY)) &lt; MIN(DECODE(F.rNUM,2,F.TOT_QTY)) THEN 'ft_blue'
+			ELSE 'ft_green' 
+			END ) AS  PER_QTY_COL
+			FROM 
+			(
+			SELECT ROUND(AVG(A.AVG_AMT),3) AS AVG_AMT
+			      , SUM(A.TOT_AMT) AS  TOT_AMT
+			      , SUM(A.TOT_QTY) AS  TOT_QTY
+			      , 1 AS rNUM
+			  FROM T_SALE_DATE A
+			  WHERE 1=1
+			  AND A.FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+			  AND A.CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+			  AND A.SALE_DATE = #{SALE_DATE, jdbcType=VARCHAR}	
+			  AND A.PUM_NAME LIKE '%'||#{ITEM_CD, jdbcType=VARCHAR}||'%'
+			  AND  A.TOT_AMT &lt;&gt; 0
+			  GROUP BY A.CMP_CD, A.SALE_DATE , A.FLOWER_GUBN, A.PUM_NAME
+			UNION ALL
+			SELECT ROUND(AVG(B.AVG_AMT),3) AS AVG_AMT
+			      ,  ROUND(AVG(B.TOT_AMT),3) AS  TOT_AMT
+			      ,  ROUND(AVG(B.TOT_QTY),3) AS  TOT_QTY
+			      , 2 AS rNUM
+			  FROM T_SALE_DATE B
+			  WHERE 1=1
+			  AND B.FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+			  AND B.CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+			  AND SUBSTR(B.SALE_DATE,0,7) =SUBSTR((SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{SALE_DATE, jdbcType=VARCHAR},'YYYY-MM-DD'),-1),'YYYY-MM-DD') AS SALE_DATE  FROM DUAL),0,7)   
+			  AND B.PUM_NAME LIKE '%'||#{ITEM_CD, jdbcType=VARCHAR}||'%'
+			  AND  B.TOT_AMT &lt;&gt; 0
+			  GROUP BY B.CMP_CD, SUBSTR(B.SALE_DATE,0,7) , B.FLOWER_GUBN, B.PUM_NAME
+		  ) F	     		   		   		  
+	</select>
+	
+	<select id="selectGridJong" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	SELECT  T1.LV_CD
+               ,T2.LV_NAME  
+               ,SUM(TOT_QTY) AS TOT_QTY 
+               ,MAX(MAX_AMT) AS MAX_AMT
+               ,MIN(MIN_AMT) AS MIN_AMT
+               ,TRUNC(AVG(AVG_AMT),0) AS AVG_AMT  
+               ,MIN(SALE_DATE) AS SALE_DATE
+               ,MIN(PUM_NAME) AS PUM_NAME
+               ,MIN(GOOD_NAME)  AS GOOD_NAME         
+		FROM T_SALE_DATE T1,  T_LEVEL T2
+		WHERE T1.CMP_CD =#{CMP_CD, jdbcType=VARCHAR}	
+		AND T1.FLOWER_GUBN = #{FLOWER_CD, jdbcType=VARCHAR}
+		AND T1.SALE_DATE = #{SALE_DATE, jdbcType=VARCHAR}		
+		AND T1.PUM_NAME like #{PUM_NAME, jdbcType=VARCHAR}
+		AND T1.GOOD_NAME like #{GOOD_NAME, jdbcType=VARCHAR}
+		AND T1.LV_CD = T2.LV_CD
+		GROUP BY T1.LV_CD,T2.LV_NAME
+		ORDER BY LV_CD ASC  			     		   		  
+	</select>
+	
+	<select id="selectGridListAnalysis" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	SELECT MIN(DECODE(F.rNUM,1,F.AVG_AMT))  AS AVG_AMT
+   ,MIN(DECODE(F.rNUM,1,F.TOT_AMT))  AS TOT_AMT
+   ,MIN(DECODE(F.rNUM,1,F.TOT_QTY))  AS TOT_QTY
+   ,NVL(ABS(ROUND(100 -(MIN(DECODE(F.rNUM,1,F.AVG_AMT)) / MIN(DECODE(F.rNUM,2,F.AVG_AMT))*100),2)),0) AS PER_TOT_AMT
+   ,(CASE
+     WHEN MIN(DECODE(F.rNUM,1,F.AVG_AMT)) &gt; MIN(DECODE(F.rNUM,2,F.AVG_AMT)) THEN 'red'
+     WHEN MIN(DECODE(F.rNUM,1,F.AVG_AMT)) &lt; MIN(DECODE(F.rNUM,2,F.AVG_AMT)) THEN 'blue'
+     ELSE 'green' 
+  END ) AS  PER_AMT_COL
+ ,NVL(ABS(ROUND(100 -(MIN(DECODE(F.rNUM,1,F.TOT_QTY)) / MIN(DECODE(F.rNUM,2,F.TOT_QTY))*100),2)),0) AS PER_TOT_QTY
+ ,(CASE
+     WHEN MIN(DECODE(F.rNUM,1,F.TOT_QTY)) &gt; MIN(DECODE(F.rNUM,2,F.TOT_QTY)) THEN 'red'
+     WHEN MIN(DECODE(F.rNUM,1,F.TOT_QTY)) &lt; MIN(DECODE(F.rNUM,2,F.TOT_QTY)) THEN 'blue'
+     ELSE 'green' 
+  END ) AS  PER_QTY_COL
+,NVL(ABS(ROUND(100 -(MIN(DECODE(F.rNUM,1,F.AVG_AMT)) / MIN(DECODE(F.rNUM,4,F.AVG_AMT))*100),2)),0) AS PER_YEAR_TOT_AMT
+,(CASE
+     WHEN MIN(DECODE(F.rNUM,1,F.AVG_AMT)) &gt; MIN(DECODE(F.rNUM,4,F.AVG_AMT)) THEN 'red'
+     WHEN MIN(DECODE(F.rNUM,1,F.AVG_AMT)) &lt; MIN(DECODE(F.rNUM,4,F.AVG_AMT)) THEN 'blue'
+     ELSE 'green' 
+  END ) AS  PER_YEAR_AMT_COL
+,NVL(ABS(ROUND(100 -(MIN(DECODE(F.rNUM,3,F.TOT_QTY)) / MIN(DECODE(F.rNUM,4,F.TOT_QTY))*100),2)),0) AS PER_YEAR_TOT_QTY
+ ,(CASE
+     WHEN MIN(DECODE(F.rNUM,1,F.TOT_QTY)) &gt; MIN(DECODE(F.rNUM,4,F.TOT_QTY)) THEN 'red'
+     WHEN MIN(DECODE(F.rNUM,1,F.TOT_QTY)) &lt; MIN(DECODE(F.rNUM,4,F.TOT_QTY)) THEN 'blue'
+     ELSE 'green' 
+  END ) AS  PER_YEAR_QTY_COL
+ ,NVL(ABS(ROUND(100 -(MIN(DECODE(F.rNUM,1,F.AVG_AMT)) / MIN(DECODE(F.rNUM,5,F.AVG_AMT))*100),2)),0) AS PER_OLD_TOT_AMT
+,(CASE
+     WHEN MIN(DECODE(F.rNUM,1,F.AVG_AMT)) &gt; MIN(DECODE(F.rNUM,5,F.AVG_AMT)) THEN 'red'
+     WHEN MIN(DECODE(F.rNUM,1,F.AVG_AMT)) &lt; MIN(DECODE(F.rNUM,5,F.AVG_AMT)) THEN 'blue'
+     ELSE 'green' 
+  END ) AS  PER_OLD_AMT_COL
+,NVL(ABS(ROUND(100 -(MIN(DECODE(F.rNUM,3,F.TOT_QTY)) / MIN(DECODE(F.rNUM,5,F.TOT_QTY))*100),2)),0) AS PER_OLD_TOT_QTY
+ ,(CASE
+     WHEN MIN(DECODE(F.rNUM,1,F.TOT_QTY)) &gt; MIN(DECODE(F.rNUM,5,F.TOT_QTY)) THEN 'red'
+     WHEN MIN(DECODE(F.rNUM,1,F.TOT_QTY)) &lt; MIN(DECODE(F.rNUM,5,F.TOT_QTY)) THEN 'blue'
+     ELSE 'green' 
+  END ) AS  PER_OLD_QTY_COL 
+FROM 
+(
+SELECT ROUND(AVG(A.AVG_AMT),3) AS AVG_AMT
+      , SUM(A.TOT_AMT) AS  TOT_AMT
+      , SUM(A.TOT_QTY) AS  TOT_QTY
+      , 1 AS rNUM
+  FROM T_SALE_DATE A
+  WHERE 1=1
+  AND A.FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+  AND A.CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+  AND A.SALE_DATE = #{SALE_DATE, jdbcType=VARCHAR}	
+  AND A.PUM_NAME LIKE '%'||#{PUM_NAME, jdbcType=VARCHAR}||'%'
+  AND A.GOOD_NAME LIKE '%'||#{GOOD_NAME, jdbcType=VARCHAR}||'%'
+  AND A.LV_CD =#{LV_CD, jdbcType=VARCHAR}
+  AND  A.TOT_AMT &lt;&gt; 0
+  GROUP BY A.CMP_CD, A.SALE_DATE , A.FLOWER_GUBN, A.PUM_NAME, A.GOOD_NAME,A.LV_CD
+UNION ALL
+SELECT ROUND(AVG(B.AVG_AMT),3) AS AVG_AMT
+      ,  ROUND(AVG(B.TOT_AMT),3) AS  TOT_AMT
+      ,  ROUND(AVG(B.TOT_QTY),3) AS  TOT_QTY
+      , 2 AS rNUM
+  FROM T_SALE_DATE B
+  WHERE 1=1
+  AND B.FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+  AND B.CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+  AND SUBSTR(B.SALE_DATE,0,7) =SUBSTR((SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{SALE_DATE, jdbcType=VARCHAR},'YYYY-MM-DD'),-1),'YYYY-MM-DD') AS SALE_DATE  FROM DUAL),0,7)   
+  AND B.PUM_NAME LIKE '%'||#{PUM_NAME, jdbcType=VARCHAR}||'%'
+  AND B.GOOD_NAME LIKE '%'||#{GOOD_NAME, jdbcType=VARCHAR}||'%'
+  AND B.LV_CD =#{LV_CD, jdbcType=VARCHAR}
+  AND  B.TOT_AMT &lt;&gt; 0
+  GROUP BY B.CMP_CD, SUBSTR(B.SALE_DATE,0,7) , B.FLOWER_GUBN, B.PUM_NAME, B.GOOD_NAME,B.LV_CD
+  UNION ALL
+  SELECT ROUND(AVG(D.AVG_AMT),3) AS AVG_AMT
+      ,  ROUND(AVG(D.TOT_AMT),3) AS  TOT_AMT
+      ,  ROUND(AVG(D.TOT_QTY),3) AS  TOT_QTY
+      , 3 AS rNUM
+  FROM T_SALE_DATE D
+  WHERE 1=1
+  AND D.FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+  AND D.CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+  AND SUBSTR(D.SALE_DATE,0,4) = SUBSTR(#{SALE_DATE, jdbcType=VARCHAR}	,0,4)   
+  AND D.PUM_NAME LIKE '%'||#{PUM_NAME, jdbcType=VARCHAR}||'%'
+  AND D.GOOD_NAME LIKE '%'||#{GOOD_NAME, jdbcType=VARCHAR}||'%'
+  AND D.LV_CD =#{LV_CD, jdbcType=VARCHAR}
+  AND  D.TOT_AMT &lt;&gt; 0
+  GROUP BY D.CMP_CD, SUBSTR(D.SALE_DATE,0,4) , D.FLOWER_GUBN, D.PUM_NAME, D.GOOD_NAME,D.LV_CD
+  UNION ALL
+  SELECT
+   ROUND(AVG(C.AVG_AMT),3) AS AVG_AMT
+      ,  ROUND(AVG(C.TOT_AMT),3) AS  TOT_AMT
+      ,  ROUND(AVG(C.TOT_QTY),3) AS  TOT_QTY
+      , 4 AS rNUM
+  FROM T_SALE_DATE C
+  WHERE 1=1
+  AND C.FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+  AND C.CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+  AND SUBSTR(C.SALE_DATE,0,4) = SUBSTR(#{SALE_DATE, jdbcType=VARCHAR}	,0,4)-1   
+  AND C.PUM_NAME LIKE '%'||#{PUM_NAME, jdbcType=VARCHAR}||'%'
+  AND C.GOOD_NAME LIKE '%'||#{GOOD_NAME, jdbcType=VARCHAR}||'%'
+  AND C.LV_CD =#{LV_CD, jdbcType=VARCHAR}
+  AND  C.TOT_AMT &lt;&gt; 0
+  GROUP BY C.CMP_CD, SUBSTR(C.SALE_DATE,0,4) , C.FLOWER_GUBN, C.PUM_NAME, C.GOOD_NAME,C.LV_CD
+  UNION ALL
+  SELECT
+   ROUND(AVG(G.AVG_AMT),3) AS AVG_AMT
+      ,  ROUND(AVG(G.TOT_AMT),3) AS  TOT_AMT
+      ,  ROUND(AVG(G.TOT_QTY),3) AS  TOT_QTY
+      , 5 AS rNUM
+  FROM T_SALE_DATE G
+  WHERE 1=1
+  AND G.FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+  AND G.CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+  AND SUBSTR(G.SALE_DATE,0,4) &gt;= SUBSTR(#{SALE_DATE, jdbcType=VARCHAR},0,4)-5   
+  AND SUBSTR(G.SALE_DATE,0,4) &lt;= SUBSTR(#{SALE_DATE, jdbcType=VARCHAR},0,4)-1   
+  AND G.PUM_NAME LIKE '%'||#{PUM_NAME, jdbcType=VARCHAR}||'%'
+  AND G.GOOD_NAME LIKE '%'||#{GOOD_NAME, jdbcType=VARCHAR}||'%'
+  AND G.LV_CD =#{LV_CD, jdbcType=VARCHAR}
+  AND  G.TOT_AMT &lt;&gt; 0
+  GROUP BY G.CMP_CD, G.FLOWER_GUBN, G.PUM_NAME, G.GOOD_NAME,G.LV_CD
+  ) F	     		   		  
+	</select>
+	
+	<select id="selectMainIndex" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	   	SELECT T1.SALE_MONTH
+               ,T1.MON
+               ,T1.TOT_AMT
+               ,T1.TOT_QTY
+               ,T2.SALE_YEAR
+               ,T2.YEAR_AMT
+               ,T2.YEAR_QTY
+               ,T3.AGO_TOT_AMT
+               ,T3.AGO_TOT_QTY
+                ,NVL(ABS(ROUND(100-(T1.TOT_AMT/T3.AGO_TOT_AMT*100),2)),0) AS TOT_AMT_COMP
+                ,TRUNC((((T1.TOT_AMT/T3.AGO_TOT_AMT)-1)*100),0) AS M_AMT_COMP
+                ,CASE
+                 WHEN T1.TOT_AMT &gt; T3.AGO_TOT_AMT THEN 'red'
+                 WHEN T1.TOT_AMT &lt; T3.AGO_TOT_AMT THEN 'blue'
+                 ELSE 'green' END AS TOT_AMT_COL
+                ,NVL(ABS(ROUND(100-(T1.TOT_QTY/T3.AGO_TOT_QTY*100),2)),0) AS TOT_QTY_COMP
+                ,TRUNC((((T1.TOT_QTY/T3.AGO_TOT_QTY)-1)*100),0) AS M_QTY_COMP
+                ,CASE
+                 WHEN T1.TOT_QTY &gt; T3.AGO_TOT_QTY THEN 'red'
+                 WHEN T1.TOT_QTY &lt; T3.AGO_TOT_QTY THEN 'blue'
+                 ELSE 'green' END AS TOT_QTY_COL
+		FROM		
+		(SELECT SALE_MONTH
+                ,SUBSTR(SALE_MONTH,6,7) AS MON
+               ,SUM(TOT_AMT) AS TOT_AMT
+               ,SUM(TOT_QTY) AS TOT_QTY            
+		FROM T_SALE_MONTH T1				
+		WHERE CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+		AND SALE_MONTH = #{SALE_MONTH, jdbcType=VARCHAR}
+		AND FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+		GROUP BY SALE_MONTH) T1
+		LEFT OUTER JOIN		
+		(SELECT #{SALE_MONTH, jdbcType=VARCHAR} AS SALE_MONTH
+		       ,SUBSTR(T2.SALE_MONTH,1,4) AS SALE_YEAR           
+               ,SUM(T2.TOT_AMT) AS YEAR_AMT
+               ,SUM(T2.TOT_QTY) AS YEAR_QTY
+		FROM T_SALE_MONTH T2		
+		WHERE CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+		AND SUBSTR(SALE_MONTH,1,4) = #{SALE_YEAR, jdbcType=VARCHAR}
+		AND FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+		GROUP BY SUBSTR(SALE_MONTH,1,4)) T2
+		ON T1.SALE_MONTH = T2.SALE_MONTH	
+		LEFT OUTER JOIN
+		(SELECT #{SALE_MONTH, jdbcType=VARCHAR} AS SALE_MONTH                
+               ,SUM(TOT_AMT) AS AGO_TOT_AMT
+               ,SUM(TOT_QTY) AS AGO_TOT_QTY            
+		FROM T_SALE_MONTH				
+		WHERE CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+		AND SALE_MONTH = #{AGO_SALE_MONTH, jdbcType=VARCHAR}
+		AND FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+		GROUP BY SALE_MONTH) T3
+		ON T1.SALE_MONTH = T3.SALE_MONTH  
+	</select>
+	
+	<select id="selectChartListIndex" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	   	SELECT SALE_MONTH                
+               ,TRUNC(SUM(TOT_AMT)/10000,0) AS TOT_AMT
+               ,SUM(TOT_QTY) AS TOT_QTY            
+		FROM T_SALE_MONTH 				
+		WHERE CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+		AND SUBSTR(SALE_MONTH,1,4) =  #{SALE_YEAR, jdbcType=VARCHAR}
+		AND FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+		GROUP BY SALE_MONTH
+		ORDER BY SALE_MONTH ASC	   		  
+	</select>
+	
+	<select id="selectGridListMok" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	SELECT PUM_NAME FROM T_SALE_DATE
+	WHERE  SALE_DATE =#{SALE_DATE, jdbcType=VARCHAR}
+		AND  CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+		AND FLOWER_GUBN =#{FLOWER_CD, jdbcType=VARCHAR}
+		AND TOT_AMT != 0
+		<if test ="searchItemCd!=null and searchItemCd!='' " >
+		AND PUM_NAME LIKE '%' || #{searchItemCd, jdbcType=VARCHAR} || '%'
+		</if>
+		GROUP BY PUM_NAME
+		ORDER BY PUM_NAME		     		   		  
+	</select>
+	
+	<select id="selectChartListChulHa" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	SELECT T1.REG_DATE
+            ,SUBSTR(T1.REG_DATE,6,7) AS MON
+               ,T1.CMP_CD AS MARKET_CD
+               ,T2.MARKET_NAME
+               ,T1.QTY
+		FROM       
+		(SELECT SUBSTR(REG_DATE,1,7) AS REG_DATE
+		       ,CMP_CD            
+		       ,SUM(QTY) AS QTY
+		FROM T_SHIPMNT_INFO 
+		WHERE 1=1
+		AND GUBN='2' 
+		AND USE_YN='Y'
+		 AND SUBSTR(REG_DATE,1,7) = (SELECT MAX(SUBSTR(REG_DATE,1,7)) FROM T_SHIPMNT_INFO WHERE USE_YN='Y' AND GUBN='2')		
+		GROUP BY SUBSTR(REG_DATE,1,7), CMP_CD) T1
+		LEFT OUTER JOIN T_JOINT_MARKET T2
+		ON T1.CMP_CD = T2.MARKET_CD
+		ORDER BY T1.QTY DESC, T2.MARKET_NAME	     		   	
+	</select>
+	
+	<select id="selectChartListChulHaShdul" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	SELECT T1.REG_DATE
+		       ,T1.CMP_CD
+		       ,T2.MARKET_NAME AS SHDUL_MARKET_NAME
+		       ,T1.SHDUL_QTY
+		FROM       
+		(SELECT SUBSTR(REG_DATE,1,7) AS REG_DATE
+		       ,CMP_CD            
+		       ,SUM(QTY) AS SHDUL_QTY
+		FROM T_SHIPMNT_INFO 
+		WHERE 1=1
+		AND GUBN='1' 
+		AND USE_YN='Y'
+		 AND SUBSTR(REG_DATE,1,7) = (SELECT MAX(SUBSTR(REG_DATE,1,7)) FROM T_SHIPMNT_INFO WHERE USE_YN='Y' AND GUBN='1')		
+		GROUP BY SUBSTR(REG_DATE,1,7), CMP_CD) T1
+		LEFT OUTER JOIN T_JOINT_MARKET T2
+		ON T1.CMP_CD = T2.MARKET_CD
+		ORDER BY T1.SHDUL_QTY DESC, T2.MARKET_NAME
+	     		   		  
+	</select>
+	
+	<select id="selectSalePriceTrand" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+SELECT REG_MONTH
+        ,SAN_NAME
+         ,TRUNC(CASE WHEN DAE_SALE_PRICE != 0 THEN (NVL(SALE_PRICE,0)+NVL(DAE_SALE_PRICE,0))/2 
+              WHEN IN_SALE_PRICE != 0 THEN (NVL(SALE_PRICE,0)+NVL(IN_SALE_PRICE,0))/2 
+              ELSE SALE_PRICE END,0) AS REAL_PRICE
+FROM
+(
+SELECT T1.REG_MONTH
+       ,T1.SAN_NAME
+       ,T1.SALE_PRICE
+       ,T2.DAE_SALE_PRICE
+       ,T3.IN_SALE_PRICE      
+FROM
+(SELECT REG_MONTH       
+        ,SAN_NAME
+        ,AVG(SALE_PRICE) AS SALE_PRICE
+FROM
+(SELECT  SUBSTR(REG_DATE,1,7) AS REG_MONTH
+       ,CASE 
+            WHEN SUBSTR(SAN_CD,1,2) IN (31,32,33,34,35) THEN '충청남도' 
+            WHEN SUBSTR(SAN_CD,1,2) IN (36,37,38,39) THEN '충청북도'
+            WHEN SUBSTR(SAN_CD,1,2) IN (51,52,53,54,55) THEN '전라남도'
+            WHEN SUBSTR(SAN_CD,1,2) IN (56,57,58,59) THEN '전라북도'
+            WHEN SUBSTR(SAN_CD,1,2) IN (62,63,64,65,66) THEN '경상남도'
+            WHEN SUBSTR(SAN_CD,1,2) BETWEEN '71' AND '79' THEN '경상북도'
+            WHEN SUBSTR(SAN_CD,1,2) IN(20,21,22,23,24,25,26,48) THEN '강원도'
+            WHEN SUBSTR(SAN_CD,1,2) BETWEEN '41' AND '48' THEN '경기도'
+            WHEN SUBSTR(SAN_CD,1,2) BETWEEN '10' AND '15' THEN '서울'
+            WHEN SUBSTR(SAN_CD,1,2) IN (40) THEN '인천'
+            WHEN SUBSTR(SAN_CD,1,2) IN (70) THEN '대구'
+            WHEN SUBSTR(SAN_CD,1,2) IN (30) THEN '대전'
+            WHEN SUBSTR(SAN_CD,1,2) IN (50) THEN '광주'
+            WHEN SUBSTR(SAN_CD,1,2) IN (60,61) THEN '부산'
+            WHEN SUBSTR(SAN_CD,1,2) IN (68) THEN '울산'            
+       END SAN_NAME
+       ,AVG(SALE_PRICE) AS SALE_PRICE
+FROM T_SALEPRICE_TRAND
+WHERE SUBSTR(SAN_CD,1,3) &lt;&gt; '417'
+AND SUBSTR(SAN_CD,1,3) &lt;&gt; '711'
+AND SUBSTR(REG_DATE,1,7) =#{SALE_MONTH2, jdbcType=VARCHAR}
+GROUP BY SUBSTR(REG_DATE,1,7),SUBSTR(SAN_CD,1,2))
+GROUP BY REG_MONTH,SAN_NAME) T1
+LEFT OUTER JOIN 
+(SELECT SUBSTR(REG_DATE,1,7) AS REG_MONTH
+         ,SUBSTR(SAN_CD,1,3)
+        ,'대구' AS SAN_NAME
+       ,AVG(SALE_PRICE) AS DAE_SALE_PRICE
+FROM T_SALEPRICE_TRAND
+WHERE SUBSTR(SAN_CD,1,3) = '711'
+AND SUBSTR(REG_DATE,1,7) = #{SALE_MONTH2, jdbcType=VARCHAR}
+GROUP BY SUBSTR(REG_DATE,1,7), SUBSTR(SAN_CD,1,3)) T2
+ON T1.REG_MONTH = T2.REG_MONTH
+AND T1.SAN_NAME = T2.SAN_NAME
+LEFT OUTER JOIN 
+(SELECT SUBSTR(REG_DATE,1,7) AS REG_MONTH
+         ,SUBSTR(SAN_CD,1,3)
+        ,'인천' AS SAN_NAME
+       ,AVG(SALE_PRICE) AS IN_SALE_PRICE
+FROM T_SALEPRICE_TRAND
+WHERE SUBSTR(SAN_CD,1,3) = '417'
+AND SUBSTR(REG_DATE,1,7) =#{SALE_MONTH2, jdbcType=VARCHAR}
+GROUP BY SUBSTR(REG_DATE,1,7), SUBSTR(SAN_CD,1,3)) T3
+ON T1.REG_MONTH = T3.REG_MONTH
+AND T1.SAN_NAME = T3.SAN_NAME
+)    		   		  
+	</select>
+	
+	<select id="selectSaleTrend" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+               SELECT  RNUM   
+                           ,REG_MONTH
+                           ,PUM_NAME
+                           ,GOOD_NAME                           
+                           ,QTY 
+                FROM
+                (
+                SELECT   ROW_NUMBER() OVER (ORDER BY QTY DESC, GOOD_NAME) AS  RNUM   
+                           ,REG_MONTH
+                           ,PUM_NAME
+                           ,GOOD_NAME                           
+                           ,QTY                           
+                FROM (
+                SELECT
+                            SUBSTR(REG_DATE,1,7) AS REG_MONTH
+                           ,PUM_NAME
+                           ,GOOD_NAME                           
+                           ,SUM(QTY) AS QTY                                                       
+                FROM T_CONSUMPTION_TREND
+                WHERE 1=1
+                AND SUBSTR(REG_DATE,1,7)=(SELECT SUBSTR(MAX(REG_DATE),1,7) AS REG_MONTH FROM T_CONSUMPTION_TREND)
+                GROUP BY SUBSTR(REG_DATE,1,7),PUM_NAME,GOOD_NAME
+                        )              
+                )                 
+                WHERE RNUM  &lt; 8 
+	</select>
+		
+	 <select id="selectGridListMokSub" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+	SELECT PUM_NAME FROM T_SALE_DATE
+	WHERE  SALE_DATE =#{searchSaleDate, jdbcType=VARCHAR}
+		AND  CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+		AND FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		<if test ="searchItemCd!=null and searchItemCd!='' " >
+		AND PUM_NAME LIKE '%' || #{searchItemCd, jdbcType=VARCHAR} || '%'
+		</if>
+		GROUP BY PUM_NAME
+		ORDER BY PUM_NAME		     		   		  
+	</select>	
+  
+  <select id="selectGridListMokSubMonth" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+      SELECT PUM_NAME 
+		FROM T_SALE_MONTH 
+		WHERE 1=1
+		AND SALE_MONTH =#{searchSaleDate, jdbcType=VARCHAR}
+		AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+		AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+		<if test ="searchItemCd!=null and searchItemCd!='' " >
+		AND PUM_NAME LIKE '%' || #{searchItemCd, jdbcType=VARCHAR} || '%'
+		</if>
+		GROUP BY PUM_NAME
+		ORDER BY PUM_NAME		     		   		  
+	</select>	
+	
+	
+	
+	<select id="selectGridListMokSubYear" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT PUM_NAME
+		FROM T_SALE_MONTH
+		WHERE SALE_MONTH BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY-MM') AND TO_CHAR(SYSDATE,'YYYY-MM')
+		AND FLOWER_GUBN=#{FLOWER_CD, jdbcType=VARCHAR}
+		<if test ="searchItemCd!=null and searchItemCd!='' " >
+			AND PUM_NAME LIKE '%' || #{searchItemCd, jdbcType=VARCHAR} || '%'
+		</if>
+		GROUP BY PUM_NAME
+		ORDER BY PUM_NAME	     		   		  
+	</select>	
+	
+	<select id="situationNewChart1" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT SALE_MONTH
+		     , NVL(SUM(AT_QTY),0) AS AT_QTY
+		     , NVL(SUM(KJ_QTY),0) AS KJ_QTY
+		     , NVL(SUM(BK_QTY),0) AS BK_QTY
+		     , NVL(SUM(BS_QTY),0) AS BS_QTY
+		     , NVL(SUM(HU_QTY),0) AS HU_QTY
+		     , NVL(SUM(HB_QTY),0) AS HB_QTY
+		     , NVL(SUM(OLD_AT_QTY),0) AS OLD_AT_QTY
+		     , NVL(SUM(OLD_KJ_QTY),0) AS OLD_KJ_QTY
+		     , NVL(SUM(OLD_BK_QTY),0) AS OLD_BK_QTY
+		     , NVL(SUM(OLD_BS_QTY),0) AS OLD_BS_QTY
+		     , NVL(SUM(OLD_HU_QTY),0) AS OLD_HU_QTY
+		     , NVL(SUM(OLD_HB_QTY),0) AS OLD_HB_QTY
+		     , SUM(TOT_AMT) / DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS TOT_AVG
+		     , NVL(SUM(OLD_TOT_AMT) / DECODE(SUM(OLD_TOT_QTY),0,NULL,SUM(OLD_TOT_QTY)),0) AS OLD_TOT_AVG
+		FROM (       
+		    SELECT CMP_CD
+		         , SALE_MONTH
+		         , CASE WHEN CMP_CD = '0000000001' THEN  TOT_QTY ELSE 0 END AS AT_QTY
+		         , CASE WHEN CMP_CD = '4108212335' THEN  TOT_QTY ELSE 0 END AS KJ_QTY
+		         , CASE WHEN CMP_CD = '6068207466' THEN  TOT_QTY ELSE 0 END AS BK_QTY
+		         , CASE WHEN CMP_CD = '1508500020' THEN  TOT_QTY ELSE 0 END AS BS_QTY
+		         , CASE WHEN CMP_CD = '3848200087' THEN  TOT_QTY ELSE 0 END AS HU_QTY
+		         , CASE WHEN CMP_CD = '1288202296' THEN  TOT_QTY ELSE 0 END AS HB_QTY
+		         , CASE WHEN CMP_CD = '0000000001' THEN  OLD_TOT_QTY ELSE 0 END AS OLD_AT_QTY
+		         , CASE WHEN CMP_CD = '4108212335' THEN  OLD_TOT_QTY ELSE 0 END AS OLD_KJ_QTY
+		         , CASE WHEN CMP_CD = '6068207466' THEN  OLD_TOT_QTY ELSE 0 END AS OLD_BK_QTY
+		         , CASE WHEN CMP_CD = '1508500020' THEN  OLD_TOT_QTY ELSE 0 END AS OLD_BS_QTY
+		         , CASE WHEN CMP_CD = '3848200087' THEN  OLD_TOT_QTY ELSE 0 END AS OLD_HU_QTY
+		         , CASE WHEN CMP_CD = '1288202296' THEN  OLD_TOT_QTY ELSE 0 END AS OLD_HB_QTY
+		         , TOT_AMT
+		         , TOT_QTY
+		         , OLD_TOT_AMT
+		         , OLD_TOT_QTY
+		    FROM (       
+		           SELECT
+		                D.CMP_CD
+		                , SUBSTR(D.SALE_MONTH,6,2) AS SALE_MONTH
+		                , D.FLOWER_GUBN 
+		                , F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ) AS FLOWER_GUBN_NM
+		                , C.MAX_AMT
+		                , C.MIN_AMT
+		                , C.AVG_AMT
+		                , C.TOT_AMT AS TOT_AMT
+		                , C.TOT_QTY AS TOT_QTY
+		                , D.OLD_MAX_AMT
+		                , D.OLD_MIN_AMT
+		                , D.OLD_AVG_AMT
+		                , D.OLD_TOT_AMT AS OLD_TOT_AMT
+		                , D.OLD_TOT_QTY AS OLD_TOT_QTY
+		            FROM 
+		            (
+		                SELECT 
+		                    A.CMP_CD
+		                    , A.SALE_MONTH
+		                    , A.FLOWER_GUBN      
+		                    , MAX(A.MAX_AMT) AS MAX_AMT
+		                    , MIN(A.MIN_AMT) AS MIN_AMT
+		                    , ROUND(AVG(A.AVG_AMT),3) AS AVG_AMT
+		                    , SUM(A.TOT_AMT) AS  TOT_AMT
+		                    , SUM(A.TOT_QTY) AS  TOT_QTY
+		                FROM T_SALE_MONTH A
+		                WHERE 1=1
+		                AND A.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+		                AND SUBSTR(A.SALE_MONTH,0,4)= #{searchYear, jdbcType=VARCHAR}
+		                AND A.PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+		                AND  A.TOT_AMT <![CDATA[<>]]> 0
+		                GROUP BY A.CMP_CD, A.SALE_MONTH, A.FLOWER_GUBN 
+		                ORDER BY A.SALE_MONTH ASC) C,
+		            (    SELECT T1.CMP_CD AS CMP_CD
+		                     , T2.YYMM AS SALE_MONTH
+		                     , '1' AS FLOWER_GUBN
+		                     , T1.OLD_MAX_AMT
+		                     , T1.OLD_MIN_AMT
+		                     , T1.OLD_AVG_AMT
+		                     , T1.OLD_TOT_AMT
+		                     , T1.OLD_TOT_QTY 
+		               FROM(
+		                SELECT 
+		                    B.CMP_CD
+		                    , REPLACE(B.SALE_MONTH,SUBSTR(B.SALE_MONTH,0,4),#{searchYear, jdbcType=VARCHAR}) AS SALE_MONTH
+		                    , B.FLOWER_GUBN      
+		                    , MAX(B.MAX_AMT) AS OLD_MAX_AMT
+		                    , MIN(B.MIN_AMT) AS OLD_MIN_AMT
+		                    , ROUND(AVG(B.AVG_AMT),3) AS OLD_AVG_AMT
+		                    , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+		                    , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+		                FROM T_SALE_MONTH B
+		                WHERE 1=1
+		                AND SUBSTR(B.SALE_MONTH,0,4)= #{searchYear, jdbcType=VARCHAR} -1
+		                AND B.PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+		                AND  B.TOT_AMT <![CDATA[<>]]> 0
+		                GROUP BY B.CMP_CD, B.SALE_MONTH, B.FLOWER_GUBN 
+		                ORDER BY B.SALE_MONTH ASC) T1,
+		                (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'01','YYYYMM'), LEVEL-1), 'YYYY-MM') AS YYMM
+		                  FROM DUAL
+		                  CONNECT BY LEVEL <![CDATA[<]]> 13) T2
+		                WHERE 1=1
+		                AND T1.SALE_MONTH(+) = T2.YYMM
+		                ) D
+		            WHERE 1=1
+		            AND C.CMP_CD(+) = D.CMP_CD
+		            AND C.FLOWER_GUBN(+) =D.FLOWER_GUBN
+		            AND C.SALE_MONTH(+) = D.SALE_MONTH  
+		    )
+		)GROUP BY SALE_MONTH 
+		ORDER BY SALE_MONTH ASC
+	</select>
+	
+	<select id="situationNewChart2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	    SELECT SALE_MONTH
+	         , SUM(MAX_AMT) AS MAX_AMT
+	         , SUM(MIN_AMT) AS MIN_AMT
+	         , SUM(TOT_AMT) / DECODE(SUM(THIS_TOT_QTY),0,NULL,SUM(THIS_TOT_QTY)) AS AVG_AMT
+	         , SUM(TOT_AMT) AS TOT_AMT
+	         , SUM(CHUL_QTY) AS CHUL_QTY
+	         , SUM(TOT_QTY) AS TOT_QTY
+	         , SUM(OLD_MAX_AMT) AS OLD_MAX_AMT
+	         , SUM(OLD_MIN_AMT) AS OLD_MIN_AMT
+	         , NVL(SUM(OLD_TOT_AMT) / DECODE(SUM(OLD_TOT_QTY),0,NULL,SUM(OLD_TOT_QTY)),0) AS OLD_AVG_AMT
+	         , SUM(OLD_TOT_AMT) AS OLD_TOT_AMT
+	         , SUM(OLD_TOT_QTY) AS OLD_TOT_QTY
+	         , SUM(OLD_CHUL_QTY) AS OLD_CHUL_QTY
+	         , MAX(OLD_SUM_QTY) AS OLD_SUM_QTY
+	    FROM (
+	        SELECT SUBSTR(SALE_MONTH,6,2) AS SALE_MONTH
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN MAX_AMT ELSE 0 END AS MAX_AMT
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN MIN_AMT ELSE 0 END AS MIN_AMT
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN AVG_AMT ELSE 0 END AS AVG_AMT
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN TOT_AMT ELSE 0 END AS TOT_AMT
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN TOT_QTY ELSE 0 END AS THIS_TOT_QTY
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN CHUL_QTY ELSE 0 END AS CHUL_QTY
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(SYSDATE,'YYYY') AND SALE_MONTH != TO_CHAR(SYSDATE,'YYYY-MM') THEN TOT_QTY 
+	                    WHEN SALE_MONTH = TO_CHAR(SYSDATE,'YYYY-MM') THEN ROUND((CHUL_QTY * AVG_CHUL_PER * 0.1)+(PRE_SUM_QTY*NVL((TOT_SUM_QTY/NULLIF(OLD_SUM_QTY,0)),0)*0.9),0) ELSE 0 END AS TOT_QTY
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY') THEN MAX_AMT ELSE 0 END AS OLD_MAX_AMT
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY') THEN MIN_AMT ELSE 0 END AS OLD_MIN_AMT
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY') THEN AVG_AMT ELSE 0 END AS OLD_AVG_AMT
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY') THEN TOT_AMT ELSE 0 END AS OLD_TOT_AMT
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY') THEN CHUL_QTY ELSE 0 END AS OLD_CHUL_QTY
+	             , CASE WHEN SUBSTR(SALE_MONTH,0,4) = TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY') THEN TOT_QTY ELSE 0 END AS OLD_TOT_QTY
+	             , OLD_SUM_QTY         
+	        FROM(             
+	            SELECT SALE_MONTH
+	                 , MAX_AMT
+	                 , MIN_AMT
+	                 , AVG_AMT
+	                 , TOT_AMT
+	                 , TOT_QTY
+	                 , CHUL_QTY
+	                 , AVG(CHUL_PER) OVER() AS AVG_CHUL_PER
+	                 , SUM(TOT_SUM_QTY) OVER() AS TOT_SUM_QTY
+                     , SUM(OLD_SUM_QTY) OVER() AS OLD_SUM_QTY
+                     , SUM(PRE_SUM_QTY) OVER() AS PRE_SUM_QTY
+	            FROM(            
+	                SELECT SALE_MONTH
+	                     , MAX_AMT
+	                     , MIN_AMT
+	                     , AVG_AMT
+	                     , TOT_AMT
+	                     , TOT_QTY
+	                     , CHUL_QTY
+	                     , CASE WHEN SALE_MONTH BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY-MM') AND TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY-MM') THEN (TOT_QTY / CHUL_QTY) ELSE NULL END AS CHUL_PER
+	                     , CASE WHEN SALE_MONTH BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY-MM') AND TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY-MM') THEN TOT_QTY ELSE 0 END AS TOT_SUM_QTY
+                         , CASE WHEN SALE_MONTH BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-23),'YYYY-MM') AND TO_CHAR(ADD_MONTHS(SYSDATE,-13),'YYYY-MM') THEN TOT_QTY ELSE 0 END AS OLD_SUM_QTY
+                         , CASE WHEN SALE_MONTH BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY-MM') AND TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY-MM') THEN TOT_QTY ELSE 0 END AS PRE_SUM_QTY
+	                FROM (            
+	                        SELECT T2.YYMM AS SALE_MONTH
+	                             , NVL(T1.MAX_AMT,0) AS MAX_AMT
+	                             , NVL(T1.MIN_AMT,0) AS MIN_AMT
+	                             , NVL(T1.AVG_AMT,0) AS AVG_AMT
+	                             , NVL(T1.TOT_AMT,0) AS TOT_AMT
+	                             , NVL(T1.TOT_QTY,0) AS TOT_QTY
+	                             , (
+	                                SELECT SUM(QTY)
+	                                FROM T_SHIPMNT_INFO
+	                                WHERE 1=1
+	                                AND PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+	                                AND SUBSTR(REG_DATE,0,7) = T2.YYMM
+	                                AND GUBN = '1'
+	                                AND USE_YN = 'Y'
+	                                ) AS CHUL_QTY                    
+	                        FROM(
+	                        SELECT 
+	                              B.SALE_MONTH AS SALE_MONTH    
+	                            , MAX(B.MAX_AMT) AS MAX_AMT
+	                            , MIN(B.MIN_AMT) AS MIN_AMT
+	                            , ROUND(AVG(B.TOT_AMT/B.TOT_QTY),3) AS AVG_AMT
+	                            , SUM(B.TOT_AMT) AS  TOT_AMT
+	                            , SUM(B.TOT_QTY) AS  TOT_QTY
+	                        FROM T_SALE_MONTH B
+	                        WHERE 1=1
+	                        AND SUBSTR(B.SALE_MONTH,0,4) BETWEEN TO_CHAR(SYSDATE,'YYYY') - 2 AND TO_CHAR(SYSDATE,'YYYY') 
+	                        AND B.PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+	                        AND  B.TOT_AMT <![CDATA[<>]]> 0
+	                        GROUP BY B.SALE_MONTH 
+	                        ORDER BY B.SALE_MONTH ASC) T1,
+	                        (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(SYSDATE,'YYYY')-2||'01','YYYYMM'), LEVEL-1), 'YYYY-MM') AS YYMM
+	                          FROM DUAL
+	                          CONNECT BY LEVEL <![CDATA[<]]> (37 - (12 - TO_CHAR(SYSDATE,'MM')))) T2
+	                        WHERE 1=1
+	                        AND T1.SALE_MONTH(+) = T2.YYMM
+	                 )
+	            )
+	        )
+	    )GROUP BY SALE_MONTH
+	    ORDER BY SALE_MONTH
+	</select>
+		
+	<select id="situationNewTable2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT SALE_MONTH
+             , MAX_AMT
+             , MIN_AMT
+             , AVG_AMT
+             , TOT_AMT
+             , TOT_QTY
+             , CHUL_QTY
+             , CHUL_PER
+             , AVG(CHUL_PER) OVER() AS AVG_CHUL_PER
+             , SUM(TOT_SUM_QTY) OVER() AS TOT_SUM_QTY
+             , SUM(PRE_SUM_QTY) OVER() AS PRE_SUM_QTY
+        FROM (
+	    		SELECT SALE_MONTH
+                     , MAX_AMT
+                     , MIN_AMT
+                     , AVG_AMT
+                     , TOT_AMT
+                     , (TOT_QTY/1000) AS TOT_QTY
+                     , (CHUL_QTY/1000) AS CHUL_QTY
+                     , CASE WHEN SALE_MONTH BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY-MM') AND TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY-MM') THEN NVL((TOT_QTY / NULLIF(CHUL_QTY,0)),0) ELSE NULL END AS CHUL_PER
+                     , CASE WHEN SALE_MONTH BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYY-MM') AND TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY-MM') THEN TOT_QTY/1000 ELSE 0 END AS TOT_SUM_QTY
+                     , CASE WHEN SALE_MONTH BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY-MM') AND TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY-MM') THEN TOT_QTY/1000 ELSE 0 END AS PRE_SUM_QTY
+                FROM( 
+                        SELECT T2.YYMM AS SALE_MONTH
+                             , NVL(T1.MAX_AMT,0) AS MAX_AMT
+                             , NVL(T1.MIN_AMT,0) AS MIN_AMT
+                             , NVL(T1.AVG_AMT,0) AS AVG_AMT
+                             , NVL(T1.TOT_AMT,0) AS TOT_AMT
+                             , NVL(T1.TOT_QTY,0) AS TOT_QTY
+                             , (
+                                SELECT SUM(QTY)
+                                FROM T_SHIPMNT_INFO
+                                WHERE 1=1
+                                AND PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+                                AND SUBSTR(REG_DATE,0,7) = T2.YYMM
+                                AND GUBN = '1'
+                                AND USE_YN = 'Y'
+                                ) AS CHUL_QTY                    
+                        FROM(
+                        SELECT 
+                              B.SALE_MONTH AS SALE_MONTH    
+                            , MAX(B.MAX_AMT) AS MAX_AMT
+                            , MIN(B.MIN_AMT) AS MIN_AMT
+                            , ROUND(AVG(B.TOT_AMT/B.TOT_QTY),3) AS AVG_AMT
+                            , SUM(B.TOT_AMT) AS TOT_AMT
+                            , SUM(B.TOT_QTY) AS TOT_QTY
+                        FROM T_SALE_MONTH B
+                        WHERE 1=1
+                        AND B.SALE_MONTH BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -12),'YYYY-MM') AND TO_CHAR(SYSDATE,'YYYY-MM') 
+                        AND B.PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+                        AND  B.TOT_AMT <![CDATA[<>]]> 0
+                        GROUP BY B.SALE_MONTH 
+                        ORDER BY B.SALE_MONTH ASC) T1,
+                        (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYYMM'),'YYYYMM'), LEVEL-1), 'YYYY-MM') AS YYMM
+                          FROM DUAL
+                          CONNECT BY LEVEL <![CDATA[<]]> 14) T2
+                        WHERE 1=1
+                        AND T1.SALE_MONTH(+) = T2.YYMM
+                  )
+          )
+	</select>
+	
+	
+	<select id="situationNewChart3" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	    SELECT MM
+		     , SUM(THIS_AREA) AS THIS_AREA
+		     , SUM(OLD_AREA) AS OLD_AREA
+		     , CASE WHEN MM <![CDATA[>]]> TO_CHAR(SYSDATE,'MM') THEN NULL ELSE SUM(THIS_TOT_QTY) END AS THIS_TOT_QTY
+		     , SUM(OLD_TOT_QTY) AS OLD_TOT_QTY
+		FROM (          
+		    SELECT SUBSTR(T3.YYMM,6,2) AS MM
+		         , CASE WHEN SUBSTR(T3.YYMM,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN AREA ELSE 0 END AS THIS_AREA
+		         , CASE WHEN SUBSTR(T3.YYMM,0,4) = TO_CHAR(SYSDATE,'YYYY')-1 THEN AREA ELSE 0 END AS OLD_AREA
+		         , CASE WHEN SUBSTR(T3.YYMM,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN TOT_QTY ELSE 0 END AS THIS_TOT_QTY
+		         , CASE WHEN SUBSTR(T3.YYMM,0,4) = TO_CHAR(SYSDATE,'YYYY')-1 THEN TOT_QTY ELSE 0 END AS OLD_TOT_QTY
+		    FROM (            
+		        SELECT SUBSTR(REG_DATE,0,7) AS REG_MONTH
+		             , SUM(AREA) AS AREA        
+		        FROM T_CULTIVATION_TREND
+		        WHERE 1=1
+		        AND USE_YN = 'Y'
+		        AND PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+		        AND SUBSTR(REG_DATE,0,4) BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -12),'YYYY') AND TO_CHAR(SYSDATE,'YYYY')
+		        GROUP BY SUBSTR(REG_DATE,0,7)) T1,
+		        (SELECT 
+		              B.SALE_MONTH AS SALE_MONTH 
+		            , SUM(B.TOT_QTY) AS  TOT_QTY
+		        FROM T_SALE_MONTH B
+		        WHERE 1=1
+		        AND SUBSTR(B.SALE_MONTH,0,4) BETWEEN TO_CHAR(SYSDATE,'YYYY') - 1 AND TO_CHAR(SYSDATE,'YYYY') 
+		        AND B.PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+		        AND  B.TOT_AMT <![CDATA[<>]]> 0
+		        GROUP BY B.SALE_MONTH 
+		        ORDER BY B.SALE_MONTH ASC) T2,
+		        (
+		          SELECT TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(SYSDATE,'YYYY')-1||'01','YYYYMM'), LEVEL-1), 'YYYY-MM') AS YYMM
+		          FROM DUAL
+		          CONNECT BY LEVEL <![CDATA[<]]> (25 - (12 - TO_CHAR(SYSDATE,'MM')))) T3
+		    WHERE 1=1 
+		    AND T1.REG_MONTH(+) = T3.YYMM
+		    AND T2.SALE_MONTH(+) = T3.YYMM
+		)GROUP BY MM
+		ORDER BY MM
+	</select>
+	
+	<select id="situationNewChart4" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+       
+		    SELECT T2.YYMM
+		         , T1.VAL1
+		         , T1.VAL2
+		         , T1.VAL3
+		         , T1.VAL4
+		    FROM (            
+		        SELECT REG_MONTH
+				     , NVL(SUM(VAL1),0) AS VAL1
+				     , NVL(SUM(VAL2),0) AS VAL2
+				     , NVL(SUM(VAL3),0) AS VAL3
+				     , NVL(SUM(VAL4),0) AS VAL4
+				FROM (
+				    SELECT REG_MONTH
+				         , CASE WHEN STATUS = '1' THEN STATUS_CNT ELSE 0 END AS VAL1
+				         , CASE WHEN STATUS = '2' THEN STATUS_CNT ELSE 0 END AS VAL2
+				         , CASE WHEN STATUS = '3' THEN STATUS_CNT ELSE 0 END AS VAL3
+				         , CASE WHEN STATUS = '4' THEN STATUS_CNT ELSE 0 END AS VAL4
+				    FROM (
+				        SELECT SUBSTR(REG_DATE,1,7) AS REG_MONTH
+				             , STATUS 
+				             , COUNT(STATUS) AS STATUS_CNT
+				        FROM T_CROP_REPORT_DETAIL
+				        WHERE PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+				        GROUP BY SUBSTR(REG_DATE,1,7), STATUS
+				    )
+				)GROUP BY REG_MONTH) T1,
+		        (
+		         SELECT TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(ADD_MONTHS(SYSDATE,-11),'YYYYMM'),'YYYYMM'), LEVEL-1), 'YYYY-MM') AS YYMM
+                  FROM DUAL
+                  CONNECT BY LEVEL <![CDATA[< 13]]>) T2
+		    WHERE 1=1 
+		    AND T1.REG_MONTH(+) = T2.YYMM
+			ORDER BY T2.YYMM
+	</select>
+	
+	<select id="situationNewChart5" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	    SELECT MM
+		     , SUM(THIS_QTY) AS THIS_QTY
+		     , SUM(OLD_QTY) AS OLD_QTY
+		     , CASE WHEN MM <![CDATA[>]]> TO_CHAR(SYSDATE,'MM') THEN NULL ELSE SUM(THIS_AMT) END AS THIS_AMT
+		     , SUM(OLD_AMT) AS OLD_AMT
+		FROM (          
+		    SELECT SUBSTR(T3.YYMM,6,2) AS MM
+		         , CASE WHEN SUBSTR(T3.YYMM,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN QTY ELSE 0 END AS THIS_QTY
+		         , CASE WHEN SUBSTR(T3.YYMM,0,4) = TO_CHAR(SYSDATE,'YYYY')-1 THEN QTY ELSE 0 END AS OLD_QTY
+		         , CASE WHEN SUBSTR(T3.YYMM,0,4) = TO_CHAR(SYSDATE,'YYYY') THEN AVG_AMT ELSE 0 END AS THIS_AMT
+		         , CASE WHEN SUBSTR(T3.YYMM,0,4) = TO_CHAR(SYSDATE,'YYYY')-1 THEN AVG_AMT ELSE 0 END AS OLD_AMT
+		    FROM (            
+		        SELECT SUBSTR(REG_DATE,0,7) AS REG_MONTH
+		             , SUM(QTY) AS QTY        
+		        FROM T_CONSUMPTION_TREND
+		        WHERE 1=1
+		        AND USE_YN = 'Y'
+		        AND PUM_NAME LIKE '%'||  #{searchItem, jdbcType=VARCHAR} || '%'
+		        AND SUBSTR(REG_DATE,0,4) BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -12),'YYYY') AND TO_CHAR(SYSDATE,'YYYY')
+		        GROUP BY SUBSTR(REG_DATE,0,7)) T1,
+		        (
+		        SELECT SUBSTR(REG_DATE,0,7) AS SALE_MONTH
+                     , ROUND(AVG(SALE_PRICE),0) AS AVG_AMT
+                FROM T_SALEPRICE_TRAND
+                WHERE USE_YN = 'Y'
+                AND SUBSTR(REG_DATE,0,4) BETWEEN TO_CHAR(SYSDATE,'YYYY') - 1 AND TO_CHAR(SYSDATE,'YYYY')
+                GROUP BY SUBSTR(REG_DATE,0,7)
+                ORDER BY SALE_MONTH ASC) T2,
+		        (
+		          SELECT TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(SYSDATE,'YYYY')-1||'01','YYYYMM'), LEVEL-1), 'YYYY-MM') AS YYMM
+		          FROM DUAL
+		          CONNECT BY LEVEL <![CDATA[<]]> (25 - (12 - TO_CHAR(SYSDATE,'MM')))) T3
+		    WHERE 1=1 
+		    AND T1.REG_MONTH(+) = T3.YYMM
+		    AND T2.SALE_MONTH(+) = T3.YYMM
+		)GROUP BY MM
+		ORDER BY MM
+	</select>
+	
+	
+	
+	<!-- 부류별 품목 및 품종 -->
+	<select id="hab01Button" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT PUM_NAME
+             , PUM_CODE
+             , TOT_QTY
+          FROM ( SELECT SUM(TOT_QTY) AS TOT_QTY
+					<if test ="searchProductGubun == 1" >
+                      , ITEM_NM AS PUM_NAME
+                      , PUM_CODE
+					</if>
+					<if test ="searchProductGubun != 1" >
+                      , KIND_NM AS PUM_NAME
+                      , PUM_CODE
+					</if>                      
+                      , ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS ROW_NUM
+                   FROM ( SELECT A.SALE_DATE, A.FLOWER_GUBN, A.FLOWER_CODE, A.ITEM_CD, A.KIND_CD
+                               , A.MARKET_CD, A.CMP_GOOD, A.LARGE, A.MID, A.SMALL
+                               , A.LV_CD, A.TOT_QTY
+                               , B.ITEM_NM
+                               , C.KIND_NM
+                               <if test ="searchProductGubun == 1" >
+                               , (A.FLOWER_CODE||A.ITEM_CD) AS PUM_CODE
+                               </if>
+                               <if test ="searchProductGubun != 1" >
+                               , (A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD) AS PUM_CODE
+                               </if>
+                            FROM T_INT_SALE A
+                               , T_INT_ITEM B
+                               , T_INT_KIND C
+                           WHERE A.FLOWER_GUBN = B.FLOWER_GUBN
+                             AND A.FLOWER_CODE = B.FLOWER_CODE
+                             AND A.ITEM_CD = B.ITEM_CD
+                             AND A.FLOWER_GUBN = C.FLOWER_GUBN
+                             AND A.FLOWER_CODE = C.FLOWER_CODE
+                             AND A.ITEM_CD = C.ITEM_CD
+                             AND A.KIND_CD = C.KIND_CD
+                             AND A.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+							<if test ="searchProductGubun == 1" >
+                             AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+							</if>
+							<if test ="searchProductGubun == 2" >
+                             AND A.SALE_DATE BETWEEN TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw'), 'YYYY-MM-DD') AND TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw')+1, 'YYYY-MM-DD')
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+							</if>
+							<if test ="searchProductGubun == 3" >
+                             AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+							</if>
+                        )
+				<if test ="searchProductGubun == 1" >
+                  GROUP BY ITEM_NM, PUM_CODE
+				</if>
+				<if test ="searchProductGubun != 1" >
+                  GROUP BY KIND_NM, PUM_CODE
+				</if>
+               )
+         WHERE 1 = 1
+		<choose>
+			<when test="searchProductGubun == 1">
+           AND ROW_NUM <![CDATA[<=]]> 5
+			</when>
+			<when test="searchProductGubun == 2">
+           AND ROW_NUM <![CDATA[<=]]> 3
+			</when>
+			<when test="searchProductGubun == 3">
+           AND ROW_NUM <![CDATA[<=]]> 3
+			</when>
+			<otherwise>
+           AND ROW_NUM <![CDATA[<=]]> 5
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+	<!-- 일자별 경매정보 보기 : 물량비중 -->
+	<select id="hab01Chart1" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT A.MARKET_CD AS CMP_CD
+             , B.MARKET_NAME
+             , A.TOT_QTY
+             , ROUND((RATIO_TO_REPORT(A.TOT_QTY) OVER()), 3)*100||'%' AS PER
+          FROM ( SELECT MARKET_CD
+                      , SUM(TOT_QTY) AS TOT_QTY
+                      , ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS ROW_NUM
+                   FROM ( SELECT A.SALE_DATE, A.FLOWER_GUBN, A.FLOWER_CODE, A.ITEM_CD, A.KIND_CD
+                               , A.MARKET_CD, A.CMP_GOOD, A.LARGE, A.MID, A.SMALL
+                               , A.LV_CD, A.TOT_QTY
+                               , B.ITEM_NM
+                               , C.KIND_NM
+                            FROM T_INT_SALE A
+                               , T_INT_ITEM B
+                               , T_INT_KIND C
+                           WHERE A.FLOWER_GUBN = B.FLOWER_GUBN
+                             AND A.FLOWER_CODE = B.FLOWER_CODE
+                             AND A.ITEM_CD = B.ITEM_CD
+                             AND A.FLOWER_GUBN = C.FLOWER_GUBN
+                             AND A.FLOWER_CODE = C.FLOWER_CODE
+                             AND A.ITEM_CD = C.ITEM_CD
+                             AND A.KIND_CD = C.KIND_CD
+                             AND A.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+							<if test ="searchProductGubun == 1" >
+                             AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+                             AND A.FLOWER_CODE||A.ITEM_CD = #{searchItemCd, jdbcType=VARCHAR}
+							</if>
+							<if test ="searchProductGubun == 2" >
+                             AND A.SALE_DATE BETWEEN TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw'), 'YYYY-MM-DD') AND TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw')+1, 'YYYY-MM-DD')
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+                             AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+							</if>
+							<if test ="searchProductGubun == 3" >
+                             AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+                             AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+							</if>
+                        )
+                  GROUP BY MARKET_CD
+               ) A LEFT OUTER JOIN T_JOINT_MARKET B ON A.MARKET_CD = B.MARKET_CD
+           ORDER BY A.MARKET_CD
+	</select>
+	
+	
+	<!-- 일자별 경매정보 보기 : 일자별 평균단가 -->
+	<select id="hab01Chart2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT T1.SALE_DATE
+             , T1.ROW_NUM||'주차' AS WEEKLY_NM
+             , CASE WHEN MAX(T1.COL_1) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_1),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_1),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_1) 
+                END AS COL_0000000001 
+             , CASE WHEN MAX(T1.COL_2) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_2),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_2),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_2) 
+                END AS COL_1288202296 
+             , CASE WHEN MAX(T1.COL_3) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_3),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_3),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_3) 
+                END AS COL_1508500020 
+             , CASE WHEN MAX(T1.COL_4) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_4),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_4),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_4) 
+                END AS COL_3848200087 
+     
+     
+             , CASE WHEN MAX(T1.COL_5) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_5),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_5),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_5) 
+                END AS COL_4108212335 
+             , CASE WHEN MAX(T1.COL_6) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_6),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_6),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_6) 
+                END AS COL_6068207466
+          FROM ( SELECT SALE_DATE
+                      , ROW_NUM
+                      , DECODE(MARKET_CD, '0000000001', AVG_AMT, NULL) AS COL_1
+                      , DECODE(MARKET_CD, '1288202296', AVG_AMT, NULL) AS COL_2
+                      , DECODE(MARKET_CD, '1508500020', AVG_AMT, NULL) AS COL_3
+                      , DECODE(MARKET_CD, '3848200087', AVG_AMT, NULL) AS COL_4
+                      , DECODE(MARKET_CD, '4108212335', AVG_AMT, NULL) AS COL_5
+                      , DECODE(MARKET_CD, '6068207466', AVG_AMT, NULL) AS COL_6
+                   FROM ( SELECT MARKET_CD
+                               , SALE_DATE AS SALE_DATE
+                               , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+                               , ROW_NUM
+                            FROM ( SELECT A.SALE_DATE, A.FLOWER_GUBN, A.FLOWER_CODE, A.ITEM_CD, A.KIND_CD
+                                        , A.MARKET_CD, A.CMP_GOOD, A.LARGE, A.MID, A.SMALL
+                                        , A.LV_CD, A.TOT_QTY, A.TOT_AMT
+                                        , B.ITEM_NM
+                                        , C.KIND_NM
+                                        , D.ROW_NUM
+                                     FROM T_INT_SALE A
+                                        , T_INT_ITEM B
+                                        , T_INT_KIND C
+                                        , ( SELECT SALE_DATE
+                                                 , ROW_NUMBER() OVER (ORDER BY ROW_NUM DESC) AS ROW_NUM
+                                              FROM ( SELECT SALE_DATE
+                                                          , ROW_NUMBER() OVER (ORDER BY SALE_DATE DESC) AS ROW_NUM
+                                                       FROM T_INT_SALE 
+                                                      WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                                                        <if test ="searchProductGubun == 1" >
+                                                        AND SALE_DATE BETWEEN TO_CHAR((TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') - 63),'YYYY-MM-DD') AND #{searchDate, jdbcType=VARCHAR}
+                                                        AND (TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+                                                        AND FLOWER_CODE||ITEM_CD = #{searchItemCd, jdbcType=VARCHAR}
+                                                        </if>
+                                                        <if test ="searchProductGubun == 2" >
+                                                        AND SALE_DATE BETWEEN TO_CHAR((TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') - 63),'YYYY-MM-DD') AND TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw')+1, 'YYYY-MM-DD')
+                                                        AND (TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+                                                        AND FLOWER_CODE||ITEM_CD||KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+                                                        </if>
+                                                        <if test ="searchProductGubun == 3" >
+                                                        AND SALE_DATE BETWEEN TO_CHAR((TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') - 63),'YYYY-MM-DD') AND #{searchDate, jdbcType=VARCHAR}
+                                                        AND (TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+                                                        AND FLOWER_CODE||ITEM_CD||KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+                                                        </if>
+                                                       GROUP BY SALE_DATE
+                                                   )
+                                             WHERE ROW_NUM <![CDATA[<=]]> 6
+                                          ) D
+                                       , ( SELECT A.MARKET_CD
+                                             FROM T_INT_SALE A
+                                                , T_INT_ITEM B
+                                                , T_INT_KIND C
+                                            WHERE A.FLOWER_GUBN = B.FLOWER_GUBN
+                                              AND A.FLOWER_CODE = B.FLOWER_CODE
+                                              AND A.ITEM_CD = B.ITEM_CD
+                                              AND A.FLOWER_GUBN = C.FLOWER_GUBN
+                                              AND A.FLOWER_CODE = C.FLOWER_CODE
+                                              AND A.ITEM_CD = C.ITEM_CD
+                                              AND A.KIND_CD = C.KIND_CD
+                                              AND A.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+											<if test ="searchProductGubun == 1" >
+                                              AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                                              AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+                                              AND A.FLOWER_CODE||A.ITEM_CD = #{searchItemCd, jdbcType=VARCHAR}
+											</if>
+											<if test ="searchProductGubun == 2" >
+                                              AND A.SALE_DATE BETWEEN TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw'), 'YYYY-MM-DD') AND TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw')+1, 'YYYY-MM-DD')
+                                              AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+                                              AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+											</if>
+											<if test ="searchProductGubun == 3" >
+                                              AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                                              AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+                                              AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+											</if>
+                                            GROUP BY A.MARKET_CD
+                                         ) E
+                                   WHERE A.FLOWER_GUBN = B.FLOWER_GUBN
+                                     AND A.FLOWER_CODE = B.FLOWER_CODE
+                                     AND A.ITEM_CD = B.ITEM_CD
+                                     AND A.FLOWER_GUBN = C.FLOWER_GUBN
+                                     AND A.FLOWER_CODE = C.FLOWER_CODE
+                                     AND A.ITEM_CD = C.ITEM_CD
+                                     AND A.KIND_CD = C.KIND_CD
+                                     AND A.SALE_DATE = D.SALE_DATE
+                                     AND A.MARKET_CD = E.MARKET_CD
+                                     AND A.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+                                     <if test ="searchProductGubun == 1" >
+                                     AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+                                     AND A.FLOWER_CODE||A.ITEM_CD = #{searchItemCd, jdbcType=VARCHAR}
+                                     </if>
+                                     <if test ="searchProductGubun == 2" >
+                                     AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+                                     AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+                                     </if>
+                                     <if test ="searchProductGubun == 3" >
+                                     AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+                                     AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+                                     </if>
+                                 )
+                           GROUP BY MARKET_CD, SALE_DATE, ROW_NUM
+                           ORDER BY MARKET_CD, SALE_DATE
+                        )
+               ) T1
+         GROUP BY T1.SALE_DATE, T1.ROW_NUM
+         ORDER BY T1.SALE_DATE
+    </select>
+    
+    
+    <select id="selectFlowerMainMonth" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT * FROM(
+				SELECT 
+				    PUM_NAME
+				     ,'1최고' AS GUBN
+				     ,MAX(DECODE(SALE_MONTH, '01', MAX_AMT, '0')) AS JAN
+				     ,MAX(DECODE(SALE_MONTH, '02', MAX_AMT, '0')) AS FEB
+				     ,MAX(DECODE(SALE_MONTH, '03', MAX_AMT, '0')) AS MAR
+				     ,MAX(DECODE(SALE_MONTH, '04', MAX_AMT, '0')) AS APR
+				     ,MAX(DECODE(SALE_MONTH, '05', MAX_AMT, '0')) AS MAY
+				     ,MAX(DECODE(SALE_MONTH, '06', MAX_AMT, '0')) AS JUN
+				     ,MAX(DECODE(SALE_MONTH, '07', MAX_AMT, '0')) AS JUL
+				     ,MAX(DECODE(SALE_MONTH, '08', MAX_AMT, '0')) AS AUG
+				     ,MAX(DECODE(SALE_MONTH, '09', MAX_AMT, '0')) AS SEP
+				     ,MAX(DECODE(SALE_MONTH, '10', MAX_AMT, '0')) AS OCT
+				     ,MAX(DECODE(SALE_MONTH, '11', MAX_AMT, '0')) AS NOV
+				     ,MAX(DECODE(SALE_MONTH, '12', MAX_AMT, '0')) AS DEC
+				FROM(
+				    SELECT 
+				        PUM_NAME
+				        ,SUBSTR(SALE_MONTH,6) AS SALE_MONTH
+				        ,MAX(MAX_AMT) AS MAX_AMT
+				        ,MIN(MIN_AMT) AS MIN_AMT
+				        ,ROUND(AVG(AVG_AMT)) AS AVG_AMT
+				        ,SUM(TOT_QTY) 
+				    FROM T_SALE_MONTH
+				    WHERE SALE_MONTH BETWEEN '2019-01' AND '2019-12'
+				    AND PUM_NAME IN
+				    (SELECT PUM_NAME FROM
+				    (SELECT 
+				        PUM_NAME
+				        ,RANK() OVER(ORDER BY SUM(TOT_AMT) DESC, SUM(TOT_QTY) DESC) AS RNUM
+				    FROM T_SALE_MONTH
+				    WHERE SALE_MONTH BETWEEN '2019-01' AND '2019-12'
+				    GROUP BY PUM_NAME
+				    )
+				    WHERE RNUM &lt;= 20)
+				    GROUP BY PUM_NAME, SALE_MONTH
+				) 
+				GROUP BY PUM_NAME
+			UNION
+				SELECT 
+				    PUM_NAME
+				     ,'2최저' AS GUBN
+				     ,MAX(DECODE(SALE_MONTH, '01', MIN_AMT, '0')) AS JAN
+				     ,MAX(DECODE(SALE_MONTH, '02', MIN_AMT, '0')) AS FEB
+				     ,MAX(DECODE(SALE_MONTH, '03', MIN_AMT, '0')) AS MAR
+				     ,MAX(DECODE(SALE_MONTH, '04', MIN_AMT, '0')) AS APR
+				     ,MAX(DECODE(SALE_MONTH, '05', MIN_AMT, '0')) AS MAY
+				     ,MAX(DECODE(SALE_MONTH, '06', MIN_AMT, '0')) AS JUN
+				     ,MAX(DECODE(SALE_MONTH, '07', MIN_AMT, '0')) AS JUL
+				     ,MAX(DECODE(SALE_MONTH, '08', MIN_AMT, '0')) AS AUG
+				     ,MAX(DECODE(SALE_MONTH, '09', MIN_AMT, '0')) AS SEP
+				     ,MAX(DECODE(SALE_MONTH, '10', MIN_AMT, '0')) AS OCT
+				     ,MAX(DECODE(SALE_MONTH, '11', MIN_AMT, '0')) AS NOV
+				     ,MAX(DECODE(SALE_MONTH, '12', MIN_AMT, '0')) AS DEC
+				FROM(
+				    SELECT 
+				        PUM_NAME
+				        ,SUBSTR(SALE_MONTH,6) AS SALE_MONTH
+				        ,MAX(MAX_AMT) AS MAX_AMT
+				        ,MIN(MIN_AMT) AS MIN_AMT
+				        ,ROUND(AVG(AVG_AMT)) AS AVG_AMT
+				        ,SUM(TOT_QTY) 
+				    FROM T_SALE_MONTH
+				    WHERE SALE_MONTH BETWEEN '2019-01' AND '2019-12'
+				    AND PUM_NAME IN
+				    (SELECT PUM_NAME FROM
+				    (SELECT 
+				        PUM_NAME
+				        ,RANK() OVER(ORDER BY SUM(TOT_AMT) DESC, SUM(TOT_QTY) DESC) AS RNUM
+				    FROM T_SALE_MONTH
+				    WHERE SALE_MONTH BETWEEN '2019-01' AND '2019-12'
+				    GROUP BY PUM_NAME
+				    )
+				    WHERE RNUM &lt;= 20)
+				    GROUP BY PUM_NAME, SALE_MONTH
+				) 
+				GROUP BY PUM_NAME
+			UNION
+				SELECT 
+				    PUM_NAME
+				     ,'3평균' AS GUBN
+				     ,MAX(DECODE(SALE_MONTH, '01', AVG_AMT, '0')) AS JAN
+				     ,MAX(DECODE(SALE_MONTH, '02', AVG_AMT, '0')) AS FEB
+				     ,MAX(DECODE(SALE_MONTH, '03', AVG_AMT, '0')) AS MAR
+				     ,MAX(DECODE(SALE_MONTH, '04', AVG_AMT, '0')) AS APR
+				     ,MAX(DECODE(SALE_MONTH, '05', AVG_AMT, '0')) AS MAY
+				     ,MAX(DECODE(SALE_MONTH, '06', AVG_AMT, '0')) AS JUN
+				     ,MAX(DECODE(SALE_MONTH, '07', AVG_AMT, '0')) AS JUL
+				     ,MAX(DECODE(SALE_MONTH, '08', AVG_AMT, '0')) AS AUG
+				     ,MAX(DECODE(SALE_MONTH, '09', AVG_AMT, '0')) AS SEP
+				     ,MAX(DECODE(SALE_MONTH, '10', AVG_AMT, '0')) AS OCT
+				     ,MAX(DECODE(SALE_MONTH, '11', AVG_AMT, '0')) AS NOV
+				     ,MAX(DECODE(SALE_MONTH, '12', AVG_AMT, '0')) AS DEC
+				FROM(
+				    SELECT 
+				        PUM_NAME
+				        ,SUBSTR(SALE_MONTH,6) AS SALE_MONTH
+				        ,MAX(MAX_AMT) AS MAX_AMT
+				        ,MIN(MIN_AMT) AS MIN_AMT
+				        ,ROUND(AVG(AVG_AMT)) AS AVG_AMT
+				        ,SUM(TOT_QTY) 
+				    FROM T_SALE_MONTH
+				    WHERE SALE_MONTH BETWEEN '2019-01' AND '2019-12'
+				    AND PUM_NAME IN
+				    (SELECT PUM_NAME FROM
+				    (SELECT 
+				        PUM_NAME
+				        ,RANK() OVER(ORDER BY SUM(TOT_AMT) DESC, SUM(TOT_QTY) DESC) AS RNUM
+				    FROM T_SALE_MONTH
+				    WHERE SALE_MONTH BETWEEN '2019-01' AND '2019-12'
+				    GROUP BY PUM_NAME
+				    )
+				    WHERE RNUM &lt;= 20)
+				    GROUP BY PUM_NAME, SALE_MONTH
+				) 
+				GROUP BY PUM_NAME
+			UNION
+				SELECT 
+				    PUM_NAME
+				     ,'4거래량' AS GUBN
+				     ,MAX(DECODE(SALE_MONTH, '01', TOT_QTY, '0')) AS JAN
+				     ,MAX(DECODE(SALE_MONTH, '02', TOT_QTY, '0')) AS FEB
+				     ,MAX(DECODE(SALE_MONTH, '03', TOT_QTY, '0')) AS MAR
+				     ,MAX(DECODE(SALE_MONTH, '04', TOT_QTY, '0')) AS APR
+				     ,MAX(DECODE(SALE_MONTH, '05', TOT_QTY, '0')) AS MAY
+				     ,MAX(DECODE(SALE_MONTH, '06', TOT_QTY, '0')) AS JUN
+				     ,MAX(DECODE(SALE_MONTH, '07', TOT_QTY, '0')) AS JUL
+				     ,MAX(DECODE(SALE_MONTH, '08', TOT_QTY, '0')) AS AUG
+				     ,MAX(DECODE(SALE_MONTH, '09', TOT_QTY, '0')) AS SEP
+				     ,MAX(DECODE(SALE_MONTH, '10', TOT_QTY, '0')) AS OCT
+				     ,MAX(DECODE(SALE_MONTH, '11', TOT_QTY, '0')) AS NOV
+				     ,MAX(DECODE(SALE_MONTH, '12', TOT_QTY, '0')) AS DEC
+				FROM(
+				    SELECT 
+				        PUM_NAME
+				        ,SUBSTR(SALE_MONTH,6) AS SALE_MONTH
+				        ,MAX(MAX_AMT) AS MAX_AMT
+				        ,MIN(MIN_AMT) AS MIN_AMT
+				        ,ROUND(AVG(AVG_AMT)) AS AVG_AMT
+				        ,SUM(TOT_QTY) AS TOT_QTY
+				    FROM T_SALE_MONTH
+				    WHERE SALE_MONTH BETWEEN '2019-01' AND '2019-12'
+				    AND PUM_NAME IN
+				    (SELECT PUM_NAME FROM
+				    (SELECT 
+				        PUM_NAME
+				        ,RANK() OVER(ORDER BY SUM(TOT_AMT) DESC, SUM(TOT_QTY) DESC) AS RNUM
+				    FROM T_SALE_MONTH
+				    WHERE SALE_MONTH BETWEEN '2019-01' AND '2019-12'
+				    GROUP BY PUM_NAME
+				    )
+				    WHERE RNUM &lt;= 20)
+				    GROUP BY PUM_NAME, SALE_MONTH
+				) 
+				GROUP BY PUM_NAME
+		)
+		ORDER BY PUM_NAME, GUBN
+    </select>
+	
+  
+  	<select id="selectRealSaleDate" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		 SELECT MAX(SALE_DATE) AS SALE_DATE
+		  FROM T_REAL
+		 WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-30,'YYYYMMDD') AND TO_CHAR(SYSDATE+1,'YYYYMMDD')
+		 AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+		 GROUP BY SALE_DATE
+		 ORDER BY SALE_DATE DESC
+ 	</select>
+ 	
+ 	<select id="selectSaleDate" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT TO_CHAR(ADD_MONTHS(MAX(SALE_DATE), '0'), 'YYYY-MM-DD') AS SALE_DATE
+		  FROM T_SALE_DATE
+		 WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-30,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		 AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+		 GROUP BY SALE_DATE
+		 ORDER BY SALE_DATE DESC
+ 	</select>
+ 	
+	<select id="selectPumMokSaledate" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT TO_CHAR(ADD_MONTHS(MAX(SALE_DATE), '0'), 'YYYY-MM-DD') AS SALE_DATE
+		  FROM T_SALE_DATE
+		 WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-30,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		   AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+		   AND FLOWER_GUBN = #{searchGubn, jdbcType=VARCHAR}
+		 GROUP BY SALE_DATE
+		 ORDER BY SALE_DATE DESC
+ 	</select>
+ 	
+	<select id="selectAreaSaleDate" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT TO_CHAR(ADD_MONTHS(MAX(SALE_DATE), '0'), 'YYYY-MM-DD') AS SALE_DATE
+		  FROM T_SALE_DATE
+		 WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-30,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		 GROUP BY SALE_DATE
+		 ORDER BY SALE_DATE DESC
+ 	</select>
+ 	
+ 	<select id="selectRealData" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT saleDate, cmpCd, mejang, pumName, goodName, qty, cost, (SUBSTR(nakTime,'9','2')||':'||SUBSTR(nakTime,'11','2')) AS nakTime, lvCd, sanName_1, sanName, lvName, RNUM
+		FROM
+			(
+			SELECT TA.*,
+				   CASE WHEN(INSTR(sanName_1,'충남')=1 OR INSTR(sanName_1,'충청남도')=1)  THEN '충남'
+	             		WHEN(INSTR(sanName_1,'충북')=1 OR INSTR(sanName_1,'충청북도')=1)  THEN '충북'
+	             		WHEN(INSTR(sanName_1,'전북')=1 OR INSTR(sanName_1,'전라북도')=1)  THEN '전북'
+	             		WHEN(INSTR(sanName_1,'전남')=1 OR INSTR(sanName_1,'전라남도')=1)  THEN '전남'
+	             		WHEN(INSTR(sanName_1,'경북')=1 OR INSTR(sanName_1,'경상북도')=1)  THEN '경북'
+	             		WHEN(INSTR(sanName_1,'경남')=1 OR INSTR(sanName_1,'경상남도')=1)  THEN '경남'
+	               ELSE SUBSTR(sanName_1,0,2)
+	               END sanName,
+	  			   NVL(TB.LV_NAME, '없음' ) AS lvName,
+	  			   RANK() OVER (ORDER BY nakTime DESC) AS RNUM
+			FROM (
+			  		SELECT 
+			  			SALE_DATE	AS saleDate	 
+			    		, CMP_CD	AS cmpCd
+			    		, MEJANG	AS mejang
+			    		, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME), PUM_NAME) AS pumName 
+			    		, GOOD_NAME AS goodName
+			    		, QTY		AS qty
+			    		, COST		AS cost
+			    		, NAK_TIME AS nakTime
+			    		, LV_CD		AS lvCd
+			    		, SAN_NAME	AS sanName_1
+			  		FROM T_REAL
+			  		WHERE 1=1
+					AND SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+			  		<if test="cmpCd != null and cmpCd != ''">
+			  		AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+			  		</if>
+			  	 ) TA,
+	  			 ( 
+	  			 	SELECT * 
+	  			 	FROM T_LEVEL A, LEVELCHANGE_KR B 
+	  			 	WHERE A.LV_CD = B.STRCODE(+)
+	  			 ) TB
+	  		<if test="cmpCd != '0000000001' and cmpCd != '1508500020' and cmpCd != '6068207466' and cmpCd != '4108212335' and cmpCd != '6158209828'and cmpCd != '7368200686'">
+			WHERE TA.lvCd = TB.KRCODE(+)
+			</if>
+			<if test="cmpCd != '3848200087' and cmpCd != '1288202296' ">
+			WHERE TA.lvCd = TB.LV_CD(+)
+			</if>
+			)
+		WHERE 1=1
+		AND RNUM <![CDATA[<=]]> 30
+ 	</select>
+ 	
+ 	<select id="selectSaleData" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT * FROM(
+			SELECT PUM_NAME
+			    , GOOD_NAME
+			    , SALE_DATE
+			    , NVL(LV_NAME,'없음') AS LV_NAME
+			    , TOT_QTY
+			    , ROUND(AVG_AMT) AS AVG_AMT
+			    , RANK() OVER (ORDER BY TA.TOT_QTY DESC) AS RNUM 
+			FROM(
+			SELECT PUM_NAME
+			      , GOOD_NAME
+			      , LV_CD
+			      , SALE_DATE
+			      , SUM(TOT_QTY) AS TOT_QTY
+			      , SUM(TOT_AMT)/SUM(TOT_QTY)  AS AVG_AMT
+			FROM T_SALE_DATE
+			WHERE SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+	  		<if test="cmpCd != null and cmpCd != ''">
+	  			AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+	  		</if>
+			GROUP BY PUM_NAME, GOOD_NAME, LV_CD, SALE_DATE
+			) TA,
+			( 
+	  			 	SELECT * 
+	  			 	FROM T_LEVEL A, LEVELCHANGE_KR B 
+	  			 	WHERE A.LV_CD = B.STRCODE(+)
+			) TB
+			<if test="cmpCd != '0000000001' and cmpCd != '1508500020' and cmpCd != '6068207466' and cmpCd != '4108212335' and cmpCd != '6158209828'and cmpCd != '7368200686'">
+			WHERE TA.LV_CD = TB.KRCODE(+)
+			</if>
+			<if test="cmpCd != '3848200087' and cmpCd != '1288202296' ">
+			WHERE TA.LV_CD = TB.LV_CD(+)
+			</if>
+		) 
+		WHERE RNUM <![CDATA[<=]]> 30
+ 	</select>
+ 	
+ 	<select id="selectPumMokData" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT CMP_CD
+		     , SALE_DATE
+		     , PUM_NAME
+		     , MAX_AMT
+		     , MIN_AMT
+		     , AVG_AMT
+		     , TOT_AMT
+		     , TOT_QTY
+		     , RNUM  
+		     , ROUND((RATIO_TO_REPORT(TOT_QTY) OVER() * 100), 1) || '%' AS QTY_RATE
+		  FROM
+		  (
+		    SELECT B.CMP_CD
+		         , B.SALE_DATE
+		         , B.PUM_NAME
+		         , MAX(B.MAX_AMT) AS MAX_AMT
+		         , MIN(B.MIN_AMT) AS MIN_AMT
+		         , TRUNC(SUM(B.TOT_AMT)/SUM(B.TOT_QTY)) AS AVG_AMT
+		         , SUM(B.TOT_AMT) AS  TOT_AMT
+		         , SUM(B.TOT_QTY) AS  TOT_QTY
+		         , ROW_NUMBER() OVER (ORDER BY SUM(B.TOT_QTY) DESC) AS RNUM  
+		    FROM
+		    (
+		        SELECT TA.CMP_CD
+		             , TA.SALE_DATE
+		             , DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS PUM_NAME
+		             , TA.MAX_AMT
+		             , TA.MIN_AMT
+		             , TA.TOT_AMT
+		             , TA.TOT_QTY
+		        FROM
+		        (
+		            SELECT CMP_CD
+		                 , SALE_DATE
+		                 , MAX_AMT
+		                 , MIN_AMT
+		                 , AVG_AMT
+		                 , TOT_AMT
+		                 , TOT_QTY
+		                 , DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME
+		              FROM T_SALE_DATE A
+		              WHERE 1=1
+		              	AND A.FLOWER_GUBN = #{searchGubn, jdbcType=VARCHAR}
+		                AND A.CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                AND A.SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+		                AND A.TOT_AMT <![CDATA[<>]]> 0
+		          )TA,
+		        (
+		            SELECT 
+		            MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+		            FROM FLOWER.TB_KIND_MAP
+		            WHERE CMP_CD_MAP = #{cmpCd, jdbcType=VARCHAR}  
+		            GROUP BY PUM_NM_MAP
+		        ) TB
+		        WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+		    )B
+		    WHERE 1=1
+		    GROUP BY B.CMP_CD, SALE_DATE, PUM_NAME
+		)
+		WHERE 1=1
+		AND RNUM <![CDATA[<=]]> 6
+		ORDER BY TOT_QTY DESC
+ 	</select>
+ 	
+ 	<select id="selectPumMokTotalInfo" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+<!-- 		SELECT SUM(TOT_QTY) AS TOT_QTY
+			 , ROUND(AVG(MAX_AMT)) AS MAX_AMT
+			 , ROUND(AVG(MIN_AMT)) AS MIN_AMT
+			 , ROUND(AVG(AVG_AMT)) AS AVG_AMT
+		FROM (
+				SELECT CMP_CD
+				     , SALE_DATE
+				     , PUM_NAME
+				     , MAX_AMT
+				     , MIN_AMT
+				     , AVG_AMT
+				     , TOT_AMT
+				     , TOT_QTY
+				     , RNUM  
+				     , ROUND((RATIO_TO_REPORT(TOT_QTY) OVER() * 100), 1) || '%' AS QTY_RATE
+				  FROM
+				  (
+				    SELECT B.CMP_CD
+				         , B.SALE_DATE
+				         , B.PUM_NAME
+				         , MAX(B.MAX_AMT) AS MAX_AMT
+				         , MIN(B.MIN_AMT) AS MIN_AMT
+				         , TRUNC(SUM(B.TOT_AMT)/SUM(B.TOT_QTY)) AS AVG_AMT
+				         , SUM(B.TOT_AMT) AS  TOT_AMT
+				         , SUM(B.TOT_QTY) AS  TOT_QTY
+				         , RANK() OVER (ORDER BY SUM(B.TOT_QTY) DESC) AS RNUM  
+				    FROM
+				    (
+				        SELECT TA.CMP_CD
+				             , TA.SALE_DATE
+				             , DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS PUM_NAME
+				             , TA.MAX_AMT
+				             , TA.MIN_AMT
+				             , TA.TOT_AMT
+				             , TA.TOT_QTY
+				        FROM
+					         (
+					            SELECT CMP_CD
+					                 , SALE_DATE
+					                 , MAX_AMT
+					                 , MIN_AMT
+					                 , AVG_AMT
+					                 , TOT_AMT
+					                 , TOT_QTY
+					                 , DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME
+					              FROM T_SALE_DATE A
+					              WHERE 1=1
+					              	AND A.FLOWER_GUBN = #{searchGubn, jdbcType=VARCHAR}
+					                AND A.CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+					                AND A.SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+					                AND A.TOT_AMT <![CDATA[<>]]> 0
+					         )TA,
+					         (
+					            SELECT 
+					            MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+					            FROM FLOWER.TB_KIND_MAP
+					            WHERE CMP_CD_MAP = #{cmpCd, jdbcType=VARCHAR}  
+					            GROUP BY PUM_NM_MAP
+					         ) TB
+				        WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+				    )B
+				    WHERE 1=1
+				    GROUP BY B.CMP_CD, SALE_DATE, PUM_NAME
+				)
+				WHERE 1=1
+				AND RNUM <![CDATA[<=]]> 6
+				ORDER BY TOT_QTY DESC
+			 ) -->
+			 
+		 <!-- 23.06.21 이현우 과장님 요청. 최고단가, 최저단가, 평균단가 계산 식 변경 -->
+		SELECT SUM(A.QTY) AS TOT_QTY
+		     , ROUND(MAX(A.COST)) AS MAX_AMT
+		     , ROUND(MIN(A.COST)) AS MIN_AMT
+		     , ROUND(SUM(A.TOT_AMT)/SUM(A.TOT_QTY)) AS AVG_AMT
+		FROM(
+		    SELECT *
+		    FROM T_SALE
+		    WHERE MEJANG = #{searchGubn, jdbcType=VARCHAR}
+		    AND SALE_DATE =  #{searchSaleDate, jdbcType=VARCHAR}
+		    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		    ) A,
+		    (
+		    SELECT PUM_NAME, SUM(TOT_QTY) AS TOT_QTY, RANK() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RNUM
+		    FROM T_SALE
+		    WHERE MEJANG = #{searchGubn, jdbcType=VARCHAR}
+		    AND SALE_DATE =  #{searchSaleDate, jdbcType=VARCHAR}
+		    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		    GROUP BY PUM_NAME
+		    ) B
+		WHERE A.PUM_NAME = B.PUM_NAME
+		AND RNUM <![CDATA[<=]]> 6
+ 	</select>
+ 	
+	<select id="selectAreaChartData" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT PUM_NAME
+             , SAN_BIGO AS  SAN_CD_NM
+             , REPLACE(SAN_BIGO ||CHR(13)||CHR(10)||'('|| PUM_NAME||')', ' ', CHR(10)) AS  CHART_X  
+			 , MAX_AMT
+			 , MIN_AMT
+			 , AVG_AMT
+			 , TOT_AMT
+			 , TOT_QTY
+			 , RNUM  
+		FROM
+			(
+			SELECT B.PUM_NAME
+			     , C.SAN_BIGO
+			     , MAX(B.MAX_AMT) AS MAX_AMT
+			     , MIN(B.MIN_AMT) AS MIN_AMT
+			     , TRUNC(SUM(B.TOT_AMT)/SUM(B.TOT_QTY)) AS AVG_AMT
+			     , SUM(B.TOT_AMT) AS  TOT_AMT
+			     , SUM(B.TOT_QTY) AS  TOT_QTY
+			     , RANK() OVER (ORDER BY SUM(B.TOT_QTY) DESC, SUM(B.TOT_AMT) DESC) AS RNUM  
+			FROM
+				(
+			    SELECT DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS PUM_NAME
+			   		 , SAN_CD
+			   		 , TA.MAX_AMT
+			   		 , TA.MIN_AMT
+			   		 , TA.TOT_AMT
+			   		 , TA.TOT_QTY
+			    FROM
+				    (
+			        SELECT SALE_DATE, MAX_AMT, MIN_AMT, 
+			           	   AVG_AMT, SAN_CD, TOT_AMT, TOT_QTY, 
+			               DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME
+			        FROM T_SALE_DATE A
+					WHERE 1=1
+					  AND SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+					  AND A.TOT_AMT <![CDATA[<>]]> 0
+				    )TA,
+				    (
+			        SELECT MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+			        FROM FLOWER.TB_KIND_MAP
+			        GROUP BY PUM_NM_MAP
+				    ) TB
+			    WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+				)B, T_LOCAL C
+            WHERE 1=1
+              AND B.SAN_CD  = C.SAN_CD(+)
+              AND SAN_BIGO IS NOT NULL
+			GROUP BY PUM_NAME, C.SAN_BIGO
+			)
+		WHERE 1=1
+		  AND RNUM <![CDATA[<=]]> 6
+ 	</select>
+ 	
+	<select id="selectDetailAreaChartData" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT PUM_NAME
+		     , SAN_CD_NM
+		     , CHART_X  
+		     , MAX_AMT
+		     , MIN_AMT
+		     , AVG_AMT
+		     , TOT_AMT
+		     , TOT_QTY
+		     , RNUM 
+		  FROM (
+				SELECT PUM_NAME
+				     , SAN_BIGO AS  SAN_CD_NM
+				     , REPLACE(SAN_BIGO ||CHR(13)||CHR(10)||'('|| PUM_NAME||')', ' ', CHR(10)) AS  CHART_X  
+				     , MAX_AMT
+				     , MIN_AMT
+				     , AVG_AMT
+				     , TOT_AMT
+				     , TOT_QTY
+				     , RANK() OVER (ORDER BY TOT_QTY DESC, TOT_AMT DESC) AS RNUM  
+				FROM
+				    (
+				    SELECT B.PUM_NAME
+				         , C.SAN_BIGO
+				         , MAX(B.MAX_AMT) AS MAX_AMT
+				         , MIN(B.MIN_AMT) AS MIN_AMT
+				         , TRUNC(SUM(B.TOT_AMT)/SUM(B.TOT_QTY)) AS AVG_AMT
+				         , SUM(B.TOT_AMT) AS  TOT_AMT
+				         , SUM(B.TOT_QTY) AS  TOT_QTY
+				    FROM
+				        (
+				        SELECT DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS PUM_NAME
+				             , SAN_CD
+				             , TA.MAX_AMT
+				             , TA.MIN_AMT
+				             , TA.TOT_AMT
+				             , TA.TOT_QTY
+				        FROM
+				            (
+				            SELECT SALE_DATE, MAX_AMT, MIN_AMT, 
+				                   AVG_AMT, SAN_CD, TOT_AMT, TOT_QTY, 
+				                   DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME
+				            FROM T_SALE_DATE A
+				            WHERE 1=1
+				              AND SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+				              AND A.TOT_AMT <![CDATA[<>]]> 0
+				            )TA,
+				            (
+				            SELECT MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+				            FROM FLOWER.TB_KIND_MAP
+				            GROUP BY PUM_NM_MAP
+				            ) TB
+				        WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+				        )B, T_LOCAL C
+				    WHERE 1=1
+				      AND B.SAN_CD  = C.SAN_CD(+)
+				      AND SAN_BIGO IS NOT NULL
+				    GROUP BY PUM_NAME, C.SAN_BIGO
+				    )
+				WHERE 1=1
+				  AND SAN_BIGO LIKE #{searchAreaKeyword, jdbcType=VARCHAR} || '%'
+				  <if test="searchAreaKeyword2 != null">
+				   OR SAN_BIGO LIKE #{searchAreaKeyword2, jdbcType=VARCHAR} || '%'
+				  </if>
+		        )
+		 WHERE 1=1
+		   AND RNUM <![CDATA[<=]]> 6
+ 	</select> 	
+ 	
+ 	<select id="selectAreaMapData" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+    	SELECT CODE
+		     , ROUND(SUM(TOT_QTY),1) AS TOT_QTY
+		     , ROUND(SUM(TOT_AMT)/10000,1) AS TOT_AMT
+		FROM(
+			SELECT CASE WHEN SAN_BIGO LIKE '강원%' THEN 100
+			            WHEN SAN_BIGO LIKE '경기%' THEN 200 
+			            WHEN SAN_BIGO LIKE '경상남도%' OR SAN_BIGO LIKE '경남%' THEN 300 
+			            WHEN SAN_BIGO LIKE '경상북도%' OR SAN_BIGO LIKE '경북%' THEN 400
+			            WHEN SAN_BIGO LIKE '광주%' THEN 500
+			            WHEN SAN_BIGO LIKE '대구%' THEN 600
+			            WHEN SAN_BIGO LIKE '대전%' THEN 700
+			            WHEN SAN_BIGO LIKE '부산%' THEN 800
+			            WHEN SAN_BIGO LIKE '서울%' THEN 90000
+			            WHEN SAN_BIGO LIKE '울산%' THEN 1000
+			            WHEN SAN_BIGO LIKE '인천%' THEN 1100
+			            WHEN SAN_BIGO LIKE '전라남도%' OR SAN_BIGO LIKE '전남%' THEN 1200
+			            WHEN SAN_BIGO LIKE '전라북도%' OR SAN_BIGO LIKE '전북%' THEN 1300
+			            WHEN SAN_BIGO LIKE '제주%' THEN 1400
+			            WHEN SAN_BIGO LIKE '충청남도%' OR SAN_BIGO LIKE '충남%' THEN 1500
+			            WHEN SAN_BIGO LIKE '충청북도%' OR SAN_BIGO LIKE '충북%' THEN 1600
+			            WHEN SAN_BIGO LIKE '세종%' THEN 1700
+			            END AS CODE
+			     , TOT_AMT
+			     , TOT_QTY
+			FROM
+			    (
+			    SELECT C.SAN_BIGO
+			      , SUM(B.TOT_AMT) AS  TOT_AMT
+			      , SUM(B.TOT_QTY) AS  TOT_QTY
+			    FROM
+			        (
+			          SELECT SAN_CD
+			          	   , SUM(TOT_AMT) AS TOT_AMT
+			          	   , SUM(TOT_QTY) AS TOT_QTY
+			          FROM T_SALE_DATE A
+			          WHERE 1=1
+			          AND SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+			          AND A.TOT_AMT != 0
+			          GROUP BY SAN_CD
+			        )B, T_LOCAL C
+			    WHERE 1=1
+			    AND B.SAN_CD  = C.SAN_CD(+)
+			    GROUP BY C.SAN_BIGO
+			    )
+			WHERE 1=1
+			  AND SAN_BIGO IS NOT NULL
+			)
+		GROUP BY CODE
+ 	</select>
+ 	
+ 	<select id="selectDealTrendList" parameterType="int" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		 SELECT SALE_DATE
+ 		 	  , TOT_QTY
+ 		 	  , TOT_AMT
+         FROM 
+             (
+              SELECT TO_CHAR(ADD_MONTHS(TO_DATE(MAX(SALE_DATE), 'YYYY-MM-DD'), '0'), 'YY"년" MM"월" DD"일"') AS SALE_DATE
+                   , SUM(TOT_QTY) AS TOT_QTY
+                   , TRUNC(SUM(TOT_AMT)/10000) AS TOT_AMT
+              FROM TB_PUM_STATS
+              -- 2013-03-15
+              -- where sale_date='2013-03-15'
+               WHERE SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM-DD') AND TO_CHAR(SYSDATE, 'YYYY-MM-DD')
+                AND FLOWER_GUBN = #{flowerGubn}
+                AND CMP_CD = '0000000001'
+              GROUP BY SALE_DATE
+              ORDER BY SALE_DATE DESC
+             )
+         WHERE ROWNUM <![CDATA[<=]]> 3
+         ORDER BY SALE_DATE
+ 	</select>
+ 	
+</mapper>

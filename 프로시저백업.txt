@@ -1,0 +1,646 @@
+create or replace PROCEDURE SP_KOSIS_FLOWER_DATA (
+	p_year IN varchar2
+	,p_loc1 IN varchar2
+	,p_loc2 IN varchar2
+	,p_loc3 IN varchar2
+	,p_gbn1 IN varchar2
+	,p_gbn2 IN varchar2
+	,p_gbn3 IN varchar2
+	,o_cursor OUT  sys_refcursor
+)
+IS
+
+/*** 
+
+Hga07 
+지역별 화훼관련 사업체  그리드 정보 동적으로 처리  
+지역별로 1,2,3단계 도,시,구 
+구분 1,2,3 단계 카테고리별
+
+**/
+
+BEGIN
+	
+    dbms_output.put_line('aaaaaaaa');
+    
+	IF p_loc1 = 'al' and p_loc2 = '전체' and p_loc3 = '전체'  THEN 
+		OPEN o_cursor FOR 
+			SELECT indst_nm,cpnm1,
+            CASE 
+            WHEN p_gbn1 = 'all' THEN '전체'   -- , (sum(c1) + sum(c2)) val tt
+            WHEN p_gbn1 = 'all1' THEN '총사업체수'   -- , (sum(c1) + sum(c2)) val tt
+            WHEN p_gbn1 = 'all2' THEN '총종사자수'  
+            WHEN p_gbn1 = 'a' THEN '종사자성별'  
+            WHEN p_gbn1 = 'b' THEN '조직형태' 
+            WHEN p_gbn1 = 'c' THEN '사업체구분' 
+            WHEN p_gbn1 = 'd' THEN '종사자규모' 
+            WHEN p_gbn1 = 'e' THEN '종사상지위' 
+            WHEN p_gbn1 = 'f' THEN '대표자성별' 
+            WHEN p_gbn1 = 'g' THEN '대표자연령대' 
+            END gubun1,
+            CASE 
+            WHEN p_gbn2 = 'all' THEN '전체' 
+            WHEN p_gbn2 = 'a1' THEN '남자' 
+            WHEN p_gbn2 = 'a2' THEN '여자' 
+            WHEN p_gbn2 = 'b1' THEN '개인사업체' 
+            WHEN p_gbn2 = 'b2' THEN '회사법인' 
+            WHEN p_gbn2 = 'b3' THEN '회사이외법인'
+            WHEN p_gbn2 = 'b4' THEN '비법인단체'
+            WHEN p_gbn2 = 'c1' THEN '단독사업체'
+            WHEN p_gbn2 = 'c2' THEN '공장,지사'
+            WHEN p_gbn2 = 'c3' THEN '본사,본점'
+            when p_gbn2='d1' then '1-4명'
+            when p_gbn2='d2' then '5-9명'
+            when p_gbn2='d3' then '10-19명'
+            when p_gbn2='d4' then '20-49명'
+            when p_gbn2='d5' then '50-99명'
+            when p_gbn2='d6' then '100-299명'
+            when p_gbn2='d7' then '300-499명'
+            when p_gbn2='d8' then '500-999명'
+            when p_gbn2='d9' then '1000명이상'
+            when p_gbn2='e1' then '자영업자'
+            when p_gbn2='e2' then '무급가족'
+            when p_gbn2='e3' then '상용'
+            when p_gbn2='e4' then '임시및일용'
+            when p_gbn2='e5' then '기타'
+            when p_gbn2='f1' then '대표자남자'
+            when p_gbn2='f2' then '대표자여자'
+            when p_gbn2='g1' then '20세미만'
+            when p_gbn2='g2' then '20-29세'
+            when p_gbn2='g3' then '30-39세'
+            when p_gbn2='g4' then '40-49세'
+            when p_gbn2='g5' then '50-59세'
+            when p_gbn2='g6' then '60세이상'
+            END gubun2,
+            case
+            when p_gbn3 = 'all' then '전체'
+            when p_gbn3 = 'ex1' then '종사자수'
+            when p_gbn3 = 'ex2' then '사업체수'
+            end gubun3,
+            case
+            when p_gbn1 = 'all' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c1) + sum(c2)) 
+            when p_gbn1 = 'all1' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c1))
+            when p_gbn1 = 'all2' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c2))
+            when p_gbn1 = 'a' and p_gbn2 = 'all' and p_gbn3 = 'ex1' then (sum(c3) + sum(c4))
+            when p_gbn1 = 'a' and p_gbn2 = 'a1' and p_gbn3 = 'ex1' then (sum(c3))
+            when p_gbn1 = 'a' and p_gbn2 = 'a2' and p_gbn3 = 'ex1' then (sum(c4))
+            when p_gbn1 = 'b' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c5) + sum(c6) + sum(c7) + sum(c8) + sum(c9) + sum(c10) + sum(c11) + sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'all' then (sum(c5) + sum(c6))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'all' then (sum(c7) + sum(c8))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'all' then (sum(c9) + sum(c10))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'all' then (sum(c11) + sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'ex1' then (sum(c6))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'ex1' then (sum(c8))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'ex1' then (sum(c10))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'ex1' then (sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'ex2' then (sum(c5))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'ex2' then (sum(c7))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'ex2' then (sum(c9))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'ex2' then (sum(c11))
+            when p_gbn1 = 'c' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c13) + sum(c14) + sum(c15) + sum(c16) + sum(c17) + sum(c18) )
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'all' then (sum(c13) + sum(c14))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'all' then (sum(c15) + sum(c16))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'all' then (sum(c17) + sum(c18))
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'ex1' then (sum(c14))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'ex1' then (sum(c16))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'ex1' then (sum(c18))
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'ex2' then (sum(c13))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'ex2' then (sum(c15))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'ex2' then (sum(c17))
+            when p_gbn1 = 'd' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c19) + sum(c20) + sum(c21) + sum(c22) + sum(c23) + sum(c24) + sum(c25) + sum(c26) + sum(c27) + sum(c28) + sum(c29) + sum(c30) + sum(c31) + sum(c32) + sum(c33) + sum(c34) + sum(c35) + sum(c36) )
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'all' then (sum(c19) + sum(c20))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'all' then (sum(c21) + sum(c22))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'all' then (sum(c23) + sum(c24))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'all' then (sum(c25) + sum(c26))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'all' then (sum(c27) + sum(c28))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'all' then (sum(c29) + sum(c30))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'all' then (sum(c31) + sum(c32))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'all' then (sum(c33) + sum(c34))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'all' then (sum(c35) + sum(c36))
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'ex2' then (sum(c19))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'ex2' then (sum(c21))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'ex2' then (sum(c23))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'ex2' then (sum(c25))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'ex2' then (sum(c27))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'ex2' then (sum(c29))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'ex2' then (sum(c31))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'ex2' then (sum(c33))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'ex2' then (sum(c35))
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'ex1' then (sum(c20))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'ex1' then (sum(c22))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'ex1' then (sum(c24))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'ex1' then (sum(c26))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'ex1' then (sum(c28))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'ex1' then (sum(c30))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'ex1' then (sum(c32))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'ex1' then (sum(c34))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'ex1' then (sum(c36))
+            when p_gbn1 = 'e' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c37) + sum(c38) +sum(c39) + sum(c40) + sum(c41))
+            when p_gbn1 = 'e' and p_gbn2 = 'e1' and p_gbn3 = 'ex1' then (sum(c37))
+            when p_gbn1 = 'e' and p_gbn2 = 'e2' and p_gbn3 = 'ex1' then (sum(c38))
+            when p_gbn1 = 'e' and p_gbn2 = 'e3' and p_gbn3 = 'ex1' then (sum(c39))
+            when p_gbn1 = 'e' and p_gbn2 = 'e4' and p_gbn3 = 'ex1' then (sum(c40))
+            when p_gbn1 = 'e' and p_gbn2 = 'e5' and p_gbn3 = 'ex1' then (sum(c41))
+            when p_gbn1 = 'f' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c42) + sum(c43) +sum(c44) + sum(c45))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'all' then (sum(c42) + sum(c43))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'all' then (sum(c44) + sum(c45))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'ex2' then (sum(c42))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'ex2' then (sum(c44))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'ex1' then (sum(c43))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'ex1' then (sum(c45))
+            when p_gbn1 = 'g' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(RPRG_GNR1_ESTM_CNT) + sum(RPRG_GNR1_WOKE_SUM) + sum(RPRG_GNR2_ESTM_CNT) + sum(RPRG_GNR2_WOKE_SUM) + sum(RPRG_GNR3_ESTM_CNT) + sum(RPRG_GNR3_WOKE_SUM) + sum(RPRG_GNR4_ESTM_CNT) + sum(RPRG_GNR4_WOKE_SUM) + sum(RPRG_GNR5_ESTM_CNT) + sum(RPRG_GNR5_WOKE_SUM) + sum(RPRG_GNR6_ESTM_CNT) + sum(RPRG_GNR6_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'all' then (sum(RPRG_GNR1_ESTM_CNT) + sum(RPRG_GNR1_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'all' then (sum(RPRG_GNR2_ESTM_CNT) + sum(RPRG_GNR2_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'all' then (sum(RPRG_GNR3_ESTM_CNT) + sum(RPRG_GNR3_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'all' then (sum(RPRG_GNR4_ESTM_CNT) + sum(RPRG_GNR4_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'all' then (sum(RPRG_GNR5_ESTM_CNT) + sum(RPRG_GNR5_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'all' then (sum(RPRG_GNR6_ESTM_CNT) + sum(RPRG_GNR6_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'ex2' then (sum(RPRG_GNR1_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'ex2' then (sum(RPRG_GNR2_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'ex2' then (sum(RPRG_GNR3_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'ex2' then (sum(RPRG_GNR4_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'ex2' then (sum(RPRG_GNR5_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'ex2' then (sum(RPRG_GNR6_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'ex1' then (sum(RPRG_GNR1_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'ex1' then (sum(RPRG_GNR2_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'ex1' then (sum(RPRG_GNR3_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'ex1' then (sum(RPRG_GNR4_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'ex1' then (sum(RPRG_GNR5_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'ex1' then (sum(RPRG_GNR6_WOKE_SUM))
+            end VAL
+    
+            FROM FLOWER.KOSIS_FLOWER_COMPANY kfc
+            where lvl = '1'
+            
+            group by indst_nm,cpnm1
+            order by cpnm1
+            
+            ;
+            
+	ELSif p_loc1 <> 'al' and p_loc2 = '전체' and p_loc3 = '전체' then 
+		OPEN o_cursor FOR 
+			SELECT indst_nm,cpnm1,
+            CASE 
+            WHEN p_gbn1 = 'all' THEN '전체'   -- , (sum(c1) + sum(c2)) val tt
+            WHEN p_gbn1 = 'all1' THEN '총사업체수'   -- , (sum(c1) + sum(c2)) val tt
+            WHEN p_gbn1 = 'all2' THEN '총종사자수'  
+            WHEN p_gbn1 = 'a' THEN '종사자성별'  
+            WHEN p_gbn1 = 'b' THEN '조직형태' 
+            WHEN p_gbn1 = 'c' THEN '사업체구분' 
+            WHEN p_gbn1 = 'd' THEN '종사자규모' 
+            WHEN p_gbn1 = 'e' THEN '종사상지위' 
+            WHEN p_gbn1 = 'f' THEN '대표자성별' 
+            WHEN p_gbn1 = 'g' THEN '대표자연령대' 
+            END gubun1,
+            CASE 
+            WHEN p_gbn2 = 'all' THEN '전체' 
+            WHEN p_gbn2 = 'a1' THEN '남자' 
+            WHEN p_gbn2 = 'a2' THEN '여자' 
+            WHEN p_gbn2 = 'b1' THEN '개인사업체' 
+            WHEN p_gbn2 = 'b2' THEN '회사법인' 
+            WHEN p_gbn2 = 'b3' THEN '회사이외법인'
+            WHEN p_gbn2 = 'b4' THEN '비법인단체'
+            WHEN p_gbn2 = 'c1' THEN '단독사업체'
+            WHEN p_gbn2 = 'c2' THEN '공장,지사'
+            WHEN p_gbn2 = 'c3' THEN '본사,본점'
+            when p_gbn2='d1' then '1-4명'
+            when p_gbn2='d2' then '5-9명'
+            when p_gbn2='d3' then '10-19명'
+            when p_gbn2='d4' then '20-49명'
+            when p_gbn2='d5' then '50-99명'
+            when p_gbn2='d6' then '100-299명'
+            when p_gbn2='d7' then '300-499명'
+            when p_gbn2='d8' then '500-999명'
+            when p_gbn2='d9' then '1000명이상'
+            when p_gbn2='e1' then '자영업자'
+            when p_gbn2='e2' then '무급가족'
+            when p_gbn2='e3' then '상용'
+            when p_gbn2='e4' then '임시및일용'
+            when p_gbn2='e5' then '기타'
+            when p_gbn2='f1' then '대표자남자'
+            when p_gbn2='f2' then '대표자여자'
+            when p_gbn2='g1' then '20세미만'
+            when p_gbn2='g2' then '20-29세'
+            when p_gbn2='g3' then '30-39세'
+            when p_gbn2='g4' then '40-49세'
+            when p_gbn2='g5' then '50-59세'
+            when p_gbn2='g6' then '60세이상'
+            END gubun2,
+            case
+            when p_gbn3 = 'all' then '전체'
+            when p_gbn3 = 'ex1' then '종사자수'
+            when p_gbn3 = 'ex2' then '사업체수'
+            end gubun3,
+            case
+            when p_gbn1 = 'all' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c1) + sum(c2)) 
+            when p_gbn1 = 'all1' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c1))
+            when p_gbn1 = 'all2' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c2))
+            when p_gbn1 = 'a' and p_gbn2 = 'all' and p_gbn3 = 'ex1' then (sum(c3) + sum(c4))
+            when p_gbn1 = 'a' and p_gbn2 = 'a1' and p_gbn3 = 'ex1' then (sum(c3))
+            when p_gbn1 = 'a' and p_gbn2 = 'a2' and p_gbn3 = 'ex1' then (sum(c4))
+            when p_gbn1 = 'b' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c5) + sum(c6) + sum(c7) + sum(c8) + sum(c9) + sum(c10) + sum(c11) + sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'all' then (sum(c5) + sum(c6))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'all' then (sum(c7) + sum(c8))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'all' then (sum(c9) + sum(c10))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'all' then (sum(c11) + sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'ex1' then (sum(c6))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'ex1' then (sum(c8))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'ex1' then (sum(c10))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'ex1' then (sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'ex2' then (sum(c5))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'ex2' then (sum(c7))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'ex2' then (sum(c9))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'ex2' then (sum(c11))
+            when p_gbn1 = 'c' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c13) + sum(c14) + sum(c15) + sum(c16) + sum(c17) + sum(c18) )
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'all' then (sum(c13) + sum(c14))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'all' then (sum(c15) + sum(c16))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'all' then (sum(c17) + sum(c18))
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'ex1' then (sum(c14))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'ex1' then (sum(c16))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'ex1' then (sum(c18))
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'ex2' then (sum(c13))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'ex2' then (sum(c15))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'ex2' then (sum(c17))
+            when p_gbn1 = 'd' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c19) + sum(c20) + sum(c21) + sum(c22) + sum(c23) + sum(c24) + sum(c25) + sum(c26) + sum(c27) + sum(c28) + sum(c29) + sum(c30) + sum(c31) + sum(c32) + sum(c33) + sum(c34) + sum(c35) + sum(c36) )
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'all' then (sum(c19) + sum(c20))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'all' then (sum(c21) + sum(c22))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'all' then (sum(c23) + sum(c24))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'all' then (sum(c25) + sum(c26))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'all' then (sum(c27) + sum(c28))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'all' then (sum(c29) + sum(c30))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'all' then (sum(c31) + sum(c32))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'all' then (sum(c33) + sum(c34))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'all' then (sum(c35) + sum(c36))
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'ex2' then (sum(c19))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'ex2' then (sum(c21))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'ex2' then (sum(c23))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'ex2' then (sum(c25))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'ex2' then (sum(c27))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'ex2' then (sum(c29))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'ex2' then (sum(c31))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'ex2' then (sum(c33))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'ex2' then (sum(c35))
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'ex1' then (sum(c20))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'ex1' then (sum(c22))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'ex1' then (sum(c24))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'ex1' then (sum(c26))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'ex1' then (sum(c28))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'ex1' then (sum(c30))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'ex1' then (sum(c32))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'ex1' then (sum(c34))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'ex1' then (sum(c36))
+            when p_gbn1 = 'e' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c37) + sum(c38) +sum(c39) + sum(c40) + sum(c41))
+            when p_gbn1 = 'e' and p_gbn2 = 'e1' and p_gbn3 = 'ex1' then (sum(c37))
+            when p_gbn1 = 'e' and p_gbn2 = 'e2' and p_gbn3 = 'ex1' then (sum(c38))
+            when p_gbn1 = 'e' and p_gbn2 = 'e3' and p_gbn3 = 'ex1' then (sum(c39))
+            when p_gbn1 = 'e' and p_gbn2 = 'e4' and p_gbn3 = 'ex1' then (sum(c40))
+            when p_gbn1 = 'e' and p_gbn2 = 'e5' and p_gbn3 = 'ex1' then (sum(c41))
+            when p_gbn1 = 'f' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c42) + sum(c43) +sum(c44) + sum(c45))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'all' then (sum(c42) + sum(c43))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'all' then (sum(c44) + sum(c45))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'ex2' then (sum(c42))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'ex2' then (sum(c44))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'ex1' then (sum(c43))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'ex1' then (sum(c45))
+            when p_gbn1 = 'g' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(RPRG_GNR1_ESTM_CNT) + sum(RPRG_GNR1_WOKE_SUM) + sum(RPRG_GNR2_ESTM_CNT) + sum(RPRG_GNR2_WOKE_SUM) + sum(RPRG_GNR3_ESTM_CNT) + sum(RPRG_GNR3_WOKE_SUM) + sum(RPRG_GNR4_ESTM_CNT) + sum(RPRG_GNR4_WOKE_SUM) + sum(RPRG_GNR5_ESTM_CNT) + sum(RPRG_GNR5_WOKE_SUM) + sum(RPRG_GNR6_ESTM_CNT) + sum(RPRG_GNR6_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'all' then (sum(RPRG_GNR1_ESTM_CNT) + sum(RPRG_GNR1_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'all' then (sum(RPRG_GNR2_ESTM_CNT) + sum(RPRG_GNR2_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'all' then (sum(RPRG_GNR3_ESTM_CNT) + sum(RPRG_GNR3_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'all' then (sum(RPRG_GNR4_ESTM_CNT) + sum(RPRG_GNR4_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'all' then (sum(RPRG_GNR5_ESTM_CNT) + sum(RPRG_GNR5_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'all' then (sum(RPRG_GNR6_ESTM_CNT) + sum(RPRG_GNR6_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'ex2' then (sum(RPRG_GNR1_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'ex2' then (sum(RPRG_GNR2_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'ex2' then (sum(RPRG_GNR3_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'ex2' then (sum(RPRG_GNR4_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'ex2' then (sum(RPRG_GNR5_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'ex2' then (sum(RPRG_GNR6_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'ex1' then (sum(RPRG_GNR1_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'ex1' then (sum(RPRG_GNR2_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'ex1' then (sum(RPRG_GNR3_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'ex1' then (sum(RPRG_GNR4_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'ex1' then (sum(RPRG_GNR5_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'ex1' then (sum(RPRG_GNR6_WOKE_SUM))
+            end VAL
+            FROM FLOWER.KOSIS_FLOWER_COMPANY kfc 
+            where substr(AD_CD_INDST_IDV_CD ,0,2) = p_loc1
+            and lvl = case when p_loc1 = '29' then '1' else '2' end
+            
+            group by indst_nm,cpnm1
+            order by cpnm1
+            ;
+    ELSif p_loc1 <> 'al' and p_loc2 <> '전체' and p_loc3 = '전체' then 
+		OPEN o_cursor FOR 
+			SELECT indst_nm,cpnm1,
+            CASE 
+            WHEN p_gbn1 = 'all' THEN '전체'   -- , (sum(c1) + sum(c2)) val tt
+            WHEN p_gbn1 = 'all1' THEN '총사업체수'   -- , (sum(c1) + sum(c2)) val tt
+            WHEN p_gbn1 = 'all2' THEN '총종사자수'  
+            WHEN p_gbn1 = 'a' THEN '종사자성별'  
+            WHEN p_gbn1 = 'b' THEN '조직형태' 
+            WHEN p_gbn1 = 'c' THEN '사업체구분' 
+            WHEN p_gbn1 = 'd' THEN '종사자규모' 
+            WHEN p_gbn1 = 'e' THEN '종사상지위' 
+            WHEN p_gbn1 = 'f' THEN '대표자성별' 
+            WHEN p_gbn1 = 'g' THEN '대표자연령대' 
+            END gubun1,
+            CASE 
+            WHEN p_gbn2 = 'all' THEN '전체' 
+            WHEN p_gbn2 = 'a1' THEN '남자' 
+            WHEN p_gbn2 = 'a2' THEN '여자' 
+            WHEN p_gbn2 = 'b1' THEN '개인사업체' 
+            WHEN p_gbn2 = 'b2' THEN '회사법인' 
+            WHEN p_gbn2 = 'b3' THEN '회사이외법인'
+            WHEN p_gbn2 = 'b4' THEN '비법인단체'
+            WHEN p_gbn2 = 'c1' THEN '단독사업체'
+            WHEN p_gbn2 = 'c2' THEN '공장,지사'
+            WHEN p_gbn2 = 'c3' THEN '본사,본점'
+            when p_gbn2='d1' then '1-4명'
+            when p_gbn2='d2' then '5-9명'
+            when p_gbn2='d3' then '10-19명'
+            when p_gbn2='d4' then '20-49명'
+            when p_gbn2='d5' then '50-99명'
+            when p_gbn2='d6' then '100-299명'
+            when p_gbn2='d7' then '300-499명'
+            when p_gbn2='d8' then '500-999명'
+            when p_gbn2='d9' then '1000명이상'
+            when p_gbn2='e1' then '자영업자'
+            when p_gbn2='e2' then '무급가족'
+            when p_gbn2='e3' then '상용'
+            when p_gbn2='e4' then '임시및일용'
+            when p_gbn2='e5' then '기타'
+            when p_gbn2='f1' then '대표자남자'
+            when p_gbn2='f2' then '대표자여자'
+            when p_gbn2='g1' then '20세미만'
+            when p_gbn2='g2' then '20-29세'
+            when p_gbn2='g3' then '30-39세'
+            when p_gbn2='g4' then '40-49세'
+            when p_gbn2='g5' then '50-59세'
+            when p_gbn2='g6' then '60세이상'
+            END gubun2,
+            case
+            when p_gbn3 = 'all' then '전체'
+            when p_gbn3 = 'ex1' then '종사자수'
+            when p_gbn3 = 'ex2' then '사업체수'
+            end gubun3,
+            case
+            when p_gbn1 = 'all' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c1) + sum(c2)) 
+            when p_gbn1 = 'all1' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c1))
+            when p_gbn1 = 'all2' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c2))
+            when p_gbn1 = 'a' and p_gbn2 = 'all' and p_gbn3 = 'ex1' then (sum(c3) + sum(c4))
+            when p_gbn1 = 'a' and p_gbn2 = 'a1' and p_gbn3 = 'ex1' then (sum(c3))
+            when p_gbn1 = 'a' and p_gbn2 = 'a2' and p_gbn3 = 'ex1' then (sum(c4))
+            when p_gbn1 = 'b' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c5) + sum(c6) + sum(c7) + sum(c8) + sum(c9) + sum(c10) + sum(c11) + sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'all' then (sum(c5) + sum(c6))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'all' then (sum(c7) + sum(c8))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'all' then (sum(c9) + sum(c10))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'all' then (sum(c11) + sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'ex1' then (sum(c6))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'ex1' then (sum(c8))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'ex1' then (sum(c10))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'ex1' then (sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'ex2' then (sum(c5))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'ex2' then (sum(c7))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'ex2' then (sum(c9))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'ex2' then (sum(c11))
+            when p_gbn1 = 'c' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c13) + sum(c14) + sum(c15) + sum(c16) + sum(c17) + sum(c18) )
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'all' then (sum(c13) + sum(c14))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'all' then (sum(c15) + sum(c16))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'all' then (sum(c17) + sum(c18))
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'ex1' then (sum(c14))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'ex1' then (sum(c16))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'ex1' then (sum(c18))
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'ex2' then (sum(c13))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'ex2' then (sum(c15))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'ex2' then (sum(c17))
+            when p_gbn1 = 'd' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c19) + sum(c20) + sum(c21) + sum(c22) + sum(c23) + sum(c24) + sum(c25) + sum(c26) + sum(c27) + sum(c28) + sum(c29) + sum(c30) + sum(c31) + sum(c32) + sum(c33) + sum(c34) + sum(c35) + sum(c36) )
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'all' then (sum(c19) + sum(c20))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'all' then (sum(c21) + sum(c22))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'all' then (sum(c23) + sum(c24))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'all' then (sum(c25) + sum(c26))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'all' then (sum(c27) + sum(c28))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'all' then (sum(c29) + sum(c30))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'all' then (sum(c31) + sum(c32))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'all' then (sum(c33) + sum(c34))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'all' then (sum(c35) + sum(c36))
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'ex2' then (sum(c19))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'ex2' then (sum(c21))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'ex2' then (sum(c23))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'ex2' then (sum(c25))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'ex2' then (sum(c27))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'ex2' then (sum(c29))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'ex2' then (sum(c31))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'ex2' then (sum(c33))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'ex2' then (sum(c35))
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'ex1' then (sum(c20))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'ex1' then (sum(c22))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'ex1' then (sum(c24))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'ex1' then (sum(c26))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'ex1' then (sum(c28))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'ex1' then (sum(c30))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'ex1' then (sum(c32))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'ex1' then (sum(c34))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'ex1' then (sum(c36))
+            when p_gbn1 = 'e' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c37) + sum(c38) +sum(c39) + sum(c40) + sum(c41))
+            when p_gbn1 = 'e' and p_gbn2 = 'e1' and p_gbn3 = 'ex1' then (sum(c37))
+            when p_gbn1 = 'e' and p_gbn2 = 'e2' and p_gbn3 = 'ex1' then (sum(c38))
+            when p_gbn1 = 'e' and p_gbn2 = 'e3' and p_gbn3 = 'ex1' then (sum(c39))
+            when p_gbn1 = 'e' and p_gbn2 = 'e4' and p_gbn3 = 'ex1' then (sum(c40))
+            when p_gbn1 = 'e' and p_gbn2 = 'e5' and p_gbn3 = 'ex1' then (sum(c41))
+            when p_gbn1 = 'f' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c42) + sum(c43) +sum(c44) + sum(c45))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'all' then (sum(c42) + sum(c43))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'all' then (sum(c44) + sum(c45))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'ex2' then (sum(c42))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'ex2' then (sum(c44))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'ex1' then (sum(c43))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'ex1' then (sum(c45))
+            when p_gbn1 = 'g' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(RPRG_GNR1_ESTM_CNT) + sum(RPRG_GNR1_WOKE_SUM) + sum(RPRG_GNR2_ESTM_CNT) + sum(RPRG_GNR2_WOKE_SUM) + sum(RPRG_GNR3_ESTM_CNT) + sum(RPRG_GNR3_WOKE_SUM) + sum(RPRG_GNR4_ESTM_CNT) + sum(RPRG_GNR4_WOKE_SUM) + sum(RPRG_GNR5_ESTM_CNT) + sum(RPRG_GNR5_WOKE_SUM) + sum(RPRG_GNR6_ESTM_CNT) + sum(RPRG_GNR6_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'all' then (sum(RPRG_GNR1_ESTM_CNT) + sum(RPRG_GNR1_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'all' then (sum(RPRG_GNR2_ESTM_CNT) + sum(RPRG_GNR2_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'all' then (sum(RPRG_GNR3_ESTM_CNT) + sum(RPRG_GNR3_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'all' then (sum(RPRG_GNR4_ESTM_CNT) + sum(RPRG_GNR4_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'all' then (sum(RPRG_GNR5_ESTM_CNT) + sum(RPRG_GNR5_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'all' then (sum(RPRG_GNR6_ESTM_CNT) + sum(RPRG_GNR6_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'ex2' then (sum(RPRG_GNR1_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'ex2' then (sum(RPRG_GNR2_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'ex2' then (sum(RPRG_GNR3_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'ex2' then (sum(RPRG_GNR4_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'ex2' then (sum(RPRG_GNR5_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'ex2' then (sum(RPRG_GNR6_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'ex1' then (sum(RPRG_GNR1_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'ex1' then (sum(RPRG_GNR2_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'ex1' then (sum(RPRG_GNR3_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'ex1' then (sum(RPRG_GNR4_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'ex1' then (sum(RPRG_GNR5_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'ex1' then (sum(RPRG_GNR6_WOKE_SUM))
+            end VAL
+            FROM FLOWER.KOSIS_FLOWER_COMPANY kfc 
+            where substr(AD_CD_INDST_IDV_CD ,0,2) = p_loc1
+            and lvl = '2'
+            and cpnm1 = p_loc2
+            
+            group by indst_nm,cpnm1
+            order by cpnm1
+            ;
+    ELSif p_loc1 <> 'al' and p_loc2 <> '전체' and p_loc3 <> '전체' then 
+		OPEN o_cursor FOR 
+			SELECT indst_nm,cpnm1,
+            CASE 
+            WHEN p_gbn1 = 'all' THEN '전체'   -- , (sum(c1) + sum(c2)) val tt
+            WHEN p_gbn1 = 'all1' THEN '총사업체수'   -- , (sum(c1) + sum(c2)) val tt
+            WHEN p_gbn1 = 'all2' THEN '총종사자수'  
+            WHEN p_gbn1 = 'a' THEN '종사자성별'  
+            WHEN p_gbn1 = 'b' THEN '조직형태' 
+            WHEN p_gbn1 = 'c' THEN '사업체구분' 
+            WHEN p_gbn1 = 'd' THEN '종사자규모' 
+            WHEN p_gbn1 = 'e' THEN '종사상지위' 
+            WHEN p_gbn1 = 'f' THEN '대표자성별' 
+            WHEN p_gbn1 = 'g' THEN '대표자연령대' 
+            END gubun1,
+            CASE 
+            WHEN p_gbn2 = 'all' THEN '전체' 
+            WHEN p_gbn2 = 'a1' THEN '남자' 
+            WHEN p_gbn2 = 'a2' THEN '여자' 
+            WHEN p_gbn2 = 'b1' THEN '개인사업체' 
+            WHEN p_gbn2 = 'b2' THEN '회사법인' 
+            WHEN p_gbn2 = 'b3' THEN '회사이외법인'
+            WHEN p_gbn2 = 'b4' THEN '비법인단체'
+            WHEN p_gbn2 = 'c1' THEN '단독사업체'
+            WHEN p_gbn2 = 'c2' THEN '공장,지사'
+            WHEN p_gbn2 = 'c3' THEN '본사,본점'
+            when p_gbn2='d1' then '1-4명'
+            when p_gbn2='d2' then '5-9명'
+            when p_gbn2='d3' then '10-19명'
+            when p_gbn2='d4' then '20-49명'
+            when p_gbn2='d5' then '50-99명'
+            when p_gbn2='d6' then '100-299명'
+            when p_gbn2='d7' then '300-499명'
+            when p_gbn2='d8' then '500-999명'
+            when p_gbn2='d9' then '1000명이상'
+            when p_gbn2='e1' then '자영업자'
+            when p_gbn2='e2' then '무급가족'
+            when p_gbn2='e3' then '상용'
+            when p_gbn2='e4' then '임시및일용'
+            when p_gbn2='e5' then '기타'
+            when p_gbn2='f1' then '대표자남자'
+            when p_gbn2='f2' then '대표자여자'
+            when p_gbn2='g1' then '20세미만'
+            when p_gbn2='g2' then '20-29세'
+            when p_gbn2='g3' then '30-39세'
+            when p_gbn2='g4' then '40-49세'
+            when p_gbn2='g5' then '50-59세'
+            when p_gbn2='g6' then '60세이상'
+            END gubun2,
+            case
+            when p_gbn3 = 'all' then '전체'
+            when p_gbn3 = 'ex1' then '종사자수'
+            when p_gbn3 = 'ex2' then '사업체수'
+            end gubun3,
+            case
+            when p_gbn1 = 'all' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c1) + sum(c2)) 
+            when p_gbn1 = 'all1' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c1))
+            when p_gbn1 = 'all2' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c2))
+            when p_gbn1 = 'a' and p_gbn2 = 'all' and p_gbn3 = 'ex1' then (sum(c3) + sum(c4))
+            when p_gbn1 = 'a' and p_gbn2 = 'a1' and p_gbn3 = 'ex1' then (sum(c3))
+            when p_gbn1 = 'a' and p_gbn2 = 'a2' and p_gbn3 = 'ex1' then (sum(c4))
+            when p_gbn1 = 'b' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c5) + sum(c6) + sum(c7) + sum(c8) + sum(c9) + sum(c10) + sum(c11) + sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'all' then (sum(c5) + sum(c6))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'all' then (sum(c7) + sum(c8))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'all' then (sum(c9) + sum(c10))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'all' then (sum(c11) + sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'ex1' then (sum(c6))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'ex1' then (sum(c8))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'ex1' then (sum(c10))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'ex1' then (sum(c12))
+            when p_gbn1 = 'b' and p_gbn2 = 'b1' and p_gbn3 = 'ex2' then (sum(c5))
+            when p_gbn1 = 'b' and p_gbn2 = 'b2' and p_gbn3 = 'ex2' then (sum(c7))
+            when p_gbn1 = 'b' and p_gbn2 = 'b3' and p_gbn3 = 'ex2' then (sum(c9))
+            when p_gbn1 = 'b' and p_gbn2 = 'b4' and p_gbn3 = 'ex2' then (sum(c11))
+            when p_gbn1 = 'c' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c13) + sum(c14) + sum(c15) + sum(c16) + sum(c17) + sum(c18) )
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'all' then (sum(c13) + sum(c14))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'all' then (sum(c15) + sum(c16))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'all' then (sum(c17) + sum(c18))
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'ex1' then (sum(c14))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'ex1' then (sum(c16))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'ex1' then (sum(c18))
+            when p_gbn1 = 'c' and p_gbn2 = 'c1' and p_gbn3 = 'ex2' then (sum(c13))
+            when p_gbn1 = 'c' and p_gbn2 = 'c2' and p_gbn3 = 'ex2' then (sum(c15))
+            when p_gbn1 = 'c' and p_gbn2 = 'c3' and p_gbn3 = 'ex2' then (sum(c17))
+            when p_gbn1 = 'd' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c19) + sum(c20) + sum(c21) + sum(c22) + sum(c23) + sum(c24) + sum(c25) + sum(c26) + sum(c27) + sum(c28) + sum(c29) + sum(c30) + sum(c31) + sum(c32) + sum(c33) + sum(c34) + sum(c35) + sum(c36) )
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'all' then (sum(c19) + sum(c20))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'all' then (sum(c21) + sum(c22))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'all' then (sum(c23) + sum(c24))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'all' then (sum(c25) + sum(c26))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'all' then (sum(c27) + sum(c28))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'all' then (sum(c29) + sum(c30))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'all' then (sum(c31) + sum(c32))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'all' then (sum(c33) + sum(c34))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'all' then (sum(c35) + sum(c36))
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'ex2' then (sum(c19))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'ex2' then (sum(c21))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'ex2' then (sum(c23))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'ex2' then (sum(c25))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'ex2' then (sum(c27))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'ex2' then (sum(c29))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'ex2' then (sum(c31))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'ex2' then (sum(c33))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'ex2' then (sum(c35))
+            when p_gbn1 = 'd' and p_gbn2 = 'd1' and p_gbn3 = 'ex1' then (sum(c20))
+            when p_gbn1 = 'd' and p_gbn2 = 'd2' and p_gbn3 = 'ex1' then (sum(c22))
+            when p_gbn1 = 'd' and p_gbn2 = 'd3' and p_gbn3 = 'ex1' then (sum(c24))
+            when p_gbn1 = 'd' and p_gbn2 = 'd4' and p_gbn3 = 'ex1' then (sum(c26))
+            when p_gbn1 = 'd' and p_gbn2 = 'd5' and p_gbn3 = 'ex1' then (sum(c28))
+            when p_gbn1 = 'd' and p_gbn2 = 'd6' and p_gbn3 = 'ex1' then (sum(c30))
+            when p_gbn1 = 'd' and p_gbn2 = 'd7' and p_gbn3 = 'ex1' then (sum(c32))
+            when p_gbn1 = 'd' and p_gbn2 = 'd8' and p_gbn3 = 'ex1' then (sum(c34))
+            when p_gbn1 = 'd' and p_gbn2 = 'd9' and p_gbn3 = 'ex1' then (sum(c36))
+            when p_gbn1 = 'e' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c37) + sum(c38) +sum(c39) + sum(c40) + sum(c41))
+            when p_gbn1 = 'e' and p_gbn2 = 'e1' and p_gbn3 = 'ex1' then (sum(c37))
+            when p_gbn1 = 'e' and p_gbn2 = 'e2' and p_gbn3 = 'ex1' then (sum(c38))
+            when p_gbn1 = 'e' and p_gbn2 = 'e3' and p_gbn3 = 'ex1' then (sum(c39))
+            when p_gbn1 = 'e' and p_gbn2 = 'e4' and p_gbn3 = 'ex1' then (sum(c40))
+            when p_gbn1 = 'e' and p_gbn2 = 'e5' and p_gbn3 = 'ex1' then (sum(c41))
+            when p_gbn1 = 'f' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(c42) + sum(c43) +sum(c44) + sum(c45))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'all' then (sum(c42) + sum(c43))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'all' then (sum(c44) + sum(c45))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'ex2' then (sum(c42))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'ex2' then (sum(c44))
+            when p_gbn1 = 'f' and p_gbn2 = 'f1' and p_gbn3 = 'ex1' then (sum(c43))
+            when p_gbn1 = 'f' and p_gbn2 = 'f2' and p_gbn3 = 'ex1' then (sum(c45))
+            when p_gbn1 = 'g' and p_gbn2 = 'all' and p_gbn3 = 'all' then (sum(RPRG_GNR1_ESTM_CNT) + sum(RPRG_GNR1_WOKE_SUM) + sum(RPRG_GNR2_ESTM_CNT) + sum(RPRG_GNR2_WOKE_SUM) + sum(RPRG_GNR3_ESTM_CNT) + sum(RPRG_GNR3_WOKE_SUM) + sum(RPRG_GNR4_ESTM_CNT) + sum(RPRG_GNR4_WOKE_SUM) + sum(RPRG_GNR5_ESTM_CNT) + sum(RPRG_GNR5_WOKE_SUM) + sum(RPRG_GNR6_ESTM_CNT) + sum(RPRG_GNR6_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'all' then (sum(RPRG_GNR1_ESTM_CNT) + sum(RPRG_GNR1_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'all' then (sum(RPRG_GNR2_ESTM_CNT) + sum(RPRG_GNR2_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'all' then (sum(RPRG_GNR3_ESTM_CNT) + sum(RPRG_GNR3_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'all' then (sum(RPRG_GNR4_ESTM_CNT) + sum(RPRG_GNR4_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'all' then (sum(RPRG_GNR5_ESTM_CNT) + sum(RPRG_GNR5_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'all' then (sum(RPRG_GNR6_ESTM_CNT) + sum(RPRG_GNR6_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'ex2' then (sum(RPRG_GNR1_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'ex2' then (sum(RPRG_GNR2_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'ex2' then (sum(RPRG_GNR3_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'ex2' then (sum(RPRG_GNR4_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'ex2' then (sum(RPRG_GNR5_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'ex2' then (sum(RPRG_GNR6_ESTM_CNT))
+            when p_gbn1 = 'g' and p_gbn2 = 'g1' and p_gbn3 = 'ex1' then (sum(RPRG_GNR1_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g2' and p_gbn3 = 'ex1' then (sum(RPRG_GNR2_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g3' and p_gbn3 = 'ex1' then (sum(RPRG_GNR3_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g4' and p_gbn3 = 'ex1' then (sum(RPRG_GNR4_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g5' and p_gbn3 = 'ex1' then (sum(RPRG_GNR5_WOKE_SUM))
+            when p_gbn1 = 'g' and p_gbn2 = 'g6' and p_gbn3 = 'ex1' then (sum(RPRG_GNR6_WOKE_SUM))
+            end VAL
+            FROM FLOWER.KOSIS_FLOWER_COMPANY kfc 
+            where substr(AD_CD_INDST_IDV_CD ,0,2) = p_loc1
+            and lvl = '3'
+            and cpnm1 = p_loc3
+            
+            group by indst_nm,cpnm1
+            order by cpnm1
+            ;
+            
+	END IF;
+       EXCEPTION
+                WHEN OTHERS THEN
+                    dbms_output.put_line('에러');
+	-- SELECT CPNM1 INTO V_CPNM1 FROM FLOWER.kosis_flower_company;
+    -- execute immediate
+	
+END SP_KOSIS_FLOWER_DATA;

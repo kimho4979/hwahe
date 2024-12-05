@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns="http://www.w3.org/1999/xhtml">
+
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi" />
+<title>출하 및 예정물량 ㅣ aT 화훼유통정보 모니터요원 입력시스템</title>
+<link rel="stylesheet" type="text/css" href="../../../../css/mobile/common/layout.css"/>
+</head>
+<body>
+<div id="lay_out">
+  <div id="sub_top">
+    <ul>
+      <li class="lay1">
+        <h1 class="h1_img">
+        <img src="../../../../images/common/at3.png" alt="aT화훼유통정보모니터요원로고" title="aT화훼유통정보모니터요원로고"/></h1><!--화훼메인로고입니다-->
+      </li>
+      
+      <!--li class="lay2"><a href="file:///C|/Users/woorim/Desktop/모니터입력화면 모바일/index.asp">
+       <img src="file:///C|/Users/woorim/Desktop/모니터입력화면 모바일/images/top_home_btn.png" alt="처음으로" width="49" height="50" /></a></li-->
+    </ul>
+  </div>
+  
+  <div id="top_bar">
+     <div id="sub_top_menu">
+     <a href="./sub1.html">출하 및 예정물량</a>ㅣ <a href=""><span class="a_purple">작황동향</span></a> ㅣ <a href="./sub1_3.html">재배동향</a> ㅣ <a href="./sub1_4.html">소비동향</a> ㅣ <a href="./sub1_5.html">소매가격</a>
+  </div> <!--화훼메뉴입니다-->
+  <div class="hw_clear"></div>  
+
+  <div class="ma_half1_1"><span class="half_title2 half_title2_ano">작황동향</span></div>
+  <div id="sub_body">
+     <!-- 검색 시작-->
+
+	<div class="all_select_part">
+        <div class="half2_purple"></div>
+        <span class="select_date_title1">날짜선택</span>
+        <span class="select_date_title2">해당 날짜를 선택하세요</span>
+    </div>
+    <div class="radio_btn_all">
+		<input type="text" name="calender_date_box" class="calender_datebox_1"/>
+    </div>
+    <div class="all_select_part">
+        <div class="half2_purple"></div>
+        <span class="select_date_title1">작황정보</span>
+        <span class="select_date_title2">품종을 선택하세요</span>
+    </div>
+    <div class="radio_btn_all">
+       <form class="frm_ssq">
+            <input id="radio1" type="radio" name="radio" value="1" checked="checked"><label for="radio1">좋음</label>
+            <input id="radio2" type="radio" name="radio" value="2"><label for="radio2">보통</label>
+            <input id="radio3" type="radio" name="radio" value="3"><label for="radio3">나쁨</label>
+       </form>
+    </div>
+    <div class="all_select_part">
+        <div class="half2_purple"></div>
+        <span class="select_date_title1">작황상태 요약</span>
+        <span class="select_date_title2">작황상태 요약정보를 입력하세요(100자~300자)</span>
+    </div>
+    <div class="radio_btn_all2">
+    	<textarea name="message" class="message_input"></textarea>
+    </div>
+    <div class="all_select_part">
+        <div class="half2_purple"></div>
+        <span class="select_date_title1">작황사진 업로드</span>
+        <span class="select_date_title2">작황사진을 업로드하세요</span>
+    </div>
+    <div class="radio_btn_all">
+    	<input type="file" name="input_file" class="file_input" />
+    </div>
+	<div id="rt_sch_btn">
+	  <div id="rt_sch_btn_lay"style="cursor:pointer;">
+           <ul>
+             <li class="lo1"><img src="../../../../images/common/sch_btn_img1.png" alt="img" /></li>
+             <li class="lo2"><img src="../../../../images/common/sch_btn_ment.png" alt="등록하기"  /></li>
+             <li class="lo3"><img src="../../../../images/common/sch_btn_img2.png" alt="img"/></li>
+           </ul>
+      </div>
+    </div>   
+    <table class="table_chart">
+ 	<tr>
+        	<td width="4%"></td>
+        	<td width="21%">출하일자</td>
+            <td width="10%">품목</td>
+            <td width="10%">품종</td>
+            <td width="29%">출하지역</td>
+            <td width="26%">출하량</td>                        
+        </tr>
+    	<tr>
+        	<td><input type="checkbox" name="schedule_check" value="schedule_ok"></td>
+        	<td>2016-09-30</td>
+            <td>장미</td>
+            <td>비탈</td>
+            <td>aT화훼공판장</td>
+            <td>2,540</td>
+        </tr>
+    	<tr>
+        	<td><input type="checkbox" name="schedule_check" value="schedule_ok"></td>        
+        	<td>2016-09-30</td>
+            <td>장미</td>
+            <td>비탈</td>
+            <td>aT화훼공판장</td>
+            <td>2,540</td>
+        </tr>
+    	<tr>
+        	<td><input type="checkbox" name="schedule_check" value="schedule_ok"></td>        
+        	<td>2016-09-30</td>
+            <td>장미</td>
+            <td>비탈</td>
+            <td>aT화훼공판장</td>
+            <td>2,540</td>
+        </tr>
+    	<tr>
+        	<td><input type="checkbox" name="schedule_check" value="schedule_ok"></td>        
+        	<td>2016-09-30</td>
+            <td>장미</td>
+            <td>비탈</td>
+            <td>aT화훼공판장</td>
+            <td>2,540</td>
+        </tr>
+    	<tr>
+        	<td><input type="checkbox" name="schedule_check" value="schedule_ok"></td>        
+        	<td>2016-09-30</td>
+            <td>장미</td>
+            <td>비탈</td>
+            <td>aT화훼공판장</td>
+            <td>2,540</td>
+        </tr>                                                  
+    </table>
+	<div id="rt_sch_btn">
+	  <div id="rt_sch_btn_lay" style="cursor:pointer;">
+           <ul>
+             <li class="lo1"><img src="../../../../images/common/sch_btn_img1.png" alt="img" /></li>
+             <li class="lo2"><img src="../../../../images/common/sch_btn_ment2.png" alt="삭제하기"  /></li>
+             <li class="lo3"><img src="../../../../images/common/sch_btn_img2.png" alt="img"/></li>
+           </ul>
+      </div>
+    </div>     
+   </div>
+  <div id="bottom">
+  	<ul>
+      <li class="lay1">
+          <a href=""><button type=button class="pcver_btn">pc버전</button></a> 
+          <a href=""><button type=button class="up_btn">맨위로</button></a>
+      </li>
+      <li class="lay2">
+      	  <address class="copyright_address">Copyright By 화훼유통정보시스템 모바일. All rights reserved.</address>
+      </li>
+    </ul>  
+  </div>
+  </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mab02.mapper.Mab02Mapper">
+	<resultMap id="MabResultMap" type="com.fpminput.mntr.mab02.domain.Mab02VO">
+		<result property="seqNo"			column="SEQ_NO"/>
+		<result property="regDate"			column="REG_DATE"/>
+		<result property="pumName"			column="PUM_NAME"/>
+		<result property="goodName"			column="GOOD_NAME"/>
+		<result property="chulNo"			column="CHUL_NO"/>
+		<result property="uniqueColor"		column="UNIQUE_COLOR"/>
+		<result property="status"			column="STATUS"/>
+		<result property="statSun"			column="STAT_SUN"/>
+		<result property="statSize"			column="STAT_SIZE"/>
+		<result property="statClimate"		column="STAT_CLIMATE"/>
+		<result property="statDefinition"	column="STAT_DEFINITION"/>
+		<result property="statTemper"		column="STAT_TEMPER"/>
+		<result property="statColor"		column="STAT_COLOR"/>
+		<result property="statLength"		column="STAT_LENGTH"/>
+		<result property="statThick"		column="STAT_THICK"/>
+		<result property="statInsectYn"		column="STAT_INSECT_YN"/>
+		<result property="statInsectKind"	column="STAT_INSECT_KIND"/>
+		<result property="bigo"				column="BIGO"/>
+		<result property="useYn"			column="USE_YN"/>
+		<result property="sanCd"			column="SAN_CD"/>
+		<result property="regDt"			column="REG_DT"/>
+		<result property="uptDt"			column="UPT_DT"/>
+		<result property="fileSeq"			column="FILE_SEQ"/>
+		<result property="cropReportSeq"	column="CROP_REPORT_SEQ"/>
+		<result property="originalFileName"	column="ORIGINAL_FILE_NAME"/>
+		<result property="storedFileName"	column="STORED_FILE_NAME"/>
+		<result property="fileSize"			column="FILE_SIZE"/>
+		<result property="creaDtm"			column="CREA_DTM"/>
+		<result property="creaId"			column="CREA_ID"/>
+		<result property="delGb"			column="DEL_GB"/>
+		<result property="statusName"		column="STATUS_NAME"/>
+		<result property="fileName"			column="FILE_NAME"/>
+	</resultMap>
+	
+	<select id="selectCropInfoInput" parameterType="java.util.HashMap" statementType="PREPARED"  resultMap="MabResultMap" >
+		SELECT T1.REG_DATE
+			,T1.SEQ_NO
+			,T1.PUM_NAME
+			,T1.GOOD_NAME
+			,T1.CHUL_NO
+			, T1.UNIQUE_COLOR
+		    , T1.STATUS
+		    , T1.STAT_SUN
+		    , T1.STAT_SIZE
+		    , T1.STAT_CLIMATE
+		    , T1.STAT_DEFINITION
+		    , NVL(STAT_TEMPER,0) AS STAT_TEMPER
+		    , T1.STAT_COLOR
+		    , NVL(STAT_LENGTH,0) AS STAT_LENGTH
+		    , NVL(STAT_THICK,0) AS STAT_THICK
+		    , T1.STAT_INSECT_YN
+		    , T1.STAT_INSECT_KIND
+			, T1.BIGO
+			, T2.FILE_SEQ
+			, T2.ORIGINAL_FILE_NAME AS ORIGINAL_FILE_NAME
+			, T2.STORED_FILE_NAME AS STORED_FILE_NAME
+			, T2.FILE_SIZE AS FILE_SIZE
+			, T1.REG_DT
+      		, T1.UPT_DT
+      		, T1.USE_YN
+		FROM T_CROP_REPORT_DETAIL T1
+		LEFT OUTER JOIN
+		T_CROP_DETAIL_FILE T2
+		ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+		WHERE T1.USE_YN = 'Y'
+		<if test="seqNo != null and seqNo != ''">
+			AND T1.SEQ_NO = #{seqNo}
+		</if>
+		<if test="chulNo!=99999999 ">
+			AND T1.CHUL_NO=#{chulNo, jdbcType=VARCHAR}
+		</if>
+		<if test="regDate1 != null and regDate1 != ''">
+			AND TO_DATE(REG_DATE, 'YYYY-MM-DD' ) <![CDATA[>=]]> TO_DATE(#{regDate1} , 'yyyy-mm-dd')
+		</if>
+		<if test="regDate2 != null and regDate2 != ''">
+			AND TO_DATE(REG_DATE, 'YYYY-MM-DD' ) <![CDATA[<=]]> TO_DATE(#{regDate2} , 'yyyy-mm-dd')
+		</if>
+		<if test="pumName != null and pumName != ''">
+			AND PUM_NAME = #{pumName}
+		</if>
+		<if test="goodName != null and goodName != ''">
+			AND GOOD_NAME = #{goodName}
+		</if>
+		<if test="status != null and status != ''">
+			AND T1.STATUS = #{status}
+		</if>
+		ORDER BY T1.SEQ_NO DESC, T1.REG_DATE DESC, T1.GOOD_NAME
+	</select>
+	
+	<select id="selectCropInfoInputAll" statementType="PREPARED" resultMap="MabResultMap">
+		SELECT T1.REG_DATE
+			, T1.SEQ_NO
+			, T1.PUM_NAME
+			, T1.GOOD_NAME
+			, T1.CHUL_NO
+			, T1.UNIQUE_COLOR
+		    , T1.STATUS
+		    , T1.STAT_SUN
+		    , T1.STAT_SIZE
+		    , T1.STAT_CLIMATE
+		    , T1.STAT_DEFINITION
+		   	, NVL(STAT_TEMPER,0) AS STAT_TEMPER
+		    , T1.STAT_COLOR
+		    , NVL(STAT_LENGTH,0) AS STAT_LENGTH
+		    , NVL(STAT_THICK,0) AS STAT_THICK
+		    , T1.STAT_INSECT_YN
+		    , T1.STAT_INSECT_KIND
+			, T1.BIGO
+			, T2.FILE_SEQ
+        	, T2.ORIGINAL_FILE_NAME AS ORIGINAL_FILE_NAME
+        	, T2.STORED_FILE_NAME AS STORED_FILE_NAME
+        	, T2.FILE_SIZE AS FILE_SIZE
+			, T1.REG_DT
+      		, T1.UPT_DT
+      		, T1.USE_YN
+		FROM T_CROP_REPORT_DETAIL T1
+		LEFT OUTER JOIN T_CROP_DETAIL_FILE T2
+		ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+		WHERE T1.USE_YN = 'Y'
+		ORDER BY T1.SEQ_NO DESC, T1.REG_DATE DESC, T1.GOOD_NAME
+	</select>
+	
+	<insert id="insertCropInfoInput" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			SELECT CROP_DETAIL_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO T_CROP_REPORT_DETAIL
+		( 
+			SEQ_NO
+			, REG_DATE
+			, PUM_NAME
+			, GOOD_NAME
+			, CHUL_NO
+			, UNIQUE_COLOR
+		    , STATUS
+		    , STAT_SUN
+		    , STAT_SIZE
+		    , STAT_CLIMATE
+		    , STAT_DEFINITION
+		    , STAT_TEMPER
+		    <!-- , STAT_COLOR -->
+		    , STAT_LENGTH
+		    , STAT_THICK
+		    , STAT_INSECT_YN
+		    , STAT_INSECT_KIND
+			, BIGO
+			, SAN_CD
+			, REG_DT
+			, UPT_DT
+		)
+		VALUES
+		( 
+			#{IDX}
+			,#{regDate, jdbcType=VARCHAR}
+			,#{pumName, jdbcType=VARCHAR}
+			,#{goodName, jdbcType=VARCHAR}
+			,#{chulNo, jdbcType=VARCHAR}
+			,#{uniqueColor, jdbcType=VARCHAR}
+			,#{status, jdbcType=VARCHAR}
+			,#{statSun, jdbcType=VARCHAR}
+			,#{statSize, jdbcType=VARCHAR}
+			,#{statClimate, jdbcType=VARCHAR}
+			,#{statDefinition, jdbcType=VARCHAR}
+			,#{statTemper, jdbcType=VARCHAR}
+			<!-- ,#{statColor, jdbcType=VARCHAR} -->
+			,#{statLength, jdbcType=VARCHAR}
+			,#{statThick, jdbcType=VARCHAR}
+			,#{statInsectYn, jdbcType=VARCHAR}
+			,#{statInsectKind, jdbcType=VARCHAR}
+			,#{bigo, jdbcType=VARCHAR}
+			,#{sanCd, jdbcType=VARCHAR}
+			,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+			,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		)
+	</insert>
+
+	<insert id="insertCropFile" parameterType="java.util.HashMap">
+		INSERT INTO T_CROP_DETAIL_FILE
+		(
+			FILE_SEQ
+			,CROP_REPORT_SEQ
+			,ORIGINAL_FILE_NAME
+			,STORED_FILE_NAME
+			,FILE_SIZE
+			,CREA_ID
+		)
+		VALUES
+		(
+			CROP_DETAIL_FILE_SEQ.NEXTVAL
+			,#{CROP_IDX, jdbcType=VARCHAR}
+			,#{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}
+			,#{STORED_FILE_NAME, jdbcType=VARCHAR}
+			,#{FILE_SIZE, jdbcType=VARCHAR}
+			,'ADMIN'
+		)
+	</insert>
+	
+	<select id="selectSumNail" parameterType="String" resultMap="MabResultMap">
+		SELECT 
+		  FILE_SEQ,
+		  CROP_REPORT_SEQ,
+		  ORIGINAL_FILE_NAME,
+		  STORED_FILE_NAME,
+		  FILE_SIZE,
+		  CREA_DTM,
+		  CREA_ID,
+		  DEL_GB
+		FROM T_CROP_DETAIL_FILE a, T_CROP_REPORT_DETAIL b
+		WHERE a.CROP_REPORT_SEQ = b.SEQ_NO(+)
+		AND b.SEQ_NO = #{seqNo, jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateCropInfoInput" parameterType="java.util.HashMap">
+		UPDATE T_CROP_REPORT_DETAIL
+		SET REG_DATE         = #{regDate, jdbcType=VARCHAR},
+		       PUM_NAME         = #{pumName, jdbcType=VARCHAR},
+		       GOOD_NAME        = #{goodName, jdbcType=VARCHAR},
+		       UNIQUE_COLOR     =#{uniqueColor, jdbcType=VARCHAR},
+		       STATUS           = #{status, jdbcType=VARCHAR},
+		       STAT_SUN         = #{statSun, jdbcType=VARCHAR},
+		       STAT_SIZE        = #{statSize, jdbcType=VARCHAR},
+		       STAT_CLIMATE     = #{statClimate, jdbcType=VARCHAR},
+		       STAT_DEFINITION  = #{statDefinition, jdbcType=VARCHAR},
+		       STAT_TEMPER      = #{statTemper, jdbcType=VARCHAR},
+		       <!-- STAT_COLOR       = #{statColor, jdbcType=VARCHAR}, -->
+		       STAT_LENGTH      = #{statLength, jdbcType=VARCHAR},
+		       STAT_THICK       = #{statThick, jdbcType=VARCHAR},
+		       STAT_INSECT_YN   = #{statInsectYn, jdbcType=VARCHAR},
+		       STAT_INSECT_KIND = #{statInsectKind, jdbcType=VARCHAR},
+		       BIGO             = #{bigo, jdbcType=VARCHAR},
+		       UPT_DT           = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		WHERE    SEQ_NO           = #{seqNo, jdbcType=VARCHAR}
+		AND CHUL_NO          = #{chulNo, jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateCropFile" parameterType="java.util.HashMap">
+		UPDATE T_CROP_DETAIL_FILE 
+		SET
+			ORIGINAL_FILE_NAME = #{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}
+			,STORED_FILE_NAME = #{STORED_FILE_NAME, jdbcType=VARCHAR}
+			,FILE_SIZE = #{FILE_SIZE, jdbcType=VARCHAR}
+			,UPT_DT = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		WHERE CROP_REPORT_SEQ = #{seqNo, jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteCropInfoInput" parameterType="java.util.HashMap">	
+		UPDATE T_CROP_REPORT_DETAIL 
+		SET
+			USE_YN = 'N'
+		WHERE REG_DATE = #{regDate, jdbcType=VARCHAR}
+		AND CHUL_NO = #{chulNo, jdbcType=VARCHAR}
+		AND PUM_NAME = #{pumName, jdbcType=VARCHAR}
+		AND GOOD_NAME = #{goodName , jdbcType=VARCHAR}
+		AND SEQ_NO = #{seqNo, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteCropFile" parameterType="java.util.HashMap">
+		UPDATE T_CROP_DETAIL_FILE SET
+			DEL_GB = 'Y'
+		WHERE CROP_REPORT_SEQ = #{seqNo, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

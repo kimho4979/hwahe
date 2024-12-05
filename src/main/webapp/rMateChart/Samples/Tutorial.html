@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>rMate Chart for HTML5 - AreaChart</title>
+
+<!-- rMateChartH5 에서 사용하는 스타일 -->
+<link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/>
+
+<!-- IE7, 8 에서 차트 생성하고자 하는 경우 -->
+<!--[if IE]><script language="javascript" type="text/javascript" src="../rMateChartH5/JS/excanvas.js"></script><![endif]-->
+
+<!-- rMateChartH5 라이센스 -->
+<script language="javascript" type="text/javascript" src="../LicenseKey/rMateChartH5License.js"></script>
+
+<!-- 실제적인 rMateChartH5 라이브러리 -->
+<script language="javascript" type="text/javascript" src="../rMateChartH5/JS/rMateChartH5.js"></script>
+
+<!-- rMateChartH5 테마 js -->
+<script type="text/javascript" src="../rMateChartH5/Assets/Theme/theme.js"></script>
+
+<script type="text/javascript">
+
+// -----------------------차트 설정 시작-----------------------
+
+var chartCreated = false;
+
+window.onload = function(){
+	if(window.addEventListener)
+		window.addEventListener("scroll", function(event){
+			if(window.pageYOffset >= 1356 && !chartCreated){
+				chartCreated = true;
+				rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+				window.scrollTo(0, 1800);
+			}
+		});
+	else
+		rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+}
+
+// rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.
+var chartVars = "rMateOnLoadCallFunction=chartReadyHandler";
+
+// rMateChart 를 생성합니다.
+// 파라메터 (순서대로) 
+//  1. 차트의 id ( 임의로 지정하십시오. ) 
+//  2. 차트가 위치할 div 의 id (즉, 차트의 부모 div 의 id 입니다.)
+//  3. 차트 생성 시 필요한 환경 변수들의 묶음인 chartVars
+//  4. 차트의 가로 사이즈 (생략 가능, 생략 시 100%)
+//  5. 차트의 세로 사이즈 (생략 가능, 생략 시 100%)
+//rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+
+// 차트의 속성인 rMateOnLoadCallFunction 으로 설정된 함수.
+// rMate 차트 준비가 완료된 경우 이 함수가 호출됩니다.
+// 이 함수를 통해 차트에 레이아웃과 데이터를 삽입합니다.
+// 파라메터 : id - rMateChartH5.create() 사용 시 사용자가 지정한 id 입니다.
+function chartReadyHandler(id) {
+	document.getElementById(id).setLayout(layoutStr);
+	document.getElementById(id).setData(chartData);
+}
+
+// 스트링 형식으로 레이아웃 정의.
+var layoutStr = '<rMateChart  backgroundColor="#ffffff" borderStyle="none">'
+	+'<Options>'
+		+'<Caption text="Price Indices of Meats ($ Per Kilogram)"/>'
+		+'<SubCaption text="World Bank Commodity Price Data in 2013" textAlign="center" />'
+		+'<Legend useVisibleCheck="true"/>'
+	+'</Options>'
+	+'<NumberFormatter id="numFmt" precision="0"/>'
+	+'<Line2DChart showDataTips="true" dataTipDisplayMode="axis" paddingTop="0">'
+		+'<horizontalAxis>'
+			+'<CategoryAxis categoryField="Month" padding="0.2"/>'
+		+'</horizontalAxis>'
+		+'<verticalAxis>'
+			+'<LinearAxis maximum="100"/>'
+		+'</verticalAxis>'
+		+'<series>'
+			/* 
+			itemRenderer는 Tip이 보여지는 영역차트 부분에 ItemRenderer에서 제공하는 모양을 그려줍니다
+			이 예제에서는 Diamond입니다
+			사용할 수 있는 도형을 모두 표현한 예제는 Chart Samples 의 범례 예제를 참고하십시오.
+			*/
+			+'<Line2DSeries yField="Sheep" radius="5" displayName="Sheep" itemRenderer="RectangleItemRenderer">'
+				+'<showDataEffect>'
+					+'<SeriesInterpolate/>'
+				+'</showDataEffect>'
+			+'</Line2DSeries>'
+			+'<Line2DSeries yField="Beef" radius="5" displayName="Beef" itemRenderer="CircleItemRenderer">'
+			/* itemRenderer는 Circle입니다 */
+				+'<showDataEffect>'
+					+'<SeriesInterpolate/>'
+				+'</showDataEffect>'
+			+'</Line2DSeries>'
+			+'<Line2DSeries yField="Chicken" radius="6" displayName="Chicken" itemRenderer="TriangleItemRenderer">'
+			/* itemRenderer는 Triangle입니다 */
+				+'<showDataEffect>'
+					+'<SeriesInterpolate/>'
+				+'</showDataEffect>'
+			+'</Line2DSeries>'
+		+'</series>'
+	+'</Line2DChart>'
++'</rMateChart>'
+
+// 차트 데이터
+var chartData = [{"Month":"Jan", "Beef":38.5, "Chicken":20, "Sheep":50},
+	{"Month":"Feb", "Beef":56.57, "Chicken":27.52, "Sheep":42},
+	{"Month":"Mar", "Beef":58.57, "Chicken":23.65, "Sheep":40},
+	{"Month":"Apr", "Beef":41.13, "Chicken":29.54, "Sheep":60},
+	{"Month":"May", "Beef":40.58, "Chicken":24.21, "Sheep":50},
+	{"Month":"Jun", "Beef":60.79, "Chicken":39.12, "Sheep":52.5},
+	{"Month":"Jul", "Beef":49.14, "Chicken":32.56, "Sheep":70.64},
+	{"Month":"Aug", "Beef":89.35, "Chicken":39.24, "Sheep":68.57},
+	{"Month":"Sep", "Beef":65.21, "Chicken":32.12, "Sheep":54.14},
+	{"Month":"Oct", "Beef":75.15, "Chicken":42.12, "Sheep":57.58},
+	{"Month":"Nov", "Beef":69.12, "Chicken":35.54, "Sheep":54.47},
+	{"Month":"Dec", "Beef":73.24, "Chicken":40.45, "Sheep":62.47}];
+
+// -----------------------차트 설정 끝 -----------------------
+
+</script>
+<!-- 샘플 작동을 위한 css와 js -->
+<script type="text/javascript" src="./Web/JS/common.js"></script>
+<link rel="stylesheet" type="text/css" href="./Web/sample.css"/>
+
+</head>
+<body>
+	<div id="wrapper" class="wrapper" style="padding-top:15px;">
+		<span class="tuto">1. HTML에 차트의 JS와 CSS, LicenseKey를 Include 합니다.</span>
+		<div class="description">
+			<span class="comment">&lt;!-- rMateChartH5 에서 사용하는 스타일 --&gt;</span><br/>
+			&lt;link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/&gt;<br/><br/>
+
+			<span class="comment">&lt;!-- IE7, 8 에서 차트 생성하고자 하는 경우 --&gt;</span><br/>
+			&lt;!--[if IE]>&lt;script language="javascript" type="text/javascript" src="../rMateChartH5/JS/excanvas.js"&gt;&lt;/script&gt;&lt;![endif]--&gt;<br/><br/>
+
+			<span class="comment">&lt;!-- rMateChartH5 라이센스 --&gt;</span><br/>
+			&lt;script language="javascript" type="text/javascript" src="../LicenseKey/rMateChartH5License.js"&gt;&lt;/script&gt;<br/><br/>
+
+			<span class="comment">&lt;!-- 실제적인 rMateChartH5 라이브러리 --&gt;</span><br/>
+			&lt;script language="javascript" type="text/javascript" src="../rMateChartH5/JS/rMateChartH5.js"&gt;&lt;/script&gt;<br/><br/>
+		</div>
+		<span class="tuto">2. 차트가 생성되어질 DIV를 생성하고 크기를 설정합니다.</span>
+		<div class="description">
+			<span class="comment">해당 div의 display값이 none일 경우는 크기를 제대로 가져오지 못하여 올바르게 출력이 되지 않을 수 있습니다.</span><br/><br/>
+			&lt;div id="chartHolder" style="width:800px;height:450px;"&gt;&lt;div&gt;
+		</div>
+		<span class="tuto">3. 차트가 생성되어질 DIV의 ID, 만들어질 차트의 ID를 설정 및 크기를 설정하고 차트 준비 완료시 실행할 함수를 설정합니다.</span>
+		<div class="description">
+			<span class="comment">// rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.</span><br/>
+			var chartVars = "rMateOnLoadCallFunction=chartReadyHandler";<br/><br/>
+
+			<span class="comment">// rMateChart 를 생성합니다.<br/>
+			// 파라메터 (순서대로) <br/>
+			//  1. 차트의 id ( 임의로 지정하십시오. ) <br/>
+			//  2. 차트가 위치할 div 의 id (즉, 차트의 부모 div 의 id 입니다.)<br/>
+			//  3. 차트 생성 시 필요한 환경 변수들의 묶음인 chartVars<br/>
+			//  4. 차트의 가로 사이즈 (생략 가능, 생략 시 100%)<br/>
+			//  5. 차트의 세로 사이즈 (생략 가능, 생략 시 100%)</span><br/>
+			rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%");<br/><br/>
+			
+			<span class="comment">// 차트의 속성인 rMateOnLoadCallFunction 으로 설정된 함수.<br/>
+			// rMate 차트 준비가 완료된 경우 이 함수가 호출됩니다.<br/>
+			// 이 함수를 통해 차트에 레이아웃과 데이터를 삽입합니다.<br/>
+			// 파라메터 : id - rMateChartH5.create() 사용 시 사용자가 지정한 id 입니다.</span><br/>
+			function chartReadyHandler(id){<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById(id).setLayout(layoutStr);<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;document.getElementById(id).setData(chartData);<br/>
+			}
+		</div>
+		<span class="tuto">4. 어떤 차트를 생성할지 차트의 모양(레이아웃)을 정의합니다.</span>
+		<div class="description">
+			<span class="comment">// 스트링 형식으로 레이아웃 정의</span>
+				<pre style="margin-top:0;">var layoutStr = '&lt;rMateChart  backgroundColor="#ffffff" borderStyle="none"&gt;'
+	+'&lt;Options&gt;'
+		+'&lt;Caption text="Price Indices of Meats ($ Per Kilogram)"/&gt;'
+		+'&lt;SubCaption text="World Bank Commodity Price Data in 2013" textAlign="center" /&gt;'
+		+'&lt;Legend useVisibleCheck="true"/&gt;'
+	+'&lt;/Options&gt;'
+	+'&lt;NumberFormatter id="numFmt" precision="0"/&gt;'
+	+'&lt;Line2DChart showDataTips="true" dataTipDisplayMode="axis" paddingTop="0"&gt;'
+		+'&lt;horizontalAxis&gt;'
+			+'&lt;CategoryAxis categoryField="Month" padding="0.2"/&gt;'
+		+'&lt;/horizontalAxis&gt;'
+		+'&lt;verticalAxis&gt;'
+			+'&lt;LinearAxis maximum="100"/&gt;'
+		+'&lt;/verticalAxis&gt;'
+		+'&lt;series&gt;'
+			+'&lt;Line2DSeries yField="Sheep" radius="5" displayName="Sheep" itemRenderer="RectangleItemRenderer"&gt;'
+				+'&lt;showDataEffect&gt;'
+					+'&lt;SeriesInterpolate/&gt;'
+				+'&lt;/showDataEffect&gt;'
+			+'&lt;/Line2DSeries&gt;'
+			+'&lt;Line2DSeries yField="Beef" radius="5" displayName="Beef" itemRenderer="CircleItemRenderer"&gt;'
+				+'&lt;showDataEffect&gt;'
+					+'&lt;SeriesInterpolate/&gt;'
+				+'&lt;/showDataEffect&gt;'
+			+'&lt;/Line2DSeries&gt;'
+			+'&lt;Line2DSeries yField="Chicken" radius="6" displayName="Chicken" itemRenderer="TriangleItemRenderer"&gt;'
+				+'&lt;showDataEffect&gt;'
+					+'&lt;SeriesInterpolate/&gt;'
+				+'&lt;/showDataEffect&gt;'
+			+'&lt;/Line2DSeries&gt;'
+		+'&lt;/series&gt;'
+	+'&lt;/Line2DChart&gt;'
++'&lt;/rMateChart&gt;';</pre>
+		</div>
+		<span class="tuto">5. 설정한 차트의 모양으로 출력할 데이터를 정의합니다.</span>
+		<div class="description">
+			<span class="comment">// 차트 데이터</span><br/>
+			<pre style="margin-top:0;">var chartData = [{"Month":"Jan", "Beef":38.5, "Chicken":20, "Sheep":50},
+	{"Month":"Feb", "Beef":56.57, "Chicken":27.52, "Sheep":42},
+	{"Month":"Mar", "Beef":58.57, "Chicken":23.65, "Sheep":40},
+	{"Month":"Apr", "Beef":41.13, "Chicken":29.54, "Sheep":60},
+	{"Month":"May", "Beef":40.58, "Chicken":24.21, "Sheep":50},
+	{"Month":"Jun", "Beef":60.79, "Chicken":39.12, "Sheep":52.5},
+	{"Month":"Jul", "Beef":49.14, "Chicken":32.56, "Sheep":70.64},
+	{"Month":"Aug", "Beef":89.35, "Chicken":39.24, "Sheep":68.57},
+	{"Month":"Sep", "Beef":65.21, "Chicken":32.12, "Sheep":54.14},
+	{"Month":"Oct", "Beef":75.15, "Chicken":42.12, "Sheep":57.58},
+	{"Month":"Nov", "Beef":69.12, "Chicken":35.54, "Sheep":54.47},
+	{"Month":"Dec", "Beef":73.24, "Chicken":40.45, "Sheep":62.47}];</pre>
+		</div>
+		<div class="description">
+			이후 HTML 실행 시 DOM이 완료되고 차트의 준비가 완료된 경우 chartReadyHandler함수가 실행이 되며<br/>
+			설정해두었던 layoutStr, chartData가 차트 객체에 삽입되며 아래와 같은 차트를 생성하게 됩니다.
+		</div>
+		<div id="content" style="margin-top:30px;">
+			<div id="chartHolder"></div>
+		</div>
+	</div>
+</body>
+</html>

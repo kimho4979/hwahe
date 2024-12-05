@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.apimgt.mapper.ApiMgtMapper">
+
+	<!-- 공공데이터 OpenAPI SelectBox :: 공통 -->
+	<select id="selectApiSelectBoxList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			REQ_DATA_CD
+			, REQ_DATA_NM
+		FROM TB_API_REQDATA_CD
+	</select>
+
+	<!-- 공공데이터 개발설정 조회 -->
+	<select id="selectApiMgtList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			OPEN_GUBN
+			, MAX_CALL_CNT
+			, OPEN_TERM
+			, TO_CHAR(REG_DT,'YYYY-MM-DD') AS REG_DT
+			, TO_CHAR(UPT_DT,'YYYY-MM-DD') AS UPT_DT
+			, UPT_TIME
+		FROM TB_API_SETTING
+	</select>
+	
+	<!-- 공공데이터 개방설정 수정 -->
+	<update id="updateApiMgtList" parameterType="java.util.HashMap">
+		UPDATE TB_API_SETTING SET
+			OPEN_GUBN = #{openGubn}
+			, MAX_CALL_CNT = #{maxCallCnt}
+			, OPEN_TERM = #{openTerm}
+			, UPT_DT = SYSDATE
+			, UPT_TIME = TO_CHAR(SYSDATE, 'HH24:MI:SS')
+	</update>
+	
+	<!-- 공공데이터 신청 조회 -->
+	<select id="selectApiDegreeList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT * FROM
+		(
+			SELECT
+				ROWNUM AS RN
+				, T3.REQ_DATA_NM
+				, TO_CHAR(T1.REG_DT, 'YYYY-MM-DD') AS REG_DT
+				, T2.COMP_MGR
+				, T2.COMP_TEL
+				, T2.IP
+				, T1.USE_YN
+				, T1.SERVICE_KEY
+			FROM TB_API_OPEN T1
+			LEFT OUTER JOIN TB_API_USER T2 ON T1.SERVICE_KEY = T2.SERVICE_KEY
+			LEFT OUTER JOIN TB_API_REQDATA_CD T3 ON T1.REQ_DATA_CD = T3.REQ_DATA_CD
+			WHERE 1=1
+			<if test="useYn != null and useYn != ''">
+				AND T1.USE_YN = #{useYn}
+			</if>
+			<if test="searchNm != null and searchNm != ''">
+				AND T1.REQ_DATA_CD = #{searchNm}
+			</if>
+		)
+	</select>
+	
+	<!-- 공공데이터 신청 수정 -->
+	<update id="updateApiDegreeList" parameterType="java.util.HashMap">
+		UPDATE TB_API_OPEN SET
+		USE_YN = #{useYn}
+		, REG_DT = SYSDATE
+		WHERE SERVICE_KEY = #{serviceKey}
+	</update>
+	
+	<!-- 공공데이터 로그 조회 -->
+	<select id="selectApiLogList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			T2.REQ_DATA_NM
+			, TO_CHAR(TO_DATE(T1.CALL_DT,'YYYY-MM-DD'),'YYYY-MM-DD') AS CALL_DT
+			, T1.CALL_TIME
+			, T3.COMP_MGR
+			, T3.COMP_TEL
+			, T1.IP
+		FROM TB_API_LOG T1
+		LEFT OUTER JOIN TB_API_REQDATA_CD T2 ON T1.REQ_DATA_CD = T2.REQ_DATA_CD
+		LEFT OUTER JOIN TB_API_USER T3 ON T1.SERVICE_KEY = T3.SERVICE_KEY
+		WHERE 1=1
+		<if test="searchNm != null and searchNm != ''">
+			AND T1.REQ_DATA_CD = #{searchNm}
+		</if>
+		<if test="searchDate1 != null and searchDate1 != '' and searchDate2 != null and searchDate2 != ''">
+			AND T1.CALL_DT BETWEEN REPLACE(#{searchDate1},'-','') AND REPLACE(#{searchDate2},'-','')
+		</if>
+		ORDER BY T1.CALL_DT DESC
+	</select>
+	
+</mapper>

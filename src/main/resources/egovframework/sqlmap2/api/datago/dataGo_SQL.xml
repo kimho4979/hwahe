@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.egovapi.mapper.DataGoCustMapper">
+	<!-- 공공데이터 생필품 가격정보 입력전 데이터 있을 수 있기때문에 삭제하고 진행 -->
+	<delete id="dataType1BeforeDelete" parameterType="java.util.HashMap">
+		DELETE FROM TB_IMPEXP_RAW
+		WHERE YYYYMM = #{yyyymm} 
+	</delete>
+	
+	<!-- 공공데이터 생필품 가격정보 데이터 입력 -->
+	<insert id="dataType1Insert" parameterType="java.util.HashMap">
+		INSERT INTO TB_IMPEXP_RAW 
+		(
+		   YYYYMM
+		   , HS_CD
+		   , NAT_CD
+		   , STAT_KOR
+		   , EXP_WGT
+		   , EXP_PRC
+		   , IMP_WGT
+		   , IMP_PRC
+		   , BAL_PAY
+		   , REG_DT
+		) 
+		VALUES 
+		(
+			 #{yyyymm},
+			 NVL(#{hsCd},'06'),
+			 #{statCd},
+			(SELECT A.HS_NM FROM FLOWER.TB_IMPEXP_HSCD A WHERE A.HS_CD = NVL(#{hsCd},'06')),
+			 #{expWgt},
+			 #{expDlr},
+			 #{impWgt},
+			 #{impDlr},
+			 #{balPayments},
+			 SYSDATE 
+		 )
+	</insert>
+	
+</mapper>

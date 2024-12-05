@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.cmmn.mapper.ItemMapper">
+	<resultMap id="ItemResultMap" type="com.fpminput.mntr.cmmn.domain.ItemVO">
+		<result property="itemCd" 		column="ITEM_CD"/>
+		<result property="gubnCd" 		column="GUBN_CD"/>
+		<result property="gubnName" 	column="GUBN_NAME"/>
+		<result property="largeCd" 		column="LARGE_CD"/>
+		<result property="largeName" 	column="LARGE_NAME"/>
+		<result property="smallCd" 		column="SMALL_CD"/>
+		<result property="smallName" 	column="SMALL_NAME"/>
+		<result property="useYn" 		column="USE_YN"/>
+		<result property="regDate" 		column="REG_DATE"/>
+		<result property="regUser" 		column="REG_USER"/>
+	</resultMap>
+	
+	<select id="selectItemListLargeNm" parameterType="com.fpminput.mntr.cmmn.domain.ItemVO" resultMap="ItemResultMap">
+		SELECT
+			LARGE_CD,
+			LARGE_NAME
+		FROM T_ITEM
+		WHERE 1=1
+		GROUP BY LARGE_CD, LARGE_NAME
+		ORDER BY LARGE_CD, LARGE_NAME
+	</select>
+	
+	<select id="selectItemListSmallNm" parameterType="com.fpminput.mntr.cmmn.domain.ItemVO" resultMap="ItemResultMap">
+		SELECT
+			SMALL_CD,
+			SMALL_NAME
+		FROM T_ITEM
+		WHERE 1=1
+		AND LARGE_CD = #{largeCd}
+		GROUP BY SMALL_CD, SMALL_NAME
+		ORDER BY SMALL_CD, SMALL_NAME
+	</select>
+	
+</mapper>

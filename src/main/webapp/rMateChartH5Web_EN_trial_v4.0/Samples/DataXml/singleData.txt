@@ -1,0 +1,1 @@
+[{"Month":"Jan","Profit":900},{"Month":"Feb","Profit":1400},{"Month":"Mar","Profit":1500},{"Month":"Apr","Profit":1900},{"Month":"May","Profit":1400},{"Month":"Jun","Profit":2000},{"Month":"Jul","Profit":1800},{"Month":"Aug","Profit":2500},{"Month":"Sep","Profit":3000},{"Month":"Oct","Profit":2000},{"Month":"Nov","Profit":2100},{"Month":"Dec","Profit":1700}]

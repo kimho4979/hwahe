@@ -1,0 +1,126 @@
+﻿
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>화훼유통정보시스템 관리자</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=9">
+	<meta http-equiv="X-UA-Compatible" content="IE=8">
+ <link rel="stylesheet" type="text/css" href="../../../css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="../../../css/hw/ma.css" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="js/html5shiv.js"></script>
+<![endif]-->
+<!--[if lt IE 9]> 
+	<script src="js/respond.min.js"></script> 
+<![endif]--> 
+ 
+<!-- <script type="text/javascript" src="js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" src="js/jquery.jcarousel.js"></script>
+<script type="text/javascript" src="js/ui.js"></script>
+<script type="text/javascript" src="js/jquery.carousel.min.js"></script> -->
+
+</head>
+<body>
+
+<div id="wrap"><!--전체--->
+
+<div class="top"> 
+<ul>
+	<li><a href="#">화훼유통정보 홈페이지 바로가기</a></li>
+	<li><a href="#">접속자 : 홍길동</a></li>
+	<li><a href="#">로그아웃</a></li>
+  	<li><a href="#">Home</a></li>
+</ul>
+</div>
+
+
+<div class="hw_clear"></div>
+
+
+<div class="content_wrap"><!--네비와 컨텐츠 감싸는 부분-->
+
+<div class="navarea">
+<h1 class="logo"><img src="../../../images/logo.jpg" alt="aT화훼유통정보시스템 관리자"/></h1>
+
+<!-- menu -->  
+
+<div id="accordian" >
+	<ul>
+		<li>
+			<a href="#"><h3><span class="icon-dashboard"></span>▶ 사용자권한관리</h3></a>
+            </li>
+		<li class="active">
+			<h3><span class="icon-tasks"></span>▶ 모니터요원 등록현황</h3>
+			<ul>
+                <li><a href="#">- 출하 및 예정물량</a></li>
+                <li><a href="#">- 작황정보</a></li>                            
+                <li><a href="#">- 재배정보</a></li>                            
+                <li><a href="#">- 소비동향</a></li>
+                <li><a href="#">- 소매가격</a></li> 
+			</ul>
+		</li>
+		<li>
+			<h3><span class="icon-calendar"></span>▶ 공지사항관리</h3>
+    	</li>
+		<li>
+			<h3><span class="icon-heart"></span>▶ FAQ관리</h3>
+		</li>
+                <li>
+			<h3><span class="icon-heart"></span>▶ 로그관리</h3>
+		</li>
+        
+	</ul>
+</div>
+
+                      
+</div>
+	<div class="sub_contents">  
+		<div class="sub_contents_title">사용자 권한관리</div>
+	
+		<div class="real_contents">
+			<h3 class="hw_h3_ma"><a href="">작황동향 입력</a></h3>
+			<div class="hw_clear"></div>
+			<div class="hw_infouse_01"><p><span class="purple"> ◎ 이용안내 :</span> 글을 작성하시려면 추가하기를 누르셔서 작성날짜선택, 작황정보선택, 작황정보 요약, 사진업로드를 해주시면 됩니다.</p></div>
+			<div>
+				<div><input  class="ma_add"  type="button" value="등록하기" onclick="fnObj.modalOpen();" /></div>
+				<div><input  class="ma_del"  type="button" value="삭제하기" onclick="fnObj.getCheckedList();" /></div>
+				<div><input  class="ma_re"  type="button" value="새로고침" onclick="grid_ajax();" /></div>
+			</div>
+			<div class="hw_clear"></div>
+			
+			<div class="hw_ma_grid" style="border:1px solid gray;">
+			 <div id="AXGridTarget" style="height:400px;"></div>
+			</div>
+		</div>
+	</div>
+</div> <!--네비와 컨텐츠 감싸는 부분 끝-->
+
+
+
+
+
+<div class="hw_clear"></div>
+<div class="footer_box"> <!--푸터시작-->
+<div class="logo_g"><a href=""><img src="../../../images/logo_g.jpg" alt="aT화훼유통정보시스템 로고"/></a></div>
+<div class="adress">
+<p>[58217] 서울특별시 서초구 강남대로 27 화훼공판장    전화 : 02-579-8100    I   팩스 : 02-578-8671<p>
+<p>&nbsp;COPYRIGHT @2016 by Korea Agro-Fisheries & Food Trade Corporation ALL RIGHTS RESERVED.</p>
+</div> <!--어드레스 끝-->
+</div> <!--푸터끝-->
+</div>
+
+
+
+
+
+
+
+</div><!--전체 끝--->
+
+
+</body>
+
+</html>
+
+

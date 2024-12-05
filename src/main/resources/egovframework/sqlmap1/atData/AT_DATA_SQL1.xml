@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.at.mapper.aTMapper">
+	
+	<select id="atMarketData" parameterType="java.util.HashMap" resultType="com.at.domain.AtMarketVO">
+    		select 
+	    		A.PAN_DAY
+	    		, A.PAN_NO
+	    		, A.PAN_SERIAL
+	    		, A.PUM_CODE
+	    		, A.MOK_NAME
+	    		, A.JONG_NAME
+	    		, A.SOK_CNT
+	    		, A.KM_P_NEW
+	    		, A.CHUL_CODE
+	    		, A.REGION_CODE
+	    		, A.REGION_NAME
+	    		, A.PAN_PRICE
+	    		, C.STRCODE AS STRCODE_LEVEL
+	    		, D.STRCODE AS STRCODE_LOCAL 
+		         ,case when SUBSTR(A.PUM_CODE, 1, 1)='1' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='3' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='5' then '4' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='6' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='7' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='8' then '2' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='9' then '2' 
+	               ELSE '5' END AS MEJANG,
+	               F_SONGE_CNT 
+             from FLOWER.VV_RFLO
+             A LEFT JOIN LEVELCHANGE C ON A.LEVEL_CODE = C.YCODE 
+             LEFT JOIN LOCALCHANGE D ON A.REGION_CODE = D.YCODE 
+             where PAN_DAY between #{strDate, jdbcType=VARCHAR } and #{saleDate, jdbcType=VARCHAR }
+	</select>
+	
+	<select id="atMarketDataManual" parameterType="java.util.HashMap" resultType="com.at.domain.AtMarketVO">
+    		select 
+	    		A.PAN_DAY
+	    		, A.PAN_NO
+	    		, A.PAN_SERIAL
+	    		, A.PUM_CODE
+	    		, A.MOK_NAME
+	    		, A.JONG_NAME
+	    		, A.SOK_CNT
+	    		, A.KM_P_NEW
+	    		, A.CHUL_CODE
+	    		, A.REGION_CODE
+	    		, A.REGION_NAME
+	    		, A.PAN_PRICE
+	    		, C.STRCODE AS STRCODE_LEVEL
+	    		, D.STRCODE AS STRCODE_LOCAL 
+		         ,case when SUBSTR(A.PUM_CODE, 1, 1)='1' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='3' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='5' then '4' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='6' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='7' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='8' then '2' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='9' then '2' 
+	               ELSE '5' END AS MEJANG 
+             from FLOWER.VV_RFLO
+             A LEFT JOIN LEVELCHANGE C ON A.LEVEL_CODE = C.YCODE 
+             LEFT JOIN LOCALCHANGE D ON A.REGION_CODE = D.YCODE 
+             where PAN_DAY = #{panDay, jdbcType=VARCHAR }
+	</select>
+	
+	
+	<select id="atMarketRealData" parameterType="java.util.HashMap" resultType="com.at.domain.AtMarketVO">
+    		select 
+	    		A.PAN_DAY
+	    		, A.PAN_NO
+	    		, A.PAN_SERIAL
+	    		, A.PUM_CODE
+	    		, A.MOK_NAME
+	    		, A.JONG_NAME
+	    		, A.SOK_CNT
+	    		, A.KM_P_NEW
+	    		, A.CHUL_CODE
+	    		, A.REGION_CODE
+	    		, A.REGION_NAME
+	    		, A.PAN_PRICE
+	    		, C.STRCODE AS STRCODE_LEVEL
+	    		, D.STRCODE AS STRCODE_LOCAL 
+	    		, TO_CHAR(A.PAN_FIRST_IN_DATE,'YYYYMMDDHH24MISS')  AS FIRST_IN_DATE
+		         ,case when SUBSTR(A.PUM_CODE, 1, 1)='1' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='3' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='5' then '4' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='6' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='7' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='8' then '2' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='9' then '2' 
+	               ELSE '5' END AS MEJANG 
+             from FLOWER.VV_RFLO
+             A LEFT JOIN LEVELCHANGE C ON A.LEVEL_CODE = C.YCODE 
+             LEFT JOIN LOCALCHANGE D ON A.REGION_CODE = D.YCODE 
+             where PAN_DAY = #{panDate, jdbcType=VARCHAR }
+             and TO_CHAR(A.PAN_FIRST_IN_DATE, 'YYYYMMDDHH24MISS') between TO_CHAR(#{strDate, jdbcType=VARCHAR }) AND TO_CHAR(#{saleDate, jdbcType=VARCHAR })
+             AND SUBSTR(PAN_NO,0,1) != 'C'
+	</select>
+	
+	<select id="atMarketRealData2" parameterType="java.util.HashMap" resultType="com.at.domain.AtMarketVO">
+    		select 
+	    		A.PAN_DAY
+	    		, A.PAN_NO
+	    		, A.PAN_SERIAL
+	    		, A.PUM_CODE
+	    		, A.MOK_NAME
+	    		, A.JONG_NAME
+	    		, A.SOK_CNT
+	    		, A.KM_P_NEW
+	    		, A.CHUL_CODE
+	    		, A.REGION_CODE
+	    		, A.REGION_NAME
+	    		, A.PAN_PRICE
+	    		, C.STRCODE AS STRCODE_LEVEL
+	    		, D.STRCODE AS STRCODE_LOCAL 
+	    		, TO_CHAR(A.PAN_FIRST_IN_DATE,'YYYYMMDDHH24MISS')  AS FIRST_IN_DATE
+		         ,CASE WHEN SUBSTR(A.PUM_CODE, 1, 1)='1' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='3' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='5' then '4' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='6' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='7' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='8' then '2' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='9' then '2' 
+	               ELSE '5' END AS MEJANG 
+             FROM FLOWER.VV_RFLO
+             A LEFT JOIN LEVELCHANGE C ON A.LEVEL_CODE = C.YCODE 
+             LEFT JOIN LOCALCHANGE D ON A.REGION_CODE = D.YCODE 
+             WHERE PAN_DAY = #{strDate, jdbcType=VARCHAR}
+             AND SUBSTR(PAN_NO,0,1) != 'C'
+	</select>
+	
+	<select id="atMarketTotCnt" parameterType="java.util.HashMap" resultType="int" >
+		SELECT SUM(SOK_CNT) AS TOT_QTY FROM FLOWER.VV_RFLO
+		WHERE PAN_DAY = #{strDate, jdbcType=VARCHAR}
+		AND SUBSTR(PAN_NO,0,1) != 'C'
+	</select>
+	
+	<select id="atMarketRealDataDate" parameterType="java.util.HashMap" resultType="com.at.domain.AtMarketVO">
+    		select 
+	    		A.PAN_DAY
+	    		, A.PAN_NO
+	    		, A.PAN_SERIAL
+	    		, A.PUM_CODE
+	    		, A.MOK_NAME
+	    		, A.JONG_NAME
+	    		, A.SOK_CNT
+	    		, A.KM_P_NEW
+	    		, A.CHUL_CODE
+	    		, A.REGION_CODE
+	    		, A.REGION_NAME
+	    		, A.PAN_PRICE
+	    		, C.STRCODE AS STRCODE_LEVEL
+	    		, D.STRCODE AS STRCODE_LOCAL 
+	    		, TO_CHAR(A.PAN_FIRST_IN_DATE,'YYYYMMDDHH24MISS')  AS FIRST_IN_DATE
+		         ,case when SUBSTR(A.PUM_CODE, 1, 1)='1' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='3' then '1' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='5' then '4' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='6' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='7' then '3' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='8' then '2' 
+	               WHEN SUBSTR(A.PUM_CODE, 1, 1)='9' then '2' 
+	               ELSE '5' END AS MEJANG 
+             from FLOWER.VV_RFLO
+             A LEFT JOIN LEVELCHANGE C ON A.LEVEL_CODE = C.YCODE 
+             LEFT JOIN LOCALCHANGE D ON A.REGION_CODE = D.YCODE 
+             where PAN_DAY = #{panDate, jdbcType=VARCHAR }
+             AND SUBSTR(PAN_NO,0,1) != 'C'
+	</select>
+	
+	<select id="atMarketYuchalData" parameterType="java.util.HashMap" resultType="com.at.domain.AtMarketVO">
+			SELECT A.BUN_CHK, A.PAN_DAY, A.PUM_CODE, A.MOK_NAME, A.JONG_NAME, TOT_CNT, NVL(YUCHAL_CNT,0) YUCHAL_CNT, NVL(ROUND(YUCHAL_CNT/TOT_CNT*100),0) YUCHAL_PER
+			FROM
+			(
+			    SELECT  BUN_CHK, PAN_DAY, PUM_CODE, MOK_NAME, JONG_NAME,  SUM(SOK_CNT) TOT_CNT
+			    FROM V_AUC_MNT
+			    WHERE PAN_DAY BETWEEN #{strDate, jdbcType=VARCHAR } AND #{saleDate, jdbcType=VARCHAR }
+			    GROUP BY BUN_CHK, PAN_DAY, PUM_CODE, MOK_NAME, JONG_NAME
+			) A,
+			(
+			    SELECT  BUN_CHK, PAN_DAY, PUM_CODE, MOK_NAME, JONG_NAME, SUM(SOK_CNT) YUCHAL_CNT
+			    FROM V_AUC_MNT
+			    WHERE PAN_DAY BETWEEN #{strDate, jdbcType=VARCHAR } AND #{saleDate, jdbcType=VARCHAR }
+			    AND KM_LIST='2'
+			    GROUP BY BUN_CHK, PAN_DAY, PUM_CODE, MOK_NAME, JONG_NAME
+			) B
+			WHERE A.BUN_CHK = B.BUN_CHK(+)
+			AND A.PAN_DAY = B.PAN_DAY(+)
+			AND A.PUM_CODE = B.PUM_CODE(+)
+			AND A.MOK_NAME = B.MOK_NAME(+)
+			AND A.JONG_NAME = B.JONG_NAME(+)
+	</select>
+	
+	<select id="selectSituation" parameterType="java.util.HashMap" resultType="com.at.domain.SituationVO">
+		SELECT TA.MONTH, NVL(TB.PLAN,0) AS PLAN_SUM, NVL(TB.PAN_SUM,0) AS PAN_SUM, FIVE_YEAR_AVG, BEFORE_YEAR_AVG
+		FROM
+		(
+		  SELECT A.MONTH, FIVE_YEAR_AVG, BEFORE_YEAR_AVG
+		  FROM
+		  (
+		    SELECT SUBSTR(YYYYMM,5,2) AS MONTH, ROUND(SUM(SUM_PRICE)/COUNT(*)) AS FIVE_YEAR_AVG
+		    FROM V_FIVE_AVG
+		    GROUP BY SUBSTR(YYYYMM,5,2)
+		  ) A,
+		  (
+		    SELECT SUBSTR(YYYYMM,5,2) AS MONTH, SUM_PRICE AS BEFORE_YEAR_AVG
+		    FROM V_FIVE_AVG
+		    WHERE SUBSTR(YYYYMM,0,4) =  TO_CHAR(ADD_MONTHS(SYSDATE,-12),'YYYY')
+		  ) B
+		  WHERE A.MONTH = B.MONTH
+		) TA,
+		( 
+		  SELECT SUBSTR(YYYYMM,5,2) AS MONTH, ROUND(SUM(PLAN)) AS PLAN, ROUND(SUM(PAN_SUM)) AS PAN_SUM
+		  FROM V_GRAPH
+		  WHERE YYYYMM BETWEEN TO_CHAR(SYSDATE,'YYYY')||'01' AND TO_CHAR(SYSDATE,'YYYY')||'12'
+		  GROUP BY YYYYMM
+		  ORDER BY YYYYMM
+		) TB
+		WHERE TA.MONTH = TB.MONTH(+)
+	</select>	
+	
+	<select id="selectSituation1" parameterType="java.util.HashMap" resultType="com.at.domain.SituationVO">
+		  <!-- 
+		  SELECT TO_CHAR (TO_DATE (PAN_DAY, 'YYYYMMDD'), 'YYYY.MM.DD.') AS PAN_DAY,
+             BUN_CHK,
+             DECODE (BUN_CHK,  'N', '1',  'C', '3',  '2') AS BUN_CHK_RANK,
+             TOT_SOK,
+             ROUND (TOT_PRICE / 1000) AS TOT_PRICE,
+             TO_CHAR (TO_DATE (BEF_DAY, 'YYYYMMDD'), 'YYYY.MM.DD.') AS BEF_DAY,
+             NVL (BRF_TOT_SOK, 0) AS BEF_TOT_SOK,
+             NVL (ROUND (BRF_TOT_PRICE / 1000), 0) AS BEF_TOT_PRICE,
+             DAY_YOIL,
+             BEF_DAY_YOIL  
+         FROM
+         (
+             SELECT PAN_DAY, BUN_CHK, WEEK_CNT, DAY_CNT, DAY_YOIL, TOT_SOK, TOT_PRICE, ORDERING, BUN_CHK_CHANGE
+             FROM
+             (
+                 SELECT PAN_DAY, BUN_CHK, DECODE(BUN_CHK,'G','Y',BUN_CHK) BUN_CHK_CHANGE, WEEK_CNT, DAY_CNT, SUM(SOK_CNT) AS TOT_SOK, SUM
+
+(PAN_PRICE) AS TOT_PRICE
+                     , DENSE_RANK() OVER(PARTITION BY DECODE(BUN_CHK,'G','Y',BUN_CHK) ORDER BY PAN_DAY DESC) AS ORDERING
+                     , DECODE(DAY_CNT,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금','토') AS DAY_YOIL
+                 FROM
+                 (
+                     SELECT 
+                         PAN_DAY
+                         , BUN_CHK
+                         , TO_CHAR(TO_DATE(PAN_DAY,'YYYYMMDD'),'WW') WEEK_CNT
+                         , TO_CHAR(TO_DATE(PAN_DAY,'YYYYMMDD'),'d') DAY_CNT
+                         ,  SOK_CNT
+                         , PAN_PRICE
+                     FROM V_AUC_MNT
+                     WHERE PAN_DAY BETWEEN TO_CHAR(SYSDATE-10,'YYYYMMDD') AND TO_CHAR(SYSDATE,'YYYYMMDD')
+                     AND KM_LIST IN('1','3','4')
+                 )
+                 WHERE (
+                     (BUN_CHK='N' AND DAY_CNT IN ('2','4','6'))
+                     OR (BUN_CHK='Y' )
+                     OR (BUN_CHK='C')
+                     OR (BUN_CHK='G'  AND DAY_CNT IN ('4'))
+                 )
+                 GROUP BY PAN_DAY, BUN_CHK, WEEK_CNT, DAY_CNT
+             )
+             WHERE ORDERING = 1
+         ) A, 
+         (
+             SELECT PAN_DAY AS BEF_DAY, BUN_CHK AS BEF_BUN_CHK, WEEK_CNT AS BEF_WEEK_CNT, DAY_CNT AS BEF_DAY_CNT, SUM(SOK_CNT) AS BRF_TOT_SOK, 
+
+SUM(PAN_PRICE) AS BRF_TOT_PRICE
+             , DENSE_RANK() OVER(PARTITION BY BUN_CHK ORDER BY PAN_DAY DESC) AS ORDERING
+             , DECODE(DAY_CNT,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금','토') AS BEF_DAY_YOIL
+             FROM
+             (
+                 SELECT 
+                     PAN_DAY
+                     , BUN_CHK
+                     , TO_CHAR(TO_DATE(PAN_DAY,'YYYYMMDD'),'WW') WEEK_CNT
+                     , TO_CHAR(TO_DATE(PAN_DAY,'YYYYMMDD'),'d') DAY_CNT
+                     ,  SOK_CNT
+                     , PAN_PRICE
+                 FROM V_AUC_MNT
+                 WHERE PAN_DAY BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE-5,-12),'YYYYMMDD') AND TO_CHAR(ADD_MONTHS(SYSDATE+4,-12),'YYYYMMDD')
+                 AND KM_LIST IN('1','3','4')
+             )
+             WHERE (
+                 (BUN_CHK='N' AND DAY_CNT IN ('2','4','6'))
+                 OR (BUN_CHK='Y' AND DAY_CNT IN ('2','5'))
+                 OR (BUN_CHK='C' AND DAY_CNT IN ('3','6'))
+                 OR (BUN_CHK='G' AND DAY_CNT IN ('4'))
+             )
+             GROUP BY PAN_DAY, BUN_CHK, WEEK_CNT, DAY_CNT
+         ) B
+            where
+                A.bun_chk = B.bef_bun_chk(+)
+                and
+                a.day_yoil = b.bef_day_yoil(+)
+            order by
+                bun_chk_rank -->
+                
+                
+          with t as(
+		SELECT PAN_DAY
+		     , fc_last_year_date(pan_day) as bef_day
+		     , BUN_CHK
+		     , DECODE(BUN_CHK,'G','Y',BUN_CHK) BUN_CHK_CHANGE
+		     , WEEK_CNT
+		     , DAY_CNT
+		     , SUM(SOK_CNT) AS TOT_SOK
+		     , SUM(PAN_PRICE) AS TOT_PRICE
+		     , DENSE_RANK() OVER(PARTITION BY DECODE(BUN_CHK,'G','Y',BUN_CHK) ORDER BY PAN_DAY DESC) AS ORDERING
+		     , DECODE(DAY_CNT,1,'일',2,'월',3,'화',4,'수',5,'목',6,'금','토') AS DAY_YOIL
+		 FROM (SELECT PAN_DAY
+		            , BUN_CHK
+		            , TO_CHAR(TO_DATE(PAN_DAY,'YYYYMMDD'),'WW') WEEK_CNT
+		            , TO_CHAR(TO_DATE(PAN_DAY,'YYYYMMDD'),'d') DAY_CNT
+		            , SOK_CNT
+		            , PAN_PRICE
+		         FROM V_AUC_MNT
+		        WHERE PAN_DAY BETWEEN TO_CHAR(SYSDATE-10,'YYYYMMDD') AND TO_CHAR(SYSDATE,'YYYYMMDD')
+		          AND KM_LIST IN('1','3','4') )
+		WHERE ( (BUN_CHK='N' AND DAY_CNT IN ('2','4','6')) OR (BUN_CHK='Y' ) OR (BUN_CHK='C') OR (BUN_CHK='G' AND DAY_CNT IN ('4')) )
+		GROUP BY PAN_DAY, BUN_CHK, WEEK_CNT, DAY_CNT
+		), w as (
+		SELECT PAN_DAY
+		     , BEF_DAY
+		     , BUN_CHK
+		     , WEEK_CNT
+		     , DAY_CNT
+		     , DAY_YOIL
+		     , TOT_SOK
+		     , TOT_PRICE
+		     , ORDERING
+		     , BUN_CHK_CHANGE
+		  FROM t
+		 WHERE ORDERING = 1 
+		), q as(
+		select a.bef_day
+		     , b.pan_day
+		     , b.bun_chk
+		     , sum(b.sok_cnt) as tot_sok
+		     , sum(b.pan_price) as tot_price
+		     , DECODE(TO_CHAR(TO_DATE(b.PAN_DAY,'YYYYMMDD'),'d'),1,'일',2,'월',3,'화',4,'수',5,'목',6,'금','토') AS DAY_YOIL
+		  from w            a
+		     , v_auc_mnt    b
+		 where b.pan_day = a.bef_day
+		   and b.bun_chk = a.bun_chk
+		   and b.km_list in ('1','3','4')
+		group by a.bef_day
+		     , b.pan_day
+		     , b.bun_chk
+		)
+		select TO_CHAR (TO_DATE (w.PAN_DAY, 'YYYYMMDD'), 'YYYY.MM.DD.') as pan_day
+		     , w.bun_chk
+		     , DECODE (w.BUN_CHK, 'N', '1', 'C', '3', '2') AS BUN_CHK_RANK
+		     , nvl(ROUND(w.tot_sok),0) as tot_sok
+		     , nvl(ROUND(w.tot_price/1000),0) as tot_price
+		     , TO_CHAR (TO_DATE (q.bef_day, 'YYYYMMDD'), 'YYYY.MM.DD.') as bef_day
+		     , nvl(ROUND(q.tot_sok),0) as bef_tot_sok
+		     , nvl(ROUND(q.tot_price/1000),0) as bef_tot_price
+		     , w.day_yoil AS DAY_YOIL
+		     , q.day_yoil AS BEF_DAY_YOIL
+		  from w
+		     , q
+		 where w.bef_day = q.bef_day(+)
+		   and w.bun_chk = q.bun_chk(+)
+		order by 3       
+                
+                
+	</select>	
+	
+	<select id="selectSituation2" parameterType="java.util.HashMap" resultType="com.at.domain.SituationVO">
+		SELECT  A.YYYYMM AS YYYYMM,
+         A.BUN_CHK,
+         DECODE (A.BUN_CHK,  '1', '절화',  '2', '난/춘란',  '관엽')
+            AS BUN_CHK_NAME,
+         NVL(ROUND (A.PLAN),0) AS PLAN,
+         NVL(ROUND (A.PAN_SUM),0) AS PAN_SUM,
+         NVL(ROUND (A.SUM_PLAN),0) AS SUM_PLAN,
+         NVL(ROUND (A.SUM_PAN_SUM),0) AS SUM_PAN,
+         B.PLAN_YEAR_SUM,
+         NVL(ROUND (A.PAN_SUM / A.PLAN * 100),0) AS PLAN_PER,
+         NVL(ROUND (A.SUM_PAN_SUM / A.SUM_PLAN * 100),0) AS SUM_PER
+		FROM
+		(
+		    SELECT YYYYMM, BUN_CHK, SUM(PLAN) AS PLAN, SUM(PAN_SUM) AS PAN_SUM, SUM(SUM_PLAN) AS SUM_PLAN, SUM(SUM_PAN_SUM) AS SUM_PAN_SUM
+		    FROM
+		    (
+		        SELECT 
+		            YYYYMM
+		            , DECODE(BUN_CHK,'N','1','C','3','2') AS BUN_CHK
+		            , PLAN
+		            , PAN_SUM
+		            , SUM(PLAN) OVER (PARTITION BY BUN_CHK ORDER BY YYYYMM ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS SUM_PLAN
+		            , SUM(PAN_SUM) OVER (PARTITION BY BUN_CHK ORDER BY YYYYMM ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS SUM_PAN_SUM
+		        FROM V_GRAPH
+		        WHERE 1=1
+		        AND YYYYMM BETWEEN  TO_CHAR(SYSDATE,'YYYY')||'01' AND TO_CHAR(SYSDATE,'YYYY')||'12'
+		        ORDER BY YYYYMM, BUN_CHK
+		    )
+		    GROUP BY YYYYMM, BUN_CHK
+		) A,
+		(
+		    SELECT YYYY, BUN_CHK, SUM(PLAN) AS PLAN_YEAR_SUM
+		    FROM
+		    (
+		        SELECT SUBSTR(YYYYMM,0,4) AS YYYY, DECODE(BUN_CHK,'N','1','C','3','2') AS BUN_CHK, PLAN, SOK_SUM, PAN_SUM
+		        FROM V_GRAPH
+		        WHERE YYYYMM BETWEEN TO_CHAR(SYSDATE,'YYYY')||'01' AND TO_CHAR(SYSDATE,'YYYY')||'12'
+		    )
+		    GROUP BY YYYY, BUN_CHK 
+		) B
+		WHERE A.BUN_CHK=B.BUN_CHK
+		AND YYYYMM=TO_CHAR(SYSDATE,'YYYYMM')
+		ORDER BY YYYYMM, BUN_CHK
+	</select>
+	
+	<select id="selectAuctionAPumMok" resultType="java.util.HashMap">
+		select * from a_pum_mok_info
+	</select>
+	
+	
+	<select id="selectAuctionAPumJong" resultType="java.util.HashMap">
+		select * from(
+		select rownum as rn,a.*
+		from a_pum_jong_info a 
+		)
+		where rn >= 1
+		and flower_code = '1'
+	</select>
+	
+</mapper>
+

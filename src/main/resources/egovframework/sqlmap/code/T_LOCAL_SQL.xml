@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpditrans.trans.cmmn.mapper.TLocalMapper">
+	<resultMap id="LocalResultMap" type="com.fpditrans.trans.cmmn.domain.TLocalVO">
+		<result property="sanCd" column="SAN_CD"/>
+		<result property="sanName" column="SAN_NAME"/>
+		<result property="sanBigo" column="SAN_BIGO"/>
+		<result property="gubn" column="GUBN"/>	
+		<result property="rowNum" column="ROW_NUM"/>	
+
+</resultMap>
+    
+ 	<select id="selectSANListAll" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="LocalResultMap">
+ 	   SELECT A.SAN_CD,
+       A.SAN_NAME,
+       A.SAN_BIGO,
+       A.GUBN
+  FROM T_LOCAL A
+ 	</select>    
+ 	
+ 	<select id="selectSanListSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="LocalResultMap">
+ 	      SELECT A.SAN_CD,
+		       A.SAN_NAME,
+		       A.SAN_BIGO,
+		       A.GUBN
+		  FROM T_LOCAL A
+   		 WHERE 1=1
+	    <if  test ="searchParams!=null and searchParams!='' " >
+	     AND  (A.SAN_CD LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%'   OR A.SAN_NAME LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%' OR A.SAN_BIGO LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%'   ) 
+	    </if>
+	    <if  test ="searchParams==null or searchParams=='' " >
+	     AND ROWNUM &lt;=20
+	    </if>   
+ 	</select> 
+ 	<select id="selectSanListSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="LocalResultMap">
+ 	    	SELECT data.* 
+		  FROM 
+		       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+		              ROWNUM ROW_NUM, 
+		              ROWNUM LINENUM, 
+		              data.* 
+		         FROM 
+		              (
+ 	    
+				 	      SELECT A.SAN_CD,
+						       A.SAN_NAME,
+						       A.SAN_BIGO,
+						       A.GUBN
+						  FROM T_LOCAL A
+				   		 WHERE 1=1
+					    <if  test ="searchParams!=null and searchParams!='' " >
+					     AND  (A.SAN_CD LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%'   OR A.SAN_NAME LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%' OR A.SAN_BIGO LIKE '%' || #{searchParams, jdbcType=VARCHAR} || '%'   ) 
+					    </if>
+					    <if  test ="searchParams==null or searchParams=='' " >
+					     AND ROWNUM &lt;=20
+					    </if>   
+					          
+		              ) data 
+	       		) data 
+	 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	  
+	       
+ 	</select>       
+ 
+</mapper>

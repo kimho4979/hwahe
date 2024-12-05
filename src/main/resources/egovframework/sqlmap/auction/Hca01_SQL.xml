@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hca01.mapper.Hca01Mapper">
+
+	<resultMap id="resultHca01ExcelMap" type="com.fpdisys.dist.hca01.domain.Hca01ExcelVO">
+		<result property="seqNo" 		column="SEQ_NO"/>
+		<result property="regDate" 		column="REG_DATE"/>
+		<result property="pumName" 		column="PUM_NAME"/>
+		<result property="goodName" 	column="GOOD_NAME"/>
+		<result property="cmpCd" 		column="CMP_CD"/>
+		<result property="gubn" 		column="GUBN"/>
+		<result property="chulNo" 		column="CHUL_NO"/>
+		<result property="qty" 			column="QTY"/>
+		<result property="bigo" 		column="BIGO"/>
+		<result property="sanCd" 		column="SAN_CD"/>
+		<result property="useYn" 		column="USE_YN"/>
+		<result property="regDt" 		column="REG_DT"/>
+		<result property="uptDt" 		column="UPT_DT"/>
+		<result property="daysGubn" 	column="DAYS_GUBN"/>
+		<result property="qty1" 		column="QTY_1"/>
+		<result property="qty2" 		column="QTY_2"/>
+		<result property="qty3" 		column="QTY_3"/>
+		<result property="totQty" 		column="TOT_QTY"/>
+		<result property="marketName" 	column="MARKET_NAME"/>
+		<result property="dayGubn" 		column="DAY_GUBN"/>
+	</resultMap>
+ 
+ 	<select id="selectFastDay" statementType="PREPARED" resultType="String"> 
+		SELECT REG_DATE
+		FROM
+		(
+		    SELECT SUBSTR(REG_DATE,0,7) AS REG_DATE
+		    FROM T_SHIPMNT_INFO
+		    WHERE REG_DATE BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE,-2),'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+        GROUP BY REG_DATE
+        ORDER BY REG_DATE DESC
+		)
+		WHERE ROWNUM=1
+		ORDER BY REG_DATE DESC
+	</select>
+ 
+ 
+ <select id="selectTop" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.hca01.domain.Hca01VO">
+ 	SELECT 
+  		CMP_CD
+  		, MARKET_NAME
+  		, SUM(TOT_QTY1) AS TOT_QTY
+  		, MAX(QTY_1) AS QTY_1
+  		, MAX(QTY_2) AS QTY_2
+  		, MAX(QTY_3) AS QTY_3
+	FROM
+	(
+  		SELECT
+    		CMP_CD
+    		, MARKET_NAME
+    		, SUM(TOT_QTY) AS TOT_QTY1
+    		, DECODE(DAYS_GUBN,'1',SUM(TOT_QTY),0) AS QTY_1
+    		, DECODE(DAYS_GUBN,'2',SUM(TOT_QTY),0) AS QTY_2
+    		, DECODE(DAYS_GUBN,'3',SUM(TOT_QTY),0) AS QTY_3
+  		FROM
+  		(
+    		SELECT 
+      			SUBSTR(T1.REG_DATE,1,7) AS REG_DATE
+      			, T1.CMP_CD
+      			, T2.MARKET_NAME
+      			, T1.GUBN
+      			, T1.DAYS_GUBN
+      			, SUM(T1.QTY) AS TOT_QTY
+    		FROM T_SHIPMNT_INFO T1
+    		LEFT OUTER JOIN T_JOINT_MARKET T2
+    		ON T1.CMP_CD = T2.MARKET_CD
+    		WHERE 1=1
+    		AND USE_YN = 'Y'
+    		AND T1.GUBN =#{GUBN, jdbcType=VARCHAR}
+    		AND SUBSTR(T1.REG_DATE,1,7) = #{REG_MONTH, jdbcType=VARCHAR}
+    		GROUP BY SUBSTR(T1.REG_DATE,1,7), T1.CMP_CD, T2.MARKET_NAME, T1.GUBN, T1.DAYS_GUBN
+  		)
+  		WHERE 1=1
+  		GROUP BY CMP_CD, MARKET_NAME, GUBN, DAYS_GUBN
+	)
+	GROUP BY CMP_CD, MARKET_NAME
+	ORDER BY CMP_CD
+		<!-- SELECT T1.REG_DATE
+		       ,T1.CMP_CD
+		       ,T2.MARKET_NAME
+		       ,T1.QTY
+		FROM       
+		(SELECT SUBSTR(REG_DATE,1,7) AS REG_DATE
+		       ,CMP_CD            
+		       ,SUM(QTY) AS QTY
+		FROM T_SHIPMNT_INFO 
+		WHERE 1=1
+		AND GUBN='2' 
+		 AND SUBSTR(REG_DATE,1,7) = #{REG_MONTH, jdbcType=VARCHAR} 
+		 AND USE_YN='Y'		
+		GROUP BY SUBSTR(REG_DATE,1,7), CMP_CD) T1
+		LEFT OUTER JOIN T_JOINT_MARKET T2
+		ON T1.CMP_CD = T2.MARKET_CD
+		ORDER BY T1.QTY DESC, T2.MARKET_NAME -->
+					     		   		  
+	</select>
+	
+	<!-- <select id="selectBottom" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.hca01.domain.Hca01VO">
+		SELECT T1.REG_DATE
+		       ,T1.CMP_CD
+		       ,T2.MARKET_NAME
+		       ,T1.QTY
+		FROM       
+		(SELECT SUBSTR(REG_DATE,1,7) AS REG_DATE
+		       ,CMP_CD            
+		       ,SUM(QTY) AS QTY
+		FROM T_SHIPMNT_INFO 
+		WHERE 1=1
+		AND GUBN='1' 
+		 AND SUBSTR(REG_DATE,1,7) = #{REG_MONTH, jdbcType=VARCHAR} 	
+		  AND USE_YN='Y'			
+		GROUP BY SUBSTR(REG_DATE,1,7), CMP_CD) T1
+		LEFT OUTER JOIN T_JOINT_MARKET T2
+		ON T1.CMP_CD = T2.MARKET_CD	   
+		ORDER BY T1.QTY DESC,  T2.MARKET_NAME		   		  
+	</select> -->
+	
+	<select id="selectMainChulChart" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.hca01.domain.Hca01VO">
+		 SELECT CASE WHEN DAYS_GUBN = '1' THEN '초순'
+	                 WHEN DAYS_GUBN = '2' THEN '중순' 
+	                 ELSE '하순' END AS DAY_GUBN
+	          , SUM(QTY_1) AS QTY_1
+	          , SUM(QTY_2) AS QTY_2
+	          , REG_DATE
+	     FROM (            
+	           SELECT CMP_CD
+	                , DAYS_GUBN
+	                , REG_DATE
+	                , DECODE(GUBN,'1',SUM(TOT_QTY),0) AS QTY_1
+	                , DECODE(GUBN,'2',SUM(TOT_QTY),0) AS QTY_2
+	           FROM (
+	                SELECT SUBSTR(T1.REG_DATE,1,7) AS REG_DATE
+	                      , T1.CMP_CD
+	                      , T2.MARKET_NAME
+	                      , T1.GUBN
+	                      , T1.DAYS_GUBN
+	                      , SUM(T1.QTY) AS TOT_QTY
+	                FROM T_SHIPMNT_INFO T1
+	                LEFT OUTER JOIN T_JOINT_MARKET T2
+	                ON T1.CMP_CD = T2.MARKET_CD
+	                WHERE 1=1
+	                AND USE_YN = 'Y'
+	                AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+	                AND SUBSTR(T1.REG_DATE,1,7) = SUBSTR((SELECT MAX(REG_DATE) FROM T_SHIPMNT_INFO WHERE USE_YN = 'Y' AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}),1,7)
+	                GROUP BY SUBSTR(T1.REG_DATE,1,7), T1.CMP_CD, T2.MARKET_NAME, T1.GUBN, T1.DAYS_GUBN
+	            )GROUP BY CMP_CD, DAYS_GUBN, GUBN, REG_DATE
+	      )GROUP BY DAYS_GUBN, REG_DATE
+	      ORDER BY DAYS_GUBN, REG_DATE
+      </select>
+      
+	<select id="selectTopExcel" resultType="com.fpdisys.dist.hca01.domain.Hca01ExcelVO" resultMap="resultHca01ExcelMap">
+	 	SELECT 
+	  		CMP_CD
+	  		, MARKET_NAME
+	  		, SUM(TOT_QTY1) AS TOT_QTY
+	  		, MAX(QTY_1) AS QTY_1
+	  		, MAX(QTY_2) AS QTY_2
+	  		, MAX(QTY_3) AS QTY_3
+		FROM
+		(
+	  		SELECT
+	    		CMP_CD
+	    		, MARKET_NAME
+	    		, SUM(TOT_QTY) AS TOT_QTY1
+	    		, DECODE(DAYS_GUBN,'1',SUM(TOT_QTY),'0') AS QTY_1
+	    		, DECODE(DAYS_GUBN,'2',SUM(TOT_QTY),'0') AS QTY_2
+	    		, DECODE(DAYS_GUBN,'3',SUM(TOT_QTY),'0') AS QTY_3
+	  		FROM
+	  		(
+	    		SELECT 
+	      			SUBSTR(T1.REG_DATE,1,7) AS REG_DATE
+	      			, T1.CMP_CD
+	      			, T2.MARKET_NAME
+	      			, T1.GUBN
+	      			, T1.DAYS_GUBN
+	      			, SUM(T1.QTY) AS TOT_QTY
+	    		FROM T_SHIPMNT_INFO T1
+	    		LEFT OUTER JOIN T_JOINT_MARKET T2
+	    		ON T1.CMP_CD = T2.MARKET_CD
+	    		WHERE 1=1
+	    		AND USE_YN = 'Y'
+	    		AND T1.GUBN =#{GUBN, jdbcType=VARCHAR}
+	    		AND SUBSTR(T1.REG_DATE,1,7) = #{REG_MONTH, jdbcType=VARCHAR}
+	    		GROUP BY SUBSTR(T1.REG_DATE,1,7), T1.CMP_CD, T2.MARKET_NAME, T1.GUBN, T1.DAYS_GUBN
+	  		)
+	  		WHERE 1=1
+	  		GROUP BY CMP_CD, MARKET_NAME, GUBN, DAYS_GUBN
+		)
+		GROUP BY CMP_CD, MARKET_NAME
+		ORDER BY CMP_CD
+	</select>
+	
+</mapper>

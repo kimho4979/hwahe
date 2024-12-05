@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.customInfo.mapper.CustomInfoMapper">
+
+	<resultMap id="CustomInfoResultMap" type="com.fpdisys.dist.customInfo.domain.CustomInfoVO">
+		<id property="userId"		column="USER_ID"/>
+		<id property="passwd"		column="PASSWD"/>
+		<id property="userGubun"	column="USER_GUBUN"/>
+		<id property="useYn"		column="USE_YN"/>
+		<id property="regDate"		column="REG_DATE"/>
+		<id property="regId"		column="REG_ID"/>
+		<id property="initYn"		column="INIT_YN"/>
+		<id property="report1Yn"	column="REPORT1_YN"/>
+		<id property="report2Yn"	column="REPORT2_YN"/>
+		<id property="saleYn"		column="SALE_YN"/>
+		<id property="salePum"		column="SALE_PUM"/>
+		<id property="realYn"		column="REAL_YN"/>
+		<id property="regDate"		column="REG_DATE"/>
+		<id property="regId"		column="REG_ID"/>
+		<id property="seq"			column="SEQ"/>
+		<id property="sidoCode"		column="SIDO_CODE"/>
+		<id property="itemCd"		column="ITEM_CD"/>
+		<id property="itemCd1"		column="ITEM_CD1"/>
+		<id property="flowerCd"		column="FLOWER_CD"/>
+		<id property="realTime"		column="REAL_TIME"/>
+		<id property="acsYn"		column="ACS_YN"/>
+	</resultMap>
+ 	
+ 	<select id="getCustomInfo" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.customInfo.domain.CustomInfoVO"> 	
+		/*SELECT 
+		    USER_ID AS userId
+		    <!-- , PASSWD AS passwd-->
+		    , USER_GUBUN AS userGubun
+		    , USE_YN AS useYn
+		    <!-- , REG_DATE AS regDate -->
+		    , REG_ID AS regId
+		FROM T_CUSTOMINFO
+		WHERE USER_ID=
+		*/
+		
+		SELECT 
+		    A.USER_ID AS userId
+		    , A.USER_GUBUN AS userGubun
+		    , A.USE_YN AS useYn
+		    , A.REG_ID AS regId
+		FROM T_CUSTOMINFO A, T_AUTH_CODE B
+        WHERE A.USER_ID = B.USER_ID
+		AND A.USER_ID = #{userId, jdbcType=VARCHAR}
+        AND B.AUTHCODE = #{authCode, jdbcType=VARCHAR}
+		
+		
+	</select>
+	
+	<select id="getCustomInfoList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.customInfo.domain.CustomInfoVO"> 	
+		SELECT 
+		    USER_ID AS userId
+		    , PASSWD AS passwd
+		    , USER_GUBUN AS userGubun
+		    , USE_YN AS useYn
+		    <!-- , REG_DATE AS regDate -->
+		    , REG_ID AS regId
+		FROM T_CUSTOMINFO
+	</select>
+	
+	<insert id="saveCustomInfo" parameterType="java.util.HashMap">
+		INSERT INTO T_CUSTOMINFO 
+		(USER_ID, PASSWD, USER_GUBUN, USE_YN, REG_DATE, REG_ID,ACS_YN)
+		VALUES (
+			  #{userId, jdbcType=VARCHAR}
+			, #{passwd, jdbcType=VARCHAR}
+			, #{radioGubun, jdbcType=VARCHAR}
+			, 'Y'
+			, SYSDATE
+			, #{userId, jdbcType=VARCHAR}
+			, 'N'
+		)
+	</insert>
+	
+	<insert id="saveCustomInfoDtl" parameterType="java.util.HashMap">
+		INSERT INTO T_CUSTOMINFO_DTL 
+		(USER_ID, REPORT1_YN, REPORT2_YN, SALE_YN, SALE_PUM, REAL_YN, REG_DATE, REG_ID, REAL_TIME) 
+		VALUES 
+		(
+		#{userId, jdbcType=VARCHAR},
+		 #{report1Yn, jdbcType=VARCHAR},
+		 #{report2Yn, jdbcType=VARCHAR},
+		 #{saleYn, jdbcType=VARCHAR},
+		 #{salePum, jdbcType=VARCHAR},
+		 #{realYn, jdbcType=VARCHAR},
+		 SYSDATE,
+		 #{userId, jdbcType=VARCHAR},
+		 #{realTime, jdbcType=VARCHAR}
+		 )
+	</insert>
+	
+	<insert id="saveCustomInfoReal" parameterType="java.util.HashMap">
+		INSERT INTO T_CUSTOMINFO_REAL 
+		(USER_ID, SEQ, SIDO_CODE, ITEM_CD, FLOWER_CD, ITEM_CD1) 
+		VALUES 
+		( 
+		#{userId, jdbcType=VARCHAR},
+		 (select count(*) as cnt
+		 from T_CUSTOMINFO_REAL
+		 where USER_ID=#{userId, jdbcType=VARCHAR}),
+		 #{sidoCd, jdbcType=VARCHAR},
+		 #{itemCd, jdbcType=VARCHAR},
+		 #{flowerCd, jdbcType=VARCHAR},
+		 #{itemCd1, jdbcType=VARCHAR}
+		 )
+	</insert>
+	
+	<select id="loginCustomInfo" parameterType="java.util.HashMap" resultMap="CustomInfoResultMap">
+		SELECT
+			T1.USER_ID
+			, T1.PASSWD
+			, T1.USER_GUBUN
+			, T1.INIT_YN
+			, T1.ACS_YN
+		FROM T_CUSTOMINFO T1
+		WHERE 1=1
+		AND T1.USER_ID = #{userId, jdbcType=VARCHAR}
+		AND T1.PASSWD = #{passwd, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getCustomInfoMs" parameterType="com.fpdisys.dist.customInfo.domain.CustomInfoVO" resultMap="CustomInfoResultMap">
+		SELECT
+			T1.USER_ID
+			, T1.PASSWD
+			, T1.USER_GUBUN
+			, T1.INIT_YN
+			, T2.REPORT1_YN
+			, T2.REPORT2_YN
+			, T2.SALE_YN
+			, T2.SALE_PUM
+			, T2.REAL_YN
+			, T2.REAL_TIME
+			, T3.SEQ
+			, T3.SIDO_CODE
+			, T3.ITEM_CD
+			, T3.ITEM_CD1
+			, T3.FLOWER_CD
+		FROM T_CUSTOMINFO T1
+		LEFT OUTER JOIN T_CUSTOMINFO_DTL T2 ON T1.USER_ID = T2.USER_ID
+		LEFT OUTER JOIN T_CUSTOMINFO_REAL T3 ON T1.USER_ID = T3.USER_ID
+		WHERE 1=1
+		AND T1.USER_ID = #{userId, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getPumName" parameterType="java.util.HashMap" resultType="String">
+		SELECT PUM_NAME
+		FROM
+		(
+			SELECT DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) PUM_NAME , SUM(TOT_QTY) TOT_QTY
+			FROM T_REAL
+			WHERE  SALE_DATE BETWEEN TO_CHAR((SYSDATE-365), 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD') 
+			AND MEJANG = #{flowerCd, jdbcType=VARCHAR}
+			AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+			GROUP BY CMP_CD, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME)
+		)
+		ORDER BY PUM_NAME
+	</select>
+	
+	<select id="getGoodName" parameterType="java.util.HashMap" resultType="String">
+		SELECT GOOD_NAME
+	 	FROM
+	 	(
+		    SELECT DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) PUM_NAME, GOOD_NAME, SUM(TOT_QTY) TOT_QTY
+		    FROM T_REAL 
+		    WHERE  SALE_DATE BETWEEN TO_CHAR((SYSDATE-365), 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			AND MEJANG = #{flowerCd, jdbcType=VARCHAR}
+			AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+			<if test ="cmpCd!= null and cmpCd =='0000000001'" >
+				<if test="itemCd!=null and itemCd!='' ">
+					<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+		  				AND PUM_NAME IN('호접란', '팔레높시스')
+		  			</if>
+		  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+		  				AND PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+		  			</if>
+				</if>
+			</if>
+			<if test ="cmpCd!= null and cmpCd !='0000000001'" >
+				<if test="itemCd!=null and itemCd!='' ">
+					AND PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+				</if>
+			</if>
+		    GROUP BY CMP_CD, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME), GOOD_NAME
+		) 
+		ORDER BY PUM_NAME, GOOD_NAME
+	</select>
+	
+	<update id="updateCustomInfoPw" parameterType="java.util.HashMap">
+		UPDATE T_CUSTOMINFO
+		SET
+ 			PASSWD =#{newPass, jdbcType=VARCHAR}
+		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateCustomInfoDtl" parameterType="java.util.HashMap">
+		UPDATE T_CUSTOMINFO_DTL SET
+ 			REPORT1_YN =NVL(#{report1Yn, jdbcType=VARCHAR}, 'N'), 
+ 			REPORT2_YN =NVL(#{report2Yn, jdbcType=VARCHAR}, 'N'), 
+ 			SALE_YN =NVL(#{saleYn, jdbcType=VARCHAR}, 'N'), 
+ 			SALE_PUM =#{salePum, jdbcType=VARCHAR}, 
+ 			REAL_YN =NVL(#{realYn, jdbcType=VARCHAR}, 'N'), 
+ 			REAL_TIME =#{realTime, jdbcType=VARCHAR}
+		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteCustomInfo" parameterType="java.util.HashMap">
+		DELETE FROM T_CUSTOMINFO
+		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="deleteCustomInfoDtl" parameterType="java.util.HashMap">
+		DELETE FROM T_CUSTOMINFO_DTL 
+		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="updateCustomInfoReal" parameterType="java.util.HashMap">
+		UPDATE T_CUSTOMINFO_REAL SET 
+			SIDO_CODE = #{sidoCode, jdbcType=VARCHAR}
+			, ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			, FLOWER_CD =#{flowerCd, jdbcType=VARCHAR}
+		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+		AND SEQ = #{seq, jdbcType=VARCHAR]
+	</update>
+	
+	<delete id="deleteCustomInfoReal" parameterType="String">
+		DELETE FROM T_CUSTOMINFO_REAL
+		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+	</delete>
+	
+	<resultMap id="CustomSnsInfo" type="com.fpdisys.dist.customInfo.domain.CustomInfoSnsVO">
+		<id property="userId"		column="USER_ID"/>
+		<result property="userGubun"		column="USER_GUBUN"/>
+		<result property="useYn"		column="USE_YN"/>
+		<result property="report1Yn"		column="REPORT1_YN"/>
+		<result property="report2Yn"		column="REPORT2_YN"/>
+		<result property="saleYn"		column="SALE_YN"/>
+		<result property="salePum"		column="SALE_PUM"/>
+		<result property="realYn"		column="REAL_YN"/>
+		<result property="realTime"		column="REAL_TIME"/>
+		<collection property="customInfoVo" ofType="com.fpdisys.dist.customInfo.domain.CustomInfoVO">
+			<result property="seq"		column="SEQ"/>
+			<result property="sidoCode"		column="SIDO_CODE"/>
+			<result property="itemCd"		column="ITEM_CD"/>
+			<result property="itemCd1"		column="ITEM_CD1"/>
+		</collection>
+	</resultMap>
+	
+	<select id="getSnsList" parameterType="java.util.HashMap" resultMap="CustomSnsInfo" >
+		SELECT 
+		    A.USER_ID, A.PASSWD, A.USER_GUBUN, A.USE_YN
+		    , REPORT1_YN, REPORT2_YN, SALE_YN, SALE_PUM, REAL_YN, REAL_TIME
+		    , SEQ, SIDO_CODE, ITEM_CD, ITEM_CD1 
+		FROM T_CUSTOMINFO A,  T_CUSTOMINFO_DTL B, T_CUSTOMINFO_REAL C
+		WHERE A.USER_ID = B.USER_ID
+		AND A.USER_ID=B.USER_ID
+		AND B.USER_ID=C.USER_ID
+		AND A.USE_YN='Y'
+		AND C.SIDO_CODE IS NOT NULL
+		<if test="realTime != null and realTime != ''">
+			AND REAL_TIME = #{realTime, jdbcType=VARCHAR}
+		</if>
+		 ORDER BY A.USER_ID, FLOWER_CD, ITEM_CD, ITEM_CD1
+	</select>
+	
+	<insert id="sendMail" parameterType="java.util.HashMap" >
+		INSERT INTO BIZ_MAIL 
+		(USER_ID
+			   , SUBJECT
+			   , MSG_BODY
+			   , SEND_TIME
+			   , SEQ
+			   )
+			   VALUES (
+			  #{userId, jdbcType=VARCHAR}
+			   , #{title, jdbcType=VARCHAR}
+			   , #{content, jdbcType=VARCHAR}
+			   , SYSDATE
+			   , MAIL_SEQ.NEXTVAL
+			   )
+	</insert>
+	
+	<insert id="sendKakao" parameterType="java.util.HashMap" >
+		INSERT INTO BIZ_MSG (CMID
+			, MSG_TYPE
+			   , REQUEST_TIME
+			   , SEND_TIME
+			   , DEST_PHONE
+			   , SEND_PHONE
+			   <if test="msgType eq '5'">
+			   , SUBJECT
+			   </if>
+			   , MSG_BODY
+			   <if test="template != null and template != ''">
+			   , NATION_CODE
+			   , SENDER_KEY
+			   , TEMPLATE_CODE
+			   , RE_TYPE
+			   , RE_BODY
+			   </if>
+			   )
+			   VALUES (BIZ_SEQ.NEXTVAL
+			   , #{msgType, jdbcType=VARCHAR}
+			   , SYSDATE
+			   , SYSDATE
+			   , #{userId, jdbcType=VARCHAR}
+			   , '025798100'
+			   <if test="msgType eq '5'">
+			   , #{title, jdbcType=VARCHAR}
+			   </if>
+			   ,  #{subject, jdbcType=VARCHAR}
+			   <if test="template != null and template != ''">
+			   , '82'
+			   , 'fae835fad0cefa9e8bf9a9b06b6cb63a4b7146b6'
+			   , #{template, jdbcType=VARCHAR}
+			   , #{sms, jdbcType=VARCHAR}
+			   , #{subject, jdbcType=VARCHAR}
+			   </if>
+			   )
+	</insert>
+	
+	<insert id="insertAuthCode" parameterType="java.util.HashMap" >
+			INSERT INTO T_AUTH_CODE 
+			(
+			USER_ID
+			, AUTHCODE
+			, INSERT_DT
+			)
+			VALUES (
+			#{userId, jdbcType=VARCHAR}
+			, #{authCode, jdbcType=VARCHAR}
+			, SYSDATE
+			)
+	</insert>
+	
+	<delete id="deleteAuthCode" parameterType="String">
+		DELETE FROM T_AUTH_CODE
+		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="compareAuthCode" parameterType="java.util.HashMap" resultType="int" >
+		SELECT COUNT(1)
+		FROM T_AUTH_CODE
+		WHERE USER_ID=#{userId, jdbcType=VARCHAR}
+		AND AUTHCODE=#{authCode, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getUserSearch" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap" >
+		SELECT 
+		USER_ID, CMP_CD, FLOWER_CD, 
+		   PUM_CD, GOOD_CD, REG_DT, 
+		   UPT_DT
+		FROM TB_USER_SEARCH
+		WHERE USER_ID=#{userId, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertUserSearch" parameterType="java.util.HashMap" >
+			INSERT INTO TB_USER_SEARCH
+			 (
+			 USER_ID
+			 , CMP_CD
+			 , FLOWER_CD
+			 , PUM_CD
+			 , GOOD_CD
+			 , REG_DT
+			 , UPT_DT
+			 ) 
+			VALUES (
+			 #{userId, jdbcType=VARCHAR},
+			 #{cmpCd, jdbcType=VARCHAR},
+			 #{flowerCd, jdbcType=VARCHAR},
+			 #{itemCd, jdbcType=VARCHAR},
+			 #{itemCd2, jdbcType=VARCHAR},
+			 SYSDATE,
+			 SYSDATE 
+			 )
+	</insert>
+	
+	<update id="updateUserSearch" parameterType="java.util.HashMap">
+		UPDATE TB_USER_SEARCH
+		SET    CMP_CD    = #{cmpCd, jdbcType=VARCHAR},
+		       FLOWER_CD = #{flowerCd, jdbcType=VARCHAR},
+		       PUM_CD    = #{itemCd, jdbcType=VARCHAR},
+		       GOOD_CD   = #{itemCd2, jdbcType=VARCHAR},
+		       UPT_DT    = SYSDATE
+		WHERE  USER_ID   =#{userId, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteUserSearch" parameterType="java.util.HashMap">
+		DELETE FROM TB_USER_SEARCH
+		WHERE  USER_ID   =#{userId, jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="selectMainSet" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+		SELECT A.USER_ID, A.MENU_ORDER, A.MENU_CD, 
+		           B.MENU_NM, B.MENU_URL, A.REG_DT
+		FROM
+		(
+		    SELECT 
+		        USER_ID, MENU_ORDER, MENU_CD, 
+		           MENU_NM, REG_DT
+		    FROM TB_USER_MENU
+		    WHERE USER_ID=#{userId, jdbcType=VARCHAR}
+		) A,TB_MENU B
+		WHERE A.MENU_CD = B.MENU_CD(+)
+		ORDER BY A.MENU_ORDER
+	</select>
+	
+	<insert id="insertMainSet" parameterType="java.util.HashMap" >
+			INSERT INTO TB_USER_MENU
+			 (
+			 USER_ID
+			 , MENU_ORDER
+			 , MENU_CD
+			 , MENU_NM
+			 , REG_DT
+			 ) 
+			VALUES (
+			 #{userId, jdbcType=VARCHAR},
+			 #{menuOrder, jdbcType=VARCHAR},
+			 #{menuCd, jdbcType=VARCHAR},
+			 #{menuNm, jdbcType=VARCHAR},
+			 SYSDATE 
+			 )
+	</insert>
+	
+	<delete id="deleteMainSet" parameterType="java.util.HashMap">
+		DELETE TB_USER_MENU
+		WHERE  USER_ID   =#{userId, jdbcType=VARCHAR}
+	</delete>
+	
+	<insert id="insertFavor" parameterType="java.util.HashMap">
+		INSERT INTO TB_USER_FAVOR (
+		   USER_ID
+		   , MENU_NM
+		   , MENU_URL
+		   , REG_DT
+		) 
+		VALUES (
+		 #{userId}
+		 ,#{menuNm}
+		 ,#{menuUrl}
+		 ,SYSDATE
+		 )
+	</insert>
+	
+	<select id="getFavoriteList" parameterType="String" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT USER_ID, MENU_NM, 
+		   MENU_URL, REG_DT
+		FROM TB_USER_FAVOR
+		WHERE USER_ID=#{userId}
+	</select>
+	
+	<select id="selectFavor" parameterType="egovframework.rte.psl.dataaccess.util.EgovMap" resultType="int">
+		SELECT count(1)
+		FROM TB_USER_FAVOR
+		WHERE USER_ID=#{userId}
+		AND MENU_NM=#{menuNm}
+	</select>
+	
+	<delete id="deleteFavor" parameterType="java.util.HashMap">
+		DELETE FROM TB_USER_FAVOR
+        WHERE USER_ID=#{userId}
+        <if test="menuNm!=null and menuNm!='' ">
+			AND MENU_NM=#{menuNm}
+		</if>
+	</delete>
+	
+	<select id="selectMenuList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT MENU_CD, MENU_NM, MENU_UP_CD, 
+		   MENU_URL, MENU_GUBN, MENU_ORDER, 
+		   MENU_DETAIL, MENU_DEPTH
+		FROM
+		(
+		    SELECT MENU_CD, MENU_NM, MENU_UP_CD, 
+		    MENU_URL, MENU_GUBN, MENU_ORDER, 
+		    MENU_DETAIL, MENU_DEPTH, USE_YN,
+		    ROWNUM RNUM   
+		    FROM TB_MENU
+		    WHERE USE_YN='Y'
+		    START WITH MENU_UP_CD IS NULL
+		    CONNECT BY PRIOR MENU_CD = MENU_UP_CD
+		    ORDER SIBLINGS BY MENU_UP_CD ASC, MENU_ORDER
+		)
+		WHERE MENU_DEPTH=3
+		ORDER BY RNUM
+	</select>
+	
+</mapper>

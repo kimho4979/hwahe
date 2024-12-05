@@ -1,0 +1,429 @@
+﻿
+.wrap{width:1150px; margin:0 auto;}
+
+.blue{color:#3373dd; font-weight:bold;}
+.white{color:white;}
+.red{color:#e3493d; font-weight:bold; }
+
+.brown{color:#5e4000;}
+.hw_big{font-size:30px;}
+.hw_small{font-size:12px;}
+.bold{font-weight:700;}
+
+/*경매정보서브 a에 관한 css*/
+/*서브 a 네비*/
+.nav_sub_a{width:176px; height:660px; margin-top:15px; background-color:f3f3f3; border:1px solid #e2e2e2; float:left;}
+.hw_content{width:957px; margin-top:15px; margin-left:15px; float:left; }
+
+.sub_title_a_on{font-size:18px; font-weight:700; color:#e3493d;}
+.sub_title_a_off{font-size:18px; font-weight:700; color:#8c8c8c;}
+
+.sub_list_a_on{font-weight:700; color:#e3493d;}
+
+#nav_sub_a > li{font-size:14px; padding-left:10px; line-height:34px;}
+#nav_sub_a > li a{color:#616161}
+#nav_sub_a > li a:hover{font-weight:700; color:#e3493d;}
+
+/*서브 a 컨텐츠*/
+
+
+.hw_h3_a{width:390px; height:40px; font-size:18px; font-weight:700; color:#2c2c2c;  border-left:10px solid #e3493d; padding-left:10px; line-height: 36px; float:left;}
+.hw_position_a{width:530px; height:40px; font-size:12px; line-height: 54px; float:right; text-align:right; color:#8c8c8c;}
+
+.hw_h4_red{width:390px; height:30px; font-size:16px; font-weight:700; color:#2c2c2c;  border-left:15px solid #e3493d; padding-left:10px; line-height: 30px; float:left; margin-top:5px;}
+.hw_h4_green{width:390px; height:30px; font-size:16px; font-weight:700; color:#2c2c2c;  border-left:15px solid #74c93a; padding-left:10px; line-height: 30px; float:left; margin-top:5px;}
+.hw_h4_dgr{width:390px; height:30px; font-size:16px; font-weight:700; color:#2c2c2c;  border-left:15px solid #005953; padding-left:10px; line-height: 30px; float:left; margin-top:5px;}
+.hw_h4_ygr{width:390px; height:30px; font-size:16px; font-weight:700; color:#2c2c2c;  border-left:15px solid #01b78e; padding-left:10px; line-height: 30px; float:left; margin-top:5px;}
+.hw_h4_ore{width:390px; height:30px; font-size:16px; font-weight:700; color:#2c2c2c;  border-left:15px solid #f47b2c; padding-left:10px; line-height: 30px; float:left; margin-top:5px;}
+.hw_h4_blu{width:390px; height:30px; font-size:16px; font-weight:700; color:#2c2c2c;  border-left:15px solid #2d415c; padding-left:10px; line-height: 30px; float:left; margin-top:5px;}
+
+
+
+/*.hw_position_a a{color:#8c8c8c;}
+.hw_position_a a:hover{color:#e3493d; font-weight:700;}   따라가는 네비에 클릭하면 색변하는 css 굳이 필요없을거같아 삭제*/
+
+.hw_mk_01{width:16.55%; height:40px; margin-top:15px; float:left; background-color:#f9a10b; line-height:38px; text-align:center; margin-right:1.2px; font-size:14px; color:white;}
+.hw_mk_02{width:16.55%; height:40px; margin-top:15px; float:left; background-color:#d0d0d0; line-height:38px; text-align:center; margin-right:1.2px; font-size:14px; color:white;}
+.hw_mk_03{width:16.55%; height:40px; margin-top:15px; float:left; background-color:#d0d0d0; line-height:38px; text-align:center; margin-right:1.2px; font-size:14px; color:white;}
+.hw_mk_04{width:16.55%; height:40px; margin-top:15px; float:left; background-color:#d0d0d0; line-height:38px; text-align:center; margin-right:1.2px; font-size:14px; color:white;}
+.hw_mk_05{width:16.55%; height:40px; margin-top:15px; float:left; background-color:#d0d0d0; line-height:38px; text-align:center; margin-right:1.2px; font-size:14px; color:white;}
+.hw_mk_06{width:16.62%; height:40px; margin-top:15px; float:right; background-color:#d0d0d0; line-height:38px; text-align:center; font-size:14px; color:white;}
+
+.hw_infouse_01{
+    width: 945px;height:38px; border:1px solid #e2e2e2; font-size:14px; line-height:38px; text-align:left; margin-top:5px; padding-left:10px; color:#61616}
+
+.hw_info_a{}
+.hw_info_img{width:179px; height:268px; float:left; margin-right:5px;}
+.hw_info_table_a{width:452px;  height:268px; float:left; margin-right:5px;}
+.hw_cho_box{width:314px; height:266px; float:right;  border:1px solid #e2e2e2;}
+
+/*서브 a 테이블*/
+.hw_info_table{width:100%; height:30px; border-collapse:collapse; margin:0 auto; clear:both; }
+.hw_thead{border-top:1px solid #cccccc; margin-top:20px; color:#2c2c2c; background-color:#e2e2e2; border-bottom:1px solid #cccccc; }
+tr{ border-bottom:1px dashed #cccccc;}
+td{line-height:37px; font-size:14px; color:#535353; text-align:center;}
+
+.hw_thead_red{color:white; font-weight:bold; background-color:#e3493d; }
+.hw_thead_green{color:white; font-weight:bold; background-color:#74c93a; }
+.hw_thead_dgr{color:white; font-weight:bold; background-color:#005953; }
+.hw_thead_ygr{color:white; font-weight:bold; background-color:#01b78e; }
+.hw_thead_ore{color:white; font-weight:bold; background-color:#f47b2c; }
+.hw_thead_blu{color:white; font-weight:bold; background-color:#2d415c; }
+
+
+/*서브 a 테이블*/
+.hw_info_all{width:100%; height:268px; margin-bottom:5px;}
+
+.hw_deal_1{width:157px; height:38px; background-color:#e3493d; float:left; line-height:38px; font-size:14px; color:white; text-align:center;}
+.hw_nomal_1{width:157px; height:38px; background-color:#d0d0d0; float:right; line-height:38px; font-size:14px; color:white; text-align:center;}
+
+.hw_deal_2{width:157px; height:38px; background-color:#75c93b; float:left; line-height:38px; font-size:14px; color:white; text-align:center;}
+.hw_nomal_2{width:157px; height:38px; background-color:#d0d0d0; float:right; line-height:38px; font-size:14px; color:white; text-align:center;}
+
+.hw_deal_3{width:157px; height:38px; background-color:#01b78e; float:left; line-height:38px; font-size:14px; color:white; text-align:center;}
+.hw_nomal_3{width:157px; height:38px; background-color:#d0d0d0; float:right; line-height:38px; font-size:14px; color:white; text-align:center;}
+
+.hw_deal_4{width:157px; height:38px; background-color:#005953; float:left; line-height:38px; font-size:14px; color:white; text-align:center;}
+.hw_nomal_4{width:157px; height:38px; background-color:#d0d0d0; float:right; line-height:38px; font-size:14px; color:white; text-align:center;}
+
+.hw_deal_box{widht:314px; height:228px; background-color:gold;}
+
+
+/*서브 a_02 품목선택*/
+.hw_a_flower{width:956px; height:133px; margin-top:15px; float:left; }
+.tab_a{width:100%; height:133px;overflow:hidden;}
+.tab_a ul{display:table; width:970px;table-layout:fixed;}
+.tab_a ul li{display:table-cell;text-align:left;}
+
+/*a_02 선택박스*/
+.hw_select{background-color:#e3493d; height:50px; margin-top:5px; overflow:hidden;}
+.hw_a_select_01{width:100px; height:40px; float:left; margin-top:5px; margin-left:10px; line-height:40px; font-size:16px; 
+color:#2c2c2c; font-weight:700; color:white;}
+.infous_01_color {background: #f3f3f3;}
+.hw_a_select_02{width:180px; height:30px; margin-top:10px; margin-left:10px; float:left; background-color:#eeeeee; text-align:center;
+line-height:30px; font-size:14px; color:#2c2c2c; }
+.hw_a_select_03{width:70px; height:40px; float:left; margin-top:5px; margin-left:30px; line-height:40px; font-size:14px; 
+color:#2c2c2c; font-weight:700; color:white;}
+.hw_a_select_04{width:130px; height:30px; margin-top:10px; float:left; background-color:white; line-height:30px; text-align:center;}
+.hw_a_select_05{width:80px; height:30px; margin-top:10px; float:left; background-color:#820900;  text-align:center; line-height:30px; font-size:14px; color:white;}
+
+.hw_a_select_06{width:101px; height:30px;  font-size:14px; text-align:center; line-height:30px; margin-left:5px; margin-top:10px; float:right; background-color:#820900;}
+.hw_a_select_06 a{color:white;}
+.hw_a_select_06 a:hover{width:101px; height:30px;  font-size:14px; text-align:center; line-height:30px; margin-left:5px; float:right; background-color:#f09c94;}
+
+
+/*경매정보 a_02 그래프 그리드*/
+.hw_a_graph_red{width:473px; height:278px; border:1px solid #e2e2e2; float:left; margin-top:5px;}
+.hw_a_grid_red{width:473px; height:278px; border:1px solid #e2e2e2; float:right; margin-top:5px;}
+
+/***a_04 날짜 및 화살표 part***/
+
+.hw_date_arrow {width:955px;height:47px;}
+.hw_date_center {width:372px;height:45px;margin:0 auto;color:#141414;font-size:24px;}
+.hw_arrow_left {width:38px;height:35px;float:left;;margin:5px 0 0 -3px;}
+.hw_date {display:inline-block;float:left;margin:5px 0 0 105px;}
+.hw_arrow_right {width:38px;height:35px;float:right;margin:5px -18px 0 0;}
+
+/***a_04 경매부분 테이블 part***/
+/*경매 큰 그래프(윗부분)*/
+.all_price_part {width:955px;height:488px;border:1px solid #f3f3f3;border-top:none;border-right:none;}
+.hw_price_table {width:956px;height:40px;border:1;}
+.hw_priceth_1 {width:39px;height:40px;background:#2d415c;color:white;font-weight:normal;font-size:12px;border-right:1px solid #f3f3f3;border-left:1px solid #f3f3f3;}
+.hw_priceth_2 {width:459px;height:40px;background:#2d415c;color:white;font-weight:normal;font-size:12px;}
+.hw_priceth_3 {width:457px;height:40px;background:#d0d0d0;color:white;font-weight:normal;font-size:12px;}
+.hw_table_bottom {width:956px;height:71px;border:1px solid #f3f3f3;border-right:none;border-left:none;}
+.hw_all_tb_leftpart {width:480px;height:71px;float:left;}
+.hw_tb_leftpart {width:239px;height:71px;border-right:1px solid #f3f3f3;float:left;}
+.hw_tb_left_text1 {display:inline-block;color:#141414;font-size:16px;font-weight:normal;margin:20px 0 0 16px;float:left;} 
+.hw_tb_left_text2 {display:inline-block;color:#141414;font-size:22px;font-weight:normal;margin:12px 0 0 25px;float:left;}
+.hw_tb_right1 {width:234px;height:35px;background:white;float:left;border:1px solid #f3f3f3;border-left:none;border-top:none;border-right:none;}
+.hw_tb_right2 {width:234px;height:35px;background:white;border:1px solid #f3f3f3;border-left:none;clear:both;float:left;margin:-36px 0 0 240px;}
+.hw_tb_right1_text1 {display:inline-block;font-size:14px;color:#141414;line-height:2.5;margin-left:48px;}
+.hw_tb_right1_text2 {display:inline-block;font-size:14px;color:#e3493d;}
+.hw_tb_right2_text1 {display:inline-block;font-size:14px;color:#141414;line-height:2.5;margin-left:48px;}
+.hw_tb_right2_text2 {display:inline-block;font-size:14px;color:#1258cc;}
+.hw_all_tb_rightpart {width:476px;height:71px;float:right;}
+.hw_tb_rightpart {width:239px;height:71px;border-right:1px solid #f3f3f3;float:left;}
+
+.hw05_graph {
+width:953px;height:376px;
+background:#f3f3f3;
+border:1px solid #eeeeee;
+border-top:none;
+margin:72px 0 0 0;}
+
+/*경매 작은 그래프들(아랫부분)*/
+.all_price_part2 {
+width:470px;height:283px;
+border:1px solid #f3f3f3;
+border-top:none;border-right:none;
+display:inline-block;
+margin-top:15px;
+float:left;}
+.hw_price_table2 {width:470px;height:39px;border:1;}
+.hw_priceth_4 {
+	width:39px;height:39px;background:url("../images/rose_back.png")no-repeat;margin-right:1px;color:white;font-weight:normal;font-size:12px;}
+.hw_priceth_5 {
+	width:214px;height:39px;background:#e3493d;margin-right:2px;color:white;font-weight:normal;font-size:12px;}
+.hw_priceth_6 {
+	width:214px;height:39px;background:#d0d0d0;margin-right:2px;color:white;font-weight:normal;font-size:12px;}
+.hw_bottom_small1 {width:470px;height:57px;}
+.hw_bs_left1 {
+	width:114px;height:57px;background:white;border-right:1px solid #f4f4f4;float:left;}
+.hw_bs_left1_text1 {
+	display:inline-block;font-size:12px;color:#141414;float:left;margin: 9px 0 0 0;}
+.hw_bs_left1_text2 {
+	display:inline-block;font-size:15px;color:#141414;float:left;margin: 11px 0 0 3px;}
+.hw_bs_right1 {
+	width:121px;height:57px;float:left;}
+.hw_bs_right1_part1 {
+	width:121px;height:28px;background:white;border:1px solid #f4f4f4;border-top:none;float:left;}
+.hw_bs_right1_text1 {display:inline-block;font-size:12px;color:#141414;margin:5px 0 0 2px;}
+.hw_bs_right1_text2 {display:inline-block;font-size:12px;color:#e3493d;}
+.hw_bs_right1_text3 {display:inline-block;font-size:12px;color:#e3493d;}
+.rtext2_color1 {color:#1258cc;}
+.hw_bs_left2 {
+	width:114px;height:57px;background:white;border-right:1px solid #f4f4f4;margin:-2px 0 0 238px;}
+.hw_bs_right1_part2 {
+	width:115px;height:28px;background:white;border:1px solid #f4f4f4;border-top:none;float:left;}
+.hw_bs_right2 {
+	width:121px;height:57px;float:left;float:right;margin:-57px -2px 0 0;}
+.hw_bs_left1_text3 {
+display:inline-block;font-size:12px;color:#141414;float:left;margin: 8px 0 0 5px;}
+.hw_bs_left1_text4 {
+display:inline-block;font-size:15px;color:#141414;float:left;margin: 11px 0 0 3px;}
+.hw_smallgraph_1 {
+width:468px;height:184px;
+background:#f3f3f3;
+border:1px solid #f4f4f4;
+border-top:none;}
+
+.pic_priceth1 {
+	background:url("../images/nan_back.png")no-repeat;}
+
+.all_price_part2 {
+width:470px;height:283px;
+border:1px solid #f3f3f3;
+border-top:none;border-right:none;
+display:inline-block;
+margin-top:15px;
+float:left;}
+
+.color_priceth1 {background:#74c93b;}
+.each_loca1 {margin-left:10px;}
+.pic_priceth2 {background:url("../images/guan_back.png")no-repeat;}
+.pic_priceth3 {background:url("../images/chun_back.png")no-repeat;}
+.color_priceth2 {background:#d0d0d0;}
+.color_priceth3 {background:#01b78e;}
+.color_priceth4 {background:#005953;}
+
+
+/***a_b_01 part***/
+.hw_infouse_02{
+width: 944px;height:38px;
+border:1px solid #e2e2e2;
+font-size:14px;
+line-height:38px;
+text-align:left;
+margin-top:5px;
+padding-left:10px;
+color:#61616}
+.infous_01_margin {margin-top:14px;}
+.hw_content_img {width:978px;height:179px;margin-top:11px;}
+.hw_img1 {display:inline-block;width:180px;height:179px;margin-right:14px;float:left;}
+.hw_img1_info1 {background:url("../images/rose.png")no-repeat;}
+.hw_img1_info2 {background:url("../images/off1.png")no-repeat;}
+.hw_img1_info3 {background:url("../images/off2.png")no-repeat;}
+.hw_img1_info4 {background:url("../images/off3.png")no-repeat;}
+.hw_chart {display:inline-block;width:179px;height:179px;float:left;}
+.hw_chart_1 {width:179px;height:29px;background:#d0d0d0;margin-bottom:1px;}
+.hw_chart_1_on {background:#f8a10a;}
+.hw_chart_text {font-size:12px;color:white;display: inline-block;margin: 5px 0 0 54px;}
+/*메인 컨텐츠 시작(날짜선택부터)*/
+.hw_dateselect {width:955px;height:39px;background:#e2e2e2;margin-top:16px;}
+.hw_dateselect_left {width:360px;height:36px;float:left;}
+.hw_dateselect_right {width:455px;height:36px;float:right;}
+.hw_dateselect_text {display:inline-block;font-size:14px;font-weight:bold;color:#2b2b2b;margin:9px 0 0 21px;}
+.hw_date01 {width:104px;height:30px;background:#eeeeee;border:0;font-weight:bold;margin-top: 4px;} 
+.hw_date02 {width:78px;height:30px;background:#eeeeee;border:0;font-weight:bold;}
+.hw_search_text {display:inline-block;font-size:14px;font-weight:bold;color:#2b2b2b;float:left;margin-top:8px;}
+.hw_search_part {display:inline-block;width:370px;height:30px;background:#eeeeee;float:left;margin:4px 0 0 19px;}
+.hw_main_search {width:247px;height:28px;background:white;float:left;border:0;margin: 1px 0 0 1px;}
+.hw_codesearch_text {display:inline-block;font-size:14px;color:#2b2b2b;float:left;margin: 4px 0 0 32px;font-weight:bold;}
+/*품종별 종합 경매정보 part*/
+.hw_auctionboard {width:468px;height:387px;border:1px solid #eeeeee;margin-top:1px;float:left;}
+.hw_auctioninfo_part {width:455px;height:30px;border-bottom:4px solid #7e7e7e;margin:12px 0 0 7px;}
+.hw_auctioninfo_text {display:inline-block;font-size:14px;font-weight:bold;color:#2b2b2b;}
+.auctioninfo_textpart1 {width:50%;height:30px;float:left;}
+.auctioninfo_textpart2 {width:50%;height:30px;float:right;}
+.hw_auctionboard_table {}
+.hw_auction_td {
+	line-height: 37px;
+    font-size: 14px;
+    color: #535353;
+    text-align: center;
+    width: 72px;
+    margin-left: 17px;
+	font-weight: bold;}
+.hw_thead1 {
+	border-top: 1px solid #cccccc;
+    margin-top: 20px;
+    color: #2c2c2c;
+    border-bottom: 1px solid #cccccc;}
+.hw_thead1:first-child{border-top:none;}	
+.hw_tbody1 {border-bottom:1px solid #d8d8d8;} 
+.auction_info1 {border-collapse:collapse;margin-left: 7px;}
+.hw_table_number {width:300px;height:22px;margin:0 auto;}
+.number_color {color:#828282;font-size:14px;margin-left:25px;}
+.point_color {color:#e3493d;}
+.background_img {background-color: #e3493d;color:white;}
+/*경매정보 part*/
+.hw_auctionboard_margin {margin-left: 15px;}
+.auction_location2 {margin-left: 125px;}
+.auction_location1 {margin-left: 285px;}
+.hw_auction_td2 {width:89px;}
+.background_img2 {background-color: #9b1b12;color:white;}   
+.number_location {width:100px;}
+/*경매정보분석 part*/
+.hw_analysis_info {
+width:469px;height:270px;
+clear:both;
+display:inline-block;
+margin-top:17px;
+float:left;}
+.analysis_info_top {width:469px;height:41px;background:#e3493d;}
+.analysis_info_top span {font-size:14px;color:white;line-height: 2.5;margin: 40%;}
+.analysis_info_middle {width:469px;height:32px;background:#9b1b12;}
+.analysis_info_middle_left {
+width:235px;height:32px;
+background:#810900;
+border-right:1px solid #ad5f59;
+float:left;}
+.analysis_info_middle_right {
+width:233px;height:32px;
+background:#9b1b12;
+float:left;}
+.analysis_info_middle span {font-size:14px;color:white;margin:0 auto;line-height:2;margin-left:40%;}
+.analysis_info_bottom {width:469px;height:56px;}
+.analysis_price1 {width:235px;height:56px;background:#a50c00;border-right:1px solid #b7473e;float:left;}
+.analysis_price2 {width:233px;height:56px;background:#af3228;float:left;}
+.price_font1 {font-size:30px;color:white;line-height: 1.7;margin-left: 30%;}
+.price_font2 {font-size:14px;color:white;}
+.analysis_dia {
+width:26px;height:26px;
+background:url("../images/dia.png")no-repeat;
+margin:-8px 0 0 105px;}
+.analysis_dia_color {background:url("../images/dia2.png")no-repeat;}
+.analysis_info_part {width:467px;height:140px;border:1px solid #eeeeee;border-top:none;}
+.analysis_info_left {width:233px;height:140px;float:left;border-right:1px solid #f0f0f0;}
+.analysis_info_right {width:233px;height:140px;float:left;}
+.analysis_text1 {font-size:16px;color:#7e7e7e;display:block;margin-bottom: 23px;}
+.analysis_text2 {font-size:16px;color:#a50c00;display:block;margin-bottom: 23px;width:75px;}
+.analysis_text3 {font-size:16px;color:#1258cc;display:block;width:75px;}
+.all_analysis_text1 {width:93px;height:125px;float:left;margin:16px 0 0 47px;}
+.all_analysis_text23 {width:60px;height:110px;float:left;margin-top:16px;}
+.auction_analysis_graph {
+width:466px;height:268px;
+border:1px solid #eeeeee;
+float:left;
+margin: 16px 0 0 16px;}
+
+/***a_b_03***/
+.hw_division_part {width:956px;height:40px;margin-top:12px;}
+.hw_division_left {width:479px;height:40px;background:#2d415c;float:left;}
+.hw_division_left span {color:white;font-size:14px;display:block;margin: 9px 0 0 220px;}
+.hw_division_right {width:477px;height:40px;background:#d0d0d0;float:left;}
+.hw_division_right:hover {width:477px;height:40px;background:#2d415c;float:left;}
+.hw_division_right span {color:white;font-size:14px;display:block;margin: 9px 0 0 220px;}
+.hw_calender_arrow {width:953px;height:66px;margin-top:9px;}
+.hw_arrow_part {width:335px;height:51px;margin:5px auto;}
+.calender_arrow_text {font-weight:bold;font-size:16px;color:#2b2b2b;display:inline-block;margin:22px 0 0 67px;}
+.price_table {width:958px;height:852px;border-collapse: collapse;border:1px solid #dadada;}
+.tr_price_table {border:1px solid #dadada;}
+.price_table tr {border:1px solid #dadada;}
+.price_table th {border:1px solid #dadada;}
+.price_table td {border:1px solid #dadada;}
+.th_price_table1 {width:69px;height:55px;}
+.th_price_table2 {width:55px;height:55px;}
+.th_price_table3 {width:68px;height:55px;}
+
+/***a_b_04***/
+.hw_wordchart {width:950px;height:360px;background:gray;}
+.hw_trade_table {width:955px;height:321px;border:1px solid #d8d8d8;border-collapse:collapse;margin-top: 10px;}
+.hw_trade_table tr {border:1px solid #d8d8d8;}
+.hw_trade_table td {border:1px solid #d8d8d8;}
+.trade_td1 {width:225px;height:39px;font-weight:bold;}
+.trade_td2 {width:145px;height:39px;font-weight:bold;}
+
+/***a_b_05***/
+.trade_td3 {width:121px;height:39px;font-weight:bold;}
+.trade_td4 {width:114px;height:39px;font-weight:bold;}
+.trade_td5 {width:123px;height:39px;font-weight:bold;}
+.trade_td6 {width:147px;height:39px;font-weight:bold;}
+.trade_td7 {width:156px;height:39px;font-weight:bold;}
+.trade_td8 {width:138px;height:39px;font-weight:bold;}
+
+/***a_b_06***/
+.hw_ly_result_graph {width:954px;height:401px;background:#f3f3f3;border:1px solid #eeeeee;}
+.hw_result_table {width:953px;height:279px;border:1px solid #d8d8d8;border-collapse:collapse;margin-top: 14px;}
+.hw_result_table tr {border:1px solid #d8d8d8;}
+.hw_result_table td {border:1px solid #d8d8d8;}
+.hw_result_table th {border:1px solid #d8d8d8;}
+.result_td1 {width:118px;height:79px;}
+.result_td2 {width:356px;height:39px;}
+.result_td3 {width:118px;height:39px;}
+.result_tr_color {background:#f3f3f3} 
+
+/***a_b_07***/
+.arrow_property {margin:-4px auto;}
+.hw_search_all {width:956px;height:40px;background:#e3493d;margin-top:6px;}
+.search_color {margin-left:24px;color:white;}
+.search_margintop {margin: 5px 0 0 19px;}
+.codesearch_part {width:86px;height:40px;background:#c22419;float:left;margin:0 0 0 5px;}
+.main_search_loca{margin: 6px 0 0 35px;}
+.codesearch_text_loca {margin: 9px 0 0 15px;color:white;}
+.hw_calender_arrow1 {width: 953px;height: 44px;margin-top: 9px;}
+.arrow_text_ano {margin: 10px 0 0 67px;}
+.hw_departure_table {width:953px;height:239px;border:1px solid #d8d8d8;border-collapse:collapse;margin-top:13px;}
+.departure_td1 {width:198px;height:39px;}
+.departure_td2 {width:232px;height:39px;}
+.departure_td3 {width:288px;height:39px;}
+.departure_tr {background:#f3f3f3;}
+.hw_departure_table tr {border:1px solid #d8d8d8;}
+.hw_departure_table td {border:1px solid #d8d8d8;}
+.hw_departure_table th {border:1px solid #d8d8d8;}
+
+
+/****b컨텐츠 시작*****/
+/*b 서브*/
+.nav_sub_b {width:178px;height:297px;background:#f3f3f3;margin-top:15px;border:1px solid #e2e2e2; float:left;}
+#nav_sub_b > li{font-size:14px; padding-left:10px; line-height:34px;}
+#nav_sub_b > li a{color:#616161}
+#nav_sub_b > li a:hover{font-weight:700; color:#e3493d;}
+.sub_title_b_on{font-size:18px; font-weight:700; color:#009999;}
+.sub_title_b_off{font-size:18px; font-weight:700; color:#8c8c8c;}
+.sub_list_b_on{font-weight:700; color:#009999;}
+
+.hw_main_content {width:1000px;height:777px;float:left;}
+.hw_b_content {width: 957px; margin-top: 15px;float: left;margin-left: 13px;}
+
+.hw_h3_b{width:390px; height:40px; font-size:18px; font-weight:700; color:#2c2c2c;  border-left:10px solid #33cccc; padding-left:10px; line-height: 36px; float:left;}
+.hw_position_b{width:530px; height:40px; font-size:12px; line-height: 54px; float:right; text-align:right; color:#8c8c8c;}
+.hw_b_part {background:#009999;}
+.codesearch_part_color {background:#005953;}
+.codesearch_text_loca2 {margin: 9px 0 0 28px;color:white;}
+.hw_sdpredict_table {width:953px;height:439px;border:1px solid #d8d8d8;border-collapse:collapse;margin-top:13px;}
+.hw_sdpredict_table tr {border:1px solid #d8d8d8;}
+.hw_sdpredict_table td {border:1px solid #d8d8d8;}
+.hw_sdpredict_table th {border:1px solid #d8d8d8;}
+.sdpredict_td1 {width:89px;height:39px;}
+.sdpredict_td2 {width:566px;height:39px;}
+.sdpredict_td3 {width:121px;height:39px;}
+.sdpredict_td4 {width:174px;height:39px;}
+.number_anoloca {margin-top:35px;}
+.nc_pointcolor {color:#005953;}
+
+
+
+
+

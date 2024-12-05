@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpdisys.dist.auth.mapper.AuthGroupMapper">
+ 
+
+    <resultMap id="groupResultMap" type="com.fpdisys.dist.login.domain.AuthGroup">
+        <result property="grpAuthCd" column="GRP_AUTH_CD"/>
+        <result property="grpAuthNm" column="GRP_AUTH_NM"/>
+       <result property="useYn" column="USE_YN"/>
+        <result property="insDt" column="INS_DT"/>
+        <result property="insId" column="INS_ID"/>
+        <result property="uptDt" column="UPT_DT"/>
+        <result property="uptId" column="UPT_ID"/>
+    </resultMap>
+    
+     <resultMap id="userResultMap" type="com.fpdisys.dist.user.domain.User">
+ 		<result property="userCd" column="USER_CD" />
+ 		<result property="userId" column="USER_ID" />
+ 		<result property="compCode" column="COMP_CODE" />
+ 		<result property="compCodeNm" column="COMP_CODE_NM" />
+ 		<result property="email" column="EMAIL" />
+ 		<result property="hpNo" column="HP_NO" />
+ 		<result property="userNm" column="USER_NM" />
+ 		<result property="userPs" column="USER_PS" />
+ 		<result property="userType" column="USER_TYPE" />
+ 		<result property="userTypeNm" column="USER_TYPE_NM" />
+ 		<result property="useYn" column="USE_YN" />
+ 		<result property="remark" column="REMARK" />
+ 		<result property="passErrNum" column="PASS_ERR_NUM" />
+ 		<result property="lastLoginDate" column="LAST_LOGIN_DATE" />
+ 		<result property="passwordUpdateDate" column="PASSWORD_UPDATE_DATE" />
+ </resultMap>
+
+    <select id="findAll" resultMap="groupResultMap"  statementType="PREPARED">
+    	SELECT A.GRP_AUTH_CD,
+	       A.INS_DT,
+	       A.INS_ID,
+	       A.UPT_DT,
+	       A.UPT_ID,
+	       A.GRP_AUTH_NM,
+	       A.USE_YN,
+	       A.REMARK
+	  FROM T_AUTH_GRP A
+	  ORDER BY  A.GRP_AUTH_CD ASC, A.GRP_AUTH_NM ASC, A.INS_DT DESC
+    </select>
+    
+     <select id="findByGrpAuthCd" resultMap="groupResultMap"  parameterType="java.util.HashMap"  statementType="PREPARED">
+     SELECT A.GRP_AUTH_CD,
+	       A.INS_DT,
+	       A.INS_ID,
+	       A.UPT_DT,
+	       A.UPT_ID,
+	       A.GRP_AUTH_NM,
+	       A.USE_YN,
+	       A.REMARK
+	  FROM T_AUTH_GRP A
+	  WHERE 1=1
+	  <if test="searchParams!=null and searchParams!='' and searchParams.length!=0">
+	  AND  ( A.GRP_AUTH_CD LIKE '%'||#{searchParams}||'%'  or  A.GRP_AUTH_NM  LIKE '%'||#{searchParams}||'%'   )
+	 </if>
+	  ORDER BY  A.GRP_AUTH_CD ASC, A.GRP_AUTH_NM ASC, A.INS_DT DESC
+     </select>
+    
+     <insert id="insertAuthGroup" parameterType="java.util.HashMap"  >
+     INSERT INTO T_AUTH_GRP 
+       ( 
+           GRP_AUTH_CD,
+           INS_DT,
+           INS_ID,
+           GRP_AUTH_NM,
+           USE_YN,
+           REMARK 
+       ) 
+       VALUES 
+       (
+          #{grpAuthCd     , jdbcType=VARCHAR},
+          sysdate,
+          #{userId     , jdbcType=VARCHAR},
+          #{grpAuthNm     , jdbcType=VARCHAR},
+          #{useYn     , jdbcType=VARCHAR},
+          #{remark     , jdbcType=VARCHAR} 
+       ) 
+     
+     </insert>
+     
+      <update id="updateAuthGroup" parameterType="java.util.HashMap"  >
+      UPDATE T_AUTH_GRP
+      	SET UPT_DT = 	sysdate, 
+		UPT_ID =  	#{userId     , jdbcType=VARCHAR}, 
+		GRP_AUTH_NM = 	#{grpAuthNm     , jdbcType=VARCHAR},
+		USE_YN = 		#{useYn     , jdbcType=VARCHAR},
+		REMARK =  		#{remark     , jdbcType=VARCHAR}  
+	  WHERE GRP_AUTH_CD = #{grpAuthCd     , jdbcType=VARCHAR}
+      
+      </update>
+      
+        <update id="getMergeAuthGroup"  parameterType="java.util.HashMap" >
+          <![CDATA[
+          		MERGE INTO T_PROG a
+       			USING DUAL
+       			ON (
+       				a.GRP_AUTH_CD = #{grpAuthCd     , jdbcType=VARCHAR}
+       				)
+       			WHEN MATCHED THEN
+       				UPDATE SET
+       				UPT_DT = 	sysdate, 
+					UPT_ID =  	#{userId     , jdbcType=VARCHAR}, 
+					GRP_AUTH_NM = 	#{grpAuthNm     , jdbcType=VARCHAR},
+					USE_YN = 		#{useYn     , jdbcType=VARCHAR},
+					REMARK =  		#{remark     , jdbcType=VARCHAR} 
+			
+				WHEN NOT MATCHED THEN	
+          		INSERT  
+          	  	( 
+	           		GRP_AUTH_CD,
+		           INS_DT,
+		           INS_ID,
+		           GRP_AUTH_NM,
+		          
+		           USE_YN,
+		           REMARK 
+		       ) 
+		       VALUES 
+		       (
+		          #{grpAuthCd     , jdbcType=VARCHAR},
+		          sysdate,
+		          #{userId     , jdbcType=VARCHAR},
+		          #{grpAuthNm     , jdbcType=VARCHAR},
+		          #{useYn     , jdbcType=VARCHAR},
+		          #{remark     , jdbcType=VARCHAR} 
+		       ) 
+          		 		
+			 
+          
+           	]]>
+       </update>
+          
+      <delete id="deleteAuthGroup" parameterType="java.util.HashMap" >
+        DELETE FROM T_AUTH_GRP
+		WHERE GRP_AUTH_CD= #{grpAuthCd     , jdbcType=VARCHAR}
+      </delete>  
+      
+      <select id="findByGrpUserId" resultMap="userResultMap"  parameterType="java.util.HashMap"  statementType="PREPARED">  
+     SELECT A.USER_ID,
+       A.COMP_CODE,
+       F_GET_MARKET_NAME(A.COMP_CODE) AS COMP_CODE_NM,
+       A.USER_TYPE,
+        CASE 
+         WHEN  A.USER_TYPE ='S' THEN '슈퍼관리자'
+         WHEN  A.USER_TYPE ='A' THEN '관리자'
+         WHEN  A.USER_TYPE ='D' THEN '개발자'
+         WHEN  A.USER_TYPE ='M' THEN '모니터요원'
+         WHEN  A.USER_TYPE ='F' THEN '파일전송담당자'
+         WHEN A.USER_TYPE ='U' THEN '사용자'
+        END   AS USER_TYPE_NM ,    
+       TO_CHAR(A.LAST_LOGIN_DATE,'YYYYMMDD') AS LAST_LOGIN_DATE ,
+       A.REMARK,
+       A.USE_YN,
+       A.PASS_ERR_NUM,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_USER A          
+  WHERE A.USE_YN='Y'
+  <if test="searchParams!=null">
+   and   A.USER_ID LIKE '%'||#{searchParams}||'%'
+  </if>
+     
+     </select>
+</mapper>

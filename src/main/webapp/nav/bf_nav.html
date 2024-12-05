@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title> 버튼이미지 변경</title>
+
+<link rel="stylesheet" type="text/css" href="css/v_main/bf_nav.css"/>
+
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	
+	var tablndex = 0;
+	
+	 $('.tab li').bind("click, mouseenter", function(){
+		 
+		 tabindex = $(this).index();
+		 
+		 $('.tab li').each(function(idx){
+		 $(this).find('img').attr('src',$(this).find('img').attr('src').replace('_off','_on'));
+		 if(tabindex !=idx) {
+		 $(this).find('img').attr('src',$(this).find('img').attr('src').replace('_on','_off'));
+		 }
+		 });
+		 $('.tab > div').eq(tabindex).show().siblings('div').hide();
+	 });
+	 
+});
+
+
+</script>
+</head>
+
+
+
+
+
+<body>
+
+<div class="sub_container">
+<div class="tab">
+<ul>
+<li class="on"><a href="#"><img src="image/v_main/cab_on.PNG" /></a></li>
+<li><a href="#"><img src="image/v_main/rad_off.PNG" /></a></li>
+<li><a href="#"><img src="image/v_main/pap_off.PNG" /></a></li>
+<li><a href="#"><img src="image/v_main/oni_off.PNG" /></a></li>
+<li><a href="#"><img src="image/v_main/gar_off.PNG" /></a></li>
+</ul>
+
+
+</div>
+</div>
+
+
+
+
+
+
+</body>
+</html>
+
+
+

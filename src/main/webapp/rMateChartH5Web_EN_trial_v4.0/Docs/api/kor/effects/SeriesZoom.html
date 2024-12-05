@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="SeriesZoom,kor.effects.SeriesZoom" name="keywords">
+<title>kor.effects.SeriesZoom</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'SeriesZoom - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?kor/effects/SeriesZoom.html&amp;kor/effects/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;SeriesZoom</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class SeriesZoom"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor.effects</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class SeriesZoom</td>
+</tr>
+</table>
+<p></p>
+  SeriesZoom 클래스는 설정된 기준점에서 시작하여 데이터 아이템들이 점점 확대되어 표시되는 형태의 애니메이션 이펙트를 표현합니다.
+    <p>relativeTo 속성값이 chart 이면 차트의 전체 영역 중 horizontalFocus 속성과 verticalFocus 속성에 설정한 위치를 기준점으로 하여 이펙트가 시작됩니다.<br/>
+  relativeTo 속성값이 series 이면 차트의 데이터 아이템이 출력되어지는 영역(series) 중 horizontalFocus 속성과 verticalFocus 속성에 설정한 위치를 기준점으로 하여 이펙트가 시작됩니다.</p>
+    <p><code>&lt;SeriesZoom&gt;</code> 의 레이아웃은 다음과 같은 형식으로 작성됩니다.</p>
+    <pre>
+  &lt;rMateChart&gt;
+   ...
+    &lt;Line2DSeries ... &gt;
+     &lt;showDataEffect&gt;
+      &lt;SeriesZoom duration="600" horizontalFocus="center" verticalFocus="center/&gt;
+     &lt;/showDataEffect&gt;
+    &lt;/Line2DSeries&gt;
+   ...
+  &lt;/rMateChart&gt;
+  </pre>
+    <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<table id="summaryTableStyle" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:duration"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">duration</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+ <p>이펙트의 총 재생 시간을 밀리 세컨드(Millisecond) 단위로 지정합니다.<br/>
+ 모든 이펙트는 duration 속성에 정의된 시간 동안에 재생되고 종료됩니다.</p>
+   기본값(default) :  <code>500</code>.</td><td class="summaryTableOwnerCol">SeriesZoom</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:elementOffset"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">elementOffset</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+ <p>한개의 데이터 아이템에 대한 이펙트 재생이 시작된 후 다음 데이터 아이템의 이펙트 재생이 실행되기 까지의 지연시간을 지정합니다.</p>
+   기본값(default) :  <code>20</code>.</td><td class="summaryTableOwnerCol">SeriesZoom</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:horizontalFocus"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">horizontalFocus</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>수평방향의 기준점을 설정합니다.<br/>
+  유효값은 left, center, right 입니다.</p>
+     기본값(default) :  <code>center</code>.</td><td class="summaryTableOwnerCol">SeriesZoom</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:id"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">id</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+ <p>식별자(Identifier)를 설정합니다. 식별자(Identifier)는 사용자에 의해 정의된 임의의 고유값입니다.<br/>
+ 설정된 식별자(Identifier)를 통해 해당 객체에 접근이 가능합니다.</p>
+   기본값(default) :  <code>undefined</code>.</td><td class="summaryTableOwnerCol">SeriesZoom</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:minimumElementDuration"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">minimumElementDuration</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+ <p>각 데이터 아이템의 이펙트가 완료되는데 필요한 시간을 밀리 세컨드(Millisecond) 단위로 지정합니다.<br/>
+ duration 속성값이 minimumElementDuration 속성값보다 작은 경우 duration 속성은 무시됩니다.</p>
+   기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">SeriesZoom</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:offset"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">offset</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+ <p>시리즈 사이의 이펙트의 지연 시간을 밀리 세컨드(Millisecond) 단위로 지정합니다.<br>
+ 다수의 시리즈를 정의했을 때, 시리즈의 재생 시간에 대한 차이를 주고싶을 경우 이 속성을 사용합니다.</p>
+   기본값(default) :  <code>0</code>.</td><td class="summaryTableOwnerCol">SeriesZoom</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:relativeTo"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">relativeTo</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>이펙트가 시작되는 기준을 설정합니다.<br/>
+  유효값은 series, chart 입니다.</p>
+     기본값(default) :  <code>series</code>.</td><td class="summaryTableOwnerCol">SeriesZoom</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:verticalFocus"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">verticalFocus</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>String<br>
+  <p>수직방향의 기준점을 설정합니다.<br/>
+  유효값은 top, center, bottom 입니다.</p>
+     기본값(default) :  <code>center</code>.</td><td class="summaryTableOwnerCol">SeriesZoom</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

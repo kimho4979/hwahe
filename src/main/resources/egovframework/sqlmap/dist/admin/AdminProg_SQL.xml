@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpdisys.admin.prog.mapper.AdminProgMapper">
+ <resultMap id="progResultMap" type="com.fpdisys.admin.prog.domain.ProgVO">
+	      <result property="sysCd" column="SYS_CD"/>
+	      <result property="progCd" column="PROG_CD"/>
+     	  <result property="progNm" column="PROG_NM"/>
+          <result property="fileNm" column="FILE_NM"/>
+          <result property="progPh" column="PROG_PH"/>
+		  <result property="target" column="TARGET"/>
+		   <result property="schAh" column="SCH_AH"/>
+			<result property="savAh" column="SAV_AH"/>
+			<result property="exlAh" column="EXL_AH"/>
+			<result property="fn1Ah" column="FN1_AH"/>
+			<result property="fn2Ah" column="FN2_AH"/>
+			<result property="fn3Ah" column="FN3_AH"/>
+			<result property="fn4Ah" column="FN4_AH"/>
+			<result property="fn5Ah" column="FN5_AH"/>
+			<result property="remark" column="REMARK"/>
+			<result property="useYn" column="USE_YN"/>
+	    <result property="regDt" column="INS_DT"/>
+        <result property="insId" column="INS_ID"/>
+        <result property="sUptDt" column="UPT_DT"/>
+        <result property="uptId" column="UPT_ID"/>    
+    </resultMap>
+    <select id="selectProgAll" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="progResultMap">
+		SELECT A.SYS_CD,
+		       A.PROG_CD,
+		       A.PROG_NM,
+		       A.PROG_PH,
+		       A.FILE_NM,
+		       A.TARGET,
+		       A.SAV_AH,
+		       A.SCH_AH,
+		       A.EXL_AH,
+		       A.DEL_AH,
+		       A.FN1_AH,
+		       A.FN2_AH,
+		       A.FN3_AH,
+		       A.FN4_AH,
+		       A.FN5_AH,
+		       A.REMARK,
+		       A.USE_YN,
+		       A.INS_DT,
+		       A.INS_ID,
+		       A.UPT_DT,
+		       A.UPT_ID
+		  FROM T_PROG A
+
+    </select>
+     <select id="selectProgSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="progResultMap">
+   SELECT A.SYS_CD,
+       A.PROG_CD,
+       A.PROG_NM,
+       A.PROG_PH,
+       A.FILE_NM,
+       A.TARGET,
+       A.SAV_AH,
+       A.SCH_AH,
+       A.EXL_AH,
+       A.DEL_AH,
+       A.FN1_AH,
+       A.FN2_AH,
+       A.FN3_AH,
+       A.FN4_AH,
+       A.FN5_AH,
+       A.REMARK,
+       A.USE_YN,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_PROG A
+  WHERE 1=1
+    <if test="searchSysCd!=null and searchSysCd!='' ">
+     AND A.SYS_CD= #{searchSysCd , jdbcType=VARCHAR }
+    </if>
+    <if test="searchParams!=null and searchParams!='' ">
+   AND  ( A.PROG_CD LIKE '%'||#{searchParams}||'%'  or  A.PROG_NM  LIKE '%'||#{searchParams}||'%'   )
+  </if>
+  </select>
+    
+     <select id="selectProgSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="progResultMap">
+      SELECT data.* 
+	  FROM 
+	       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+	              ROWNUM ROW_NUM, 
+	              ROWNUM LINENUM, 
+	              data.* 
+	         FROM 
+	              (      
+		    SELECT A.SYS_CD,
+		       A.PROG_CD,
+		       A.PROG_NM,
+		       A.PROG_PH,
+		       A.FILE_NM,
+		       A.TARGET,
+		       A.SAV_AH,
+		       A.SCH_AH,
+		       A.EXL_AH,
+		       A.DEL_AH,
+		       A.FN1_AH,
+		       A.FN2_AH,
+		       A.FN3_AH,
+		       A.FN4_AH,
+		       A.FN5_AH,
+		       A.REMARK,
+		       A.USE_YN,
+		       A.INS_DT,
+		       A.INS_ID,
+		       A.UPT_DT,
+		       A.UPT_ID
+		  FROM T_PROG A
+		  WHERE 1=1
+		  <if test="searchSysCd!=null and searchSysCd!='' ">
+		     AND A.SYS_CD= #{searchSysCd , jdbcType=VARCHAR }
+		    </if>
+ 		   <if test="searchParams!=null and searchParams!='' ">
+		   AND  ( A.PROG_CD LIKE '%'||#{searchParams}||'%'  or  A.PROG_NM  LIKE '%'||#{searchParams}||'%'   )
+		  </if>
+		  ORDER BY A.INS_DT DESC
+		  	) data 
+       	) data 
+ 		<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+    </select>
+    <select id="getActiveProgSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="progResultMap">
+     	    SELECT A.SYS_CD,
+		       A.PROG_CD,
+		       A.PROG_NM,
+		       A.PROG_PH,
+		       A.FILE_NM,
+		       A.TARGET,
+		       A.SAV_AH,
+		       A.SCH_AH,
+		       A.EXL_AH,
+		       A.DEL_AH,
+		       A.FN1_AH,
+		       A.FN2_AH,
+		       A.FN3_AH,
+		       A.FN4_AH,
+		       A.FN5_AH,
+		       A.REMARK,
+		       A.USE_YN,
+		       A.INS_DT,
+		       A.INS_ID,
+		       A.UPT_DT,
+		       A.UPT_ID
+		  FROM T_PROG A
+		  WHERE 1=1 
+		    <if test="searchSysCd!=null and searchSysCd!='' ">
+		     AND A.SYS_CD= #{searchSysCd , jdbcType=VARCHAR }
+		    </if>
+ 		  <if test="searchParams!=null and searchParams!='' ">
+		   AND  ( A.PROG_CD LIKE '%'||#{searchParams}||'%'  or  A.PROG_NM  LIKE '%'||#{searchParams}||'%'   )
+		  </if>   
+          
+    </select> 
+     <update id="getAdminMergeProg"  parameterType="java.util.HashMap" >
+          <![CDATA[
+          	MERGE INTO T_PROG a
+       			USING DUAL
+       			ON ( a.SYS_CD=#{sysCd     , jdbcType=VARCHAR}
+       				AND a.PROG_CD=#{progCd     , jdbcType=VARCHAR}
+       				)
+       			WHEN MATCHED THEN
+       				UPDATE SET
+       					 a.UPT_DT = sysdate, 
+							a.UPT_ID = #{userId     , jdbcType=VARCHAR}, 
+							a.PROG_NM = #{progNm     , jdbcType=VARCHAR}, 
+							a.PROG_PH = #{progPh     , jdbcType=VARCHAR}, 
+							a.REMARK = #{remark     , jdbcType=VARCHAR}, 
+							a.USE_YN = #{useYn     , jdbcType=VARCHAR}      				
+       			WHEN NOT MATCHED THEN	
+          			INSERT  ( 
+          			    SYS_CD,
+				    	PROG_CD,
+				    	INS_DT,
+				    	INS_ID,
+				    	PROG_NM,
+				    	PROG_PH,
+				    	REMARK,
+				    	TARGET,
+				    	USE_YN 
+				    	)
+						 VALUES 
+						( 
+						#{sysCd     , jdbcType=VARCHAR} ,
+						#{progCd     , jdbcType=VARCHAR} ,
+						sysdate,
+						#{userId     , jdbcType=VARCHAR},
+						#{progNm     , jdbcType=VARCHAR},
+						#{progPh     , jdbcType=VARCHAR},
+						#{remark     , jdbcType=VARCHAR},
+						'_slef',
+						#{useYn     , jdbcType=VARCHAR}      
+						)
+          
+        	]]>
+       </update>
+       
+      <select id="getProg" resultMap="progResultMap"  statementType="PREPARED">
+  SELECT 
+       A.SYS_CD,
+       A.PROG_CD,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID,
+       A.FILE_NM,
+       A.PROG_NM,
+       A.PROG_PH,
+       A.SAV_AH,
+       A.SCH_AH,
+       A.EXL_AH,
+       A.FN1_AH,
+       A.FN2_AH,
+       A.FN3_AH,
+       A.FN4_AH,
+       A.FN5_AH,
+       A.REMARK,
+       A.TARGET,
+       A.USE_YN
+  FROM T_PROG A
+  WHERE 1=1
+  AND A.SYS_CD = #{sysCd     , jdbcType=VARCHAR}
+  AND A.PROG_CD=#{progCd     , jdbcType=VARCHAR}
+    </select>
+     
+
+</mapper>

@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.item.mapper.AuctionItemMapper">
+	<resultMap id="resultAuctionItemMap" type="com.fpdisys.dist.item.domain.AuctionItemVO">
+		<result property="marketCd" column="MARKET_CD"/>
+		<result property="marketName" column="MARKET_NAME"/>
+		<result property="pumName" column="PUM_NAME"/>
+		<result property="totQty" column="TOT_QTY"/>
+		<result property="maxAmt" column="MAX_AMT"/>
+		<result property="minAmt" column="MIN_AMT"/>
+		<result property="avgAmt" column="AVG_AMT"/>
+		<result property="itemNm" column="ITEM_NM"/>
+	</resultMap>
+
+	<select id="selectItemDaily" parameterType="HashMap" resultType="HashMap">
+		WITH	rstBase
+		AS		(
+				SELECT	TIS.MARKET_CD
+				,		TIS.FLOWER_GUBN
+				,		DECODE(TIS.FLOWER_CODE || TIS.ITEM_CD, '6002', '6043', TIS.FLOWER_CODE || TIS.ITEM_CD) AS ITEM_CD
+				,		TIS.COST
+				,		TIS.TOT_QTY
+				,		TIS.TOT_AMT
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN ('0000000001', '4108212335', '6068207466','1508500020', '3848200087', '1288202296', '6158209828')
+			<if test="cmpCd != null and cmpCd != ''">
+				AND		TIS.MARKET_CD = #{cmpCd, jdbcType=VARCHAR}
+			</if>
+			<if test="searchStrDate != null and searchStrDate != ''">
+				AND		TIS.SALE_DATE BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+			</if>
+	<if test="itemCd != null and itemCd != ''">
+		<choose>
+			<when test="itemCd == '6043'">
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD IN ('6002', '6043')
+			</when>
+			<otherwise>
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			</otherwise>
+		</choose>
+	</if>
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+				)
+		,		rstCalCost
+		AS		(
+				SELECT	rb.MARKET_CD
+				,		rb.FLOWER_GUBN
+				,		rb.ITEM_CD
+				,		SUM(rb.TOT_QTY) AS tot_qty
+				,		MAX(rb.COST) AS max_amt
+				,		MIN(rb.COST) AS min_amt
+				,		ROUND(SUM(rb.TOT_AMT)/SUM(rb.TOT_QTY), 0) AS avg_amt
+				FROM	rstBase rb
+				GROUP BY (rb.MARKET_CD, rb.FLOWER_GUBN, rb.ITEM_CD)
+				)
+		SELECT	rcc.MARKET_CD	AS MARKET_CD
+		,		tjm.MARKET_NAME	AS MARKET_NAME
+		,		rcc.ITEM_CD		AS ITEM_CD
+		,		tii.ITEM_NM		AS PUM_NAME
+		,		rcc.TOT_QTY		AS TOT_QTY
+		,		rcc.MIN_AMT		AS MIN_AMT
+		,		rcc.MAX_AMT		AS MAX_AMT
+		,		rcc.AVG_AMT		AS AVG_AMT
+		FROM	rstCalCost rcc
+		LEFT JOIN T_INT_ITEM tii ON rcc.ITEM_CD = tii.FLOWER_CODE || tii.ITEM_CD AND tii.USE_YN = 'Y'
+		LEFT JOIN T_JOINT_MARKET tjm ON rcc.MARKET_CD = tjm.MARKET_CD
+		ORDER BY rcc.TOT_QTY DESC
+	</select>
+
+	<select id="selectItemDailyDate" parameterType="HashMap" resultType="HashMap">
+		WITH	rstBase
+		AS		(
+				SELECT	TIS.SALE_DATE
+				,		TIS.MARKET_CD
+				,		DECODE(TIS.FLOWER_CODE || TIS.ITEM_CD, '6002', '6043', TIS.FLOWER_CODE || TIS.ITEM_CD) AS ITEM_CD
+				,		TIS.COST
+				,		TIS.TOT_QTY
+				,		TIS.TOT_AMT
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN (#{cmpCd, jdbcType=VARCHAR})
+				AND		TIS.SALE_DATE BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+		<choose>
+			<when test="itemCd == '6043'">
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD IN ('6002', '6043')
+			</when>
+			<otherwise>
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			</otherwise>
+		</choose>
+
+				)
+		,		rstCalCost
+		AS		(
+				SELECT	rb.SALE_DATE
+				,		rb.MARKET_CD
+				,		rb.ITEM_CD
+				,		SUM(rb.TOT_QTY) AS tot_qty
+				,		MAX(rb.COST)	AS max_amt
+				,		MIN(rb.COST) 	AS min_amt
+				,		ROUND(SUM(rb.TOT_AMT)/SUM(rb.TOT_QTY), 0) AS avg_amt
+				FROM	rstBase rb
+				GROUP BY (rb.SALE_DATE, rb.MARKET_CD, rb.ITEM_CD)
+				)
+		SELECT	rcc.SALE_DATE	AS SALE_DATE
+		,		rcc.MARKET_CD	AS MARKET_CD
+		,		rcc.ITEM_CD		AS ITEM_CD
+		,		rcc.TOT_QTY		AS TOT_QTY
+		,		rcc.MIN_AMT		AS MIN_AMT
+		,		rcc.MAX_AMT		AS MAX_AMT
+		,		rcc.AVG_AMT		AS AVG_AMT
+		FROM	rstCalCost rcc
+		ORDER BY rcc.SALE_DATE
+	</select>
+
+	<select id="selectItemDailyDateLevel" parameterType="HashMap" resultType="HashMap">
+		WITH	rstBase
+		AS		(
+				SELECT	TIS.LV_CD
+				,		TIS.TOT_QTY
+				,		TIS.COST
+				,		TIS.TOT_AMT
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN (#{cmpCd, jdbcType=VARCHAR})
+				AND		TIS.SALE_DATE BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+		<choose>
+			<when test="itemCd == '6043'">
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD IN ('6002', '6043')
+			</when>
+			<otherwise>
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			</otherwise>
+		</choose>
+				)
+		,		rstCalCost
+		AS		(
+				SELECT	rb.LV_CD
+				,		SUM(rb.TOT_QTY) AS tot_qty
+				,		MAX(rb.COST) 	AS max_amt
+				,		MIN(rb.COST) 	AS min_amt
+				,		ROUND(SUM(rb.TOT_AMT)/SUM(rb.TOT_QTY), 0) AS avg_amt
+				FROM	rstBase rb
+				GROUP BY (rb.LV_CD)
+				)
+		SELECT	tl.LV_NAME		AS LEVEL_NAME
+		,		rcc.TOT_QTY		AS TOT_QTY
+		,		rcc.MIN_AMT		AS MIN_AMT
+		,		rcc.MAX_AMT		AS MAX_AMT
+		,		rcc.AVG_AMT		AS AVG_AMT
+		FROM	rstCalCost rcc
+		LEFT JOIN T_LEVEL tl ON RCC.LV_CD = tl.LV_CD
+		ORDER BY rcc.LV_CD
+	</select>
+
+	<select id="selectItemMonthly" parameterType="HashMap" resultType="HashMap">
+		WITH	rstBase
+		AS		(
+				SELECT	TIS.MARKET_CD
+				,		TIS.FLOWER_GUBN
+				,		DECODE(TIS.FLOWER_CODE || TIS.ITEM_CD, '6002', '6043', TIS.FLOWER_CODE || TIS.ITEM_CD) AS ITEM_CD
+				,		TIS.TOT_QTY
+				,		TIS.COST
+				,		TIS.TOT_AMT
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN ('0000000001', '4108212335', '6068207466','1508500020', '3848200087', '1288202296','6158209828')
+			<if test="cmpCd != null and cmpCd != ''">
+				AND		TIS.MARKET_CD = #{cmpCd, jdbcType=VARCHAR}
+			</if>
+			<if test="searchStrDate != null and searchStrDate != ''">
+				AND		TIS.SALE_DATE BETWEEN #{searchStrDate, jdbcType=VARCHAR} || '-01' AND #{searchEndDate, jdbcType=VARCHAR} || '-31'
+			</if>
+	<if test="itemCd != null and itemCd != ''">
+		<choose>
+			<when test="itemCd == '6043'">
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD IN ('6002', '6043')
+			</when>
+			<otherwise>
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			</otherwise>
+		</choose>
+	</if>
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+				)
+		,		rstCalCost
+		AS		(
+				SELECT	rb.MARKET_CD
+				,		rb.FLOWER_GUBN
+				,		rb.ITEM_CD
+				,		SUM(rb.TOT_QTY) AS tot_qty
+				,		MAX(rb.COST) 	AS max_amt
+				,		MIN(rb.COST) 	AS min_amt
+				,		ROUND(SUM(rb.TOT_AMT)/SUM(rb.TOT_QTY), 0) AS avg_amt
+				FROM	rstBase rb
+				GROUP BY (rb.MARKET_CD, rb.FLOWER_GUBN, rb.ITEM_CD)
+				)
+		SELECT	rcc.MARKET_CD	AS MARKET_CD
+		,		tjm.MARKET_NAME	AS MARKET_NAME
+		,		rcc.ITEM_CD		AS ITEM_CD
+		,		tii.ITEM_NM		AS PUM_NAME
+		,		rcc.TOT_QTY		AS TOT_QTY
+		,		rcc.MIN_AMT		AS MIN_AMT
+		,		rcc.MAX_AMT		AS MAX_AMT
+		,		rcc.AVG_AMT		AS AVG_AMT
+		FROM	rstCalCost rcc
+		LEFT JOIN T_INT_ITEM tii ON rcc.ITEM_CD = tii.FLOWER_CODE || tii.ITEM_CD AND tii.USE_YN = 'Y'
+		LEFT JOIN T_JOINT_MARKET tjm ON rcc.MARKET_CD = tjm.MARKET_CD
+		ORDER BY rcc.TOT_QTY DESC
+	</select>
+
+	<select id="selectItemMonthlyMonth" parameterType="HashMap" resultType="HashMap">
+		WITH	rstBase
+		AS		(
+				SELECT	TIS.SALE_DATE
+				,		TIS.MARKET_CD
+				,		DECODE(TIS.FLOWER_CODE || TIS.ITEM_CD, '6002', '6043', TIS.FLOWER_CODE || TIS.ITEM_CD) AS ITEM_CD
+				,		TIS.TOT_QTY
+				,		TIS.COST
+				,		TIS.TOT_AMT
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN (#{cmpCd, jdbcType=VARCHAR})
+				AND		TIS.SALE_DATE BETWEEN #{searchStrDate, jdbcType=VARCHAR} || '-01' AND #{searchEndDate, jdbcType=VARCHAR} || '-31'
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+		<choose>
+			<when test="itemCd == '6043'">
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD IN ('6002', '6043')
+			</when>
+			<otherwise>
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			</otherwise>
+		</choose>
+				)
+		,		rstCalCost
+		AS		(
+				SELECT	SUBSTR(rb.SALE_DATE, 1, 7) AS SALE_DATE
+				,		rb.MARKET_CD
+				,		rb.ITEM_CD
+				,		SUM(rb.TOT_QTY) AS tot_qty
+				,		MAX(rb.COST) 	AS max_amt
+				,		MIN(rb.COST) 	AS min_amt
+				,		ROUND(SUM(rb.TOT_AMT)/SUM(rb.TOT_QTY), 0) AS avg_amt
+				FROM	rstBase rb
+				GROUP BY (SUBSTR(rb.SALE_DATE, 1, 7), rb.MARKET_CD, rb.ITEM_CD)
+				)
+		SELECT	rcc.SALE_DATE	AS SALE_DATE
+		,		rcc.MARKET_CD	AS MARKET_CD
+		,		rcc.ITEM_CD		AS ITEM_CD
+		,		rcc.TOT_QTY		AS TOT_QTY
+		,		rcc.MIN_AMT		AS MIN_AMT
+		,		rcc.MAX_AMT		AS MAX_AMT
+		,		rcc.AVG_AMT		AS AVG_AMT
+		FROM	rstCalCost rcc
+		ORDER BY rcc.SALE_DATE
+	</select>
+
+	<select id="selectItemMonthlyMonthLevel" parameterType="HashMap" resultType="HashMap">
+		WITH	rstBase
+		AS		(
+				SELECT	TIS.LV_CD
+				,		TIS.TOT_QTY
+				,		TIS.COST
+				,		TIs.TOT_AMT
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN (#{cmpCd, jdbcType=VARCHAR})
+				AND		TIS.SALE_DATE BETWEEN #{searchStrDate, jdbcType=VARCHAR} || '-01' AND #{searchEndDate, jdbcType=VARCHAR} || '-31'
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+		<choose>
+			<when test="itemCd == '6043'">
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD IN ('6002', '6043')
+			</when>
+			<otherwise>
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			</otherwise>
+		</choose>
+				)
+		,		rstCalCost
+		AS		(
+				SELECT	rb.LV_CD
+				,		SUM(rb.TOT_QTY) AS tot_qty
+				,		MAX(rb.COST) 	AS max_amt
+				,		MIN(rb.COST) 	AS min_amt
+				,		ROUND(SUM(rb.TOT_AMT)/SUM(rb.TOT_QTY), 0) AS avg_amt
+				FROM	rstBase rb
+				GROUP BY (rb.LV_CD)
+				)
+		SELECT	tl.LV_NAME		AS LEVEL_NAME
+		,		rcc.TOT_QTY		AS TOT_QTY
+		,		rcc.MIN_AMT		AS MIN_AMT
+		,		rcc.MAX_AMT		AS MAX_AMT
+		,		rcc.AVG_AMT		AS AVG_AMT
+		FROM	rstCalCost rcc
+		LEFT JOIN T_LEVEL tl ON RCC.LV_CD = tl.LV_CD
+		ORDER BY rcc.LV_CD
+	</select>
+
+	<select id="selectItemPopularList" parameterType="HashMap" resultType="HashMap">
+		WITH	rstBase
+		AS		(
+				SELECT	TIS.SALE_DATE
+				,		DECODE(TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD, '36002', '36043', TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD) AS ITEM_CD
+				,		TIS.QTY
+				,		TIS.COST
+
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN ('0000000001', '4108212335', '6068207466','1508500020', '3848200087', '1288202296', '6158209828')
+				AND		TIS.SALE_DATE <![CDATA[ >=  ]]> #{searchStrDate, jdbcType=VARCHAR}
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+				ORDER BY TIS.SALE_DATE DESC
+				)
+		,		rstGetSaleDate
+		AS		(
+				SELECT	ROWNUM AS rn
+				,		SALE_DATE
+				FROM	(
+						SELECT	DISTINCT(rb.SALE_DATE) AS SALE_DATE
+						FROM	rstBase rb
+						ORDER BY rb.SALE_DATE DESC
+						)
+				WHERE
+	<choose>
+		<when test="dateGubn == 'week'">
+			<choose>
+				<when test="flowerCd == 1">
+						ROWNUM <![CDATA[ < ]]> 7
+				</when>
+				<otherwise>
+						ROWNUM <![CDATA[ < ]]> 5
+				</otherwise>
+			</choose>
+		</when>
+		<otherwise>
+			<choose>
+				<when test="flowerCd == 1">
+						ROWNUM <![CDATA[ < ]]> 25
+				</when>
+				<otherwise>
+						ROWNUM <![CDATA[ < ]]> 17
+				</otherwise>
+			</choose>
+		</otherwise>
+	</choose>
+				)
+		,		rstSelThisWeek
+		AS		(
+				SELECT	*
+				FROM	rstGetSaleDate
+				WHERE
+	<choose>
+		<when test="dateGubn == 'week'">
+			<choose>
+				<when test="flowerCd == 1">
+						rn <![CDATA[ < ]]> 4
+				</when>
+				<otherwise>
+						rn <![CDATA[ < ]]> 3
+				</otherwise>
+			</choose>
+		</when>
+		<otherwise>
+			<choose>
+				<when test="flowerCd == 1">
+						rn <![CDATA[ < ]]> 13
+				</when>
+				<otherwise>
+						rn <![CDATA[ < ]]> 9
+				</otherwise>
+			</choose>
+		</otherwise>
+	</choose>
+				)
+		,		rstSelBefWeek
+		AS		(
+				SELECT	*
+				FROM	rstGetSaleDate
+				WHERE
+	<choose>
+		<when test="dateGubn == 'week'">
+			<choose>
+				<when test="flowerCd == 1">
+						rn <![CDATA[ >= ]]> 4
+				</when>
+				<otherwise>
+						rn <![CDATA[ >= ]]> 3
+				</otherwise>
+			</choose>
+		</when>
+		<otherwise>
+			<choose>
+				<when test="flowerCd == 1">
+						rn <![CDATA[ >= ]]> 13
+				</when>
+				<otherwise>
+						rn <![CDATA[ >= ]]> 9
+				</otherwise>
+			</choose>
+		</otherwise>
+	</choose>
+				)
+		,		rstCalThisWeek
+		AS		(
+				SELECT	rb.ITEM_CD
+				,		MAX(QTY)			AS maxqty
+				,		SUM(QTY)			AS totqty
+				,		AVG(QTY)			AS avgqty
+				,		MAX(COST)			AS maxamt
+				,		ROUND(AVG(COST), 0) AS avgamt
+				FROM	rstSelThisWeek rstw
+				INNER JOIN rstBase rb on rstw.SALE_DATE = rb.SALE_DATE
+				GROUP BY (rb.ITEM_CD)
+				)
+		,		rstCalBefWeek
+		AS		(
+				SELECT	rb.ITEM_CD
+				,		MAX(QTY)			AS maxqty
+				,		SUM(QTY)			AS totqty
+				,		AVG(QTY)			AS avgqty
+				,		MAX(COST)			AS maxamt
+				,		ROUND(AVG(COST), 0) AS avgamt
+				FROM	rstSelBefWeek rsbw
+				INNER JOIN rstBase rb on rsbw.SALE_DATE = rb.SALE_DATE
+				GROUP BY (rb.ITEM_CD)
+				)
+		,		rstView
+		AS		(
+				SELECT	rctw.ITEM_CD 				AS ITEM_CD
+				,		tii.ITEM_NM					AS PUM_NAME
+				,		(rctw.AVGQTY - rcbw.AVGQTY)	AS COMP_MAXQTY
+				,		rctw.MAXQTY 				AS MAX_QTY
+				,		rctw.TOTQTY					AS TOT_QTY
+				,		(rctw.AVGAMT - rcbw.AVGAMT)	AS COMP_MAXAMT
+				,		rctw.MAXAMT 				AS MAX_AMT
+				,		rctw.AVGAMT					AS AVG_AMT
+				FROM	rstCalThisWeek rctw
+				INNER JOIN rstCalBefWeek rcbw on rctw.ITEM_CD = rcbw.ITEM_CD
+				LEFT JOIN T_INT_ITEM tii ON rctw.ITEM_CD = tii.FLOWER_GUBN || tii.FLOWER_CODE || tii.ITEM_CD AND tii.USE_YN = 'Y'
+				)
+		SELECT	rv.*
+		FROM	rstView rv
+		WHERE	rv.PUM_NAME IS NOT NULL
+		ORDER BY
+		<choose>
+			<when test="queryType == 'qty'">
+				rv.COMP_MAXQTY
+			</when>
+			<otherwise>
+				rv.COMP_MAXAMT
+			</otherwise>
+		</choose> DESC
+	</select>
+
+	<select id="selectItemPopularChart" parameterType="HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		WITH	rstBase
+		AS		(
+				SELECT	TIS.SALE_DATE
+				,		DECODE(TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD, '36002', '36043', TIS.FLOWER_GUBN || TIS.FLOWER_CODE || TIS.ITEM_CD) AS ITEM_CD
+				,		TIS.QTY
+				,		TIS.COST
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN ('0000000001', '4108212335', '6068207466','1508500020', '3848200087', '1288202296', '6158209828')
+				AND		TIS.SALE_DATE <![CDATA[ >=  ]]> #{searchStrDate, jdbcType=VARCHAR}
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+				ORDER BY TIS.SALE_DATE DESC
+				)
+		,		rstSaleListDate
+		AS		(
+				SELECT	*
+				FROM	(
+						SELECT	DISTINCT(rb.SALE_DATE) AS SALE_DATE
+						,		'A' AS ITEM_CD
+						,		0 AS maxqty
+						,		0 AS totqty
+						,		0 AS maxamt
+						,		0 AS avgamt
+						FROM	rstBase rb
+						ORDER BY rb.SALE_DATE DESC
+						)
+				WHERE	ROWNUM <![CDATA[ < ]]> 7
+				)
+		,		rstCalListDate
+		AS		(
+				SELECT	rsld.SALE_DATE
+				,		rb.ITEM_CD
+				,		MAX(QTY)			AS maxqty
+				,		SUM(QTY)			AS totqty
+				,		MAX(COST)			AS maxamt
+				,		ROUND(AVG(COST), 0) AS avgamt
+				FROM	rstSaleListDate rsld
+				LEFT JOIN rstBase rb ON rb.SALE_DATE = rsld.SALE_DATE
+				WHERE	rb.ITEM_CD IN
+				<foreach item="item" collection="qryItemCd" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+				GROUP BY rsld.SALE_DATE, rb.ITEM_CD
+				)
+		,		rstView
+		AS		(
+				SELECT  * FROM rstSaleListDate
+				UNION ALL
+				SELECT  * FROM rstCalListDate
+				)
+		SELECT	NVL(tii.ITEM_NM, 'CHART')		AS PUM_NAME
+		,		rv.ITEM_CD	AS ITEM_CD
+		,		rv.SALE_DATE	AS SALE_DATE
+		,		rv.maxqty		AS MAX_QTY
+		,		rv.totqty		AS TOT_QTY
+		,		rv.maxamt		AS MAX_AMT
+		,		rv.avgamt		AS AVG_AMT
+		FROM	rstView rv
+		LEFT JOIN T_INT_ITEM tii ON rv.ITEM_CD = tii.FLOWER_GUBN || tii.FLOWER_CODE || tii.ITEM_CD AND tii.USE_YN = 'Y'
+		ORDER BY SALE_DATE,  ITEM_CD DESC
+	</select>
+
+	<select id="selectDailyItemExcel" parameterType="com.fpdisys.dist.item.domain.AuctionItemVO" resultMap="resultAuctionItemMap">
+				WITH	rstBase
+		AS		(
+				SELECT	TIS.MARKET_CD
+				,		TIS.FLOWER_GUBN
+				,		TIS.FLOWER_CODE || TIS.ITEM_CD AS ITEM_CD
+				,		TIS.COST
+				,		TIS.TOT_QTY
+				,		TIS.TOT_AMT
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN ('0000000001', '4108212335', '6068207466','1508500020', '3848200087', '1288202296', '6158209828')
+			<if test="cmpCd != null and cmpCd != ''">
+				AND		TIS.MARKET_CD = #{cmpCd, jdbcType=VARCHAR}
+			</if>
+			<if test="searchStrDate != null and searchStrDate != ''">
+				AND		TIS.SALE_DATE BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+			</if>
+			<if test="itemCd != null and itemCd != ''">
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			</if>
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+				)
+		,		rstCalCost
+		AS		(
+				SELECT	rb.MARKET_CD
+				,		rb.FLOWER_GUBN
+				,		rb.ITEM_CD
+				,		SUM(rb.TOT_QTY) AS tot_qty
+				,		MAX(rb.COST) AS max_amt
+				,		MIN(rb.COST) AS min_amt
+				,		ROUND(SUM(rb.TOT_AMT)/SUM(rb.TOT_QTY), 0) AS avg_amt
+				FROM	rstBase rb
+				GROUP BY (rb.MARKET_CD, rb.FLOWER_GUBN, rb.ITEM_CD)
+				)
+		SELECT	rcc.MARKET_CD
+		,		tjm.MARKET_NAME
+		,		rcc.ITEM_CD
+		,		tii.ITEM_NM
+		,		rcc.TOT_QTY
+		,		rcc.MIN_AMT
+		,		rcc.MAX_AMT
+		,		rcc.AVG_AMT
+		FROM	rstCalCost rcc
+		LEFT JOIN T_INT_ITEM tii ON rcc.ITEM_CD = tii.FLOWER_CODE || tii.ITEM_CD AND tii.USE_YN = 'Y'
+		LEFT JOIN T_JOINT_MARKET tjm ON rcc.MARKET_CD = tjm.MARKET_CD
+	</select>
+
+	<select id="selectMonthlyItemExcel" parameterType="com.fpdisys.dist.item.domain.AuctionItemVO" resultMap="resultAuctionItemMap">
+	WITH	rstBase
+		AS		(
+				SELECT	TIS.MARKET_CD
+				,		TIS.FLOWER_GUBN
+				,		TIS.FLOWER_CODE
+				,		TIS.ITEM_CD
+				,		TIS.TOT_QTY
+				,		TIS.COST
+				,		TIS.TOT_AMT
+				FROM	T_INT_SALE TIS
+				WHERE	TIS.MARKET_CD IN ('0000000001', '4108212335', '6068207466','1508500020', '3848200087', '1288202296', '6158209828')
+			<if test="cmpCd != null and cmpCd != ''">
+				AND		TIS.MARKET_CD = #{cmpCd, jdbcType=VARCHAR}
+			</if>
+			<if test="searchStrDate != null and searchStrDate != ''">
+				AND		TIS.SALE_DATE BETWEEN #{searchStrDate, jdbcType=VARCHAR} || '-01' AND #{searchEndDate, jdbcType=VARCHAR} || '-31'
+			</if>
+			<if test="itemCd != null and itemCd != ''">
+				AND		TIS.FLOWER_CODE || TIS.ITEM_CD = #{itemCd, jdbcType=VARCHAR}
+			</if>
+				AND		TIS.FLOWER_GUBN = #{flowerCd, jdbcType=VARCHAR}
+				)
+		,		rstCalCost
+		AS		(
+				SELECT	rb.MARKET_CD
+				,		rb.FLOWER_GUBN
+				,		rb.FLOWER_CODE
+				,		rb.ITEM_CD
+				,		SUM(rb.TOT_QTY) AS tot_qty
+				,		MAX(rb.COST) 	AS max_amt
+				,		MIN(rb.COST) 	AS min_amt
+				,		ROUND(SUM(rb.TOT_AMT)/SUMT(rb.TOT_QTY), 0) AS avg_amt
+				FROM	rstBase rb
+				GROUP BY (rb.MARKET_CD, rb.FLOWER_GUBN, rb.FLOWER_CODE, rb.ITEM_CD)
+				)
+		SELECT	tjm.MARKET_NAME
+		,		tii.ITEM_NM
+		,		rcc.TOT_QTY
+		,		rcc.MIN_AMT
+		,		rcc.MAX_AMT
+		,		rcc.AVG_AMT
+		FROM	rstCalCost rcc
+		LEFT JOIN T_INT_ITEM tii ON rcc.FLOWER_CODE || rcc.ITEM_CD = tii.FLOWER_CODE || tii.ITEM_CD AND tii.USE_YN = 'Y'
+		LEFT JOIN T_JOINT_MARKET tjm ON rcc.MARKET_CD = tjm.MARKET_CD
+	</select>
+</mapper>

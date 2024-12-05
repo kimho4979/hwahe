@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.haa01.mapper.Haa01Mapper">
+
+	<resultMap id="resultHaa01Map" type="com.fpdisys.dist.haa01.domain.Haa01VO">
+		<result property="cmpCd" column="CMP_CD"/>
+		<result property="saleMonth" column="SALE_MONTH"/>
+		<result property="mmCd" column="MM_CD"/>
+		<result property="danCd" column="DAN_CD"/>
+		<result property="pojCd" column="POJ_CD"/>
+		<result property="lvCd" column="LV_CD"/>
+		<result property="danq" column="DANQ"/>
+		<result property="maxAmt" column="MAX_AMT"/>
+		<result property="minAmt" column="MIN_AMT"/>
+		<result property="avgAmt" column="AVG_AMT"/>
+		<result property="regDate" column="REG_DATE"/>
+		<result property="updDate" column="UPD_DATE"/>
+		<result property="sizeCd" column="SIZE_CD"/>
+		<result property="sanCd" column="SAN_CD"/>
+		<result property="flowerGubn" column="FLOWER_GUBN"/>
+		<result property="pumName" column="PUM_NAME"/>
+		<result property="goodName" column="GOOD_NAME"/>
+		<result property="totAmt" column="TOT_AMT"/>
+		<result property="totQty" column="TOT_QTY"/>
+	</resultMap>
+
+	<select id="selectListFlower" parameterType="HashMap" resultType="HashMap">
+		SELECT 
+		    SALE_MONTH
+		    , REPLACE(GOOD_NAME,'"','') AS GOOD_NAME
+		    , REPLACE(PUM_NAME,'"','') AS PUM_NAME
+		    , NVL(TOT_QTY, 0) AS TOT_QTY
+		    , NVL(AVG_AMT, 0) AS AVG_AMT
+		    , NVL(MAX_AMT, 0) AS MAX_AMT
+		    , NVL(MIN_AMT, 0) AS MIN_AMT
+		FROM (
+		    SELECT 
+		        SALE_MONTH
+		        , GOOD_NAME
+		        , PUM_NAME
+		        , TOT_QTY
+		        , AVG_AMT
+		        , MAX_AMT
+		        , MIN_AMT
+		        , ROWNUM AS SEQ
+		    FROM(
+		        SELECT 
+		            SALE_MONTH
+		            ,GOOD_NAME
+		            ,MIN(PUM_NAME) AS PUM_NAME
+		            ,SUM(TOT_QTY) AS TOT_QTY 
+		            ,TRUNC(AVG(AVG_AMT),0) AS AVG_AMT
+		            ,MAX(MAX_AMT) AS MAX_AMT
+		            ,MIN(MIN_AMT) AS MIN_AMT
+		        FROM T_SALE_MONTH
+		        WHERE SALE_MONTH = (SELECT MAX(SALE_MONTH) FROM T_SALE_MONTH WHERE CMP_CD=#{searchCmpCd, jdbcType=VARCHAR} AND FLOWER_GUBN=#{flowerGubun, jdbcType=VARCHAR})
+		        AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+		        AND FLOWER_GUBN=#{flowerGubun, jdbcType=VARCHAR}        
+		        <if test="flowerText != null and flowerText != ''">
+		        AND GOOD_NAME IN 
+			        <foreach item="item" collection="flowerText" open="(" separator="," close=")">
+					        #{item}
+					 </foreach>
+				 </if>
+		        GROUP BY SALE_MONTH, GOOD_NAME
+		        ORDER BY TOT_QTY DESC
+		    )
+		) T1
+		, (
+		SELECT LEVEL AS SEQ
+		FROM DUAL
+		CONNECT BY LEVEL <![CDATA[<=]]> 6
+		) T2
+		WHERE T1.SEQ(+) = T2.SEQ
+	</select>
+
+	<select id="selectListCombineGraph" parameterType="HashMap" resultType="HashMap">
+	 	SELECT 
+		    SALE_MONTH
+		    , NVL(MAX(GOOD_NAME1), ' ') AS goodName1
+		    , MAX(AVG1) AS AVG1
+		    , NVL(MAX(GOOD_NAME2), ' ') AS goodName2
+		    , MAX(AVG2) AS AVG2
+		    , NVL(MAX(GOOD_NAME3), ' ') AS goodName3
+		    , MAX(AVG3) AS AVG3
+		    , NVL(MAX(GOOD_NAME4), ' ') AS goodName4
+		    , MAX(AVG4) AS AVG4
+		    , NVL(MAX(GOOD_NAME5), ' ') AS goodName5
+		    , MAX(AVG5) AS AVG5
+		    , NVL(MAX(GOOD_NAME6), ' ') AS goodName6
+		    , MAX(AVG6) AS AVG6
+		FROM
+		(
+		    SELECT 
+			    SALE_MONTH
+			    , DECODE(RM, 1, MAX(GOOD_NAME)) AS GOOD_NAME1
+			    , DECODE(RM, 1, MAX(AVG_AMT)) AS AVG1
+			    , DECODE(RM, 2, MAX(GOOD_NAME)) AS GOOD_NAME2
+			    , DECODE(RM, 2, MAX(AVG_AMT)) AS AVG2
+			    , DECODE(RM, 3, MAX(GOOD_NAME)) AS GOOD_NAME3
+			    , DECODE(RM, 3, MAX(AVG_AMT)) AS AVG3
+			    , DECODE(RM, 4, MAX(GOOD_NAME)) AS GOOD_NAME4
+			    , DECODE(RM, 4, MAX(AVG_AMT)) AS AVG4
+			    , DECODE(RM, 5, MAX(GOOD_NAME)) AS GOOD_NAME5
+			    , DECODE(RM, 5, MAX(AVG_AMT)) AS AVG5
+			    , DECODE(RM, 6, MAX(GOOD_NAME)) AS GOOD_NAME6
+			    , DECODE(RM, 6, MAX(AVG_AMT)) AS AVG6
+		    FROM
+		    (
+		        SELECT SALE_MONTH, A.GOOD_NAME, RM, TRUNC (AVG (AVG_AMT), 0) AS AVG_AMT
+		        FROM
+		        (
+					SELECT *
+					FROM 
+					(
+						SELECT ROWNUM AS RM, REPLACE (GOOD_NAME, '"', '') AS GOOD_NAME
+						FROM 
+						(
+							SELECT 
+								SALE_MONTH
+								, GOOD_NAME
+								, PUM_NAME
+								, TOT_QTY
+								, AVG_AMT
+								, MAX_AMT
+								, MIN_AMT
+								, ROWNUM AS SEQ
+							FROM 
+							(  
+								SELECT 
+									SALE_MONTH
+									, GOOD_NAME
+									, MIN (PUM_NAME) AS PUM_NAME
+									, SUM (TOT_QTY) AS TOT_QTY
+									, TRUNC (AVG (AVG_AMT), 0) AS AVG_AMT
+									, MAX (MAX_AMT) AS MAX_AMT
+									, MIN (MIN_AMT) AS MIN_AMT
+								FROM T_SALE_MONTH
+								WHERE SALE_MONTH =
+								(
+									SELECT MAX (SALE_MONTH)
+									FROM T_SALE_MONTH
+									WHERE     CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+									AND FLOWER_GUBN = #{flowerGubun, jdbcType=VARCHAR}
+								)
+								AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+								AND FLOWER_GUBN =#{flowerGubun, jdbcType=VARCHAR}
+								<if test="flowerText != null and flowerText != ''">
+		        				AND GOOD_NAME IN 
+			        				<foreach item="item" collection="flowerText" open="(" separator="," close=")">
+					        			#{item}
+					 				</foreach>
+				 				</if>
+								GROUP BY SALE_MONTH, GOOD_NAME
+								ORDER BY TOT_QTY DESC
+							)
+						) T1,
+						(    
+							SELECT LEVEL AS SEQ
+							FROM DUAL
+							CONNECT BY LEVEL <![CDATA[<=]]>  6
+						) T2
+						WHERE T1.SEQ(+) = T2.SEQ
+					) C,
+					(
+						SELECT YYYYMM
+						FROM 
+						(
+						    SELECT TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(SYSDATE,'YYYY')||'01','YYYY-MM'), LEVEL-1),'YYYY-MM') AS YYYYMM
+						    FROM DUAL 
+						    CONNECT BY LEVEL <![CDATA[<=]]> MONTHS_BETWEEN(TO_DATE(TO_CHAR(SYSDATE,'YYYY-MM'),'YYYY-MM'), TO_DATE(TO_CHAR(SYSDATE,'YYYY')||'01','YYYY-MM'))+1
+						)
+					)
+					WHERE 1=1
+				) A,
+				(
+					SELECT SALE_MONTH, REPLACE (GOOD_NAME, '"', '') AS GOOD_NAME, PUM_NAME, TRUNC (AVG (AVG_AMT), 0) AS AVG_AMT
+					FROM T_SALE_MONTH
+					WHERE SUBSTR (SALE_MONTH, 1, 4) = TO_CHAR (SYSDATE, 'YYYY') 
+					AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+					AND FLOWER_GUBN = #{flowerGubun, jdbcType=VARCHAR}
+					GROUP BY SALE_MONTH, GOOD_NAME, PUM_NAME
+				) B
+				WHERE A.YYYYMM=B.SALE_MONTH
+				AND A.GOOD_NAME=B.GOOD_NAME
+		    	GROUP BY SALE_MONTH, A.GOOD_NAME, RM
+			)
+			GROUP BY SALE_MONTH, RM
+		)
+		GROUP BY SALE_MONTH
+		ORDER BY SALE_MONTH
+	</select>
+	
+	<select id="selectListFlowerExcel" resultType="com.fpdisys.dist.haa01.domain.Haa01VO" resultMap="resultHaa01Map">
+		SELECT 
+		    SALE_MONTH
+		    , REPLACE(GOOD_NAME,'"','') AS GOOD_NAME
+		    , REPLACE(PUM_NAME,'"','') AS PUM_NAME
+		    , NVL(TOT_QTY, 0) AS TOT_QTY
+		    , NVL(AVG_AMT, 0) AS AVG_AMT
+		    , NVL(MAX_AMT, 0) AS MAX_AMT
+		    , NVL(MIN_AMT, 0) AS MIN_AMT
+		FROM (
+		    SELECT 
+		        SALE_MONTH
+		        , GOOD_NAME
+		        , PUM_NAME
+		        , TOT_QTY
+		        , AVG_AMT
+		        , MAX_AMT
+		        , MIN_AMT
+		        , ROWNUM AS SEQ
+		    FROM(
+		        SELECT 
+		            SALE_MONTH
+		            ,GOOD_NAME
+		            ,MIN(PUM_NAME) AS PUM_NAME
+		            ,SUM(TOT_QTY) AS TOT_QTY 
+		            ,TRUNC(AVG(AVG_AMT),0) AS AVG_AMT
+		            ,MAX(MAX_AMT) AS MAX_AMT
+		            ,MIN(MIN_AMT) AS MIN_AMT
+		        FROM T_SALE_MONTH
+		        WHERE SALE_MONTH = (SELECT MAX(SALE_MONTH) FROM T_SALE_MONTH WHERE CMP_CD=#{searchCmpCd, jdbcType=VARCHAR} AND FLOWER_GUBN=#{flowerGubun, jdbcType=VARCHAR})
+		        AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+		        AND FLOWER_GUBN=#{flowerGubun, jdbcType=VARCHAR}        
+		        <if test="flowerText != null and flowerText != ''">
+		        AND GOOD_NAME IN 
+			        <foreach item="item" collection="flowerText" open="(" separator="," close=")">
+					        #{item}
+					 </foreach>
+				 </if>
+		        GROUP BY SALE_MONTH, GOOD_NAME
+		        ORDER BY TOT_QTY DESC
+		    )
+		) T1
+		, (
+		SELECT LEVEL AS SEQ
+		FROM DUAL
+		CONNECT BY LEVEL <![CDATA[<=]]> 6
+		) T2
+		WHERE T1.SEQ(+) = T2.SEQ
+	</select>
+	
+</mapper>

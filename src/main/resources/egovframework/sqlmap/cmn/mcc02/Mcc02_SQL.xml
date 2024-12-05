@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mcc02.mapper.Mcc02Mapper">
+	<resultMap id="Mcc02ResultMap" type="com.fpminput.mntr.mcc02.domain.Mcc02VO">	
+		<result property="seqNo" 				column="SEQ_NO"/>
+		<result property="regMonth" 			column="REG_MONTH"/>
+		<result property="title" 				column="TITLE"/>
+		<result property="writeName" 			column="WRITE_NAME"/>
+		<result property="insDt" 				column="INS_DT"/>
+		<result property="gubn" 				column="GUBN"/>
+		<result property="useYn" 				column="USE_YN"/>
+		<result property="content" 				column="CONTENT"/>
+		<result property="forecastSeq" 			column="FORECAST_SEQ"/>
+		<result property="originalFileName" 	column="ORIGINAL_FILE_NAME"/>
+		<result property="storedFileName" 		column="STORED_FILE_NAME"/>
+		<result property="fileSize" 			column="FILE_SIZE"/>
+		<result property="creaDtm" 				column="CREA_DTM"/>
+		<result property="creaId" 				column="CREA_ID"/>
+		<result property="delGb" 				column="DEL_GB"/>
+	</resultMap>
+	
+	<select id="selectSimilarList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT T1.SEQ_NO
+  			, T1.REG_MONTH
+  			, T1.TITLE
+  			, T1.WRITE_NAME
+  			, T1.INS_DT
+  			, T1.GUBN
+  			, T1.USE_YN
+  			, T1.CONTENT
+        	, T2.FORECAST_SEQ
+  			, T2.ORIGINAL_FILE_NAME
+  			, T2.STORED_FILE_NAME
+  			, T2.FILE_SIZE
+		FROM T_FORECAST_REPORT T1
+		LEFT OUTER JOIN T_FORECAST_REPORT_FILE T2 
+		ON T1.SEQ_NO = T2.FORECAST_SEQ
+		WHERE 1=1
+		AND T1.USE_YN = 'Y'
+		AND T1.GUBN = '4'
+		ORDER BY T1.SEQ_NO DESC, INS_DT DESC
+	</select>
+	
+	<select id="selectSimilarInputSeq" parameterType="com.fpminput.mntr.mca01.domain.Mca01VO" resultMap="Mcc02ResultMap">
+		SELECT T1.SEQ_NO
+  			, T1.REG_MONTH
+  			, T1.TITLE
+  			, T1.WRITE_NAME
+  			, T1.INS_DT
+  			, T1.GUBN
+  			, T1.USE_YN
+  			, T1.CONTENT
+  			, T2.FORECAST_SEQ
+  			, T2.ORIGINAL_FILE_NAME
+  			, T2.STORED_FILE_NAME
+  			, T2.FILE_SIZE
+		FROM T_FORECAST_REPORT T1
+		LEFT OUTER JOIN T_FORECAST_REPORT_FILE T2 
+		ON T1.SEQ_NO = T2.FORECAST_SEQ
+		WHERE 1=1
+		AND T1.USE_YN = 'Y'
+		AND T1.GUBN = '4'
+		AND T1.SEQ_NO = #{seqNo, jdbcType=VARCHAR}
+		ORDER BY T1.SEQ_NO DESC, INS_DT DESC
+	</select>
+	
+	<select id="selectSumNail" parameterType="String" resultMap="Mcc02ResultMap">
+		SELECT 
+		 a.SEQ_NO
+		 , a.FORECAST_SEQ
+		 , a.ORIGINAL_FILE_NAME
+		 , a.STORED_FILE_NAME
+		 , a.FILE_SIZE
+		 , a.CREA_DTM
+		 , a.CREA_ID
+		 , a.DEL_GB
+		FROM T_FORECAST_REPORT_FILE a, T_FORECAST_REPORT b
+		WHERE a.FORECAST_SEQ = b.SEQ_NO(+)
+		AND b.SEQ_NO = #{seqNo, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertSimilarInput"  parameterType="com.fpminput.mntr.mcb01.domain.Mcb01VO" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			SELECT CROP_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+ 		INSERT INTO T_FORECAST_REPORT
+		(   
+			SEQ_NO
+			, REG_MONTH
+			, TITLE
+			, WRITE_NAME
+			, INS_DT
+			, GUBN
+			, USE_YN
+			, CONTENT    
+		) 
+		VALUES 
+		(    
+			#{IDX}
+            , TO_CHAR(SYSDATE,'YYYY-MM')      
+            , #{TITLE, jdbcType=VARCHAR}
+            , #{WRITE_NAME, jdbcType=VARCHAR}
+            , TO_CHAR(SYSDATE,'YY/MM/DD')
+            , #{GUBN, jdbcType=VARCHAR} 
+            , 'Y'
+            , #{CONTENT, jdbcType=VARCHAR}
+		)
+ 	</insert>
+ 	
+ 	<insert id="insertSimilarFile"  parameterType="java.util.HashMap">
+ 		INSERT INTO T_FORECAST_REPORT_FILE
+       	(     
+			SEQ_NO
+            , FORECAST_SEQ                    
+            , ORIGINAL_FILE_NAME            
+            , STORED_FILE_NAME    
+            , FILE_SIZE
+            , CREA_ID                            
+       	) 
+       	VALUES 
+		(    
+			CROP_FILE_SEQ.NEXTVAL
+			, #{CROP_IDX, jdbcType=VARCHAR}      
+            , #{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}  
+            , #{STORED_FILE_NAME, jdbcType=VARCHAR}            
+            , #{FILE_SIZE, jdbcType=VARCHAR}           
+            , 'ADMIN'    
+		)         
+	</insert>
+	
+	<update id="updateSimilarInfoInput"  parameterType="java.util.HashMap">
+		UPDATE T_FORECAST_REPORT SET
+  			REG_MONTH = TO_CHAR(ADD_MONTHS(SYSDATE, 0),'YYYY-MM')
+  			, TITLE = #{TITLE, jdbcType=VARCHAR}
+  			, CONTENT = #{CONTENT, jdbcType=VARCHAR}
+		WHERE SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR} 	  
+	</update>
+	
+	<update id="updateSimilarFile"  parameterType="java.util.HashMap" >
+		UPDATE T_FORECAST_REPORT_FILE SET
+  			ORIGINAL_FILE_NAME = #{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}
+  			, STORED_FILE_NAME = #{STORED_FILE_NAME, jdbcType=VARCHAR}
+  			, FILE_SIZE = #{FILE_SIZE, jdbcType=VARCHAR}
+		WHERE FORECAST_SEQ = #{SEQ_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteSimilarInfoInput"  parameterType="java.util.HashMap" >
+		UPDATE T_FORECAST_REPORT SET
+  			USE_YN = 'N'
+		WHERE SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+		AND TITLE = #{TITLE, jdbcType=VARCHAR}
+		AND WRITE_NAME = #{WRITE_NAME, jdbcType=VARCHAR}
+		AND CONTENT = #{CONTENT, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteSimilarFileInfoInput"  parameterType="java.util.HashMap" >
+		<!-- UPDATE T_FORECAST_REPORT_FILE SET
+  			DEL_GB = 'Y'
+		WHERE FORECAST_SEQ = #{SEQ_NO, jdbcType=VARCHAR} -->
+		DELETE FROM T_FORECAST_REPORT_FILE
+		WHERE FORECAST_SEQ = #{SEQ_NO, jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

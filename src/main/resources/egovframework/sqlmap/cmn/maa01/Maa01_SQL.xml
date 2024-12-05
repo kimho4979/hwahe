@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.maa01.mapper.Maa01Mapper">
+	<resultMap id="Maa01ResultMap" type="com.fpminput.mntr.maa01.domain.Maa01VO">
+	</resultMap>
+
+	<select id="selectShipmntPrearngeVolm" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT TOTAL_COUNT
+			,RNUM
+			,SEQ_NO
+			,REG_DATE
+			,GUBN
+			,GUBN_NAME
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,MARKET_NAME
+			,QTY
+			,NVL(BIGO,' ') AS BIGO
+			,CHUL_NO
+			,REG_DT
+      		,UPT_DT
+      		,USE_YN
+      		,DAYS_GUBN
+		FROM
+		(
+			SELECT COUNT(*) OVER() AS TOTAL_COUNT
+				,RNUM
+				,REG_DATE
+				,SEQ_NO
+				,GUBN
+				,GUBN_NAME
+				,PUM_NAME
+				,GOOD_NAME
+				,CMP_CD
+				,MARKET_NAME
+				,QTY
+				,BIGO
+				,CHUL_NO
+				,REG_DT
+      			,UPT_DT
+      			,USE_YN
+      			,DAYS_GUBN
+			FROM
+			(
+				SELECT ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, CMP_CD, GOOD_NAME) RNUM
+					,T1.REG_DATE
+					,T1.SEQ_NO
+					,T1.GUBN
+					,CASE WHEN T1.GUBN =1 THEN '출하예정물량'
+					END AS GUBN_NAME
+					,T1.PUM_NAME
+					,T1.GOOD_NAME
+					,T1.CMP_CD
+					,T2.MARKET_NAME
+					,T1.QTY
+					,T1.BIGO
+					,CHUL_NO
+					,T1.REG_DT
+      				,T1.UPT_DT
+      				,T1.USE_YN
+      				,T1.DAYS_GUBN
+				FROM T_SHIPMNT_INFO T1
+				LEFT OUTER JOIN T_JOINT_MARKET T2
+				ON T1.CMP_CD = T2.MARKET_CD
+				WHERE T1.GUBN='1'
+				AND T1.USE_YN='Y'
+				AND T1.CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR}
+				ORDER BY T1.SEQ_NO DESC, T1.REG_DT DESC, T1.CMP_CD, T1.GOOD_NAME
+			)
+		)
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+	</select>
+
+	<select id="selectShipmntPrearngeVolm2" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT TOTAL_COUNT
+			,RNUM
+			,SEQ_NO
+			,REG_DATE
+			,GUBN
+			,GUBN_NAME
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,MARKET_NAME
+			,QTY
+			,NVL(BIGO,' ') AS BIGO
+			,CHUL_NO
+			,REG_DT
+        	,UPT_DT
+        	,USE_YN
+        	,DAYS_GUBN
+		FROM
+		(
+			SELECT COUNT(*) OVER() AS TOTAL_COUNT
+				,RNUM
+				,SEQ_NO
+				,REG_DATE
+				,GUBN
+				,GUBN_NAME
+				,PUM_NAME
+				,GOOD_NAME
+				,CMP_CD
+				,MARKET_NAME
+				,QTY
+				,BIGO
+				,CHUL_NO
+				,REG_DT
+        		,UPT_DT
+        		,USE_YN
+        		,DAYS_GUBN
+			FROM
+			(
+				SELECT ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, CMP_CD, GOOD_NAME)
+					RNUM
+					,T1.SEQ_NO
+					,T1.REG_DATE
+					,T1.GUBN
+					,CASE WHEN T1.GUBN =2 THEN '출하물량'
+					END AS GUBN_NAME
+					,T1.PUM_NAME
+					,T1.GOOD_NAME
+					,T1.CMP_CD
+					,T2.MARKET_NAME
+					,T1.QTY
+					,T1.BIGO
+					,T1.CHUL_NO
+					,T1.REG_DT
+        			,T1.UPT_DT
+        			,T1.USE_YN
+        			,T1.DAYS_GUBN
+				FROM T_SHIPMNT_INFO T1
+				LEFT OUTER JOIN T_JOINT_MARKET T2
+				ON T1.CMP_CD = T2.MARKET_CD
+				WHERE T1.GUBN='2'
+				AND T1.USE_YN='Y'
+				AND T1.CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR}
+				ORDER BY T1.SEQ_NO DESC, T1.REG_DT DESC, T1.CMP_CD, T1.GOOD_NAME
+			)
+		)WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+	</select>
+
+	<select id="selectTotalVolm" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT TOTAL_COUNT
+			,RNUM
+			,SEQ_NO
+			,REG_DATE
+			,GUBN
+			,GUBN_NAME
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,MARKET_NAME
+			,QTY
+			,BIGO
+			,CHUL_NO
+			,REG_DT
+			,UPT_DT
+			,DAYS_GUBN
+		FROM
+		(
+			SELECT COUNT(*) OVER() AS TOTAL_COUNT
+				,RNUM
+				,REG_DATE
+				,SEQ_NO
+				,GUBN
+				,GUBN_NAME
+				,PUM_NAME
+				,GOOD_NAME
+				,CMP_CD
+				,MARKET_NAME
+				,QTY
+				,BIGO
+				,CHUL_NO
+				,REG_DT
+				,UPT_DT
+				,DAYS_GUBN
+			FROM
+			(
+				SELECT ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, CMP_CD, GOOD_NAME) RNUM
+					,T1.REG_DATE
+					,T1.SEQ_NO
+					,T1.GUBN
+					,CASE WHEN T1.GUBN = 1 THEN '출하예정물량'
+					END AS GUBN_NAME
+					,T1.PUM_NAME
+					,T1.GOOD_NAME
+					,T1.CMP_CD
+					,T2.MARKET_NAME
+					,T1.QTY
+					,T1.BIGO
+					,T1.CHUL_NO
+					,T1.REG_DT
+					,T1.UPT_DT
+					,T1.DAYS_GUBN
+				FROM T_SHIPMNT_INFO T1
+				LEFT OUTER JOIN T_JOINT_MARKET T2
+				ON T1.CMP_CD = T2.MARKET_CD
+				WHERE T1.GUBN='1'
+				AND T1.USE_YN='Y'
+				<if test="REG_DATE1 != null and REG_DATE1 != ''">
+					AND TO_DATE(T1.REG_DT, 'YYYY-MM-DD' ) <![CDATA[>=]]> TO_DATE(#{REG_DATE1} , 'yyyy-mm-dd')
+				</if>
+				<if test="REG_DATE2 != null and REG_DATE2 != ''">
+					AND TO_DATE(T1.REG_DT, 'YYYY-MM-DD' ) <![CDATA[<=]]> TO_DATE(#{REG_DATE2} , 'yyyy-mm-dd')
+				</if>
+				<if test="PUM_NAME != null and PUM_NAME != ''">
+					AND PUM_NAME = #{PUM_NAME}
+				</if>
+				<if test="GOOD_NAME != null and GOOD_NAME != ''">
+					AND GOOD_NAME = #{GOOD_NAME}
+				</if>
+				<if test="MARKET_CD != null and MARKET_CD != ''">
+					AND CMP_CD = #{MARKET_CD}
+				</if>
+				ORDER BY T1.SEQ_NO DESC, T1.REG_DT DESC, T1.CMP_CD, T1.GOOD_NAME
+			)
+		)WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+	</select>
+
+	<select id="selectTotalVolm2" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT TOTAL_COUNT
+			,RNUM
+			,SEQ_NO
+			,REG_DATE
+			,GUBN
+			,GUBN_NAME
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,MARKET_NAME
+			,QTY
+			,BIGO
+			,CHUL_NO
+			,REG_DT
+			,UPT_DT
+			,DAYS_GUBN
+		FROM
+		(
+			SELECT COUNT(*) OVER() AS TOTAL_COUNT
+				,RNUM
+				,SEQ_NO
+				,REG_DATE
+				,GUBN
+				,GUBN_NAME
+				,PUM_NAME
+				,GOOD_NAME
+				,CMP_CD
+				,MARKET_NAME
+				,QTY
+				,BIGO
+				,CHUL_NO
+				,REG_DT
+				,UPT_DT
+				,DAYS_GUBN
+			FROM
+			(
+				SELECT ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, CMP_CD, GOOD_NAME) RNUM
+					,T1.SEQ_NO
+					,T1.REG_DATE
+					,T1.GUBN
+					,CASE WHEN T1.GUBN =2 THEN '출하물량'
+					END AS GUBN_NAME
+					,T1.PUM_NAME
+					,T1.GOOD_NAME
+					,T1.CMP_CD
+					,T2.MARKET_NAME
+					,T1.QTY
+					,T1.BIGO
+					,T1.CHUL_NO
+					,T1.REG_DT
+					,T1.UPT_DT
+					,T1.DAYS_GUBN
+				FROM T_SHIPMNT_INFO T1
+				LEFT OUTER JOIN T_JOINT_MARKET T2
+				ON T1.CMP_CD = T2.MARKET_CD
+				WHERE T1.GUBN='2'
+				AND T1.USE_YN='Y'
+				<if test="REG_DATE3 != null and REG_DATE3 != ''">
+					AND TO_DATE(T1.REG_DT, 'YYYY-MM-DD' ) <![CDATA[>=]]> TO_DATE(#{REG_DATE3} , 'yyyy-mm-dd')
+				</if>
+				<if test="REG_DATE4 != null and REG_DATE4 != ''">
+					AND TO_DATE(T1.REG_DT, 'YYYY-MM-DD' ) <![CDATA[<=]]> TO_DATE(#{REG_DATE4} , 'yyyy-mm-dd')
+				</if>
+				<if test="PUM_NAME2 != null and PUM_NAME2 != ''">
+					AND PUM_NAME = #{PUM_NAME2}
+				</if>
+				<if test="GOOD_NAME2 != null and GOOD_NAME2 != ''">
+					AND GOOD_NAME = #{GOOD_NAME2}
+				</if>
+				<if test="MARKET_CD2 != null and MARKET_CD2 != ''">
+					AND CMP_CD = #{MARKET_CD2}
+				</if>
+				ORDER BY T1.SEQ_NO DESC, T1.REG_DT DESC, T1.CMP_CD, T1.GOOD_NAME
+			)
+		)WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+	</select>
+
+
+	<insert id="insertShipmntPrearngeVolm" parameterType="java.util.HashMap">
+		INSERT INTO T_SHIPMNT_INFO
+		(
+			SEQ_NO
+			,REG_DATE
+			,DAYS_GUBN
+			,PUM_NAME
+			,GOOD_NAME
+			,CMP_CD
+			,GUBN
+			,CHUL_NO
+			,QTY
+			,BIGO
+			,SAN_CD
+			,REG_DT
+		)
+		VALUES
+		(
+			CHULHA_SEQ.NEXTVAL
+			<!-- ,#{REG_DATE, jdbcType=VARCHAR} -->
+			,#{regDate, jdbcType=VARCHAR}
+			,#{dayGubn, jdbcType=VARCHAR}
+			,#{PUM_NAME, jdbcType=VARCHAR}
+			,#{GOOD_NAME, jdbcType=VARCHAR}
+			<if test="MARKET_CD != '9999999999'">
+				,#{MARKET_CD, jdbcType=VARCHAR}
+			</if>
+			<if test="MARKET_CD == '9999999999'">
+				,#{ETC_CODE, jdbcType=VARCHAR}
+			</if>
+			,#{GUBN, jdbcType=VARCHAR}
+			<if test="SESSION_USER_ID == 'at99999999' and CHANGE_NO != ''">
+				,#{CHANGE_NO, jdbcType=VARCHAR}
+			</if>
+			<if test="SESSION_USER_ID == 'at99999999' and CHANGE_NO == ''">
+				,#{CHUL_NO, jdbcType=VARCHAR}
+			</if>
+			<if test="SESSION_USER_ID != 'at99999999'">
+				,#{CHUL_NO, jdbcType=VARCHAR}
+			</if>
+			,#{QTY, jdbcType=VARCHAR}
+			,#{BIGO, jdbcType=VARCHAR}
+			,#{SAN_CD, jdbcType=VARCHAR}
+			,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		)
+	</insert>
+
+	<update id="updateShipmntPrearngeVolm" parameterType="java.util.HashMap">
+		UPDATE T_SHIPMNT_INFO SET
+		REG_DATE = #{regDate, jdbcType=VARCHAR},
+		DAYS_GUBN = #{dayGubn, jdbcType=VARCHAR},
+		PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR},
+		GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR},
+		<if test="MARKET_CD == '9999999999'">
+			CMP_CD = #{ETC_CODE, jdbcType=VARCHAR},
+		</if>
+		<if test="MARKET_CD != '9999999999'">
+			CMP_CD = #{MARKET_CD, jdbcType=VARCHAR},
+		</if>
+		QTY = #{QTY, jdbcType=VARCHAR},
+		BIGO = #{BIGO, jdbcType=VARCHAR},
+		UPT_DT = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		WHERE USE_YN = 'Y'
+		AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+		<!-- 
+			UPDATE T_SHIPMNT_INFO SET 
+				QTY = #{QTY, jdbcType=VARCHAR} 
+				,BIGO =#{BIGO, jdbcType=VARCHAR} 
+				,REG_DATE = #{REG_DATE, jdbcType=VARCHAR} 
+			WHERE PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR} 
+			AND GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR} 
+			AND CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR} 
+			AND CMP_CD = #{MARKET_CD, jdbcType=VARCHAR} 
+			AND GUBN = #{GUBN, jdbcType=VARCHAR} 
+			AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR} -->
+	</update>
+	
+	<update id="updateShipmntPrearngeVolmMobile" parameterType="java.util.HashMap">
+		UPDATE T_SHIPMNT_INFO SET
+		REG_DATE = #{regDate, jdbcType=VARCHAR},
+		DAYS_GUBN =#{dayGubn, jdbcType=VARCHAR},
+		PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR},
+		GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR},
+		<if test="MARKET_CD == '9999999999'">
+			CMP_CD = #{ETC_CODE, jdbcType=VARCHAR},
+		</if>
+		<if test="MARKET_CD != '9999999999'">
+			CMP_CD = #{MARKET_CD, jdbcType=VARCHAR},
+		</if>
+		QTY = #{QTY, jdbcType=VARCHAR},
+		BIGO = #{BIGO, jdbcType=VARCHAR},
+		UPT_DT = TO_CHAR(SYSDATE,'YYYY-MM-DD'),
+		GUBN = #{GUBN, jdbcType=VARCHAR}
+		WHERE USE_YN = 'Y'
+		AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+		<!-- 
+			UPDATE T_SHIPMNT_INFO SET 
+				QTY = #{QTY, jdbcType=VARCHAR} 
+				,BIGO =#{BIGO, jdbcType=VARCHAR} 
+				,REG_DATE = #{REG_DATE, jdbcType=VARCHAR} 
+			WHERE PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR} 
+			AND GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR} 
+			AND CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR} 
+			AND CMP_CD = #{MARKET_CD, jdbcType=VARCHAR} 
+			AND GUBN = #{GUBN, jdbcType=VARCHAR} 
+			AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR} -->
+	</update>
+
+	<update id="deleteShipmntPrearngeVolm" parameterType="java.util.HashMap">
+		UPDATE T_SHIPMNT_INFO SET
+		USE_YN = 'N'
+		WHERE SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+	</update>
+	
+</mapper>

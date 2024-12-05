@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hab09.mapper.Hab09Mapper">
+
+	<select id="getAucBbsList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT AA.TOTAL_COUNT
+	    	 , AA.RNUM
+	    	 , AA.SEQ
+	    	 , AA.TITLE
+	    	 , AA.INS_DT
+	    	 , AA.SALE_DT
+	    	 , AA.CLICK_CNT
+	    	 , AA.BBS_DEL
+	    	 , AA.CMP_CD
+	    	 , AA.CMP_NAME
+    	  FROM (    
+		         SELECT COUNT(*) OVER() AS TOTAL_COUNT
+				 	  , A.RNUM
+				 	  , A.RNUM1
+				 	  , A.SEQ
+				 	  , A.TITLE
+				 	  , A.INS_DT
+				 	  , A.SALE_DT
+				 	  , A.CLICK_CNT
+				 	  , A.BBS_DEL
+				 	  , A.CMP_CD
+				 	  , A.CMP_NAME
+		           FROM (
+		         		<![CDATA[  
+				 		SELECT ROW_NUMBER () OVER (ORDER BY TITLE) RNUM
+	          				 , RANK() OVER (ORDER BY TITLE DESC) RNUM1  
+	          				 , SEQ
+				 			 , TITLE
+				 			 , TO_CHAR(INS_DT, 'YYYY-MM-DD') AS INS_DT
+				 			 , SALE_DT
+				 			 , CLICK_CNT
+				 			 , BBS_DEL
+				 			 , CMP_CD
+				 			 , (SELECT MARKET_NAME FROM T_JOINT_MARKET WHERE MARKET_CD=CMP_CD) AS CMP_NAME
+				 		  FROM TB_SALE_BBS
+				 		 WHERE BBS_DEL = 'N'
+				 		   AND TO_CHAR(INS_DT, 'YYYY-MM-DD') BETWEEN #{searchStrDate} AND #{searchEndDate}
+				 		 ]]>
+				 		 <if test="mobCmpCd != null and mobCmpCd != ''">
+				 		 <![CDATA[ 
+				 		   AND CMP_CD = #{mobCmpCd}
+				 		 ]]>
+				 		 </if>
+				 		 <![CDATA[
+				 		 ORDER BY TITLE DESC
+ 		 				)A
+        		)AA       
+        WHERE AA.RNUM1 BETWEEN #{START} AND #{END}
+        ]]>
+ 	</select>
+ 	
+ 	<update id="updateClickCnt" parameterType="java.util.HashMap">
+ 		UPDATE TB_SALE_BBS
+ 		   SET CLICK_CNT = (CLICK_CNT + 1)
+ 		 WHERE SEQ = #{SEQ, jdbcType=VARCHAR}
+ 	</update>
+ 	
+ 	<select id="selectHab09Detail" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+ 		SELECT AA.TOTAL_COUNT
+	    	 , AA.RNUM
+	    	 , AA.SEQ
+	    	 , AA.TITLE
+	    	 , AA.INS_DT
+	    	 , AA.SALE_DT
+	    	 , AA.CLICK_CNT
+	    	 , AA.BBS_DEL
+	    	 , AA.CMP_CD
+	    	 , AA.CMP_NAME
+    	  FROM (    
+		         SELECT COUNT(*) OVER() AS TOTAL_COUNT
+				 	  , A.RNUM
+				 	  , A.RNUM1
+				 	  , A.SEQ
+				 	  , A.TITLE
+				 	  , A.INS_DT
+				 	  , A.SALE_DT
+				 	  , A.CLICK_CNT
+				 	  , A.BBS_DEL
+				 	  , A.CMP_CD
+				 	  , A.CMP_NAME
+		           FROM (
+		         		<![CDATA[  
+				 		SELECT ROW_NUMBER () OVER (ORDER BY TITLE) RNUM
+	          				 , RANK() OVER (ORDER BY TITLE DESC) RNUM1   
+	          				 , SEQ
+				 			 , TITLE
+				 			 , TO_CHAR(INS_DT, 'YYYY-MM-DD') AS INS_DT
+				 			 , SALE_DT
+				 			 , CLICK_CNT
+				 			 , BBS_DEL
+				 			 , CMP_CD
+				 			 , (SELECT MARKET_NAME FROM T_JOINT_MARKET WHERE MARKET_CD=CMP_CD) AS CMP_NAME
+				 		  FROM TB_SALE_BBS
+				 		 WHERE BBS_DEL = 'N'
+				 		   AND TO_CHAR(INS_DT, 'YYYY-MM-DD') BETWEEN #{searchStrDate} AND #{searchEndDate}
+				 		 ]]>
+				 		 <if test="mobCmpCd != null and mobCmpCd != ''">
+				 		 <![CDATA[ 
+				 		   AND CMP_CD = #{mobCmpCd}
+				 		 ]]>
+				 		 </if>
+				 		 <![CDATA[
+				 		 ORDER BY TITLE DESC
+ 		 				)A
+        		)AA       
+ 		WHERE SEQ = #{seq}
+        ]]>
+ 	</select>
+ 	
+ 	<select id="getDataCmpList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT SD.SALE_DATE
+ 		     , SD.CMP_CD
+ 		  FROM T_SALE_DATE SD
+          LEFT OUTER JOIN TB_SALE_BBS SB ON (SD.SALE_DATE=SB.SALE_DT AND SD.CMP_CD=SB.CMP_CD)
+         WHERE SD.SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+           AND SB.SALE_DT IS NULL
+           AND SB.CMP_CD IS NULL
+         GROUP BY SD.SALE_DATE, SD.CMP_CD
+ 	</select>
+ 	
+ 	<insert id="insertAucBbs" parameterType="java.lang.String">
+ 		INSERT INTO TB_SALE_BBS
+		(
+			SEQ
+       	    , USR_NM
+			, TITLE
+			, INS_DT
+			, UPT_DT
+			, CLICK_CNT
+			, BBS_DEL
+			, CMP_CD
+			, SALE_DT
+		) 
+		VALUES 
+		(    
+			(SELECT NVL(MAX(SEQ),0)+1 FROM TB_SALE_BBS)
+            , '관리자'
+            , #{title}
+            , TO_DATE(#{saleDate}, 'YYYY-MM-DD') + 1
+            , NULL
+            , 0
+            , 'N'
+            , #{cmpCd}
+            , #{saleDate}
+		)     
+ 	</insert>
+ 	
+ 	<select id="selectAucExcel" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT B.CMP_CD
+		   	 , B.PUM_NAME
+		   	 , B.GOOD_NAME
+		  	 , B.LV_NAME
+		 	 , MAX(B.MAX_AMT) AS MAX_AMT
+		 	 , MIN(B.MIN_AMT) AS MIN_AMT
+		 	 , ROUND(SUM(B.TOT_AMT)/SUM(B.TOT_QTY)) AS AVG_AMT
+		 	 , SUM(B.TOT_AMT) AS  TOT_AMT
+		 	 , SUM(B.TOT_QTY) AS  TOT_QTY
+		FROM
+		(
+		    SELECT TA.CMP_CD
+		   		 , DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS PUM_NAME
+		   		 , DECODE(JONG_NM,NULL,GOOD_NAME,JONG_NM) AS GOOD_NAME
+		   		 , (SELECT LV_NAME FROM T_LEVEL WHERE LV_CD=TA.LV_CD) AS LV_NAME
+		   		 , TA.MAX_AMT
+		   		 , TA.MIN_AMT
+		   		 , TA.TOT_AMT
+		   		 , TA.TOT_QTY
+		      FROM
+			     (
+			        SELECT CMP_CD, SALE_DATE, MM_CD, 
+			               DAN_CD, POJ_CD, LV_CD, 
+			               DANQ, MAX_AMT, MIN_AMT, 
+			               AVG_AMT, SIZE_CD, SAN_CD, TOT_AMT, GOOD_NAME,
+			               TOT_QTY, FLOWER_GUBN, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME
+			          FROM T_SALE_DATE A
+			          WHERE 1=1
+			          AND A.SALE_DATE = #{saleDate}
+			          AND CMP_CD = #{cmpCd}
+	                  AND A.TOT_AMT <![CDATA[ <>]]> 0
+			     )TA,
+			    (
+			        SELECT MAX(PUM_NM) PUM_NM
+			             , PUM_NM_MAP
+			          FROM FLOWER.TB_KIND_MAP
+			         WHERE CMP_CD_MAP = #{cmpCd}
+			         GROUP BY PUM_NM_MAP
+			     ) TB,
+			    (
+			        SELECT MAX(JONG_NM) JONG_NM
+			             , JONG_NM_MAP
+			          FROM FLOWER.TB_KIND_MAP
+			         WHERE CMP_CD_MAP = #{cmpCd}
+			         GROUP BY JONG_NM_MAP
+			     ) TC
+		    WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+		      AND TA.GOOD_NAME=TC.JONG_NM_MAP(+)
+		)B
+		WHERE 1=1
+		GROUP BY B.CMP_CD, PUM_NAME, GOOD_NAME, LV_NAME
+		ORDER BY PUM_NAME, GOOD_NAME
+ 	</select>
+     
+</mapper>

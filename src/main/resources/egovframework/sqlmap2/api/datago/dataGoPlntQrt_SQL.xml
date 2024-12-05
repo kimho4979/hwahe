@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.egovapi.mapper.DataGoPlntQrtMapper">
+
+	<delete id="dataType3ImpBeforeDelete" parameterType="java.util.HashMap">
+		DELETE FROM TB_PLNT_QRT_IMP
+		WHERE YYYYMM = #{yyyymm}
+	</delete>
+	
+	<insert id="dataType3ImpInsert" parameterType="java.util.HashMap">
+		INSERT INTO TB_PLNT_QRT_IMP (
+		   YYYYMM
+		   , HS_CD
+		   , PLNT_NM
+		   , MAT_NM
+		   , NAT_NM
+		   , QUM_NM
+		   , INS_CNT
+		   , INS_QTY
+		   , ANT_CNT
+		   , ANT_QTY
+		   , WAS_CNT
+		   , WAS_QTY
+		   , REG_DT
+		   ) 
+		VALUES 
+		(
+			#{yyyymm}
+			, #{hsCd}
+			, #{plantNm}
+			, #{matNm}
+			, #{natNm}
+			, #{qunNm}
+			, #{insCnt}
+			, #{insQty}
+			, #{antCnt}
+			, #{antQty}
+			, #{wasCnt}
+			, #{wasQty}
+			, SYSDATE 
+		 )
+	</insert>
+	
+	<delete id="dataType3ExpBeforeDelete" parameterType="string">
+		DELETE FROM TB_PLNT_QRT_EXP
+		WHERE YYYYMM = #{yyyymm}
+	</delete>
+	
+	<select id="selectNatCdList" resultType="java.lang.String">
+		SELECT CD_ID 
+		FROM TB_CM_CODE
+		WHERE GP_ID = 'NAT_CD'
+	</select>
+	
+	<select id="selectHsCdList" resultType="java.lang.String">
+		SELECT HS_CD FROM FLOWER.TB_IMPEXP_HSCD
+	</select>
+	
+	<insert id="dataType3ExpInsert" parameterType="java.util.HashMap">
+		INSERT INTO TB_PLNT_QRT_EXP (
+		   YYYYMM
+		   , PLNT_NM
+		   , NAT_NM
+		   , QUM_NM
+		   , INS_CNT
+		   , INS_QTY
+		   , REG_DT) 
+		VALUES 
+		(
+			#{yyyymm}
+			, #{plantNm}
+			, #{natNm}
+			, #{qunNm}
+			, #{insCnt}
+			, #{insQty}
+			, SYSDATE 
+		 )
+	</insert>
+	
+	<select id="logInsertCall" parameterType="java.util.HashMap">
+		{ CALL SP_LOG_H(
+				  #{sysGp , jdbcType=VARCHAR }
+				, #{rsltGp, jdbcType=VARCHAR }
+				, #{startDate , jdbcType=VARCHAR }
+				, #{procMsg , jdbcType=VARCHAR }
+				, 'ADMIN'
+				, #{pgmId , jdbcType=VARCHAR }
+				, #{pgmNm , jdbcType=VARCHAR }
+			)
+		}
+			
+	</select>
+	
+	<!-- <select id="execForecast" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+     		{ CALL PROC_WEATHER(#{yyyymmdd , jdbcType=VARCHAR })}
+	</select> -->
+	<!-- 주요행사일정 목록조회 -->
+	<select id="chkEventList" parameterType="java.util.HashMap" resultType="HashMap">
+		SELECT A.EVENT_YMD, A.EVENT_NM, A.EVENT_PLS, B.SD_SCHUL_CODE, B.ATPT_OFCDC_SC_CODE, A.SEQ
+		FROM FLOWER.T_SCH_INFO A, 
+		(
+		     SELECT EVENT_NM, AA_YMD, EVT.SD_SCHUL_CODE, SCH.SCHUL_NM, EVT.ATPT_OFCDC_SC_CODE
+		     FROM T_EVENT_SCH EVT
+		        , T_SCHUL SCH
+		     WHERE EVT.ATPT_OFCDC_SC_CODE = SCH.ATPT_OFCDC_SC_CODE
+		       AND EVT.SD_SCHUL_CODE = SCH.SD_SCHUL_CODE
+		
+		       -- 졸업식만 활성화
+		       -- 졸업식 중 '졸업식 이후', '졸업식 예행', '졸업식 후 휴업', '졸업식 준비'은 포함하지않음.
+		       AND (EVT.EVENT_NM LIKE '%졸업식%' AND EVT.EVENT_NM NOT LIKE '%이후%' AND EVT.EVENT_NM NOT LIKE '%예행%' AND EVT.EVENT_NM NOT LIKE '%휴업%' AND EVT.EVENT_NM NOT LIKE '%준비%')
+		       AND (
+		        EVT.SCHUL_CRSE_SC_NM IN ('중학교', '고등학교') AND EVT.THREE_GRADE_EVENT_YN = 'Y'
+		        OR
+		        EVT.SCHUL_CRSE_SC_NM IN ('초등학교') AND EVT.SIX_GRADE_EVENT_YN = 'Y'
+		        )
+		) B
+		WHERE EVENT_GP = 10
+		AND A.EVENT_YMD = B.AA_YMD
+		AND A.EVENT_PLS = B.SCHUL_NM
+	</select>
+</mapper>

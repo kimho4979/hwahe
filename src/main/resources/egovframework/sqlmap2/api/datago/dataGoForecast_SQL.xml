@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.egovapi.mapper.DataGoForecastMapper">
+	<!-- 공공데이터 생필품 가격정보 입력전 데이터 있을 수 있기때문에 삭제하고 진행 -->
+	<delete id="dataType2BeforeDelete" parameterType="java.util.HashMap">
+		DELETE FROM TB_WEATHER_RAW
+		WHERE 
+		(
+		(FCST_DATE=#{yyyymmdd} AND FCST_TIME> lpad(TO_NUMBER(SUBSTR(#{baseTime},0,2))+2,2,0)||'00')
+		OR (FCST_DATE>#{yyyymmdd})
+		)
+		AND NX = #{nx}
+		AND NY = #{ny}
+	</delete>
+	
+	<!-- 공공데이터 생필품 가격정보 데이터 입력 -->
+	<insert id="dataType2Insert" parameterType="java.util.HashMap">
+		INSERT INTO TB_WEATHER_RAW 
+		(
+			BASE_DATE
+			, BASE_TIME
+			, FCST_DATE
+			, FCST_TIME
+			, CATEGORY
+			, FCST_VALUE
+			, NX
+			, NY
+			, REG_DT
+		) 
+		VALUES 
+		(
+			#{baseDate}
+			, #{baseTime}
+			, #{fcstDate}
+			, #{fcstTime}
+			, #{category}
+			, #{fcstValue}
+			, #{nx}
+			, #{ny}
+			, SYSDATE 
+		 )
+	</insert>
+	
+	<!-- 동네예보기상조회 리스트 -->
+	<select id="ForecastList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+		    SIDO_NM, GUN_NM, NX, NY
+		FROM TB_WEATHER_AREA
+		WHERE DEPTH=2
+		GROUP BY SIDO_NM, GUN_NM, NX, NY
+		ORDER BY SIDO_NM, GUN_NM, NX, NY
+	</select>
+	
+	<select id="execForecast" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+     		{ CALL PROC_WEATHER(#{yyyymmdd , jdbcType=VARCHAR })}
+	</select>
+	
+</mapper>

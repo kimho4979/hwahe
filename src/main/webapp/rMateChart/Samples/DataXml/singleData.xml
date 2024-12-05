@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items>
+	<item>
+		<Month>Jan</Month>
+		<Vancouver>23</Vancouver>
+	</item>
+	<item>
+		<Month>Feb</Month>
+		<Vancouver>33</Vancouver>
+	</item>
+	<item>
+		<Month>Mar</Month>
+		<Vancouver>55</Vancouver>
+	</item>
+	<item>
+		<Month>Apr</Month>
+		<Vancouver>48</Vancouver>
+	</item>
+	<item>
+		<Month>May</Month>
+		<Vancouver>65</Vancouver>
+	</item>
+	<item>
+		<Month>Jun</Month>
+		<Vancouver>83</Vancouver>
+	</item>
+	<item>
+		<Month>Jul</Month>
+		<Vancouver>45</Vancouver>
+	</item>
+	<item>
+		<Month>Aug</Month>
+		<Vancouver>38</Vancouver>
+	</item>
+	<item>
+		<Month>Sep</Month>
+		<Vancouver>61</Vancouver>
+	</item>
+	<item>
+		<Month>Oct</Month>
+		<Vancouver>42</Vancouver>
+	</item>
+</items>

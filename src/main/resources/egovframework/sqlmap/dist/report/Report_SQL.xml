@@ -1,0 +1,2865 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.report.mapper.ReportMapper">
+		
+	<select id="selectDayPumAucList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT SUBSTR(A.SALE_DATE, 0, 4) AS YEAR,
+	       	   SUBSTR(A.SALE_DATE, 5, 2) AS MONTH,
+	       	   SUBSTR(A.SALE_DATE, 7, 2) AS DAY,
+	       	   A.PUM_NAME AS PUM_NAME,
+	       	   B.TOT_CNT AS TOT_CNT,
+	       	   B.PAN_CNT AS PAN_CNT,
+	       	   B.YUCHAL_CNT AS YUCHAL_CNT,
+	       	   A.TOT_AMT AS TOT_AMT,
+	       	   C.AVG_AMT AS AVG_AMT
+		FROM
+			(
+			SELECT REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) AS PUM_NAME,
+			       SUM(TOT_AMT) AS TOT_AMT
+			FROM T_SALE
+			WHERE CMP_CD = '0000000001'
+		      AND REPLACE(SALE_DATE, '-', '') BETWEEN #{searchStrDate} AND #{searchEndDate}
+			<if test='hwahwanYn == "Y"'>
+				<if test="itemCd != null and itemCd != ''">
+					<if test="itemCd == '거베라'">
+						AND CMP_GOOD = '10510000'
+					</if>
+					<if test="itemCd == '국화'">
+						AND CMP_GOOD IN ('10510000', '10010327', '10010616')
+					</if>
+				</if>
+				<if test="itemCd == null or itemCd == ''">
+				  AND CMP_GOOD IN ('10510000', '10010327', '10010616')
+				</if>
+			</if>
+			<if test='hwahwanYn == "N"'>
+				<if test="itemCd !=null and itemCd !='' ">
+					<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+		  				AND PUM_NAME IN('호접란', '팔레높시스')
+		  			</if>
+		  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+		  				AND PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+		  			</if>
+				</if>
+			</if>
+			GROUP BY SALE_DATE, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME)
+			) A,
+			(
+			SELECT SALE_DATE,
+			       DECODE(MOK_NAME, '팔레높시스', '호접란', MOK_NAME) AS PUM_NAME,
+			       SUM(TOT_CNT) AS TOT_CNT,
+			       SUM(TOT_CNT - YUCHAL_CNT) AS PAN_CNT,
+			       SUM(YUCHAL_CNT) AS YUCHAL_CNT
+			FROM TB_YUCHAL
+			WHERE SALE_DATE BETWEEN #{searchStrDate} AND #{searchEndDate}
+			  AND BUN_CHK = 'N'
+			<if test='hwahwanYn == "Y"'>
+				<if test="itemCd != null and itemCd != ''">
+					<if test="itemCd == '거베라'">
+						AND PUM_CODE = '10510000'
+					</if>
+					<if test="itemCd == '국화'">
+						AND PUM_CODE IN ('10510000', '10010327', '10010616')
+					</if>
+				</if>
+				<if test="itemCd == null or itemCd == ''">
+				  AND PUM_CODE IN ('10510000', '10010327', '10010616')
+				</if>
+			</if>
+			<if test='hwahwanYn == "N"'>
+				<if test="itemCd !=null and itemCd !='' ">
+					<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+		  				AND MOK_NAME IN('호접란', '팔레높시스')
+		  			</if>
+		  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+		  				AND MOK_NAME =#{itemCd, jdbcType=VARCHAR}
+		  			</if>
+				</if>
+			</if>
+			GROUP BY SALE_DATE, DECODE(MOK_NAME, '팔레높시스', '호접란', MOK_NAME)
+			) B,
+            (
+            SELECT ROUND(SUM(TOT_AMT)/SUM(TOT_QTY), 0) AS AVG_AMT,
+                   REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) AS PUM_NAME
+            FROM T_SALE_DATE
+            WHERE FLOWER_GUBN = '1'
+			GROUP BY SALE_DATE, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME)
+            ) C
+		WHERE A.SALE_DATE = B.SALE_DATE
+		  AND A.PUM_NAME = B.PUM_NAME
+          AND A.SALE_DATE = C.SALE_DATE
+          AND A.PUM_NAME = C.PUM_NAME
+		ORDER BY PUM_NAME, YEAR, MONTH, DAY
+		
+ 	</select>
+ 	
+ 	<select id="selectCutFlowerCmpList" resultType="string">
+ 		SELECT CMP_CD FROM T_SALE_DATE
+    	WHERE FLOWER_GUBN = '1'
+    	GROUP BY CMP_CD
+ 	</select>
+ 	
+ 	<insert id="seletInsertAvgPreYearAt" parameterType="java.util.HashMap">
+ 		INSERT INTO T_SALE_PREYEAR (YYYY ,MM,CMP_CD,PUM_NAME,QUATER,AVG_AMT)
+	 	SELECT MAX(TO_CHAR(SYSDATE, 'YYYY')) AS YYYY
+	            , MM
+	            , #{cmpCd, jdbcType=VARCHAR} AS CMP_CD
+	            , PUM_NAME
+	            , CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+				            WHEN DD BETWEEN '11' AND '20' THEN '2'
+				            WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER
+	            , ROUND(NVL(AVG(AVG_AMT),0)) AS AVG_AMT
+	        FROM(
+				SELECT 
+				    SUBSTR(SALE_DATE,1,4) AS YYYY
+				    ,SUBSTR(SALE_DATE,6,2) AS MM
+				    ,SUBSTR(SALE_DATE,9,2) AS DD
+				    ,'절화류(전체)' AS PUM_NAME
+				    ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+				FROM T_SALE
+				WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-12-31' 
+				    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+				    AND MEJANG = '1'
+				    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+				GROUP BY SUBSTR(SALE_DATE,1,4), SUBSTR(SALE_DATE,6,2), SUBSTR(SALE_DATE,9,2) 
+				UNION ALL
+				SELECT 
+				    SUBSTR(SALE_DATE,1,4) AS YYYY
+				    ,SUBSTR(SALE_DATE,6,2) AS MM
+				    ,SUBSTR(SALE_DATE,9,2) AS DD
+    				,PUM_NAME
+				    ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+				FROM T_SALE
+				WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-12-31' 
+				    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+				    AND MEJANG = '1'
+				    AND PUM_NAME IN ('장미','리시안사스','백합' 
+					             ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+					             ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+					             ,'유스가스','노무라','프리지아','골드킹','작약' 
+					             ,'천일홍','수국','안시리움','유칼립투스'
+					             , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+					               )
+					AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+				GROUP BY SUBSTR(SALE_DATE,1,4), SUBSTR(SALE_DATE,6,2), SUBSTR(SALE_DATE,9,2) , PUM_NAME 
+	            UNION ALL
+	            SELECT 
+				    SUBSTR(SALE_DATE,1,4) AS YYYY
+				    ,SUBSTR(SALE_DATE,6,2) AS MM
+				    ,SUBSTR(SALE_DATE,9,2) AS DD
+					,PUM_NAME
+				    ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+				FROM T_SALE
+				WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-12-31' 
+				    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+				    AND MEJANG = '1'
+				    AND CMP_GOOD IN ('10011640','10010327','10010616')
+				    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+				GROUP BY SUBSTR(SALE_DATE,1,4), SUBSTR(SALE_DATE,6,2), SUBSTR(SALE_DATE,9,2) , PUM_NAME 
+			)
+			GROUP BY YYYY,MM, PUM_NAME ,  CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+				            WHEN DD BETWEEN '11' AND '20' THEN '2'
+				            WHEN DD BETWEEN '21' AND '31' THEN '3' END
+ 	</insert>
+ 	
+ 	<insert id="seletInsertAvgPreYearAll" parameterType="java.util.HashMap">
+ 		INSERT INTO T_SALE_PREYEAR (YYYY ,MM,CMP_CD,PUM_NAME,QUATER,AVG_AMT)
+	 	SELECT MAX(TO_CHAR(SYSDATE, 'YYYY')) AS YYYY
+	            , MM
+	            , #{cmpCd, jdbcType=VARCHAR} AS CMP_CD
+	            , PUM_NAME
+	            , QUATER
+	            , NVL(ROUND(SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)),0),0) AS AVG_AMT
+	        FROM(
+				SELECT 
+				    SUBSTR(SALE_DATE,1,4) AS YYYY
+				    ,SUBSTR(SALE_DATE,6,2) AS MM
+				    ,SUM(TOT_AMT) AS TOT_AMT
+				    ,SUM(TOT_QTY) AS TOT_QTY
+				    ,'절화류(전체)' AS PUM_NAME
+				    , CASE WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '01' AND '10' THEN '1'
+				            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '11' AND '20' THEN '2'
+				            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '21' AND '31' THEN '3' END AS  QUATER
+				FROM T_SALE
+				WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-12-31' 
+				    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+				    AND MEJANG = '1'
+				GROUP BY SUBSTR(SALE_DATE,1,4), SUBSTR(SALE_DATE,6,2)
+				            , CASE WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '01' AND '10' THEN '1'
+				            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '11' AND '20' THEN '2'
+				            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '21' AND '31' THEN '3' END
+				UNION ALL
+				SELECT 
+				    SUBSTR(SALE_DATE,1,4) AS YYYY
+				    ,SUBSTR(SALE_DATE,6,2) AS MM
+				    ,SUM(TOT_AMT) AS TOT_AMT
+				    ,SUM(TOT_QTY) AS TOT_QTY
+				    ,PUM_NAME
+				    , CASE WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '01' AND '10' THEN '1'
+				            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '11' AND '20' THEN '2'
+				            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '21' AND '31' THEN '3' END AS  QUATER
+				FROM T_SALE
+				WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-12-31' 
+				    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+				    AND MEJANG = '1'
+				    AND PUM_NAME IN ('국화','거베라','장미','리시안사스','백합' 
+					             ,'카네이션','해바라기','옥시페탈륨','불노초','칼라','스타티스','후록스' 
+					             ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+					             ,'유스가스','노무라','과꽃','골드킹','작약' 
+					             ,'천일홍','수국','안시리움','유칼립투스'
+					             , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+					               )
+				GROUP BY SUBSTR(SALE_DATE,1,4), SUBSTR(SALE_DATE,6,2) , PUM_NAME
+				            , CASE WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '01' AND '10' THEN '1'
+				            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '11' AND '20' THEN '2'
+				            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '21' AND '31' THEN '3' END
+		)
+		GROUP BY MM, PUM_NAME, QUATER
+ 	</insert>
+ 	
+ 	<insert id="seletInsertAvgYearAt" parameterType="java.util.HashMap">
+ 		INSERT INTO T_SALE_AVGYEAR (YYYY,MM,CMP_CD,PUM_NAME,QUATER,AVG_AMT)
+ 		SELECT MAX(TO_CHAR(SYSDATE, 'YYYY')) AS YYYY
+                    ,MM
+                    , #{cmpCd, jdbcType=VARCHAR} AS CMP_CD
+                    , PUM_NAME
+                    , QUATER
+                    , CASE WHEN COUNT(YYYY) > 4 THEN ROUND((SUM(AVG_AMT)-(MAX(AVG_AMT)+MIN(AVG_AMT)))/3) ELSE ROUND(AVG(AVG_AMT)) END AS AVG_AMT
+				FROM (
+					SELECT YYYY, MM, AVG(AVG_AMT) AS AVG_AMT, PUM_NAME
+						,CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+							            WHEN DD BETWEEN '11' AND '20' THEN '2'
+							            WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER             
+					 FROM(
+							SELECT 
+							    SUBSTR(SALE_DATE,1,4) as YYYY   
+							    ,SUBSTR(SALE_DATE,6,2) as MM
+							    ,SUBSTR(SALE_DATE,9,2) as DD
+							    ,'절화류(전체)' AS PUM_NAME
+							    ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+							FROM T_SALE
+							WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'-01-01' AND TO_CHAR(SYSDATE  - (INTERVAL '1' YEAR), 'YYYY')||'-12-31'
+								AND MEJANG = '1'
+								AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+                                AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+							GROUP BY SUBSTR(SALE_DATE,1,4) ,SUBSTR(SALE_DATE,6,2) ,SUBSTR(SALE_DATE,9,2)
+						UNION ALL
+							SELECT 
+							    SUBSTR(SALE_DATE,1,4) as YYYY   
+							    ,SUBSTR(SALE_DATE,6,2) as MM
+							    ,SUBSTR(SALE_DATE,9,2) as DD
+							    ,PUM_NAME
+							    ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+							FROM T_SALE
+							WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR), 'YYYY')||'-12-31'
+								AND MEJANG = '1'
+								AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+								AND PUM_NAME IN ('장미','리시안사스','백합' 
+								             ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+								             ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+								             ,'유스가스','노무라','프리지아','골드킹','작약' 
+								             ,'천일홍','수국','안시리움','유칼립투스'
+								             , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+								                      )
+                                AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+							GROUP BY SUBSTR(SALE_DATE,1,4) ,SUBSTR(SALE_DATE,6,2) ,SUBSTR(SALE_DATE,9,2), PUM_NAME
+                            UNION ALL
+							SELECT 
+							    SUBSTR(SALE_DATE,1,4) as YYYY   
+							    ,SUBSTR(SALE_DATE,6,2) as MM
+							    ,SUBSTR(SALE_DATE,9,2) as DD
+							    ,PUM_NAME
+							    ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+							FROM T_SALE
+							WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR), 'YYYY')||'-12-31'
+								AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+								AND MEJANG = '1'
+                                AND CMP_GOOD IN ('10011640','10010327','10010616')
+                                AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+							GROUP BY SUBSTR(SALE_DATE,1,4) ,SUBSTR(SALE_DATE,6,2) ,SUBSTR(SALE_DATE,9,2), PUM_NAME
+					) 
+					GROUP BY YYYY, MM, PUM_NAME
+						, CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+							            WHEN DD BETWEEN '11' AND '20' THEN '2'
+							            WHEN DD BETWEEN '21' AND '31' THEN '3' END
+				)
+				GROUP BY QUATER, PUM_NAME, MM
+ 	</insert>
+ 	
+ 	<insert id="seletInsertAvgYearAll" parameterType="java.util.HashMap">
+ 		INSERT INTO T_SALE_AVGYEAR (YYYY,MM,CMP_CD,PUM_NAME,QUATER,AVG_AMT)
+ 		SELECT MAX(TO_CHAR(SYSDATE, 'YYYY')) AS YYYY
+                    ,MM
+                    , #{cmpCd, jdbcType=VARCHAR} AS CMP_CD
+                    , PUM_NAME
+                    , QUATER
+                    , CASE WHEN COUNT(YYYY) > 4 THEN ROUND((SUM(AVG_AMT)-(MAX(AVG_AMT)+MIN(AVG_AMT)))/3) ELSE ROUND(AVG(AVG_AMT)) END AS AVG_AMT
+				FROM (
+					SELECT YYYY, MM, QUATER, SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT, PUM_NAME FROM(
+							SELECT 
+							    SUBSTR(SALE_DATE,1,4) as YYYY   
+							    ,SUBSTR(SALE_DATE,6,2) as MM
+							    ,SUBSTR(SALE_DATE,9,2) as DD
+							    ,'절화류(전체)' AS PUM_NAME
+							    ,SUM(TOT_AMT) AS TOT_AMT
+                                ,SUM(TOT_QTY) AS TOT_QTY
+							    , CASE WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '01' AND '10' THEN '1'
+							            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '11' AND '20' THEN '2'
+							            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '21' AND '31' THEN '3' END AS  QUATER
+							FROM T_SALE
+							WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'-01-01' AND TO_CHAR(SYSDATE  - (INTERVAL '1' YEAR), 'YYYY')||'-12-31'
+								AND MEJANG = '1'
+								AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+							GROUP BY SUBSTR(SALE_DATE,1,4) ,SUBSTR(SALE_DATE,6,2) ,SUBSTR(SALE_DATE,9,2)
+							        , CASE WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '01' AND '10' THEN '1'
+							        WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '11' AND '20' THEN '2'
+							        WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '21' AND '31' THEN '3' END
+						UNION ALL
+							SELECT 
+							    SUBSTR(SALE_DATE,1,4) as YYYY   
+							    ,SUBSTR(SALE_DATE,6,2) as MM
+							    ,SUBSTR(SALE_DATE,9,2) as DD
+							    ,PUM_NAME
+							    ,SUM(TOT_AMT) AS TOT_AMT
+                                ,SUM(TOT_QTY) AS TOT_QTY
+							    , CASE WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '01' AND '10' THEN '1'
+							            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '11' AND '20' THEN '2'
+							            WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '21' AND '31' THEN '3' END AS  QUATER
+							FROM T_SALE
+							WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR), 'YYYY')||'-12-31'
+								AND MEJANG = '1'
+								AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+								AND PUM_NAME IN ('국화','거베라','장미','리시안사스','백합' 
+								             ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+								             ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+								             ,'유스가스','노무라','프리지아','골드킹','작약' 
+								             ,'천일홍','수국','안시리움','유칼립투스'
+								             , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+								                      )
+							GROUP BY SUBSTR(SALE_DATE,1,4) ,SUBSTR(SALE_DATE,6,2) ,SUBSTR(SALE_DATE,9,2), PUM_NAME
+							        , CASE WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '01' AND '10' THEN '1'
+							        WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '11' AND '20' THEN '2'
+							        WHEN SUBSTR(SALE_DATE,9,2) BETWEEN '21' AND '31' THEN '3' END
+					) 
+					GROUP BY YYYY, MM, QUATER , PUM_NAME
+				)
+				GROUP BY QUATER, PUM_NAME, MM
+ 	</insert>
+ 	
+ 	
+ 	<select id="selectYsDay" parameterType="java.util.HashMap" resultType="string">
+ 		SELECT MAX(SALE_DATE) AS SALE_DATE 
+ 		FROM T_SALE_DATE
+		WHERE SALE_DATE !=  (SELECT MAX(SALE_DATE) FROM T_SALE_DATE 
+        		         	 WHERE CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+                		     AND FLOWER_GUBN = '1')
+        <if test='cmpCd == "0000000001"'>
+			AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')   
+		</if>    
+		AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		AND FLOWER_GUBN = '1'
+ 	</select>
+ 	
+ 	<select id="selectYesterDay" parameterType="java.util.HashMap" resultType="string">
+ 		SELECT MAX(SALE_DATE) AS SALE_DATE 
+ 		FROM T_SALE_DATE
+		WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		<if test='cmpCd == "0000000001"'>
+			AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')   
+		</if>
+		AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		AND FLOWER_GUBN = '1'
+ 	</select>
+ 	
+ 	<insert id="selectInsertPreDayAt" parameterType="java.util.HashMap">
+ 	INSERT INTO T_SALE_PREDAY (YYYY,MMDD,CMP_CD,PUM_NAME,TOT_CNT,PAN_CNT,YUCHAL_CNT,AVG_AMT)
+	SELECT TO_CHAR(SYSDATE, 'YYYY') AS YYYY 
+	    ,A.MMDD
+	    ,'0000000001' AS CMP_CD
+	    ,A.PUM_NAME
+	    ,A.TOT_CNT
+	    ,A.TOT_QTY
+	    ,A.YUCHAL_CNT
+	    ,A.AVG_AMT
+	    FROM(
+		SELECT 
+		        TO_CHAR(TO_DATE(T1.SALE_DATE, 'YYYY-MM-DD'),'MMDD') AS MMDD
+		        , T2.TOT_CNT
+		        , T2.TOT_QTY
+		        , T2.YUCHAL_CNT
+		        , ROUND(T1.AVG_AMT) AS AVG_AMT
+		        , T1.PUM_NAME
+		FROM 
+		(SELECT SALE_DATE
+		        ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		        , '절화류' AS PUM_NAME FROM T_SALE
+		 WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-12-31'
+		    AND MEJANG = '1'
+		    AND CMP_CD = '0000000001'
+		    AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'),'D') IN ('2','4','6')
+		GROUP BY SALE_DATE) T1
+		LEFT JOIN 
+		(
+		    SELECT SALE_DATE
+		            ,SUM(TOT_CNT) AS TOT_CNT
+		            ,SUM(TOT_CNT-YUCHAL_CNT) AS TOT_QTY 
+		            ,SUM(YUCHAL_CNT) AS YUCHAL_CNT FROM TB_YUCHAL
+		    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'0101' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'1231'
+		    AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYYMMDD'),'D') IN ('2','4','6')
+		    AND BUN_CHK='N'
+		    GROUP BY SALE_DATE
+		    ) T2
+		ON REPLACE(T1.SALE_DATE,'-','') = T2.SALE_DATE
+		UNION ALL
+		SELECT 
+		        TO_CHAR(TO_DATE(T3.SALE_DATE, 'YYYY-MM-DD'),'MMDD') AS MMDD
+		        , T4.TOT_CNT
+		        , T4.TOT_QTY
+		        , T4.YUCHAL_CNT
+		        , ROUND(T3.AVG_AMT) AS AVG_AMT
+		        ,T3.PUM_NAME
+		FROM 
+		(SELECT SALE_DATE
+		        ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		        ,PUM_NAME
+		    FROM T_SALE
+		    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-12-31'
+		        AND MEJANG = '1'
+		        AND CMP_CD = '0000000001'
+		        AND PUM_NAME IN ('장미','국화','백합','리시안사스','카네이션','거베라','수국','작약','프리지아','튜립','안개', '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+		        AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'),'D') IN ('2','4','6')
+		GROUP BY SALE_DATE,PUM_NAME) T3
+		LEFT JOIN 
+		(
+		    SELECT SALE_DATE
+		            ,SUM(TOT_CNT) AS TOT_CNT
+		            ,SUM(TOT_CNT-YUCHAL_CNT) AS TOT_QTY 
+		            ,SUM(YUCHAL_CNT) AS YUCHAL_CNT 
+		            ,MOK_NAME
+		    FROM TB_YUCHAL
+		    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'0101' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'1231'
+		        AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYYMMDD'),'D') IN ('2','4','6')
+		        AND MOK_NAME IN ('장미','국화','백합','리시안사스','카네이션','거베라','수국','작약','프리지아','튜립','안개', '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+		        AND BUN_CHK='N'
+		        GROUP BY SALE_DATE, MOK_NAME
+		    ) T4
+		ON REPLACE(T3.SALE_DATE,'-','') = T4.SALE_DATE AND T3.PUM_NAME=T4.MOK_NAME
+		UNION ALL
+		SELECT 
+		        TO_CHAR(TO_DATE(T5.SALE_DATE, 'YYYY-MM-DD'),'MMDD') AS MMDD
+		        , T6.TOT_CNT
+		        , T6.TOT_QTY
+		        , T6.YUCHAL_CNT
+		        , ROUND(T5.AVG_AMT) AS AVG_AMT
+		        , DECODE(T5.PUM_NAME,'국화','국화(대국)','거베라','거베라(거베라)',T5.PUM_NAME) AS PUM_NAME
+		FROM 
+		(
+		    SELECT SALE_DATE
+		            ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		            ,PUM_NAME 
+		    FROM T_SALE
+		    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'-12-31'
+		        AND MEJANG = '1'
+		        AND CMP_CD = '0000000001'
+		        AND CMP_GOOD IN ('10510000','10010327','10010616')
+		        AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'),'D') IN ('2','4','6')
+		    GROUP BY SALE_DATE, PUM_NAME) T5
+		LEFT JOIN 
+		(
+		    SELECT SALE_DATE
+		            ,SUM(TOT_CNT) AS TOT_CNT
+		            ,SUM(TOT_CNT-YUCHAL_CNT) AS TOT_QTY 
+		            ,MOK_NAME
+		            ,SUM(YUCHAL_CNT) AS YUCHAL_CNT 
+		    FROM TB_YUCHAL
+		    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'0101' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR),'YYYY')||'1231'
+		    AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYYMMDD'),'D') IN ('2','4','6')
+		    AND PUM_CODE IN ('10510000','10010327','10010616')
+		    AND BUN_CHK='N'
+		    GROUP BY SALE_DATE, MOK_NAME
+		    ) T6
+		ON REPLACE(T5.SALE_DATE,'-','') = T6.SALE_DATE AND T5.PUM_NAME=T6.MOK_NAME
+	) A
+ 	
+ 	</insert>
+ 	
+ 	<insert id="selectInsertAvgDayAt" parameterType="java.util.HashMap">
+ 	INSERT INTO  T_SALE_AVGDAY(YYYY, MMDD, CMP_CD, PUM_NAME, TOT_CNT, PAN_CNT, YUCHAL_CNT, AVG_AMT)
+	SELECT TO_CHAR(SYSDATE, 'YYYY') AS YYYY 
+		    ,A.MMDD
+		    ,'0000000001' AS CMP_CD
+		    ,A.PUM_NAME
+		    ,A.TOT_CNT
+		    ,A.PAN_CNT
+		    ,A.YUCHAL_CNT
+		    ,A.AVG_AMT
+	FROM
+	(
+	SELECT T1.MMDD
+	    ,'절화류' AS PUM_NAME
+	    , AVG(T2.TOT_CNT) AS TOT_CNT
+	    , AVG(T2.TOT_QTY) AS PAN_CNT
+	    , AVG(T2.YUCHAL_CNT) AS YUCHAL_CNT
+	    , ROUND(AVG(T1.AVG_AMT)) AS AVG_AMT 
+	FROM
+	    (
+	    SELECT
+	        SUBSTR(SALE_DATE,0,4)
+	        ,REPLACE(SUBSTR(SALE_DATE,5),'-','') AS MMDD
+	        ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+	    FROM T_SALE
+	    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR), 'YYYY')||'-12-31'
+	    AND MEJANG = '1'
+	    AND CMP_CD = '0000000001'
+	    AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'),'D') IN ('2','4','6')
+	    GROUP BY SUBSTR(SALE_DATE,0,4) ,REPLACE(SUBSTR(SALE_DATE,5),'-','')
+	    ) T1
+	    LEFT JOIN
+	    (
+	    SELECT 
+	        SUBSTR(SALE_DATE,5) AS MMDD
+	        ,SUM(TOT_CNT) AS TOT_CNT
+			,SUM(TOT_CNT)- SUM(YUCHAL_CNT) AS TOT_QTY 
+			,SUM(YUCHAL_CNT) AS YUCHAL_CNT 
+	    FROM TB_YUCHAL
+	    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'0101' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR), 'YYYY')||'1231'
+	    AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYYMMDD'),'D') IN ('2','4','6')
+	    AND BUN_CHK='N'
+	    GROUP BY SUBSTR(SALE_DATE,0,4),SUBSTR(SALE_DATE,5)
+	) T2 ON T1.MMDD =T2.MMDD
+	GROUP BY T1.MMDD
+	UNION ALL 
+	SELECT T1.MMDD
+	    , PUM_NAME
+	    , AVG(T2.TOT_CNT) AS TOT_CNT
+	    , AVG(T2.TOT_QTY) AS PAN_CNT
+	    , AVG(T2.YUCHAL_CNT) AS YUCHAL_CNT
+	    , ROUND(AVG(T1.AVG_AMT)) AS AVG_AMT 
+	FROM
+	    (
+	    SELECT
+	        SUBSTR(SALE_DATE,0,4)
+	        ,REPLACE(SUBSTR(SALE_DATE,5),'-','') AS MMDD
+	        ,PUM_NAME
+	        ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+	    FROM T_SALE
+	    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR), 'YYYY')||'-12-31'
+	    AND MEJANG = '1'
+	    AND CMP_CD = '0000000001'
+	    AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'),'D') IN ('2','4','6')
+	    AND PUM_NAME IN ('장미','국화','백합','리시안사스','카네이션','거베라','수국','작약','프리지아','튜립','안개', '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+	    GROUP BY SUBSTR(SALE_DATE,0,4) ,REPLACE(SUBSTR(SALE_DATE,5),'-',''), PUM_NAME
+	    ) T1
+	    LEFT JOIN
+	    (
+	    SELECT 
+	        SUBSTR(SALE_DATE,5) AS MMDD
+	        ,SUM(TOT_CNT) AS TOT_CNT
+			,SUM(TOT_CNT)- SUM(YUCHAL_CNT) AS TOT_QTY 
+			,SUM(YUCHAL_CNT) AS YUCHAL_CNT 
+	        ,MOK_NAME
+	    FROM TB_YUCHAL
+	    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'0101' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR), 'YYYY')||'1231'
+	    AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYYMMDD'),'D') IN ('2','4','6')
+	    AND BUN_CHK='N'
+	    AND MOK_NAME IN ('장미','국화','백합','리시안사스','카네이션','거베라','수국','작약','프리지아','튜립','안개', '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+	    GROUP BY SUBSTR(SALE_DATE,0,4),SUBSTR(SALE_DATE,5), MOK_NAME
+	) T2 ON T1.MMDD =T2.MMDD AND T1.PUM_NAME = T2.MOK_NAME
+	GROUP BY T1.MMDD, PUM_NAME
+	UNION ALL 
+	SELECT T1.MMDD
+	    , DECODE(T1.PUM_NAME,'국화','국화(대국)','거베라','거베라(거베라)',T1.PUM_NAME) AS PUM_NAME
+	    , AVG(T2.TOT_CNT) AS TOT_CNT
+	    , AVG(T2.TOT_QTY) AS PAN_CNT
+	    , AVG(T2.YUCHAL_CNT) AS YUCHAL_CNT
+	    , ROUND(AVG(T1.AVG_AMT)) AS AVG_AMT 
+	FROM
+	    (
+	    SELECT
+	        SUBSTR(SALE_DATE,0,4)
+	        ,REPLACE(SUBSTR(SALE_DATE,5),'-','') AS MMDD
+	        ,PUM_NAME
+	        ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+	    FROM T_SALE
+	    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'-01-01' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR), 'YYYY')||'-12-31'
+	    AND MEJANG = '1'
+	    AND CMP_CD = '0000000001'
+	    AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'),'D') IN ('2','4','6')
+	    AND CMP_GOOD IN ('10510000','10010327','10010616')
+	    GROUP BY SUBSTR(SALE_DATE,0,4) ,REPLACE(SUBSTR(SALE_DATE,5),'-',''), PUM_NAME
+	    ) T1
+	    LEFT JOIN
+	    (
+	    SELECT 
+	        SUBSTR(SALE_DATE,5) AS MMDD
+	        ,SUM(TOT_CNT) AS TOT_CNT
+			,SUM(TOT_CNT)- SUM(YUCHAL_CNT) AS TOT_QTY 
+			,SUM(YUCHAL_CNT) AS YUCHAL_CNT 
+	        ,MOK_NAME
+	    FROM TB_YUCHAL
+	    WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-(INTERVAL '5' YEAR), 'yyyy')||'0101' AND TO_CHAR(SYSDATE - (INTERVAL '1' YEAR), 'YYYY')||'1231'
+	    AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYYMMDD'),'D') IN ('2','4','6')
+	    AND BUN_CHK='N'
+	    AND PUM_CODE IN ('10510000','10010327','10010616')
+	    GROUP BY SUBSTR(SALE_DATE,0,4),SUBSTR(SALE_DATE,5), MOK_NAME
+	) T2 ON T1.MMDD =T2.MMDD AND T1.PUM_NAME = T2.MOK_NAME
+	GROUP BY T1.MMDD, PUM_NAME
+	) A
+ 	</insert>
+ 	
+ 	
+ 	<select id="selectMainFlowerAucAll" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	SELECT 
+	    A1.DY_NAME AS PUM_NAME
+	    , DAN
+	    , NVL(ROUND(A2.AVG_AMT),0) AS CY_AVG
+	    , NVL(ROUND(A3.AVG_AMT),0) AS PREY_AVG
+	    , NVL(ROUND(A4.AVG_AMT),0) AS PREM_AVG
+	    , NVL(ROUND(A5.AVG_AMT),0) AS SDAY_AVG
+	    , NVL(ROUND(A6.AVG_AMT),0) AS YDAY_AVG
+	    , NVL(ROUND(A7.AVG_AMT),0) AS TODAY_AVG
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A2.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/A2.AVG_AMT)-1)*100,1)END END AS CY_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A3.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/A3.AVG_AMT)-1)*100,1) END END AS PREY_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A4.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/NVL(ROUND(A4.AVG_AMT),0))-1)*100,1) END END AS PREM_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE
+	        CASE WHEN A5.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/NVL(ROUND(A5.AVG_AMT),0))-1)*100,1) END END AS SDAY_PER
+		FROM
+		    (SELECT '절화류(전체)' AS DY_NAME ,'-' AS DAN , '0000' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '국화' AS DY_NAME , '단(20송이)' AS DAN , '0101' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '거베라' AS DY_NAME , '단(10송이)' AS DAN , '0102' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '장미' AS DY_NAME , '단(10송이)' AS DAN , '0201' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '리시안사스' AS DY_NAME , '단(10송이)' AS DAN , '0202' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '백합' AS DY_NAME , '단(5~10송이)' AS DAN , '0203' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '카네이션' AS DY_NAME , '단(10~20송이)' AS DAN , '0204' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '해바라기' AS DY_NAME ,'단(5송이)' AS DAN , '0205' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '튜립' AS DY_NAME , '단(10송이)' AS DAN , '0206' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '불노초' AS DY_NAME , '단(10송이)' AS DAN , '0207' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '칼라' AS DY_NAME , '단(5송이)' AS DAN , '0208' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '스타티스' AS DY_NAME , '단(10송이)' AS DAN , '0209' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '후록스' AS DY_NAME ,'단(10송이)' AS DAN , '0210' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '스톡크' AS DY_NAME ,'단(5송이)' AS DAN , '0301' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '다알리아' AS DY_NAME ,'단(5송이)' AS DAN , '0302' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '안개' AS DY_NAME ,'단(30~50송이)' AS DAN , '0303' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '알스트메리아' AS DY_NAME ,'단(10송이)' AS DAN , '0304' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '석죽' AS DY_NAME ,'단(10송이)'  AS DAN , '0305' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '유스가스' AS DY_NAME ,'단(5송이)' AS DAN , '0306' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '노무라' AS DY_NAME ,'단(7송이)' AS DAN , '0307' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '프리지아' AS DY_NAME ,'단(10송이)' AS DAN , '0308' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '골드킹' AS DY_NAME ,'단(1송이)' AS DAN , '0309' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '작약' AS DY_NAME ,'단(5송이)'  AS DAN , '0310' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '천일홍' AS DY_NAME ,'단(20~50송이)' AS DAN , '0401' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '수국' AS DY_NAME ,'단(1송이)' AS DAN , '0402' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '안시리움' AS DY_NAME ,'단(1송이)' AS DAN , '0403' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '유칼립투스' AS DY_NAME ,'단(10송이)' AS DAN , '0404' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '라넌큘러스' AS DY_NAME ,'단(10송이)' AS DAN , '0405' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '심비디움' AS DY_NAME ,'단(1송이)' AS DAN , '0406' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '금어초' AS DY_NAME ,'단(10송이)' AS DAN , '0407' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '왁스플라워' AS DY_NAME ,'단(10송이)' AS DAN , '0408' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '엽란' AS DY_NAME ,'단(5송이)' AS DAN , '0409' AS RK
+		          FROM DUAL
+		    ) A1
+		LEFT JOIN
+		    (
+                SELECT AVG_AMT, PUM_NAME
+                FROM(
+					SELECT CASE WHEN COUNT(PUM_NAME) > 3 THEN (SUM(AVG_AMT) - (MIN(AVG_AMT) + MAX(AVG_AMT)))/3 ELSE AVG(AVG_AMT) END AS AVG_AMT, PUM_NAME
+					FROM(
+					    SELECT  AVG(AVG_AMT) AS AVG_AMT, PUM_NAME
+					    FROM(
+					        SELECT 
+					            SUBSTR(SALE_DATE,1,4) as YYYY   
+					            ,SUBSTR(SALE_DATE,6,2) as MM
+					            ,SUBSTR(SALE_DATE,9,2) as DD
+					            ,'절화류(전체)' AS PUM_NAME
+					            ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+					        FROM T_SALE
+					        WHERE 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -60),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-31'
+					            AND MEJANG = '1'
+					            AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+					            AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+					            AND SUBSTR(SALE_DATE,6,2) = SUBSTR(#{searchStrDate, jdbcType=VARCHAR} ,6,2)
+			                <if test='sCheck == "1"'> 
+			                	AND SUBSTR(SALE_DATE,9,2) BETWEEN '01' AND '10'
+							</if>
+							<if test='sCheck == "2"'> 
+								AND SUBSTR(SALE_DATE,9,2) BETWEEN '11' AND '20'
+							</if>
+							<if test='sCheck == "3"'> 
+								AND SUBSTR(SALE_DATE,9,2) BETWEEN '21' AND '31'
+							</if>
+					        GROUP BY SUBSTR(SALE_DATE,1,4) ,SUBSTR(SALE_DATE,6,2) ,SUBSTR(SALE_DATE,9,2)
+					    )
+					    GROUP BY YYYY, PUM_NAME
+					)
+					GROUP BY PUM_NAME
+                )
+                UNION ALL
+                    
+                SELECT AVG_AMT, PUM_NAME
+                FROM(
+                    SELECT CASE WHEN COUNT(PUM_NAME) > 3 THEN (SUM(AVG_AMT) - (MIN(AVG_AMT) + MAX(AVG_AMT)))/3 ELSE AVG(AVG_AMT) END AS AVG_AMT, PUM_NAME
+                    FROM(
+                        SELECT YUCHAL.YYYY, YUCHAL.MM, YUCHAL.QUATER, NVL(AVGYEAR.AVG_AMT, 0)/YUCHAL.MOK_CNT AS AVG_AMT, YUCHAL.PUM_NAME, YUCHAL.MOK_CNT         
+                             FROM(
+                                    SELECT YYYY, MM
+                                        , CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                        WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                        WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER  
+                                        , PUM_NAME
+                                        , SUM(AVG_AMT) AS AVG_AMT
+                                    FROM(
+                                    SELECT
+                                            SUBSTR(SALE_DATE,1,4) as YYYY   
+                                            ,SUBSTR(SALE_DATE,6,2) as MM
+                                            ,SUBSTR(SALE_DATE,9,2) as DD
+                                            ,PUM_NAME
+                                            ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+                                        FROM T_SALE
+                                        WHERE
+                                            SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -60),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-31'
+                                            AND MEJANG = '1'
+                                            AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+                                            AND (PUM_NAME IN ('장미','리시안사스','백합'
+                                                     ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+                                                     ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+                                                     ,'유스가스','노무라','프리지아','골드킹','작약' 
+                                                     ,'천일홍','수국','안시리움','유칼립투스'
+                                                     , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란') 
+                                                    OR (PUM_NAME = '거베라' AND CMP_GOOD = '10510000')
+                                                    OR (PUM_NAME = '국화' AND CMP_GOOD IN ('10011640','10010327','10010616'))
+                                                )
+                                            AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+                                        GROUP BY SUBSTR(SALE_DATE,1,4), SUBSTR(SALE_DATE,6,2), SUBSTR(SALE_DATE,9,2), PUM_NAME
+                                    )
+                                    GROUP BY YYYY, MM, 
+                                        CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                        WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                        WHEN DD BETWEEN '21' AND '31' THEN '3' END, PUM_NAME
+                                ) AVGYEAR
+                                RIGHT JOIN(
+                                    SELECT YYYY, MM, MOK_NAME AS PUM_NAME
+                                        , CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                        WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                        WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER  
+                                        ,COUNT(DISTINCT DD) AS MOK_CNT
+                                    FROM
+                                    (SELECT SUBSTR(SALE_DATE,1,4) AS YYYY
+                                        , SUBSTR(SALE_DATE,5,2) AS MM
+                                        , SUBSTR(SALE_DATE,7,2) AS DD
+                                        , MOK_NAME
+                                    FROM FLOWER.TB_YUCHAL
+                                    WHERE
+                                    SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -60),'YYYYMM') || '01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYYMM') || '31'
+                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyymmdd'),'d') in ('2','4','6')
+                                    AND BUN_CHK = 'N'
+                                    AND (MOK_NAME IN ('장미','리시안사스','백합'
+                                                     ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+                                                     ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+                                                     ,'유스가스','노무라','프리지아','골드킹','작약' 
+                                                     ,'천일홍','수국','안시리움','유칼립투스'
+                                                     , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란') 
+                                                    OR (MOK_NAME = '거베라' AND PUM_CODE = '10510000')
+                                                    OR (MOK_NAME = '국화' AND PUM_CODE IN ('10011640','10010327','10010616')))
+                                    )
+                                    GROUP BY YYYY, MM
+                                        ,CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                        WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                        WHEN DD BETWEEN '21' AND '31' THEN '3' END
+                                        , MOK_NAME
+                                        
+                              ) YUCHAL
+                              ON AVGYEAR.YYYY = YUCHAL.YYYY
+                              AND AVGYEAR.MM = YUCHAL.MM
+                              AND AVGYEAR.PUM_NAME = YUCHAL.PUM_NAME
+                              AND AVGYEAR.QUATER = YUCHAL.QUATER
+                              ORDER BY AVGYEAR.YYYY, AVGYEAR.MM, AVGYEAR.QUATER
+                    )
+                    WHERE MM = SUBSTR(#{searchStrDate, jdbcType=VARCHAR} ,6,2)
+                    AND QUATER = #{sCheck, jdbcType=VARCHAR}
+                    GROUP BY PUM_NAME
+                )
+		    )A2
+		ON A1.DY_NAME = A2.PUM_NAME
+		LEFT JOIN
+		    (
+                SELECT AVG_AMT, PUM_NAME
+                FROM(
+                    SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME
+                    FROM(
+                        SELECT 
+                            SUBSTR(SALE_DATE,1,4) as YYYY   
+                            ,SUBSTR(SALE_DATE,6,2) as MM
+                            ,SUBSTR(SALE_DATE,9,2) as DD
+                            ,'절화류(전체)' AS PUM_NAME
+                            ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+                        FROM T_SALE
+                        WHERE 
+			                <if test='sCheck == "1"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "2"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-20'
+							</if>
+							<if test='sCheck == "3"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-31'
+							</if>
+                            AND MEJANG = '1'
+                            AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+                            AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+                        GROUP BY SUBSTR(SALE_DATE,1,4) ,SUBSTR(SALE_DATE,6,2) ,SUBSTR(SALE_DATE,9,2)
+					)
+                    GROUP BY PUM_NAME
+				)
+				UNION ALL
+                    
+				SELECT AVG_AMT, PUM_NAME
+				FROM(
+					SELECT YUCHAL.YYYY, YUCHAL.MM, YUCHAL.QUATER, NVL(AVGYEAR.AVG_AMT, 0)/YUCHAL.MOK_CNT AS AVG_AMT, YUCHAL.PUM_NAME, YUCHAL.MOK_CNT         
+                         FROM(
+                                SELECT YYYY, MM
+                                    , CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER  
+                                    , PUM_NAME
+                                    , SUM(AVG_AMT) AS AVG_AMT
+                                FROM(
+                                SELECT
+                                        SUBSTR(SALE_DATE,1,4) as YYYY   
+                                        ,SUBSTR(SALE_DATE,6,2) as MM
+                                        ,SUBSTR(SALE_DATE,9,2) as DD
+                                        ,PUM_NAME
+                                        ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+                                    FROM T_SALE
+                                    WHERE
+                                        <if test='sCheck == "1"'> 
+                                            SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-10'
+                                        </if>
+                                        <if test='sCheck == "2"'> 
+                                            SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-20'
+                                        </if>
+                                        <if test='sCheck == "3"'> 
+                                            SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYY-MM') || '-31'
+                                        </if>
+                                        AND MEJANG = '1'
+                                        AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+                                        AND (PUM_NAME IN ('장미','리시안사스','백합'
+                                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+                                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+                                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+                                                 ,'천일홍','수국','안시리움','유칼립투스'
+                                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+                                                OR (PUM_NAME = '거베라' AND CMP_GOOD = '10510000')
+                                                OR (PUM_NAME = '국화' AND CMP_GOOD IN ('10011640','10010327','10010616'))
+                                            )
+                                        AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+                                    GROUP BY SUBSTR(SALE_DATE,1,4), SUBSTR(SALE_DATE,6,2), SUBSTR(SALE_DATE,9,2), PUM_NAME
+                                )
+                                GROUP BY YYYY, MM, 
+                                    CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END, PUM_NAME
+                            ) AVGYEAR
+                            RIGHT JOIN(
+                                SELECT YYYY, MM, MOK_NAME AS PUM_NAME
+                                    , CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER  
+                                    ,COUNT(DISTINCT DD) AS MOK_CNT
+                                FROM
+                                (SELECT SUBSTR(SALE_DATE,1,4) AS YYYY
+                                    , SUBSTR(SALE_DATE,5,2) AS MM
+                                    , SUBSTR(SALE_DATE,7,2) AS DD
+                                    , MOK_NAME
+                                FROM FLOWER.TB_YUCHAL
+                                WHERE
+                                    <if test='sCheck == "1"'> 
+                                        SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYYMM') || '01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYYMM') || '10'
+                                    </if>
+                                    <if test='sCheck == "2"'> 
+                                        SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYYMM') || '11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYYMM') || '20'
+                                    </if>
+                                    <if test='sCheck == "3"'> 
+                                        SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYYMM') || '21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -12),'YYYYMM') || '31'
+                                    </if>
+                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyymmdd'),'d') in ('2','4','6')
+                                    AND BUN_CHK = 'N'
+                                    AND (MOK_NAME IN ('장미','리시안사스','백합'
+                                                     ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+                                                     ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+                                                     ,'유스가스','노무라','프리지아','골드킹','작약' 
+                                                     ,'천일홍','수국','안시리움','유칼립투스'
+                                                     , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란') 
+                                                    OR (MOK_NAME = '거베라' AND PUM_CODE = '10510000')
+                                                    OR (MOK_NAME = '국화' AND PUM_CODE IN ('10011640','10010327','10010616')))
+                                )
+                                GROUP BY YYYY, MM
+                                    ,CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END
+                                    , MOK_NAME
+                                    
+                          ) YUCHAL
+                          ON AVGYEAR.YYYY = YUCHAL.YYYY
+                          AND AVGYEAR.MM = YUCHAL.MM
+                          AND AVGYEAR.PUM_NAME = YUCHAL.PUM_NAME
+                          AND AVGYEAR.QUATER = YUCHAL.QUATER
+                          ORDER BY AVGYEAR.YYYY, AVGYEAR.MM, AVGYEAR.QUATER
+                )
+		    )A3
+		ON A1.DY_NAME = A3.PUM_NAME
+		LEFT JOIN
+		    (
+                SELECT AVG_AMT, PUM_NAME
+                FROM(
+                    SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME
+                    FROM(
+                        SELECT 
+                            SUBSTR(SALE_DATE,1,4) as YYYY   
+                            ,SUBSTR(SALE_DATE,6,2) as MM
+                            ,SUBSTR(SALE_DATE,9,2) as DD
+                            ,'절화류(전체)' AS PUM_NAME
+                            ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+                        FROM T_SALE
+                        WHERE 
+							<if test='sCheck == "1"'> 
+							    SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "2"'> 
+							    SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+							</if>
+							<if test='sCheck == "3"'> 
+							    SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+							</if>
+                            AND MEJANG = '1'
+                            AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+                            AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+                        GROUP BY SUBSTR(SALE_DATE,1,4) ,SUBSTR(SALE_DATE,6,2) ,SUBSTR(SALE_DATE,9,2)
+					)
+                    GROUP BY PUM_NAME
+				)
+				UNION ALL
+				
+                SELECT AVG_AMT, PUM_NAME
+                FROM(
+                    SELECT YUCHAL.YYYY, YUCHAL.MM, YUCHAL.QUATER, NVL(AVGYEAR.AVG_AMT, 0)/YUCHAL.MOK_CNT AS AVG_AMT, YUCHAL.PUM_NAME, YUCHAL.MOK_CNT         
+                         FROM(
+                                SELECT YYYY, MM
+                                    , CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER  
+                                    , PUM_NAME
+                                    , SUM(AVG_AMT) AS AVG_AMT
+                                FROM(
+                                SELECT
+                                        SUBSTR(SALE_DATE,1,4) as YYYY   
+                                        ,SUBSTR(SALE_DATE,6,2) as MM
+                                        ,SUBSTR(SALE_DATE,9,2) as DD
+                                        ,PUM_NAME
+                                        ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+                                    FROM T_SALE
+                                    WHERE
+                                        <if test='sCheck == "1"'> 
+                                            SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+                                        </if>
+                                        <if test='sCheck == "2"'> 
+                                            SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+                                        </if>
+                                        <if test='sCheck == "3"'> 
+                                            SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+                                        </if>
+                                        AND MEJANG = '1'
+                                        AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+                                        AND (PUM_NAME IN ('장미','리시안사스','백합'
+                                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+                                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+                                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+                                                 ,'천일홍','수국','안시리움','유칼립투스'
+                                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란') 
+                                            OR (PUM_NAME = '거베라' AND CMP_GOOD = '10510000')
+                                            OR (PUM_NAME = '국화' AND CMP_GOOD IN ('10011640','10010327','10010616'))
+                                            )
+                                        AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+                                    GROUP BY SUBSTR(SALE_DATE,1,4), SUBSTR(SALE_DATE,6,2), SUBSTR(SALE_DATE,9,2), PUM_NAME
+                                )
+                                GROUP BY YYYY, MM, 
+                                    CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END, PUM_NAME
+                            ) AVGYEAR
+                            RIGHT JOIN(
+                                SELECT YYYY, MM, MOK_NAME AS PUM_NAME
+                                    , CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER  
+                                    ,COUNT(DISTINCT DD) AS MOK_CNT
+                                FROM
+                                (SELECT SUBSTR(SALE_DATE,1,4) AS YYYY
+                                    , SUBSTR(SALE_DATE,5,2) AS MM
+                                    , SUBSTR(SALE_DATE,7,2) AS DD
+                                    , MOK_NAME
+                                FROM FLOWER.TB_YUCHAL
+                                WHERE
+                                <if test='sCheck == "1"'> 
+                                    SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYYMM') || '01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYYMM') || '10'
+                                </if>
+                                <if test='sCheck == "2"'> 
+                                    SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYYMM') || '11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYYMM') || '20'
+                                </if>
+                                <if test='sCheck == "3"'> 
+                                    SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYYMM') || '21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYYMM') || '31'
+                                </if>
+                                AND TO_CHAR(TO_DATE(SALE_DATE,'yyyymmdd'),'d') in ('2','4','6')
+                                AND BUN_CHK = 'N'
+                                AND (MOK_NAME IN ('장미','리시안사스','백합'
+                                                     ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+                                                     ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+                                                     ,'유스가스','노무라','프리지아','골드킹','작약' 
+                                                     ,'천일홍','수국','안시리움','유칼립투스'
+                                                     , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란') 
+                                                    OR (MOK_NAME = '거베라' AND PUM_CODE = '10510000')
+                                                    OR (MOK_NAME = '국화' AND PUM_CODE IN ('10011640','10010327','10010616')))
+                                )
+                                GROUP BY YYYY, MM
+                                    ,CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END
+                                    , MOK_NAME
+                                    
+                          ) YUCHAL
+                          ON AVGYEAR.YYYY = YUCHAL.YYYY
+                          AND AVGYEAR.MM = YUCHAL.MM
+                          AND AVGYEAR.PUM_NAME = YUCHAL.PUM_NAME
+                          AND AVGYEAR.QUATER = YUCHAL.QUATER
+                          ORDER BY AVGYEAR.YYYY, AVGYEAR.MM, AVGYEAR.QUATER
+                )
+		    ) A4
+		ON A1.DY_NAME = A4.PUM_NAME
+		LEFT JOIN
+		    (
+                SELECT AVG_AMT, PUM_NAME
+				FROM(
+                    SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME
+                    FROM(
+                        SELECT 
+                            SUBSTR(SALE_DATE,1,4) as YYYY   
+                            ,SUBSTR(SALE_DATE,6,2) as MM
+                            ,SUBSTR(SALE_DATE,9,2) as DD
+                            ,'절화류(전체)' AS PUM_NAME
+                            ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+                        FROM T_SALE
+                        WHERE 
+			                <if test='sCheck == "1"'>
+								SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+							</if>
+							<if test='sCheck == "2"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "3"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+							</if>
+                            AND MEJANG = '1'
+                            AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+                            AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+                        GROUP BY SUBSTR(SALE_DATE,1,4) ,SUBSTR(SALE_DATE,6,2) ,SUBSTR(SALE_DATE,9,2)
+                    )
+                    GROUP BY PUM_NAME
+				)
+				UNION ALL
+                    
+                SELECT AVG_AMT, PUM_NAME
+                FROM(
+                    SELECT YUCHAL.YYYY, YUCHAL.MM, YUCHAL.QUATER, NVL(AVGYEAR.AVG_AMT, 0)/YUCHAL.MOK_CNT AS AVG_AMT, YUCHAL.PUM_NAME, YUCHAL.MOK_CNT         
+                         FROM(
+                                SELECT YYYY, MM
+                                    , CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER  
+                                    , PUM_NAME
+                                    , SUM(AVG_AMT) AS AVG_AMT
+                                FROM(
+                                SELECT
+                                        SUBSTR(SALE_DATE,1,4) as YYYY   
+                                        ,SUBSTR(SALE_DATE,6,2) as MM
+                                        ,SUBSTR(SALE_DATE,9,2) as DD
+                                        ,PUM_NAME
+                                        ,SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+                                    FROM T_SALE
+                                    WHERE
+                                    <if test='sCheck == "1"'>
+                                        SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+                                    </if>
+                                    <if test='sCheck == "2"'>
+                                        SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+                                    </if>
+                                    <if test='sCheck == "3"'>
+                                        SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+                                    </if>
+                                        AND MEJANG = '1'
+                                        AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+                                        AND (PUM_NAME IN ('장미','리시안사스','백합'
+                                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+                                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+                                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+                                                 ,'천일홍','수국','안시리움','유칼립투스'
+                                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란') 
+                                                OR (PUM_NAME = '거베라' AND CMP_GOOD = '10510000')
+                                                OR (PUM_NAME = '국화' AND CMP_GOOD IN ('10011640','10010327','10010616'))
+                                            )
+                                        AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+                                    GROUP BY SUBSTR(SALE_DATE,1,4), SUBSTR(SALE_DATE,6,2), SUBSTR(SALE_DATE,9,2), PUM_NAME
+                                )
+                                GROUP BY YYYY, MM, 
+                                    CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END, PUM_NAME
+                            ) AVGYEAR
+                            RIGHT JOIN(
+                                SELECT YYYY, MM, MOK_NAME AS PUM_NAME
+                                    , CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END AS  QUATER  
+                                    ,COUNT(DISTINCT DD) AS MOK_CNT
+                                FROM
+                                (SELECT SUBSTR(SALE_DATE,1,4) AS YYYY
+                                    , SUBSTR(SALE_DATE,5,2) AS MM
+                                    , SUBSTR(SALE_DATE,7,2) AS DD
+                                    , MOK_NAME
+                                FROM FLOWER.TB_YUCHAL
+                                WHERE
+                                    <if test='sCheck == "1"'>
+                                        SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYYMM') || '21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYYMM') || '31'
+                                    </if>
+                                    <if test='sCheck == "2"'>
+                                        SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYYMM') || '01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYYMM') || '10'
+                                    </if>
+                                    <if test='sCheck == "3"'>
+                                        SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYYMM') || '11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYYMM') || '20'
+                                    </if>
+                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyymmdd'),'d') in ('2','4','6')
+                                    AND BUN_CHK = 'N'
+                                    AND (MOK_NAME IN ('장미','리시안사스','백합'
+                                                     ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+                                                     ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+                                                     ,'유스가스','노무라','프리지아','골드킹','작약' 
+                                                     ,'천일홍','수국','안시리움','유칼립투스'
+                                                     , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란') 
+                                                    OR (MOK_NAME = '거베라' AND PUM_CODE = '10510000')
+                                                    OR (MOK_NAME = '국화' AND PUM_CODE IN ('10011640','10010327','10010616')))
+                                )
+                                GROUP BY YYYY, MM
+                                    ,CASE WHEN DD BETWEEN '01' AND '10' THEN '1'
+                                    WHEN DD BETWEEN '11' AND '20' THEN '2'
+                                    WHEN DD BETWEEN '21' AND '31' THEN '3' END
+                                    , MOK_NAME
+                                    
+                          ) YUCHAL
+                          ON AVGYEAR.YYYY = YUCHAL.YYYY
+                          AND AVGYEAR.MM = YUCHAL.MM
+                          AND AVGYEAR.PUM_NAME = YUCHAL.PUM_NAME
+                          AND AVGYEAR.QUATER = YUCHAL.QUATER
+                          ORDER BY AVGYEAR.YYYY, AVGYEAR.MM, AVGYEAR.QUATER
+                )
+		    ) A5
+		ON A1.DY_NAME = A5.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND (PUM_NAME IN ('장미','리시안사스','백합' 
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+		                            OR (PUM_NAME = '거베라' AND CMP_GOOD = '10510000')
+                                    OR (PUM_NAME = '국화' AND CMP_GOOD IN ('10011640','10010327','10010616'))
+                                )
+		                GROUP BY SALE_DATE , PUM_NAME)
+		            GROUP BY PUM_NAME
+		    ) A6
+		ON A1.DY_NAME = A6.PUM_NAME
+		LEFT JOIN 
+		(
+		    SELECT SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT, PUM_NAME FROM(
+		        SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE REPLACE(SALE_DATE, '-', '')  = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE REPLACE(SALE_DATE, '-', '')  = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND (PUM_NAME IN ('장미','리시안사스','백합' 
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+		                            OR (PUM_NAME = '거베라' AND CMP_GOOD = '10510000')
+                                    OR (PUM_NAME = '국화' AND CMP_GOOD IN ('10011640','10010327','10010616'))
+                                )
+		                GROUP BY SALE_DATE, PUM_NAME)
+		            GROUP BY PUM_NAME
+		    ) A7
+		ON A1.DY_NAME = A7.PUM_NAME
+		ORDER BY RK
+	 	</select>
+	 	
+	 	<select id="selectMainFlowerAucAt" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	SELECT 
+	    A1.DY_NAME AS PUM_NAME
+	    , DAN
+	    , NVL(A2.AVG_AMT,0) AS CY_AVG
+	    , NVL(A3.AVG_AMT,0) AS PREY_AVG
+	    , NVL(ROUND(A4.AVG_AMT),0) AS PREM_AVG
+	    , NVL(ROUND(A5.AVG_AMT),0) AS SDAY_AVG
+	    , NVL(ROUND(A6.AVG_AMT),0) AS YDAY_AVG
+	    , NVL(ROUND(A7.AVG_AMT),0) AS TODAY_AVG
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A2.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/A2.AVG_AMT)-1)*100,1)END END AS CY_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A3.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/A3.AVG_AMT)-1)*100,1) END END AS PREY_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A4.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/NVL(ROUND(A4.AVG_AMT),0))-1)*100,1) END END AS PREM_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE
+	        CASE WHEN A5.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/NVL(ROUND(A5.AVG_AMT),0))-1)*100,1) END END AS SDAY_PER
+		FROM
+		    (SELECT '절화류(전체)' AS DY_NAME ,'-' AS DAN , '0000' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '국화' AS DY_NAME , '단(20송이)' AS DAN , '0101' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '거베라' AS DY_NAME , '단(10송이)' AS DAN , '0102' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '장미' AS DY_NAME , '단(10송이)' AS DAN , '0201' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '리시안사스' AS DY_NAME , '단(10송이)' AS DAN , '0202' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '백합' AS DY_NAME , '단(5~10송이)' AS DAN , '0203' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '카네이션' AS DY_NAME , '단(10~20송이)' AS DAN , '0204' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '해바라기' AS DY_NAME ,'단(5송이)' AS DAN , '0205' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '튜립' AS DY_NAME , '단(10송이)' AS DAN , '0206' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '불노초' AS DY_NAME , '단(10송이)' AS DAN , '0207' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '칼라' AS DY_NAME , '단(5송이)' AS DAN , '0208' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '스타티스' AS DY_NAME , '단(10송이)' AS DAN , '0209' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '후록스' AS DY_NAME ,'단(10송이)' AS DAN , '0210' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '스톡크' AS DY_NAME ,'단(5송이)' AS DAN , '0301' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '다알리아' AS DY_NAME ,'단(5송이)' AS DAN , '0302' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '안개' AS DY_NAME ,'단(30~50송이)' AS DAN , '0303' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '알스트메리아' AS DY_NAME ,'단(10송이)' AS DAN , '0304' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '석죽' AS DY_NAME ,'단(10송이)'  AS DAN , '0305' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '유스가스' AS DY_NAME ,'단(5송이)' AS DAN , '0306' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '노무라' AS DY_NAME ,'단(7송이)' AS DAN , '0307' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '프리지아' AS DY_NAME ,'단(10송이)' AS DAN , '0308' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '골드킹' AS DY_NAME ,'단(1송이)' AS DAN , '0309' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '작약' AS DY_NAME ,'단(5송이)'  AS DAN , '0310' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '천일홍' AS DY_NAME ,'단(20~50송이)' AS DAN , '0401' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '수국' AS DY_NAME ,'단(1송이)' AS DAN , '0402' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '안시리움' AS DY_NAME ,'단(1송이)' AS DAN , '0403' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '유칼립투스' AS DY_NAME ,'단(10송이)' AS DAN , '0404' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '라넌큘러스' AS DY_NAME ,'단(10송이)' AS DAN , '0405' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '심비디움' AS DY_NAME ,'단(1송이)' AS DAN , '0406' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '금어초' AS DY_NAME ,'단(10송이)' AS DAN , '0407' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '왁스플라워' AS DY_NAME ,'단(10송이)' AS DAN , '0408' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '엽란' AS DY_NAME ,'단(5송이)' AS DAN , '0409' AS RK
+		          FROM DUAL
+		    ) A1
+		LEFT JOIN
+		    (
+		        SELECT AVG_AMT,PUM_NAME FROM T_SALE_AVGYEAR
+		        WHERE YYYY = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},0,4)
+		        AND MM = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},6,2)
+		        AND QUATER = #{sCheck, jdbcType=VARCHAR}
+		        AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+		    )A2
+		ON A1.DY_NAME = A2.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG_AMT,PUM_NAME FROM T_SALE_PREYEAR
+		        WHERE YYYY = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},0,4)
+		        AND MM = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},6,2)
+		        AND QUATER = #{sCheck, jdbcType=VARCHAR}
+		        AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+		    )A3
+		ON A1.DY_NAME = A3.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE	
+		                <if test='sCheck == "1"'> 
+		                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+						</if>
+						<if test='sCheck == "2"'> 
+		                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+						</if>
+						<if test='sCheck == "3"'> 
+		                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+						</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'> 
+		                		SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "2"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+							</if>
+							<if test='sCheck == "3"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+							</if>
+			                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+			                    AND MEJANG = '1'
+			                    AND PUM_NAME IN ('장미','리시안사스','백합' 
+			                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+			                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+			                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+			                                 ,'천일홍','수국','안시리움','유칼립투스'
+			                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+			                                          )
+								AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE , PUM_NAME
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'> 
+		                		SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "2"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+							</if>
+							<if test='sCheck == "3"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+							</if>
+			                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+			                    AND MEJANG = '1'
+			                    AND CMP_GOOD IN ('10510000','10010327','10010616')
+								AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE , PUM_NAME
+		                )
+		                GROUP BY PUM_NAME
+		    ) A4
+		ON A1.DY_NAME = A4.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                <if test='sCheck == "1"'>
+							SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+						</if>
+						<if test='sCheck == "2"'>
+							SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+						</if>
+						<if test='sCheck == "3"'>
+							SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+						</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'>
+								SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+							</if>
+							<if test='sCheck == "2"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "3"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+							</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                    AND PUM_NAME IN ('장미','리시안사스','백합' 
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+		                                          )
+		                GROUP BY SALE_DATE , PUM_NAME
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'>
+								SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+							</if>
+							<if test='sCheck == "2"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "3"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+							</if>
+		                    	AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    	AND MEJANG = '1'
+			                    AND CMP_GOOD IN ('10510000','10010327','10010616')
+								AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE , PUM_NAME
+		                )
+		                GROUP BY PUM_NAME
+		    ) A5
+		ON A1.DY_NAME = A5.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT (SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY))) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(TOT_QTY) AS TOT_QTY
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE_DATE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND FLOWER_GUBN = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(TOT_QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE_DATE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND FLOWER_GUBN = '1'
+		                    AND PUM_NAME IN ('장미','리시안사스','백합' 
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+		                                          )
+		                GROUP BY SALE_DATE , PUM_NAME
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(TOT_QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+			                AND CMP_GOOD IN ('10510000','10010327','10010616')
+							AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE , PUM_NAME
+		                
+		                )
+		            GROUP BY PUM_NAME
+		    ) A6
+		ON A1.DY_NAME = A6.PUM_NAME
+		LEFT JOIN 
+		(
+		    SELECT SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT, PUM_NAME FROM(
+		        SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE replace(SALE_DATE,'-','') = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE replace(SALE_DATE,'-','') = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND PUM_NAME IN ('장미','리시안사스','백합' 
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+		                                          )
+		                GROUP BY SALE_DATE, PUM_NAME
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE replace(SALE_DATE,'-','') = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND CMP_GOOD IN ('10510000','10010327','10010616')
+							AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE, PUM_NAME
+		                
+		                )
+		            GROUP BY PUM_NAME
+		    ) A7
+		ON A1.DY_NAME = A7.PUM_NAME
+		ORDER BY RK
+	 	</select>
+	 	
+ 	
+ 	<select id="selectDayAucList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT MMDD
+		     , TOT_CNT
+		     , PAN_CNT
+		     , YUCHAL_CNT
+		     , AVG_AMT
+		     , PRE_TOT_CNT
+		     , PRE_PAN_CNT
+		     , PRE_YUCHAL_CNT
+		     , PRE_AVG_AMT
+		     , ROUND(NVL((TOT_CNT - PRE_TOT_CNT) / DECODE(PRE_TOT_CNT,0,NULL,PRE_TOT_CNT), 0) * 100) AS PRE_TOT_CNT_PER
+		     , ROUND(NVL((PAN_CNT - PRE_PAN_CNT) / DECODE(PRE_PAN_CNT,0,NULL,PRE_PAN_CNT), 0) * 100) AS PRE_PAN_CNT_PER
+		     , ROUND(NVL((YUCHAL_CNT - PRE_YUCHAL_CNT) / DECODE(PRE_YUCHAL_CNT,0,NULL,PRE_YUCHAL_CNT), 0) * 100) AS PRE_YUCHAL_CNT_PER
+		     , ROUND(NVL((AVG_AMT - PRE_AVG_AMT) / DECODE(PRE_AVG_AMT,0,NULL,PRE_AVG_AMT), 0) * 100) AS PRE_AVG_AMT_PER
+		     , AVG_TOT_CNT
+		     , AVG_PAN_CNT
+		     , AVG_YUCHAL_CNT
+		     , AVG_AVG_AMT
+		     , ROUND(NVL((TOT_CNT - AVG_TOT_CNT) / DECODE(AVG_TOT_CNT,0,NULL,AVG_TOT_CNT), 0) * 100) AS AVG_TOT_CNT_PER
+		     , ROUND(NVL((PAN_CNT - AVG_PAN_CNT) / DECODE(AVG_PAN_CNT,0,NULL,AVG_PAN_CNT), 0) * 100) AS AVG_PAN_CNT_PER
+		     , ROUND(NVL((YUCHAL_CNT - AVG_YUCHAL_CNT) / DECODE(AVG_YUCHAL_CNT,0,NULL,AVG_YUCHAL_CNT), 0) * 100) AS AVG_YUCHAL_CNT_PER
+		     , ROUND(NVL((AVG_AMT - AVG_AVG_AMT) / DECODE(AVG_AVG_AMT,0,NULL,AVG_AVG_AMT), 0) * 100) AS AVG_AVG_AMT_PER
+		FROM (
+		        SELECT AA.MMDD AS MMDD
+		             , NVL(BB.TOT_CNT, 0) AS TOT_CNT
+		             , NVL(BB.PAN_CNT, 0) AS PAN_CNT
+		             , NVL(BB.YUCHAL_CNT, 0) AS YUCHAL_CNT
+		             , NVL(BB.AVG_AMT, 0) AS AVG_AMT
+		             , NVL(PRE_TOT_CNT, 0) AS PRE_TOT_CNT
+		             , NVL(PRE_PAN_CNT, 0) AS PRE_PAN_CNT
+		             , NVL(PRE_YUCHAL_CNT, 0) AS PRE_YUCHAL_CNT
+		             , NVL(PRE_AVG_AMT, 0) AS PRE_AVG_AMT
+		             , NVL(AVG_TOT_CNT, 0) AS AVG_TOT_CNT
+		             , NVL(AVG_PAN_CNT, 0) AS AVG_PAN_CNT
+		             , NVL(AVG_YUCHAL_CNT, 0) AS AVG_YUCHAL_CNT
+		             , NVL(AVG_AVG_AMT, 0) AS AVG_AVG_AMT
+		        FROM (
+		              SELECT TO_CHAR(TO_DATE('20200102','YYYYMMDD') + LEVEL - 1, 'MMDD') AS MMDD
+		              FROM DUAL
+		              CONNECT BY LEVEL <![CDATA[<=]]> TO_DATE('20201231','YYYYMMDD') - TO_DATE('20200102','YYYYMMDD') + 1
+		             ) AA
+		             LEFT JOIN
+		             (
+		              SELECT A.YYYY AS YYYY
+		                   , A.MMDD AS MMDD
+		                   , B.TOT_CNT AS TOT_CNT
+		                   , B.PAN_CNT AS PAN_CNT
+		                   , B.YUCHAL_CNT AS YUCHAL_CNT
+		                   , A.AVG_AMT AS AVG_AMT
+		              FROM (
+			                SELECT SUBSTR(SALE_DATE, 0, 4) AS YYYY
+			                     , REPLACE(SUBSTR(SALE_DATE,5),'-','') AS MMDD
+			                     , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+			                FROM T_SALE
+			                WHERE SUBSTR(SALE_DATE, 0, 4) = #{searchYear}
+			                  AND MEJANG = '1'
+			                  AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'),'D') IN ('2','4','6')
+			                  AND CMP_CD = '0000000001'
+			                  <if test="pumName != '절화류'">
+			                     <if test="pumName != '국화(대국)' and pumName != '거베라(거베라)'">
+                                AND PUM_NAME = #{pumName}
+                                </if>
+                                <if test="pumName == '국화(대국)'">
+                                AND CMP_GOOD IN ('10010327', '10010616')
+                                </if>
+                                <if test="pumName == '거베라(거베라)'">
+                                AND CMP_GOOD = '10510000'
+                                </if>
+			                  </if>
+			                GROUP BY SALE_DATE
+		                   ) A
+		                   LEFT JOIN
+		                   (
+		                    SELECT SUBSTR(SALE_DATE, 0, 4) AS YYYY
+		                         , SUBSTR(SALE_DATE,5) AS MMDD
+		                         , SUM(TOT_CNT) AS TOT_CNT
+		                         , SUM(TOT_CNT-YUCHAL_CNT) AS PAN_CNT 
+		                         , SUM(YUCHAL_CNT) AS YUCHAL_CNT 
+		                    FROM TB_YUCHAL
+		                    WHERE SUBSTR(SALE_DATE, 0, 4) = #{searchYear}
+		                      AND TO_CHAR(TO_DATE(SALE_DATE, 'YYYYMMDD'),'D') IN ('2','4','6')
+		                      AND BUN_CHK = 'N'
+			                  <if test="pumName != '절화류'">
+			                     <if test="pumName != '국화(대국)' and pumName != '거베라(거베라)'">
+                                AND MOK_NAME = #{pumName}
+                                </if>
+                                <if test="pumName == '국화(대국)'">
+                                AND PUM_CODE IN ('10010327', '10010616')
+                                </if>
+                                <if test="pumName == '거베라(거베라)'">
+                                AND PUM_CODE = '10510000'
+                                </if>
+			                  </if>
+		                    GROUP BY SALE_DATE
+		                   ) B
+		                   ON A.MMDD = B.MMDD
+		             ) BB
+		             ON AA.MMDD = BB.MMDD
+		             LEFT JOIN
+		             (
+		              SELECT YYYY
+		                   , MMDD
+		                   , TOT_CNT AS PRE_TOT_CNT
+		                   , PAN_CNT AS PRE_PAN_CNT
+		                   , YUCHAL_CNT AS PRE_YUCHAL_CNT
+		                   , AVG_AMT AS PRE_AVG_AMT
+		              FROM T_SALE_PREDAY
+		              WHERE YYYY = #{searchYear}
+		                AND PUM_NAME = #{pumName}
+		             ) PREDAY
+		             ON AA.MMDD = PREDAY.MMDD
+		             LEFT JOIN
+		             (
+		              SELECT YYYY
+		                   , MMDD
+		                   , TOT_CNT AS AVG_TOT_CNT
+		                   , PAN_CNT AS AVG_PAN_CNT
+		                   , YUCHAL_CNT AS AVG_YUCHAL_CNT
+		                   , AVG_AMT AS AVG_AVG_AMT
+		              FROM T_SALE_AVGDAY
+		              WHERE YYYY = #{searchYear}
+		                AND PUM_NAME = #{pumName}
+		             ) AVGDAY
+		             ON AA.MMDD = AVGDAY.MMDD
+		        ORDER BY AA.MMDD
+			)
+			
+ 	</select>
+
+	<insert id="insertMainFlowerAucAt" parameterType="java.util.HashMap">
+ 		INSERT INTO T_MAIN_FLOWER_AUC 
+ 			(CMP_CD, SALE_DATE, INSERT_TIME, PUM_NAME, DAN_NAME, CY_AVG, PREY_AVG, PREM_AVG, SDAY_AVG, YDAY_AVG, TODAY_AVG, CY_PER, PREY_PER, PREM_PER, SDAY_PER)
+ 		SELECT 
+	      #{cmpCd, jdbcType=VARCHAR} AS CMP_CD
+	    , #{searchStrDate, jdbcType=VARCHAR} AS SALE_DATE
+	    , #{insertTime, jdbcType=VARCHAR} AS INSERT_TIME
+	    , A1.DY_NAME AS PUM_NAME
+	    , DAN AS DAN_NAME
+	    , NVL(A2.AVG_AMT,0) AS CY_AVG
+	    , NVL(A3.AVG_AMT,0) AS PREY_AVG
+	    , NVL(ROUND(A4.AVG_AMT),0) AS PREM_AVG
+	    , NVL(ROUND(A5.AVG_AMT),0) AS SDAY_AVG
+	    , NVL(ROUND(A6.AVG_AMT),0) AS YDAY_AVG
+	    , NVL(ROUND(A7.AVG_AMT),0) AS TODAY_AVG
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A2.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/A2.AVG_AMT)-1)*100,1)END END AS CY_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A3.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/A3.AVG_AMT)-1)*100,1) END END AS PREY_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A4.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/NVL(ROUND(A4.AVG_AMT),0))-1)*100,1) END END AS PREM_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE
+	        CASE WHEN A5.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/NVL(ROUND(A5.AVG_AMT),0))-1)*100,1) END END AS SDAY_PER
+		FROM
+		    (SELECT '절화류(전체)' AS DY_NAME ,'-' AS DAN , '0000' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '국화' AS DY_NAME , '단(20송이)' AS DAN , '0101' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '거베라' AS DY_NAME , '단(10송이)' AS DAN , '0102' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '장미' AS DY_NAME , '단(10송이)' AS DAN , '0201' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '리시안사스' AS DY_NAME , '단(10송이)' AS DAN , '0202' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '백합' AS DY_NAME , '단(5~10송이)' AS DAN , '0203' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '카네이션' AS DY_NAME , '단(10~20송이)' AS DAN , '0204' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '해바라기' AS DY_NAME ,'단(5송이)' AS DAN , '0205' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '튜립' AS DY_NAME , '단(10송이)' AS DAN , '0206' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '불노초' AS DY_NAME , '단(10송이)' AS DAN , '0207' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '칼라' AS DY_NAME , '단(5송이)' AS DAN , '0208' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '스타티스' AS DY_NAME , '단(10송이)' AS DAN , '0209' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '후록스' AS DY_NAME ,'단(10송이)' AS DAN , '0210' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '스톡크' AS DY_NAME ,'단(5송이)' AS DAN , '0301' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '다알리아' AS DY_NAME ,'단(5송이)' AS DAN , '0302' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '안개' AS DY_NAME ,'단(30~50송이)' AS DAN , '0303' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '알스트메리아' AS DY_NAME ,'단(10송이)' AS DAN , '0304' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '석죽' AS DY_NAME ,'단(10송이)'  AS DAN , '0305' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '유스가스' AS DY_NAME ,'단(5송이)' AS DAN , '0306' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '노무라' AS DY_NAME ,'단(7송이)' AS DAN , '0307' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '프리지아' AS DY_NAME ,'단(10송이)' AS DAN , '0308' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '골드킹' AS DY_NAME ,'단(1송이)' AS DAN , '0309' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '작약' AS DY_NAME ,'단(5송이)'  AS DAN , '0310' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '천일홍' AS DY_NAME ,'단(20~50송이)' AS DAN , '0401' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '수국' AS DY_NAME ,'단(1송이)' AS DAN , '0402' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '안시리움' AS DY_NAME ,'단(1송이)' AS DAN , '0403' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '유칼립투스' AS DY_NAME ,'단(10송이)' AS DAN , '0404' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '라넌큘러스' AS DY_NAME ,'단(10송이)' AS DAN , '0405' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '심비디움' AS DY_NAME ,'단(1송이)' AS DAN , '0406' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '금어초' AS DY_NAME ,'단(10송이)' AS DAN , '0407' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '왁스플라워' AS DY_NAME ,'단(10송이)' AS DAN , '0408' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '엽란' AS DY_NAME ,'단(5송이)' AS DAN , '0409' AS RK
+		          FROM DUAL
+		    ) A1
+		LEFT JOIN
+		    (
+		        SELECT AVG_AMT,PUM_NAME FROM T_SALE_AVGYEAR
+		        WHERE YYYY = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},0,4)
+		        AND MM = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},6,2)
+		        AND QUATER = #{sCheck, jdbcType=VARCHAR}
+		        AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+		    )A2
+		ON A1.DY_NAME = A2.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG_AMT,PUM_NAME FROM T_SALE_PREYEAR
+		        WHERE YYYY = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},0,4)
+		        AND MM = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},6,2)
+		        AND QUATER = #{sCheck, jdbcType=VARCHAR}
+		        AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+		    )A3
+		ON A1.DY_NAME = A3.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE	
+		                <if test='sCheck == "1"'> 
+		                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+						</if>
+						<if test='sCheck == "2"'> 
+		                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+						</if>
+						<if test='sCheck == "3"'> 
+		                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+						</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'> 
+		                		SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "2"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+							</if>
+							<if test='sCheck == "3"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+							</if>
+			                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+			                    AND MEJANG = '1'
+								AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                        AND (PUM_NAME IN ('장미','리시안사스','백합'
+                                     ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+                                     ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+                                     ,'유스가스','노무라','프리지아','골드킹','작약' 
+                                     ,'천일홍','수국','안시리움','유칼립투스'
+                                     , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란') 
+                                     OR (CASE WHEN PUM_NAME = '거베라' AND CMP_GOOD = '10510000' THEN 1 ELSE 0 END) = 1)
+		                GROUP BY SALE_DATE , PUM_NAME
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'> 
+		                		SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "2"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+							</if>
+							<if test='sCheck == "3"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+							</if>
+			                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+			                    AND MEJANG = '1'
+			                    AND CMP_GOOD IN ('10011640','10010327','10010616')
+								AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE , PUM_NAME
+		                )
+		                GROUP BY PUM_NAME
+		    ) A4
+		ON A1.DY_NAME = A4.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                <if test='sCheck == "1"'>
+							SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+						</if>
+						<if test='sCheck == "2"'>
+							SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+						</if>
+						<if test='sCheck == "3"'>
+							SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+						</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'>
+								SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+							</if>
+							<if test='sCheck == "2"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "3"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+							</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                    AND (PUM_NAME IN ('장미','리시안사스','백합'
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+		                                 OR (PUM_NAME = '거베라' AND CMP_GOOD = '10510000')
+		                                 )
+		                GROUP BY SALE_DATE , PUM_NAME
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'>
+								SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+							</if>
+							<if test='sCheck == "2"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "3"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+							</if>
+		                    	AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    	AND MEJANG = '1'
+			                    AND CMP_GOOD IN ('10011640','10010327','10010616')
+								AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE , PUM_NAME
+		                )
+		                GROUP BY PUM_NAME
+		    ) A5
+		ON A1.DY_NAME = A5.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT (SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY))) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(TOT_QTY) AS TOT_QTY
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE_DATE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND FLOWER_GUBN = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(TOT_QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE_DATE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND FLOWER_GUBN = '1'
+		                    AND (PUM_NAME IN ('장미','리시안사스','백합'
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+		                                 OR (PUM_NAME = '거베라' AND GOOD_NAME = '거베라'))
+		                GROUP BY SALE_DATE , PUM_NAME
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(TOT_QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+			                AND CMP_GOOD IN ('10011640','10010327','10010616')
+							AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE , PUM_NAME
+		                
+		                )
+		            GROUP BY PUM_NAME
+		    ) A6
+		ON A1.DY_NAME = A6.PUM_NAME
+		LEFT JOIN 
+		(
+		    SELECT SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT, PUM_NAME FROM(
+		        SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE replace(SALE_DATE,'-','') = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE replace(SALE_DATE,'-','') = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND (PUM_NAME IN ('장미','리시안사스','백합'
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란')
+		                                 OR (PUM_NAME = '거베라' AND CMP_GOOD = '10510000'))
+		                GROUP BY SALE_DATE, PUM_NAME
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE replace(SALE_DATE,'-','') = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND CMP_GOOD IN ('10011640','10010327','10010616')
+							AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+		                GROUP BY SALE_DATE, PUM_NAME
+		                
+		                )
+		            GROUP BY PUM_NAME
+		    ) A7
+		ON A1.DY_NAME = A7.PUM_NAME
+		ORDER BY RK
+ 	</insert>
+ 	
+	<insert id="insertMainFlowerAucAll" parameterType="java.util.HashMap">
+ 		INSERT INTO T_MAIN_FLOWER_AUC 
+ 			(CMP_CD, SALE_DATE, INSERT_TIME, PUM_NAME, DAN_NAME, CY_AVG, PREY_AVG, PREM_AVG, SDAY_AVG, YDAY_AVG, TODAY_AVG, CY_PER, PREY_PER, PREM_PER, SDAY_PER)
+ 		SELECT 
+	      #{cmpCd, jdbcType=VARCHAR} AS CMP_CD
+	    , #{searchStrDate, jdbcType=VARCHAR} AS SALE_DATE
+	    , #{insertTime, jdbcType=VARCHAR} AS INSERT_TIME
+	    , A1.DY_NAME AS PUM_NAME
+	    , DAN AS DAN_NAME
+	    , NVL(A2.AVG_AMT,0) AS CY_AVG
+	    , NVL(A3.AVG_AMT,0) AS PREY_AVG
+	    , NVL(ROUND(A4.AVG_AMT),0) AS PREM_AVG
+	    , NVL(ROUND(A5.AVG_AMT),0) AS SDAY_AVG
+	    , NVL(ROUND(A6.AVG_AMT),0) AS YDAY_AVG
+	    , NVL(ROUND(A7.AVG_AMT),0) AS TODAY_AVG
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A2.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/A2.AVG_AMT)-1)*100,1)END END AS CY_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A3.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/A3.AVG_AMT)-1)*100,1) END END AS PREY_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE 
+	        CASE WHEN A4.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/NVL(ROUND(A4.AVG_AMT),0))-1)*100,1) END END AS PREM_PER
+	    , CASE WHEN A7.AVG_AMT IS NULL THEN 0 ELSE
+	        CASE WHEN A5.AVG_AMT IS NULL THEN 0 ELSE ROUND(((A7.AVG_AMT/NVL(ROUND(A5.AVG_AMT),0))-1)*100,1) END END AS SDAY_PER
+		FROM
+		    (SELECT '절화류(전체)' AS DY_NAME ,'-' AS DAN , '0000' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '국화' AS DY_NAME , '단(20송이)' AS DAN , '0101' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '거베라' AS DY_NAME , '단(10송이)' AS DAN , '0102' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '장미' AS DY_NAME , '단(10송이)' AS DAN , '0201' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '리시안사스' AS DY_NAME , '단(10송이)' AS DAN , '0202' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '백합' AS DY_NAME , '단(5~10송이)' AS DAN , '0203' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '카네이션' AS DY_NAME , '단(10~20송이)' AS DAN , '0204' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '해바라기' AS DY_NAME ,'단(5송이)' AS DAN , '0205' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '튜립' AS DY_NAME , '단(10송이)' AS DAN , '0206' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '불노초' AS DY_NAME , '단(10송이)' AS DAN , '0207' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '칼라' AS DY_NAME , '단(5송이)' AS DAN , '0208' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '스타티스' AS DY_NAME , '단(10송이)' AS DAN , '0209' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '후록스' AS DY_NAME ,'단(10송이)' AS DAN , '0210' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '스톡크' AS DY_NAME ,'단(5송이)' AS DAN , '0301' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '다알리아' AS DY_NAME ,'단(5송이)' AS DAN , '0302' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '안개' AS DY_NAME ,'단(30~50송이)' AS DAN , '0303' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '알스트메리아' AS DY_NAME ,'단(10송이)' AS DAN , '0304' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '석죽' AS DY_NAME ,'단(10송이)'  AS DAN , '0305' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '유스가스' AS DY_NAME ,'단(5송이)' AS DAN , '0306' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '노무라' AS DY_NAME ,'단(7송이)' AS DAN , '0307' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '프리지아' AS DY_NAME ,'단(10송이)' AS DAN , '0308' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '골드킹' AS DY_NAME ,'단(1송이)' AS DAN , '0309' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '작약' AS DY_NAME ,'단(5송이)'  AS DAN , '0310' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '천일홍' AS DY_NAME ,'단(20~50송이)' AS DAN , '0401' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '수국' AS DY_NAME ,'단(1송이)' AS DAN , '0402' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '안시리움' AS DY_NAME ,'단(1송이)' AS DAN , '0403' AS RK
+		          FROM DUAL 
+		          UNION ALL 
+		          SELECT '유칼립투스' AS DY_NAME ,'단(10송이)' AS DAN , '0404' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '라넌큘러스' AS DY_NAME ,'단(10송이)' AS DAN , '0405' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '심비디움' AS DY_NAME ,'단(1송이)' AS DAN , '0406' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '금어초' AS DY_NAME ,'단(10송이)' AS DAN , '0407' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '왁스플라워' AS DY_NAME ,'단(10송이)' AS DAN , '0408' AS RK
+		          FROM DUAL
+		          UNION ALL
+		          SELECT '엽란' AS DY_NAME ,'단(5송이)' AS DAN , '0409' AS RK
+		          FROM DUAL
+		    ) A1
+		LEFT JOIN
+		    (
+		        SELECT AVG_AMT,PUM_NAME FROM T_SALE_AVGYEAR
+		        WHERE YYYY = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},0,4)
+		        AND MM = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},6,2)
+		        AND QUATER = #{sCheck, jdbcType=VARCHAR}
+		        AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+		    )A2
+		ON A1.DY_NAME = A2.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG_AMT,PUM_NAME FROM T_SALE_PREYEAR
+		        WHERE YYYY = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},0,4)
+		        AND MM = SUBSTR(#{searchStrDate, jdbcType=VARCHAR},6,2)
+		        AND QUATER = #{sCheck, jdbcType=VARCHAR}
+		        AND CMP_CD =#{cmpCd, jdbcType=VARCHAR}
+		    )A3
+		ON A1.DY_NAME = A3.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE	
+		                <if test='sCheck == "1"'> 
+		                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+						</if>
+						<if test='sCheck == "2"'> 
+		                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+						</if>
+						<if test='sCheck == "3"'> 
+		                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+						</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'> 
+		                		SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-01' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "2"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-11' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-20'
+							</if>
+							<if test='sCheck == "3"'> 
+			                	SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1),'YYYY-MM') || '-31'
+							</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND PUM_NAME IN ('국화','거베라','장미','리시안사스','백합' 
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+		                                          )
+		                GROUP BY SALE_DATE , PUM_NAME)
+		                GROUP BY PUM_NAME
+		    ) A4
+		ON A1.DY_NAME = A4.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                <if test='sCheck == "1"'>
+							SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+						</if>
+						<if test='sCheck == "2"'>
+							SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+						</if>
+						<if test='sCheck == "3"'>
+							SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+						</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE 
+		                	<if test='sCheck == "1"'>
+								SALE_DATE BETWEEN TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-21' AND TO_CHAR(ADD_MONTHS(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), -1), 'YYYY-MM') || '-31'
+							</if>
+							<if test='sCheck == "2"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-01' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-10'
+							</if>
+							<if test='sCheck == "3"'>
+								SALE_DATE BETWEEN TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-11' AND TO_CHAR(TO_DATE(#{searchStrDate, jdbcType=VARCHAR},'YYYY-MM-DD'), 'YYYY-MM') || '-20'
+							</if>
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND PUM_NAME IN ('국화','거베라','장미','리시안사스','백합' 
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+		                                          )
+		                GROUP BY SALE_DATE , PUM_NAME)
+		                GROUP BY PUM_NAME
+		    ) A5
+		ON A1.DY_NAME = A5.PUM_NAME
+		LEFT JOIN
+		    (
+		        SELECT AVG(AVG_AMT) AS AVG_AMT, PUM_NAME FROM(
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE SALE_DATE = (SELECT MAX(SALE_DATE)
+		                                    FROM T_SALE
+		                                    WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+		                                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                                    AND MEJANG = '1')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND PUM_NAME IN ('국화','거베라','장미','리시안사스','백합' 
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+		                                          )
+		                GROUP BY SALE_DATE , PUM_NAME)
+		            GROUP BY PUM_NAME
+		    ) A6
+		ON A1.DY_NAME = A6.PUM_NAME
+		LEFT JOIN 
+		(
+		    SELECT SUM(TOT_AMT)/DECODE(SUM(TOT_QTY),0,NULL,SUM(TOT_QTY)) AS AVG_AMT, PUM_NAME FROM(
+		        SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,'절화류(전체)' AS PUM_NAME
+		                FROM T_SALE
+		                WHERE replace(SALE_DATE,'-','') = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                GROUP BY SALE_DATE
+		                UNION ALL
+		                SELECT 
+		                    SUM(TOT_AMT) AS TOT_AMT
+		                    ,SUM(QTY) AS TOT_QTY
+		                    ,PUM_NAME
+		                FROM T_SALE
+		                WHERE replace(SALE_DATE,'-','') = REPLACE(#{searchStrDate, jdbcType=VARCHAR},'-','')
+		                    AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		                    AND MEJANG = '1'
+		                    AND PUM_NAME IN ('국화','거베라','장미','리시안사스','백합' 
+		                                 ,'카네이션','해바라기','튜립','불노초','칼라','스타티스','후록스' 
+		                                 ,'스톡크','다알리아','안개','알스트메리아','석죽' 
+		                                 ,'유스가스','노무라','프리지아','골드킹','작약' 
+		                                 ,'천일홍','수국','안시리움','유칼립투스'
+		                                 , '라넌큘러스', '심비디움', '금어초', '왁스플라워', '엽란'
+		                                          )
+		                GROUP BY SALE_DATE, PUM_NAME)
+		            GROUP BY PUM_NAME
+		    ) A7
+		ON A1.DY_NAME = A7.PUM_NAME
+		ORDER BY RK
+ 	</insert>
+ 	
+ 	<select id="selectMainFlowerAucExcel" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+	 	SELECT PUM_NAME
+		     , DAN_NAME
+		     , CY_AVG
+		     , PREY_AVG
+		     , PREM_AVG
+		     , SDAY_AVG
+		     , YDAY_AVG
+		     , TODAY_AVG
+		     , CY_PER
+		     , PREY_PER
+		     , PREM_PER
+		     , SDAY_PER
+		FROM 
+			 (SELECT '절화류(전체)' AS DY_NAME ,'-' AS DAN , '0000' AS RK
+	          FROM DUAL
+	          UNION ALL
+	          SELECT '국화' AS DY_NAME , '단(20송이)' AS DAN , '0101' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '거베라' AS DY_NAME , '단(10송이)' AS DAN , '0102' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '장미' AS DY_NAME , '단(10송이)' AS DAN , '0201' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '리시안사스' AS DY_NAME , '단(10송이)' AS DAN , '0202' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '백합' AS DY_NAME , '단(5~10송이)' AS DAN , '0203' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '카네이션' AS DY_NAME , '단(10~20송이)' AS DAN , '0204' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '해바라기' AS DY_NAME ,'단(5송이)' AS DAN , '0205' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '튜립' AS DY_NAME , '단(10송이)' AS DAN , '0206' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '불노초' AS DY_NAME , '단(10송이)' AS DAN , '0207' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '칼라' AS DY_NAME , '단(5송이)' AS DAN , '0208' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '스타티스' AS DY_NAME , '단(10송이)' AS DAN , '0209' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '후록스' AS DY_NAME ,'단(10송이)' AS DAN , '0210' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '스톡크' AS DY_NAME ,'단(5송이)' AS DAN , '0301' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '다알리아' AS DY_NAME ,'단(5송이)' AS DAN , '0302' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '안개' AS DY_NAME ,'단(30~50송이)' AS DAN , '0303' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '알스트메리아' AS DY_NAME ,'단(10송이)' AS DAN , '0304' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '석죽' AS DY_NAME ,'단(10송이)'  AS DAN , '0305' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '유스가스' AS DY_NAME ,'단(5송이)' AS DAN , '0306' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '노무라' AS DY_NAME ,'단(7송이)' AS DAN , '0307' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '프리지아' AS DY_NAME ,'단(10송이)' AS DAN , '0308' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '골드킹' AS DY_NAME ,'단(1송이)' AS DAN , '0309' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '작약' AS DY_NAME ,'단(5송이)'  AS DAN , '0310' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '천일홍' AS DY_NAME ,'단(20~50송이)' AS DAN , '0401' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '수국' AS DY_NAME ,'단(1송이)' AS DAN , '0402' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '안시리움' AS DY_NAME ,'단(1송이)' AS DAN , '0403' AS RK
+	          FROM DUAL 
+	          UNION ALL 
+	          SELECT '유칼립투스' AS DY_NAME ,'단(10송이)' AS DAN , '0404' AS RK
+	          FROM DUAL
+	          UNION ALL
+	          SELECT '라넌큘러스' AS DY_NAME ,'단(10송이)' AS DAN , '0405' AS RK
+	          FROM DUAL
+	          UNION ALL
+	          SELECT '심비디움' AS DY_NAME ,'단(1송이)' AS DAN , '0406' AS RK
+	          FROM DUAL
+	          UNION ALL
+	          SELECT '금어초' AS DY_NAME ,'단(10송이)' AS DAN , '0407' AS RK
+	          FROM DUAL
+	          UNION ALL
+	          SELECT '왁스플라워' AS DY_NAME ,'단(10송이)' AS DAN , '0408' AS RK
+	          FROM DUAL
+	          UNION ALL
+	          SELECT '엽란' AS DY_NAME ,'단(5송이)' AS DAN , '0409' AS RK
+	          FROM DUAL
+	          ) A1
+		LEFT JOIN
+			  (SELECT *
+				 FROM T_MAIN_FLOWER_AUC
+				WHERE CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+				  AND SALE_DATE = #{searchStrDate, jdbcType=VARCHAR}
+				  AND INSERT_TIME = #{searchTime, jdbcType=VARCHAR}
+			   ) A2
+		ON A1.DY_NAME = A2.PUM_NAME
+		ORDER BY RK
+ 	</select>
+
+ 	<insert id="insertDayPumAucAt" parameterType="java.util.HashMap">
+ 		INSERT INTO T_DAY_PUM_AUC 
+ 			(SALE_DATE, YEAR, MONTH, DAY, PUM_NAME, TOT_CNT, PAN_CNT, YUCHAL_CNT, TOT_AMT, AVG_AMT, INSERT_TIME)
+		SELECT #{saleDate, jdbcType=VARCHAR} AS SALE_DATE,
+               SUBSTR(#{saleDate, jdbcType=VARCHAR}, 0, 4) AS YEAR,
+	       	   SUBSTR(#{saleDate, jdbcType=VARCHAR}, 5, 2) AS MONTH,
+	       	   SUBSTR(#{saleDate, jdbcType=VARCHAR}, 7, 2) AS DAY,
+	       	   A.PUM_NAME AS PUM_NAME,
+	       	   B.TOT_CNT AS TOT_CNT,
+	       	   B.PAN_CNT AS PAN_CNT,
+	       	   B.YUCHAL_CNT AS YUCHAL_CNT,
+	       	   A.TOT_AMT AS TOT_AMT,
+	       	   C.AVG_AMT AS AVG_AMT,
+	       	   #{insertTime, jdbcType=VARCHAR} AS INSERT_TIME
+		FROM
+			(
+			SELECT REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) AS PUM_NAME,
+			       SUM(TOT_AMT) AS TOT_AMT
+			FROM T_SALE
+			WHERE CMP_CD = '0000000001'
+		      AND REPLACE(SALE_DATE, '-', '') = #{saleDate, jdbcType=VARCHAR}
+			GROUP BY SALE_DATE, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME)
+			) A,
+			(
+			SELECT SALE_DATE,
+			       DECODE(MOK_NAME, '팔레높시스', '호접란', MOK_NAME) AS PUM_NAME,
+			       SUM(TOT_CNT) AS TOT_CNT,
+			       SUM(TOT_CNT - YUCHAL_CNT) AS PAN_CNT,
+			       SUM(YUCHAL_CNT) AS YUCHAL_CNT
+			FROM TB_YUCHAL
+			WHERE SALE_DATE = #{saleDate, jdbcType=VARCHAR}
+			  AND BUN_CHK = 'N'
+			GROUP BY SALE_DATE, DECODE(MOK_NAME, '팔레높시스', '호접란', MOK_NAME)
+			) B,
+            (
+            SELECT ROUND(SUM(TOT_AMT)/SUM(TOT_QTY), 0) AS AVG_AMT,
+                   REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) AS PUM_NAME
+            FROM T_SALE_DATE
+            WHERE FLOWER_GUBN = '1'
+			GROUP BY SALE_DATE, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME)
+            ) C
+		WHERE A.SALE_DATE = B.SALE_DATE
+		  AND A.PUM_NAME = B.PUM_NAME
+          AND A.SALE_DATE = C.SALE_DATE
+          AND A.PUM_NAME = C.PUM_NAME
+		ORDER BY PUM_NAME, YEAR, MONTH, DAY
+ 	</insert>
+ 	
+ 	<select id="selectDayPumAucExcelbak" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT YEAR
+		     , MONTH
+		     , DAY
+		     , PUM_NAME
+		     , TOT_CNT
+		     , PAN_CNT
+		     , YUCHAL_CNT
+		     , TOT_AMT
+		     , AVG_AMT
+		  FROM T_DAY_PUM_AUC
+		 WHERE SALE_DATE BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+		 <if test="itemCd != null and itemCd != ''">
+		   AND PUM_NAME = #{itemCd, jdbcType=VARCHAR}
+		 </if>
+		   AND INSERT_TIME = #{searchTime, jdbcType=VARCHAR}
+		 ORDER BY PUM_NAME, YEAR, MONTH, DAY
+ 	</select>
+	<select id="selectDayPumAucExcel" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+               SUBSTR(REPLACE(A.SALE_DATE, '-', ''), 0, 4) AS YEAR,
+	       	   SUBSTR(REPLACE(A.SALE_DATE, '-', ''), 5, 2) AS MONTH,
+	       	   SUBSTR(REPLACE(A.SALE_DATE, '-', ''), 7, 2) AS DAY,
+	       	   A.PUM_NAME as PUM_NAME,
+	       	   B.TOT_CNT AS TOT_CNT,
+	       	   B.PAN_CNT AS PAN_CNT,
+	       	   B.YUCHAL_CNT AS YUCHAL_CNT,
+	       	   A.TOT_AMT AS TOT_AMT,
+	       	   C.AVG_AMT AS AVG_AMT
+		 FROM
+			(
+			SELECT REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) AS PUM_NAME,
+			       SUM(TOT_AMT) AS TOT_AMT
+			FROM T_SALE
+			WHERE CMP_CD = '0000000001'
+		      and REPLACE(SALE_DATE, '-', '') BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+		      
+		      and to_char(to_date(REPLACE(SALE_DATE,'-',''), 'yyyymmdd'), 'd') in ('2','4','6')
+			GROUP BY SALE_DATE, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME)
+			) A,
+			(
+			SELECT REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(MOK_NAME, '팔레높시스', '호접란', MOK_NAME) AS PUM_NAME,
+			       SUM(TOT_CNT) AS TOT_CNT,
+			       SUM(TOT_CNT - YUCHAL_CNT) AS PAN_CNT,
+			       SUM(YUCHAL_CNT) AS YUCHAL_CNT
+			FROM TB_YUCHAL
+			WHERE REPLACE(SALE_DATE, '-', '') BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+			  AND BUN_CHK = 'N'   
+			  and to_char(to_date(REPLACE(SALE_DATE,'-',''), 'yyyymmdd'), 'd') in ('2','4','6')
+			  OR (TOT_CNT = YUCHAL_CNT)
+			GROUP BY SALE_DATE, DECODE(MOK_NAME, '팔레높시스', '호접란', MOK_NAME)
+			) B,
+            (
+            SELECT ROUND(SUM(TOT_AMT)/SUM(TOT_QTY), 0) AS AVG_AMT,
+                   REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) AS PUM_NAME
+            FROM T_SALE_DATE
+            WHERE FLOWER_GUBN = '1'
+            and REPLACE(SALE_DATE, '-', '') BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+            and to_char(to_date(REPLACE(SALE_DATE,'-',''), 'yyyymmdd'), 'd') in ('2','4','6')
+			and CMP_CD = '0000000001'
+			GROUP BY SALE_DATE, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME)
+            ) C
+		WHERE A.SALE_DATE = B.SALE_DATE
+		  AND A.PUM_NAME = B.PUM_NAME
+          AND A.SALE_DATE = C.SALE_DATE
+          AND A.PUM_NAME = C.PUM_NAME
+          
+		ORDER BY PUM_NAME, YEAR, MONTH, DAY
+	</select>
+	<select id="selectDayPumAucExcel2023" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+               SUBSTR(REPLACE(A.SALE_DATE, '-', ''), 0, 4) AS YEAR,
+	       	   SUBSTR(REPLACE(A.SALE_DATE, '-', ''), 5, 2) AS MONTH,
+	       	   SUBSTR(REPLACE(A.SALE_DATE, '-', ''), 7, 2) AS DAY,
+	       	   decode(A.PUM_NAME,'거베라','거베라(거베라)','국화','국화(대국)',A.PUM_NAME) as PUM_NAME,
+	       	   B.TOT_CNT AS TOT_CNT,
+	       	   B.PAN_CNT AS PAN_CNT,
+	       	   B.YUCHAL_CNT AS YUCHAL_CNT,
+	       	   A.TOT_AMT AS TOT_AMT,
+	       	   C.AVG_AMT AS AVG_AMT
+		 FROM
+			(
+			SELECT REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) AS PUM_NAME,
+			       SUM(TOT_AMT) AS TOT_AMT
+			FROM T_SALE
+			WHERE CMP_CD = '0000000001'
+		      and REPLACE(SALE_DATE, '-', '') BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+		      and cmp_good in ('10510000','10010327','10010616','10011640')
+		      and to_char(to_date(REPLACE(SALE_DATE,'-',''), 'yyyymmdd'), 'd') in ('2','4','6')
+			GROUP BY SALE_DATE, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME)
+			) A,
+			(
+			SELECT REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(MOK_NAME, '팔레높시스', '호접란', MOK_NAME) AS PUM_NAME,
+			       SUM(TOT_CNT) AS TOT_CNT,
+			       SUM(TOT_CNT - YUCHAL_CNT) AS PAN_CNT,
+			       SUM(YUCHAL_CNT) AS YUCHAL_CNT
+			FROM TB_YUCHAL
+			WHERE REPLACE(SALE_DATE, '-', '') BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+			  AND BUN_CHK = 'N'
+			  and PUM_CODE in ('10510000','10010327','10010616','10011640') 
+			  and to_char(to_date(REPLACE(SALE_DATE,'-',''), 'yyyymmdd'), 'd') in ('2','4','6')
+			  OR (TOT_CNT = YUCHAL_CNT)
+			GROUP BY SALE_DATE, DECODE(MOK_NAME, '팔레높시스', '호접란', MOK_NAME)
+			) B,
+            (
+            SELECT ROUND(SUM(TOT_AMT)/SUM(TOT_QTY), 0) AS AVG_AMT,
+                   REPLACE(SALE_DATE, '-', '') AS SALE_DATE,
+			       DECODE(PUM_NAME, '팔레높시스', '호접란', PUM_NAME) AS PUM_NAME
+            FROM T_SALE_DATE
+            WHERE FLOWER_GUBN = '1'
+            and CMP_CD = '0000000001'
+            and REPLACE(SALE_DATE, '-', '') BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+            and to_char(to_date(REPLACE(SALE_DATE,'-',''), 'yyyymmdd'), 'd') in ('2','4','6')
+            and good_name in('백강','백선','신마','거베라')
+			GROUP BY SALE_DATE, DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME)
+            ) C
+		WHERE A.SALE_DATE = B.SALE_DATE
+		  AND A.PUM_NAME = B.PUM_NAME
+          AND A.SALE_DATE = C.SALE_DATE
+          AND A.PUM_NAME = C.PUM_NAME
+          ----   and TOT_CNT = YUCHAL_CNT
+		ORDER BY PUM_NAME, YEAR, MONTH, DAY
+	</select> 	
+	<select id="selectDayPumAucExcel2023other" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		--  파이썬 프로그램에서 가져온 쿼리  
+		select substr(b.PAN_DAY,1,4) as YEAR
+             , substr(b.PAN_DAY,5,2) as MONTH
+             , substr(b.PAN_DAY,7,2) as DAY
+             , decode(p.P_MOK_NAME,'거베라','거베라(거베라)','국화','국화(대국)',p.P_MOK_NAME) as PUM_NAME
+             , sum(decode(b.km_list, '1', b.p_sok_cnt, '4', b.p_sok_cnt, 0) + decode(b.km_list, '3', b.p_sok_cnt, 0) + decode(b.km_list, '2', b.p_sok_cnt, 0))  as TOT_CNT
+             , sum(decode(b.km_list, '1', b.p_sok_cnt, '4', b.p_sok_cnt, 0) + decode(b.km_list, '3', b.p_sok_cnt, 0)) as PAN_CNT 
+             , sum(decode(b.km_list, '2', b.p_sok_cnt, 0)) as YUCHAL_CNT
+             , sum(decode(b.km_list, '1', b.pan_price, '4', b.pan_price, 0) + decode(b.km_list, '3', b.pan_price, 0)) as TOT_AMT
+             , sum(decode(b.km_list, '1', b.pan_price, '4', b.pan_price, 0) + decode(b.km_list, '3', b.pan_price, 0))/decode(sum(decode(b.km_list, '1', b.p_sok_cnt, '4', b.p_sok_cnt, 0) + decode(b.km_list, '3', b.p_sok_cnt, 0)),0,1,sum(decode(b.km_list, '1', b.p_sok_cnt, '4', b.p_sok_cnt, 0) + decode(b.km_list, '3', b.p_sok_cnt, 0))) as AVG_AMT 
+        from v_bon_pan_list b, a_pum_mok_info p 
+        where  b.bun_chk = 'N'
+        and b.pan_day BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR}
+        and to_char(to_date(b.pan_day, 'yyyymmdd'), 'd') in ('2','4','6')
+        and b.km_list not in ('8')
+        and substr(b.PUM_CODE,1,4) = p.FLOWER_CODE||p.P_MOK_CODE 
+        and b.PUM_CODE in ('10510000','10010327','10010616','10011640') 
+        group by p.P_MOK_NAME, substr(b.PAN_DAY,1,4), substr(b.PAN_DAY,5,2), substr(b.PAN_DAY,7,2)  
+        order by 4,1,2,3	
+	</select>  	
+ 	<!-- 공휴일(결장) 체크  -->
+ 	<select id="selectTsaleHoliday" resultType="int" parameterType="string">
+		SELECT COUNT(SALE_DATE) 
+		FROM T_SALE
+		WHERE SALE_DATE = #{strdate}
+		AND CMP_CD = '0000000001'
+		AND MEJANG = '1' 		
+ 	</select>
+ 	
+ 	<!-- 공휴일시 전일 구하기  -->
+ 	<select id="selectTsaleHolidayBefore" resultType="string" parameterType="java.util.HashMap">
+		SELECT MAX(SALE_DATE) AS SALE_DATE
+        FROM T_SALE
+        WHERE SALE_DATE &lt; #{searchStrDate, jdbcType=VARCHAR}
+        AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+        AND TO_CHAR(TO_DATE(SALE_DATE,'yyyy-mm-dd'),'d') in ('2','4','6')
+        AND MEJANG = '1'
+ 	</select>
+ 	
+ 	 	
+</mapper>

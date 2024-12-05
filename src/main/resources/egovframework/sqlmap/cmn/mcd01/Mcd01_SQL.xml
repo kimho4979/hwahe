@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mcd01.mapper.Mcd01Mapper">
+	<resultMap id="Mcd01ResultMap" type="com.fpminput.mntr.mcd01.domain.Mcd01VO">	
+		<result property="seq"				column="SEQ"/>
+		<result property="bbsGubn"			column="BBS_GUBN"/>
+		<result property="title"			column="TITLE"/>
+		<result property="content"			column="CONTENT"/>
+		<result property="dispYn"			column="DISP_YN"/>
+		<result property="compCode"			column="COMP_CODE"/>
+		<result property="insDt"			column="INS_DT"/>
+		<result property="insId"			column="INS_ID"/>
+		<result property="uptDt"			column="UPT_DT"/>
+		<result property="uptId"			column="UPT_ID"/>
+		<result property="fileSeq"			column="FILE_SEQ"/>
+		<result property="originFileName"	column="ORIGIN_FILE_NAME"/>
+		<result property="storedFileName"	column="STORED_FILE_NAME"/>
+		<result property="filePath"			column="FILE_PATH"/>
+		<result property="fileSize"			column="FILE_SIZE"/>
+		<result property="fileExt"			column="FILE_EXT"/>
+	</resultMap>
+	
+	<select id="selectGongiList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+  			T1.SEQ
+  			, T1.BBS_GUBN
+  			, T1.TITLE
+  			, T1.CONTENT
+  			, T1.DISP_YN
+  			, T1.COMP_CODE
+  			, T1.INS_DT
+  			, T1.INS_ID
+  			, T1.UPT_DT
+  			, T1.UPT_ID
+  			, T2.FILE_SEQ
+  			, T2.ORIGIN_FILE_NAME
+  			, T2.STORED_FILE_NAME
+  			, T2.FILE_SIZE
+		FROM T_BBS T1
+		LEFT OUTER JOIN T_BBS_FILE T2 ON T1.SEQ = T2.FILE_SEQ
+		WHERE 1=1
+		AND T1.BBS_GUBN = '1'
+		AND T1.DISP_YN = 'Y'
+		ORDER BY T1.SEQ DESC
+	</select>
+	
+	<select id="selectSimilarInputSeq" parameterType="com.fpminput.mntr.mcd01.domain.Mcd01VO" resultMap="Mcd01ResultMap">
+		SELECT
+  			T1.SEQ
+  			, T1.BBS_GUBN
+  			, T1.TITLE
+  			, T1.CONTENT
+  			, T1.DISP_YN
+  			, T1.COMP_CODE
+  			, T1.INS_DT
+  			, T1.INS_ID
+  			, T1.UPT_DT
+  			, T1.UPT_ID
+  			, T2.FILE_SEQ
+  			, T2.ORIGIN_FILE_NAME
+  			, T2.STORED_FILE_NAME
+  			, T2.FILE_SIZE
+		FROM T_BBS T1
+		LEFT OUTER JOIN T_BBS_FILE T2 ON T1.SEQ = T2.FILE_SEQ
+		WHERE 1=1
+		AND T1.BBS_GUBN = '1'
+		AND T1.DISP_YN = 'Y'
+		AND T1.SEQ = #{seq, jdbcType=VARCHAR}
+		ORDER BY T1.SEQ DESC
+	</select>
+	
+	<select id="selectSumNail" parameterType="String" resultMap="Mcd01ResultMap">
+		SELECT 
+		 a.SEQ
+			, a.FILE_SEQ
+			, a.ORIGIN_FILE_NAME
+			, a.STORED_FILE_NAME
+			, a.FILE_SIZE
+			, a.INS_DT
+			, a.INS_ID
+			, a.UPT_DT
+			, a.UPT_ID
+		FROM T_BBS_FILE a, T_BBS b
+		WHERE a.FILE_SEQ = b.SEQ(+)
+		AND b.SEQ = #{seqNo, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertGongiInput"  parameterType="com.fpminput.mntr.mcd01.domain.Mcd01VO" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			SELECT MAX(SEQ)+1 FROM T_BBS
+		</selectKey>
+ 		INSERT INTO T_BBS
+		(     
+			SEQ                  
+            , TITLE            
+            , INS_ID    
+            , INS_DT
+            , BBS_GUBN
+            , DISP_YN
+            , CONTENT
+            , UPT_DT    
+            , UPT_ID  
+       	) 
+       	VALUES 
+       	(    
+       		#{IDX}   
+            , #{TITLE, jdbcType=VARCHAR}  
+            , #{INS_ID, jdbcType=VARCHAR}           
+            , TO_CHAR(SYSDATE,'YYYY-MM-DD') 
+            , #{BBS_GUBN, jdbcType=VARCHAR}
+            , 'Y' 
+            , #{CONTENT, jdbcType=VARCHAR}
+            , TO_CHAR(SYSDATE, 'YY/MM/DD')
+            , #{INS_ID, jdbcType=VARCHAR}   
+       	) 
+ 	</insert>
+ 	
+ 	<insert id="insertGongiFile"  parameterType="java.util.HashMap">
+		INSERT INTO T_BBS_FILE
+		(
+			SEQ
+       		, FILE_SEQ
+			, BBS_GUBN
+			, ORIGIN_FILE_NAME
+			, STORED_FILE_NAME
+			, FILE_SIZE
+			, INS_ID
+			, INS_DT
+		) 
+		VALUES 
+		(    
+			(SELECT MAX(SEQ)+1 FROM T_BBS_FILE)
+            , #{CROP_IDX, jdbcType=VARCHAR}
+            , 'Y'
+            , #{ORIGIN_FILE_NAME, jdbcType=VARCHAR}
+            , #{STORED_FILE_NAME, jdbcType=VARCHAR}
+            , #{FILE_SIZE, jdbcType=VARCHAR}
+            , #{INS_ID, jdbcType=VARCHAR}
+            , TO_CHAR(SYSDATE, 'YY/MM/DD')
+		)          
+	</insert>
+	
+	<update id="updateGongiInfoInput"  parameterType="java.util.HashMap">
+		UPDATE T_BBS SET
+			   TITLE = #{TITLE, jdbcType=VARCHAR}
+			   , CONTENT = #{CONTENT, jdbcType=VARCHAR}
+			   , UPT_DT = TO_CHAR(SYSDATE, 'YY/MM/DD')
+			   , UPT_ID = #{INS_ID, jdbcType=VARCHAR}
+	    WHERE SEQ = #{SEQ, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateGongiFile"  parameterType="java.util.HashMap" >
+		UPDATE T_BBS_FILE SET
+            ORIGIN_FILE_NAME = #{ORIGIN_FILE_NAME, jdbcType=VARCHAR}
+            , STORED_FILE_NAME = #{STORED_FILE_NAME, jdbcType=VARCHAR}
+            , FILE_SIZE = #{FILE_SIZE, jdbcType=VARCHAR}
+            , UPT_DT = TO_CHAR(SYSDATE, 'YY/MM/DD')
+		WHERE FILE_SEQ = #{SEQ, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteGongiInfoInput"  parameterType="java.util.HashMap" >
+		UPDATE T_BBS SET
+  			DISP_YN = 'N'
+		WHERE SEQ = #{SEQ, jdbcType=VARCHAR}
+		AND INS_ID = #{INS_ID, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteGongiFileInfoInput"  parameterType="java.util.HashMap" >
+		UPDATE T_BBS_FILE SET
+  			BBS_GUBN = 'N'
+		WHERE FILE_SEQ = #{SEQ, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

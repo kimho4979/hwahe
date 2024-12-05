@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.dailyRptMgt.mapper.DailyRptMgtMapper">
+	<resultMap id="DailtRptMgtResultMap" type="com.fpminput.mntr.dailyRptMgt.domain.DailyRptMgtVO">	
+		<result property="seq"				column="SEQ"/>
+		<result property="bbsGubn"			column="BBS_GUBN"/>
+		<result property="title"			column="TITLE"/>
+		<result property="content"			column="CONTENT"/>
+		<result property="dispYn"			column="DISP_YN"/>
+		<result property="compCode"			column="COMP_CODE"/>
+		<result property="insDt"			column="INS_DT"/>
+		<result property="insId"			column="INS_ID"/>
+		<result property="uptDt"			column="UPT_DT"/>
+		<result property="uptId"			column="UPT_ID"/>
+		<result property="fileSeq"			column="FILE_SEQ"/>
+		<result property="originFileName"	column="ORIGIN_FILE_NAME"/>
+		<result property="storedFileName"	column="STORED_FILE_NAME"/>
+		<result property="filePath"			column="FILE_PATH"/>
+		<result property="fileSize"			column="FILE_SIZE"/>
+		<result property="fileExt"			column="FILE_EXT"/>
+		
+
+		<result property="rsltGp" column="RSLT_GP"/>
+		<result property="rsltGpNm" column="RSLT_GP_NM"/>
+		<result property="endDate" column="END_DATE"/>
+		<result property="procMsg" column="PROC_MSG"/>
+		<result property="startDate" column="START_DATE"/>
+		
+		<result property="logSeq" column="LOG_SEQ"/>
+		<result property="sysGp" column="SYS_GP"/>
+		<result property="userNm" column="USER_NM"/>
+		<result property="pgmId" column="PGM_ID"/>
+		<result property="pgmNm" column="PGM_NM"/>		
+	
+		
+	</resultMap>
+	
+	<!--  조회 -->
+	<select id="selectGridList" parameterType="com.fpminput.mntr.dailyRptMgt.domain.DailyRptMgtVO" resultMap="DailtRptMgtResultMap">
+	SELECT A.LOG_SEQ
+		 , TO_CHAR(TO_DATE(SUBSTR(A.START_DATE,1,8), 'YYYYMMDD'), 'YYYY-MM-DD') AS START_DATE
+	     , A.RSLT_GP
+	     , B.CD_NM AS RSLT_GP_NM
+	     , TO_CHAR(TO_DATE(A.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE
+	     , A.PROC_MSG
+	     , A.USER_NM
+	  FROM T_LOG_H A
+	     , TB_GEN_CODE B
+	     , TB_GEN_CODE C
+	 WHERE A.RSLT_GP = B.CD_ID
+		AND B.GP_ID = 'RSLT_GP'
+		AND A.SYS_GP = C.CD_ID
+		AND C.GP_ID = 'SYS_GP'
+		AND A.SYS_GP = '1'
+		AND SUBSTR(A.START_DATE,1,8) = REPLACE(#{searchDate}, '-', '')
+		<if test="searchNm != null and searchNm != ''">
+		AND A.USER_NM = #{searchNm}
+		</if>	
+	ORDER BY A.START_DATE
+	</select>
+	
+	<select id="searchGridList" parameterType="com.fpminput.mntr.dailyRptMgt.domain.DailyRptMgtVO" resultMap="DailtRptMgtResultMap">
+	SELECT A.LOG_SEQ
+		 , TO_CHAR(TO_DATE(SUBSTR(A.START_DATE,1,8), 'YYYYMMDD'), 'YYYY-MM-DD') AS START_DATE
+	     , A.RSLT_GP
+	     , B.CD_NM AS RSLT_GP_NM
+	     , TO_CHAR(TO_DATE(A.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE
+	     , A.PROC_MSG
+	     , A.USER_NM
+	  FROM T_LOG_H A
+	     , TB_CM_CODE B
+	 WHERE A.RSLT_GP = B.CD_ID
+	   AND B.GP_ID = 'RSLT_GP'
+	   AND A.SYS_GP = '1'
+	   AND SUBSTR(A.START_DATE,1,8) = REPLACE(#{searchDate}, '-', '')
+	   <if test="searchNm != null and searchNm != ''">
+	   AND A.USER_NM = #{searchNm}
+	   </if>	
+	 ORDER BY A.START_DATE
+	</select>
+	
+	<insert id="insertGridList"  parameterType="com.fpminput.mntr.dailyRptMgt.domain.DailyRptMgtVO">
+	INSERT INTO T_LOG_H
+	(     
+		LOG_SEQ                  
+        , SYS_GP            
+        , RSLT_GP    
+        , START_DATE
+        , END_DATE
+        , PROC_MSG
+        , USER_NM
+        , PGM_ID   
+        , PGM_NM
+   	) 
+    VALUES 
+    (    
+    	(SELECT MAX(LOG_SEQ)+1 FROM T_LOG_H)
+        , #{sysGp}
+        , #{rsltGp}
+        , #{startDate}
+        , #{endDate}
+        , #{procMsg}
+        , #{userNm}
+        , #{pgmId}
+        , #{pgmNm}
+   	)
+ 	</insert>
+	
+		
+	<update id="updateGridList"  parameterType="com.fpminput.mntr.dailyRptMgt.domain.DailyRptMgtVO">
+	    UPDATE T_LOG_H
+		   SET RSLT_GP = 'S',
+		   PROC_MSG = #{procMsg}
+		WHERE LOG_SEQ = #{logSeq}
+	</update>
+	
+	<select id="selectGongiList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+  			T1.SEQ
+  			, T1.BBS_GUBN
+  			, T1.TITLE
+  			, T1.CONTENT
+  			, T1.DISP_YN
+  			, T1.COMP_CODE
+  			, T1.INS_DT
+  			, T1.INS_ID
+  			, T1.UPT_DT
+  			, T1.UPT_ID
+  			, T2.FILE_SEQ
+  			, T2.ORIGIN_FILE_NAME
+  			, T2.STORED_FILE_NAME
+  			, T2.FILE_SIZE
+		FROM T_BBS T1
+		LEFT OUTER JOIN T_BBS_FILE T2 ON T1.SEQ = T2.FILE_SEQ
+		WHERE 1=1
+		AND T1.BBS_GUBN = '1'
+		AND T1.DISP_YN = 'Y'
+		ORDER BY T1.SEQ DESC
+	</select>
+	
+	<select id="selectSimilarInputSeq" parameterType="com.fpminput.mntr.dailyRptMgt.domain.DailyRptMgtVO" resultMap="DailtRptMgtResultMap">
+		SELECT
+  			T1.SEQ
+  			, T1.BBS_GUBN
+  			, T1.TITLE
+  			, T1.CONTENT
+  			, T1.DISP_YN
+  			, T1.COMP_CODE
+  			, T1.INS_DT
+  			, T1.INS_ID
+  			, T1.UPT_DT
+  			, T1.UPT_ID
+  			, T2.FILE_SEQ
+  			, T2.ORIGIN_FILE_NAME
+  			, T2.STORED_FILE_NAME
+  			, T2.FILE_SIZE
+		FROM T_BBS T1
+		LEFT OUTER JOIN T_BBS_FILE T2 ON T1.SEQ = T2.FILE_SEQ
+		WHERE 1=1
+		AND T1.BBS_GUBN = '1'
+		AND T1.DISP_YN = 'Y'
+		AND T1.SEQ = #{seq, jdbcType=VARCHAR}
+		ORDER BY T1.SEQ DESC
+	</select>
+	
+	<select id="selectSumNail" parameterType="String" resultMap="DailtRptMgtResultMap">
+		SELECT 
+		 a.SEQ
+			, a.FILE_SEQ
+			, a.ORIGIN_FILE_NAME
+			, a.STORED_FILE_NAME
+			, a.FILE_SIZE
+			, a.INS_DT
+			, a.INS_ID
+			, a.UPT_DT
+			, a.UPT_ID
+		FROM T_BBS_FILE a, T_BBS b
+		WHERE a.FILE_SEQ = b.SEQ(+)
+		AND b.SEQ = #{seqNo, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertGongiInput"  parameterType="com.fpminput.mntr.dailyRptMgt.domain.DailyRptMgtVO" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			SELECT MAX(SEQ)+1 FROM T_BBS
+		</selectKey>
+ 		INSERT INTO T_BBS
+		(     
+			SEQ                  
+            , TITLE            
+            , INS_ID    
+            , INS_DT
+            , BBS_GUBN
+            , DISP_YN
+            , CONTENT
+            , UPT_DT    
+            , UPT_ID  
+       	) 
+       	VALUES 
+       	(    
+       		#{IDX}   
+            , #{TITLE, jdbcType=VARCHAR}  
+            , #{INS_ID, jdbcType=VARCHAR}           
+            , TO_CHAR(SYSDATE,'YYYY-MM-DD') 
+            , #{BBS_GUBN, jdbcType=VARCHAR}
+            , 'Y' 
+            , #{CONTENT, jdbcType=VARCHAR}
+            , TO_CHAR(SYSDATE, 'YY/MM/DD')
+            , #{INS_ID, jdbcType=VARCHAR}   
+       	) 
+ 	</insert>
+ 	
+ 	<insert id="insertGongiFile"  parameterType="java.util.HashMap">
+		INSERT INTO T_BBS_FILE
+		(
+			SEQ
+       		, FILE_SEQ
+			, BBS_GUBN
+			, ORIGIN_FILE_NAME
+			, STORED_FILE_NAME
+			, FILE_SIZE
+			, INS_ID
+			, INS_DT
+		) 
+		VALUES 
+		(    
+			(SELECT MAX(SEQ)+1 FROM T_BBS_FILE)
+            , #{CROP_IDX, jdbcType=VARCHAR}
+            , 'Y'
+            , #{ORIGIN_FILE_NAME, jdbcType=VARCHAR}
+            , #{STORED_FILE_NAME, jdbcType=VARCHAR}
+            , #{FILE_SIZE, jdbcType=VARCHAR}
+            , #{INS_ID, jdbcType=VARCHAR}
+            , TO_CHAR(SYSDATE, 'YY/MM/DD')
+		)          
+	</insert>
+	
+	<update id="updateGongiInfoInput"  parameterType="java.util.HashMap">
+		UPDATE T_BBS SET
+			   TITLE = #{TITLE, jdbcType=VARCHAR}
+			   , CONTENT = #{CONTENT, jdbcType=VARCHAR}
+			   , UPT_DT = TO_CHAR(SYSDATE, 'YY/MM/DD')
+			   , UPT_ID = #{INS_ID, jdbcType=VARCHAR}
+	    WHERE SEQ = #{SEQ, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateGongiFile"  parameterType="java.util.HashMap" >
+		UPDATE T_BBS_FILE SET
+            ORIGIN_FILE_NAME = #{ORIGIN_FILE_NAME, jdbcType=VARCHAR}
+            , STORED_FILE_NAME = #{STORED_FILE_NAME, jdbcType=VARCHAR}
+            , FILE_SIZE = #{FILE_SIZE, jdbcType=VARCHAR}
+            , UPT_DT = TO_CHAR(SYSDATE, 'YY/MM/DD')
+		WHERE FILE_SEQ = #{SEQ, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteGongiInfoInput"  parameterType="java.util.HashMap" >
+		UPDATE T_BBS SET
+  			DISP_YN = 'N'
+		WHERE SEQ = #{SEQ, jdbcType=VARCHAR}
+		AND INS_ID = #{INS_ID, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteGongiFileInfoInput"  parameterType="java.util.HashMap" >
+		UPDATE T_BBS_FILE SET
+  			BBS_GUBN = 'N'
+		WHERE FILE_SEQ = #{SEQ, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

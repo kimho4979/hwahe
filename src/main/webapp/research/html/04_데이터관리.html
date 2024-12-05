@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=10,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>04_데이터관리</title>
+
+<!-- CSS(S) -->
+<link rel="stylesheet" type="text/css" href="../css/reset.css">
+<link rel="stylesheet" type="text/css" href="../css/common.css">
+<link rel="stylesheet" type="text/css" href="../css/sub.css">
+<!-- CSS(E) -->
+
+<!-- SCRIPT(S) -->
+<script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script> 
+<!-- SCRIPT(E) -->
+
+</head>
+
+<body> 
+	<!-- warp(S) -->
+	<div class="wrap">
+		<!-- header(S) -->
+		<div class="header">
+			<div class="header_in">
+				<a href="#!" class="btn_home">HOME</a>
+				<ul class="menu">
+					<li><a href="#!" class="btn_menu">전국절화 농가현황</a></li>
+					<li><a href="#!" class="btn_menu">재배현황</a></li>
+					<li><a href="#!" class="btn_menu on">데이터관리</a></li>
+				</ul>
+				<a href="#!" class="btn_logout">로그아웃</a>
+			</div>
+		</div>
+		<!-- header(E) -->
+
+		<!-- sub-conts(S) -->
+		<div class="content">
+			<div class="content_in">
+
+				<!-- main title(S) -->
+				<h2 class="main_title">데이터관리</h2>
+				<!-- main title(E) -->
+
+				<!-- title(S) -->
+				<div class="title_box t1 mt70">
+					<div class="fr">
+						<dl class="dl_column">
+							<dt><p class="tit_tag">년도</p></dt>
+							<dd>
+								<div class="select_type_01">
+									<select id="sel01">
+										<option>2019</option>
+									</select>
+									<label for="sel01"></label>
+								</div>
+							</dd>
+							<dt><p class="tit_tag">파일첨부</p></dt>
+							<dd>
+								<div class="file_attach">
+									<input type="text" id="fileName" class="file_input_textbox" readonly="readonly">
+									<div class="file_input_div">
+										<input type="button" value="" class="file_input_button">
+									<input type="file" class="file_input_hidden" onchange="javascript:document.getElementById('fileName').value = this.value.split('\\')[this.value.split('\\').length-1]">
+									</div>
+								</div>
+							</dd>
+						</dl>
+						
+						
+						<div class="title_btn">
+							<a href="#!" class="btn_type_01 check">데이터 검증</a>
+							<a href="#!" class="btn_type_01 save">저장</a>
+						</div>
+					</div>
+				</div>
+				<!-- title(E) -->
+
+				<!-- 농가현황(S)-->
+				<div class="title_box mt50">
+					<div class="fl">
+						<h4 class="tit_02">농가현황</h4>
+					</div>
+				</div>
+
+				<!-- 테이블(S) -->
+				<div class="table_type_01 overflow_x mt30">
+					<table>
+						<caption>자료갱신 일시</caption>
+						<colgroup>
+							<col width="100px">
+							<col width="100px">
+							<col width="100px">
+							<col width="100px">
+							<col width="100px">
+							<col width="150px">
+							<col width="150px">
+							<col width="150px">
+							<col width="150px">
+							<col width="150px">
+							<col width="150px">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>검증</th>
+								<th>ID</th>
+								<th>농장시도</th>
+								<th>성명</th>
+								<th>성별</th>
+								<th>일반전화</th>
+								<th>휴대전화</th>
+								<th>이메일</th>
+								<th>농장지번</th>
+								<th>농장도로명</th>
+								<th>영농시작일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로</p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로</p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로</p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로</p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로</p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 테이블(E) -->
+				<!-- 농가현황(E)-->
+				
+				<!-- 재배현황(S)-->
+				<div class="title_box mt50">
+					<div class="fl">
+						<h4 class="tit_02">농가현황</h4>
+					</div>
+				</div>
+
+				<!-- 테이블(S) -->
+				<div class="table_type_01 overflow_x mt30">
+					<table>
+						<caption>자료갱신 일시</caption>
+						<colgroup>
+							<col width="100px">
+							<col width="100px">
+							<col width="100px">
+							<col width="100px">
+							<col width="100px">
+							<col width="150px">
+							<col width="150px">
+							<col width="150px">
+							<col width="150px">
+							<col width="150px">
+							<col width="150px">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>검증</th>
+								<th>ID</th>
+								<th>농장시도</th>
+								<th>성명</th>
+								<th>성별</th>
+								<th>일반전화</th>
+								<th>휴대전화</th>
+								<th>이메일</th>
+								<th>농장지번</th>
+								<th>농장도로명</th>
+								<th>영농시작일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로</p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로</p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로</p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jkkkkkkkkkk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로 아현로 아현로 아현로 아현로 아현로 </p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+							<tr>
+								<td><p class="txt_01">오류</p></td>
+								<td><p class="txt_01">1032</p></td>
+								<td><p class="txt_01">17</p></td>
+								<td><p class="txt_01">김천국</p></td>
+								<td><p class="txt_01">여자</p></td>
+								<td><p class="txt_01">02-111-3333</p></td>
+								<td><p class="txt_01">010-2222-5555</p></td>
+								<td><p class="txt_01">jk@email.com</p></td>
+								<td><p class="txt_01">589451</p></td>
+								<td><p class="txt_01">아현로</p></td>
+								<td><p class="txt_01">2020.12.18</p></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 테이블(E) -->
+				<!-- 재배현황(E)-->
+			</div>
+		</div>
+		<!-- sub-conts(E) -->
+	</div>
+	<!-- wrap(E) -->		
+
+
+</body>
+</html>
+
+

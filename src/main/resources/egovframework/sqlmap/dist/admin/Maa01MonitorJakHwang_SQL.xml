@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.monitor.mapper.Maa01MonitorJakHwangMapper">
+
+	
+   <select id="maa01MonitorJakHwang" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+    select * from (  
+           SELECT 
+                T1.COMP_CODE AS COMP_CODE
+                ,ROWNUM AS RNUM
+                 ,USER_ID AS USER_ID
+                  ,COUNT(*) OVER() AS TOTAL_COUNT
+                 ,(SELECT COUNT(*) FROM T_CROP_REPORT  T     WHERE T.CHUL_NO=T1.COMP_CODE AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE}  AND USE_YN='Y') AS JAKWANG
+              ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+                 ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+                  FROM
+                  
+               		 T_USER T1
+                  
+                  WHERE
+               	    T1.USER_TYPE='M'
+               	    AND T1.USE_YN='Y'
+                  AND USER_ID NOT IN('at99999999')
+                   )
+ WHERE RNUM BETWEEN #{startCount} AND #{endCount} 	
+</select>
+
+<select id="maa01MonitorJakHwangDetail" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+				SELECT 
+                	SUBSTR(T1.REG_DATE ,'1','7')   AS REG_DATE1
+                	,REG_DATE
+                    ,T1.CHUL_NO  AS CHUL_NO
+                    ,T1.STATUS AS STATUS
+                    ,T1.BIGO AS BIGO
+                    ,T2.ORIGINAL_FILE_NAME
+                    ,CASE WHEN T1.STATUS =1 THEN '좋음'
+                                 WHEN T1.STATUS =2 THEN '보통'
+                                 ELSE '나쁨' END AS STATUS_NAME
+                    ,T1.PUM_NAME
+                    ,T1.GOOD_NAME
+                    ,T1.SEQ_NO
+                                
+                    
+                  FROM T_USER T INNER JOIN T_CROP_REPORT T1 
+                    ON T.COMP_CODE = T1.CHUL_NO
+                    LEFT JOIN  T_CROP_FILE  T2
+                    ON T1.SEQ_NO= T2.CROP_REPORT_SEQ
+                  
+                  WHERE
+	                  T.USER_TYPE='M'
+	                  AND SUBSTR(REPLACE(T1.REG_DT,'-',''),'1','6') =#{F_DATE}
+	                  
+	                  AND T.USER_ID NOT IN('at99999999')
+	                 AND T1.CHUL_NO=#{COMP_CODE}
+	                  AND T1.USE_YN='Y'
+</select>
+<select id="maa01MonitorJakHwangDate" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+  select * from (  
+           SELECT 
+                T1.COMP_CODE AS COMP_CODE
+                ,ROWNUM AS RNUM
+                 ,USER_ID AS USER_ID
+                  ,COUNT(*) OVER() AS TOTAL_COUNT
+                 ,(SELECT COUNT(*) FROM T_CROP_REPORT  T     WHERE T.CHUL_NO=T1.COMP_CODE AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE}  AND USE_YN='Y') AS JAKWANG
+              ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+                       ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+                  FROM
+                  
+               		 T_USER T1
+                  
+                  WHERE
+               	    T1.USER_TYPE='M'
+               	    AND T1.USE_YN='Y'
+                  AND USER_ID NOT IN('at99999999')
+                   )
+ WHERE RNUM BETWEEN #{startCount} AND #{endCount}	
+</select>
+	
+   <update id="Maa01MonitorJakHwangPopupUpdate"  parameterType="java.util.HashMap">
+
+			 UPDATE T_CROP_REPORT  SET 					             
+			        STATUS = #{STATUS, jdbcType=VARCHAR}
+			        ,BIGO =#{BIGO, jdbcType=VARCHAR}	 				
+			 WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+			 AND	 CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}
+			 AND	 PUM_NAME =#{PUM_NAME, jdbcType=VARCHAR} 	
+			 AND	 GOOD_NAME =#{GOOD_NAME , jdbcType=VARCHAR} 	
+			 AND	 SEQ_NO =#{SEQ_NO, jdbcType=VARCHAR} 	  
+  </update>
+	
+   <select id="maa01MonitorJakHwangReLoad" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+      select * from (  
+           SELECT 
+                T1.COMP_CODE AS COMP_CODE
+                ,ROWNUM AS RNUM
+                 ,USER_ID AS USER_ID
+                  ,COUNT(*) OVER() AS TOTAL_COUNT
+                 ,(SELECT COUNT(*) FROM T_CROP_REPORT  T     WHERE T.CHUL_NO=T1.COMP_CODE AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE}  AND USE_YN='Y') AS JAKWANG
+              ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+                       ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+                  FROM
+                  
+               		 T_USER T1
+                  
+                  WHERE
+               	    T1.USER_TYPE='M'
+                  AND USER_ID NOT IN('at99999999')
+                       )
+ WHERE RNUM BETWEEN #{startCount} AND #{endCount}	
+</select>
+
+<update id="deleteMonitorJakHwangtDetail"  parameterType="java.util.HashMap" >
+  UPDATE T_CROP_REPORT  SET
+  			USE_YN='N'
+  WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+ AND	 CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}
+ AND	 PUM_NAME =#{PUM_NAME, jdbcType=VARCHAR} 	
+ AND	 GOOD_NAME =#{GOOD_NAME , jdbcType=VARCHAR} 	
+ AND	 SEQ_NO =#{SEQ_NO, jdbcType=VARCHAR} 
+  </update>  
+   <select id="maa01MonitorJakHwang_Date" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+   
+    
+        
+    select * from (  
+           SELECT 
+                T1.COMP_CODE AS COMP_CODE
+                ,ROWNUM AS RNUM
+                 ,USER_ID AS USER_ID
+                  ,COUNT(*) OVER() AS TOTAL_COUNT
+                 ,(SELECT COUNT(*) FROM T_CROP_REPORT  T     WHERE T.CHUL_NO=T1.COMP_CODE AND SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE}  AND USE_YN='Y') AS JAKWANG
+              ,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+                       ,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+                  FROM
+                  
+               		 T_USER T1
+                  
+                  WHERE
+               	    T1.USER_TYPE='M'
+               	    AND T1.USE_YN='Y'
+                  AND USER_ID NOT IN('at99999999')
+                   )
+ WHERE RNUM BETWEEN #{startCount} AND #{endCount} 	
+</select>
+  
+<insert id="Maa01MonitorJakHwangPopupInsert"  parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			SELECT CROP_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+ 	INSERT INTO T_CROP_REPORT
+       (     SEQ_NO
+            ,REG_DATE                    
+            ,PUM_NAME            
+            ,GOOD_NAME    
+            ,CHUL_NO
+            ,STATUS
+            ,BIGO   
+            ,SAN_CD 
+            ,REG_DT            
+       ) 
+       VALUES 
+       (    #{IDX}
+            ,#{REG_DATE, jdbcType=VARCHAR}      
+            ,#{PUM_NAME, jdbcType=VARCHAR}  
+            ,#{GOOD_NAME, jdbcType=VARCHAR}            
+            ,#{COMP_CODE, jdbcType=VARCHAR}
+            ,#{STATUS, jdbcType=VARCHAR}
+            ,#{BIGO, jdbcType=VARCHAR}    
+            ,#{SAN_CD, jdbcType=VARCHAR}  
+            ,(select to_char(sysdate,'yyyy-mm-dd') from dual)       
+       ) 
+ </insert>
+ 
+  <insert id="Maa01MonitorJakHwangFileInsert"  parameterType="java.util.HashMap">
+ 	INSERT INTO T_CROP_FILE
+       (     
+       		 FILE_SEQ
+            ,CROP_REPORT_SEQ                    
+            ,ORIGINAL_FILE_NAME            
+            ,STORED_FILE_NAME    
+            ,FILE_SIZE
+            ,CREA_ID                            
+       ) 
+       VALUES 
+       (    
+               CROP_FILE_SEQ.NEXTVAL
+             ,#{CROP_IDX, jdbcType=VARCHAR}      
+            ,#{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}  
+            ,#{STORED_FILE_NAME, jdbcType=VARCHAR}            
+            ,#{FILE_SIZE, jdbcType=VARCHAR}           
+            ,'ADMIN'    
+       )         
+ </insert>
+</mapper>

@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../print.css" type="text/css" media="print">
+<meta content="BoxPlotSeries,kor.series.BoxPlotSeries" name="keywords">
+<title>kor.series.BoxPlotSeries</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'BoxPlotSeries - rMate Chart 5.0 API Guide - RiaMore Soft';
+				var baseRef = '../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">rMate Chart 5.0 API Guide</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../all-classes.html')" href="../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../all-classes.html')" href="../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../index-list.html')" href="../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../index.html?kor/series/BoxPlotSeries.html&amp;kor/series/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableTopNav"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;BoxPlotSeries</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#styleSummary">Styles</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class BoxPlotSeries"); titleBar_setSubNav(false,false,true,false,false,false,false,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">kor.series</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class BoxPlotSeries</td>
+</tr>
+</table>
+<p></p>
+  BoxPlotSeries 클래스는 BoxPlotChart 클래스 인스턴스의 series 속성에 설정됩니다.
+  
+  <p>차트에 설정된 데이터를 처리하고 최소, 최대, 제1사분위, 제3사분위 도형을 표현합니다.</p>
+  
+  <p>레이아웃은 다음과 같은 형식으로 작성됩니다.</p>
+  <pre>
+  &lt;rMateChart &gt;
+   &lt;Options&gt;
+    &lt;Caption text="Annual Report"/&gt;
+   &lt;/Options&gt;
+   &lt;BoxPlotChart showDataTips="true"&gt;
+    &lt;horizontalAxis&gt;
+     &lt;CategoryAxis categoryField="Month" /&gt;
+    &lt;/horizontalAxis&gt;
+    &lt;series&gt;
+     &lt;BoxPlotSeries yField="Profit"/&gt;
+     &lt;BoxPlotSeries yField="Revenue" /&gt;
+    &lt;/series&gt;
+   &lt;/BoxPlotChart&gt;
+  &lt;/rMateChart&gt;
+  </pre>
+  <p></p>
+<br>
+<hr>
+</div>
+<a name="styleSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Styles</div>
+<table id="summaryTableStyle" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Style</th><th>Description</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:boxStroke"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">boxStroke</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>박스(Box) 선을 설정합니다.<br/>
+  유효값은 Stroke 클래스 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol">BoxPlotSeries</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:halfWidthOffset"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">halfWidthOffset</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>다중 박스(Box) 시리즈가 존재할 경우, 이웃한 박스(Box) 사이의 간격을 픽셀 단위로 지정합니다.<br/> 
+  두 개의 BoxPlotSeries 가 존재하고, halfWidthOffset 속성값이 0.5 이면 두 박스(Box) 사이에는 1px 의 여백이 생깁니다.</p>
+  
+   기본값(default) :  <code>0.5</code>.</td><td class="summaryTableOwnerCol">BoxPlotSeries</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:maxColumnWidth"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">maxColumnWidth</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+  <p>박스(Box)의 최대 넓이값을 픽셀 단위로 지정합니다.<br/>
+  실제 박스(Box)의 넓이는 <code>barWidthRatio</code> 속성과<br/>
+  <code>maxColumnWidth</code> 속성을 계산하여 그중 작은 값이 적용됩니다.</p>
+  
+   기본값(default) :  <code>NaN</code>.</td><td class="summaryTableOwnerCol">BoxPlotSeries</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:medianStroke"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">medianStroke</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>데이터 아이템들의 평균값(Median)에 해당하는 선을 설정합니다.<br/>
+  유효값은 Stroke 클래스 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol">BoxPlotSeries</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:stroke"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">stroke</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Object<br>
+  <p>수염(Whisker) 선을 설정합니다.<br/>
+  유효값은 Stroke 클래스 인스턴스입니다.</p>
+  </td><td class="summaryTableOwnerCol">BoxPlotSeries</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol"><a name="style:whiskerWidthRatio"></a>&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<span class="signatureLink">whiskerWidthRatio</span>
+</div>
+</td><td class="summaryTableDescription"><span class="label">Type: </span>Number<br>
+   <p>박스(Box)의 넓이를 기준으로 수염(Whisker)의 가로 길이 비율을 지정합니다.</p>
+  
+    기본값(default) :  <code>0.5</code>.</td><td class="summaryTableOwnerCol">BoxPlotSeries</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright">Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved</center>
+</div>
+</body>
+</html>
+<!--Copyright(c) 2018 RiaMore Soft, Inc. All Right Reserved-->

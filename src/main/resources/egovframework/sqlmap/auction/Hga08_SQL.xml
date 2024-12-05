@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hga08.mapper.Hga08_Mapper">
+	<select id="selectHga08ChartJson1" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT CODE
+            , YYYY
+            , LOCATION
+		     , VAL1
+             , VAL2
+             , NVL(VAL1, 0) + NVL(VAL2, 0) AS TOT_QTY
+		FROM(
+			SELECT CASE WHEN LOCATION LIKE '강원%' THEN 100
+			            WHEN LOCATION LIKE '경기%' THEN 200 
+			            WHEN LOCATION LIKE '경상남도%' OR LOCATION LIKE '경남%' THEN 300 
+			            WHEN LOCATION LIKE '경상북도%' OR LOCATION LIKE '경북%' THEN 400
+			            WHEN LOCATION LIKE '광주%' THEN 500
+			            WHEN LOCATION LIKE '대구%' THEN 600
+			            WHEN LOCATION LIKE '대전%' THEN 700
+			            WHEN LOCATION LIKE '부산%' THEN 800
+			            WHEN LOCATION LIKE '서울%' THEN 90000
+			            WHEN LOCATION LIKE '울산%' THEN 1000
+			            WHEN LOCATION LIKE '인천%' THEN 1100
+			            WHEN LOCATION LIKE '전라남도%' OR LOCATION LIKE '전남%' THEN 1200
+			            WHEN LOCATION LIKE '전라북도%' OR LOCATION LIKE '전북%' THEN 1300
+			            WHEN LOCATION LIKE '제주%' THEN 1400
+			            WHEN LOCATION LIKE '충청남도%' OR LOCATION LIKE '충남%' THEN 1500
+			            WHEN LOCATION LIKE '충청북도%' OR LOCATION LIKE '충북%' THEN 1600
+			            WHEN LOCATION LIKE '세종%' THEN 1700
+			            END AS CODE
+			     , VAL1
+			     , VAL2
+                 , LOCATION
+                 , YYYY
+			FROM
+			    (
+			    SELECT YYYY
+                  , LOCATION
+			      , VAL1
+			      , VAL2
+                  FROM TB_CULTIVATION_STATUS A
+                  WHERE 1=1
+                  AND YYYY = #{searchEndDate}
+			    )
+			)
+			WHERE CODE IS NOT NULL
+	</select>
+	<select id="selectHga08ChartJson2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT YYYY
+            , LOCATION
+		     , VAL1
+             , VAL2
+             , NVL(VAL1, 0) + NVL(VAL2, 0) AS TOT_QTY
+		FROM(
+				SELECT * 
+				FROM TB_CULTIVATION_STATUS A
+				WHERE 1=1
+				AND YYYY = #{searchEndDate}
+				<if test="locaiton != null and locaiton != ''">
+					AND LOCATION = #{locaiton}
+				</if>
+			)
+	</select>
+</mapper>

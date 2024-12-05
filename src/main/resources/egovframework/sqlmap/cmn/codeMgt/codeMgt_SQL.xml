@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.codeMgt.mapper.CodeMgtMapper">
+
+	<resultMap id="resultMap" type="com.fpminput.mntr.codeMgt.domain.CodeMgtVO">
+		<result property="cmpCd" 			column="CMP_CD"/>
+		<result property="flowerGubn" 		column="FLOWER_GUBN"/>
+		<result property="pumNm" 			column="PUM_NM"/>
+		<result property="jongNm" 			column="JONG_NM"/>
+		<result property="cmpCdMap" 		column="CMP_CD_MAP"/>
+		<result property="cmpCdMapNm" 		column="CMP_CD_MAP_NM"/>
+		<result property="flowerGubnMap" 	column="FLOWER_GUBN_MAP"/>
+		<result property="pumNmMap" 		column="PUM_NM_MAP"/>
+		<result property="jongNmMap" 		column="JONG_NM_MAP"/>
+		<result property="regDt" 			column="REG_DT"/>
+		<result property="regId" 			column="REG_ID"/>
+		<result property="updDt" 			column="UPD_DT"/>
+		<result property="uptId" 			column="UPT_ID"/>
+	</resultMap>
+
+	<!-- 품목코드맵핑 관리 :: List -->
+	<select id="selectCodeMapList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			RN
+			, CMP_CD
+			, FLOWER_GUBN
+			, PUM_NM
+			, JONG_NM
+			, CMP_CD_MAP
+			, (CASE WHEN CMP_CD_MAP = '1508500020' THEN '부산화훼공판장'
+					WHEN CMP_CD_MAP = '6068207466' THEN '부산경남화훼농협'
+					WHEN CMP_CD_MAP = '4108212335' THEN '광주원예농협'
+					WHEN CMP_CD_MAP = '3848200087' THEN '한국화훼농협(음성)'
+					WHEN CMP_CD_MAP = '1288202296' THEN '한국화훼농협(본점)'
+					WHEN CMP_CD_MAP = '6158209828' THEN '영남화훼'
+					ELSE '' 
+      		END ) AS CMP_CD_MAP_NM
+			, FLOWER_GUBN_MAP
+			, PUM_NM_MAP
+			, JONG_NM_MAP
+			, TO_CHAR(REG_DT,'YYYY-MM-DD') AS REG_DT
+			, REG_ID
+			, TO_CHAR(UPT_DT,'YYYY-MM-DD') AS UPT_DT
+			, UPT_ID
+		FROM TB_KIND_MAP
+		WHERE 1=1
+		<if test="searchJongNm != null and searchJongNm != ''">
+			AND JONG_NM LIKE '%'||#{searchJongNm}||'%'
+		</if>
+		<if test="rn != null and rn != ''">
+			AND RN = #{rn}
+		</if>
+		ORDER BY RN DESC
+	</select>
+	
+	<!-- 품목코드 관리 INSERT -->
+	<insert id="insertCodeMapList" parameterType="java.util.HashMap">
+		INSERT INTO TB_KIND_MAP
+		(
+			RN
+			, CMP_CD
+			, FLOWER_GUBN
+			, PUM_NM
+			, JONG_NM
+			, CMP_CD_MAP
+			, FLOWER_GUBN_MAP
+			, PUM_NM_MAP
+			, JONG_NM_MAP
+			, REG_DT
+			, REG_ID
+			, UPT_DT
+			, UPT_ID
+		)VALUES(
+			(SELECT NVL(MAX(RN)+1,1) AS RN FROM TB_KIND_MAP)
+			, #{cmpCd}
+			, #{flowerGubn}
+			, #{pumNm}
+			, #{jongNm}
+			, #{cmpCdMap}
+			, #{flowerGubnMap}
+			, #{pumNmMap}
+			, #{jongNmMap}
+			, SYSDATE
+			, #{userId}
+			, SYSDATE
+			, #{userId}
+		)
+	</insert>
+	
+	<!-- 품목코드 관리 UPDATE -->
+	<update id="updateCodeMapList" parameterType="java.util.HashMap">
+		UPDATE TB_KIND_MAP SET
+			FLOWER_GUBN = #{flowerGubn}
+			, PUM_NM = #{pumNm}
+			, JONG_NM = #{jongNm}
+			, CMP_CD_MAP = #{cmpCdMap}
+			, FLOWER_GUBN_MAP = #{flowerGubnMap}
+			, PUM_NM_MAP = #{pumNmMap}
+			, JONG_NM_MAP = #{jongNmMap}
+			, UPT_DT = SYSDATE
+			, UPT_ID = #{userId}
+		WHERE RN = #{rn}
+	</update>
+	
+	<!-- 품목코드 관리 DELETE -->
+	<delete id="deleteCodeMapList" parameterType="java.util.HashMap">
+		DELETE FROM TB_KIND_MAP WHERE RN = #{rn}
+	</delete>
+
+</mapper>

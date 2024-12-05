@@ -1,0 +1,901 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.real.mapper.RealMapper">
+	<resultMap id="resultRealMap" type="com.fpdisys.dist.real.domain.RealVO">
+		<result property="saleDate" 	column="SALE_DATE"/>
+		<result property="chDate" 		column="CH_DATE"/>
+		<result property="cmpCd" 		column="CMP_CD"/>
+		<result property="seq" 			column="SEQ"/>
+		<result property="no1" 			column="NO1"/>
+		<result property="no2" 			column="NO2"/>
+		<result property="mejang" 		column="MEJANG"/>
+		<result property="large" 		column="LARGE"/>
+		<result property="mid" 			column="MID"/>
+		<result property="small" 		column="SMALL"/>
+		<result property="cmpGood"	 	column="CMP_GOOD"/>
+		<result property="pumName" 		column="PUM_NAME"/>
+		<result property="goodName" 	column="GOOD_NAME"/>
+		<result property="mmCd" 		column="MM_CD"/>
+		<result property="danq" 		column="DANQ"/>
+		<result property="danCd" 		column="DAN_CD"/>
+		<result property="pojCd" 		column="POJ_CD"/>
+		<result property="sizeCd" 		column="SIZE_CD"/>
+		<result property="lvCd"			column="LV_CD"/>
+		<result property="lvName"		column="LV_NAME"/>
+		<result property="sanCd" 		column="SAN_CD"/>
+		<result property="cmpSan" 		column="CMP_SAN"/>
+		<result property="sanName" 		column="SAN_NAME"/>
+		<result property="qty"			column="QTY"/>
+		<result property="cost" 		column="COST"/>
+		<result property="amerCd" 		column="AMER_CD"/>
+		<result property="chCd" 		column="CH_CD"/>
+		<result property="smanCd" 		column="SMAN_CD"/>
+		<result property="chulNo" 		column="CHUL_NO"/>
+		<result property="chulCd" 		column="CHUL_CD"/>
+		<result property="chulName" 	column="CHUL_NAME"/>
+		<result property="farmName" 	column="FARM_NAME"/>
+		<result property="nakTime" 		column="NAK_TIME"/>
+		<result property="totQty" 		column="TOT_QTY"/>
+		<result property="totAmt" 		column="TOT_AMT"/>
+		<result property="totAmt1" 		column="TOT_AMT1"/>
+		<result property="totAmt2" 		column="TOT_AMT2"/>
+		<result property="avgAmt" 		column="AVG_AMT"/>
+		<result property="minAmt" 		column="MIN_AMT"/>
+		<result property="maxAmt" 		column="MAX_AMT"/>
+		<result property="inTime" 		column="IN_TIME"/>
+		<result property="gubn" 		column="GUBN"/>
+		<result property="perAvgAmt"   	column="PER_AVG_AMT"/>
+		<result property="perTotQty"   	column="PER_TOT_QTY"/>
+		<result property="avgAmtColor" 	column="AVG_AMT_COLOR"/>
+		<result property="totQtyColor" 	column="TOT_QTY_COLOR"/>
+	</resultMap>
+
+	<insert id="deleteRealData" parameterType="com.fpdisys.dist.real.domain.RealVO">
+		DELETE FROM T_REAL 
+		WHERE  SALE_DATE = #{saleDate, jdbcType=VARCHAR}
+		AND    CH_DATE   = #{chDate, jdbcType=VARCHAR}
+		AND    CMP_CD    = #{cmpCd, jdbcType=VARCHAR}
+		AND    SEQ       = #{seq, jdbcType=VARCHAR}
+		AND    NO1       = #{no1, jdbcType=VARCHAR}
+		AND    NO2       = #{no2, jdbcType=VARCHAR}
+	</insert>
+	
+	<insert id="saveRealData" parameterType="com.fpdisys.dist.real.domain.RealVO">
+		INSERT INTO T_REAL (
+		   SALE_DATE
+		   , CH_DATE
+		   , CMP_CD
+		   , SEQ
+		   , NO1
+		   , NO2
+		   , MEJANG
+		   , LARGE
+		   , MID
+		   , SMALL
+		   , CMP_GOOD
+		   , PUM_NAME
+		   , GOOD_NAME
+		   , MM_CD
+		   , DANQ
+		   , DAN_CD
+		   , POJ_CD
+		   , SIZE_CD
+		   , LV_CD
+		   , SAN_CD
+		   , CMP_SAN
+		   , SAN_NAME
+		   , QTY
+		   , COST
+		   , AMER_CD
+		   , CH_CD
+		   , SMAN_CD
+		   , CHUL_NO
+		   , CHUL_CD
+		   , CHUL_NAME
+		   , FARM_NAME
+		   , NAK_TIME
+		   , TOT_QTY
+		   , TOT_AMT
+		   , IN_TIME
+		   , GUBN
+		) 
+		VALUES (
+		#{saleDate, jdbcType=VARCHAR},
+		#{chDate, jdbcType=VARCHAR},
+		#{cmpCd, jdbcType=VARCHAR},
+		#{seq, jdbcType=VARCHAR},
+		#{no1, jdbcType=VARCHAR},
+		#{no2, jdbcType=VARCHAR},
+		#{mejang, jdbcType=VARCHAR},
+		#{large, jdbcType=VARCHAR},
+		#{mid, jdbcType=VARCHAR},
+		#{small, jdbcType=VARCHAR},
+		#{cmpGood, jdbcType=VARCHAR},
+		#{pumName, jdbcType=VARCHAR},
+		#{goodName, jdbcType=VARCHAR},
+		#{mmCd, jdbcType=VARCHAR},		
+		#{danq, jdbcType=VARCHAR},
+		#{danCd, jdbcType=VARCHAR},
+		#{pojCd, jdbcType=VARCHAR},
+		#{sizeCd, jdbcType=VARCHAR},
+		#{lvCd, jdbcType=VARCHAR},
+		#{sanCd, jdbcType=VARCHAR},
+		#{cmpSan, jdbcType=VARCHAR},
+		#{sanName, jdbcType=VARCHAR},
+		#{qty, jdbcType=VARCHAR},
+		#{cost, jdbcType=VARCHAR},
+		#{amerCd, jdbcType=VARCHAR},
+		#{chCd, jdbcType=VARCHAR},
+		#{smanCd, jdbcType=VARCHAR},
+		#{chulNo, jdbcType=VARCHAR},
+		#{chulCd, jdbcType=VARCHAR},
+		#{chulName, jdbcType=VARCHAR},
+		#{farmName, jdbcType=VARCHAR},
+		#{nakTime, jdbcType=VARCHAR},
+		#{totQty, jdbcType=VARCHAR},
+		#{totAmt, jdbcType=VARCHAR},
+		SYSDATE,
+		#{gubn, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="deleteSaleData" parameterType="com.fpdisys.dist.real.domain.RealVO">
+		DELETE FROM T_SALE 
+		WHERE  SALE_DATE = #{saleDate, jdbcType=VARCHAR}
+		AND    CH_DATE   = #{chDate, jdbcType=VARCHAR}
+		AND    CMP_CD    = #{cmpCd, jdbcType=VARCHAR}
+		AND    SEQ       = #{seq, jdbcType=VARCHAR}
+		AND    NO1       = #{no1, jdbcType=VARCHAR}
+		AND    NO2       = #{no2, jdbcType=VARCHAR}
+	</insert>
+	
+	<insert id="saveSaleData" parameterType="com.fpdisys.dist.real.domain.RealVO">
+		INSERT INTO T_SALE (
+		   SALE_DATE
+		   , CH_DATE
+		   , CMP_CD
+		   , SEQ
+		   , NO1
+		   , NO2
+		   , MEJANG
+		   , LARGE
+		   , MID
+		   , SMALL
+		   , CMP_GOOD
+		   , PUM_NAME
+		   , GOOD_NAME
+		   , MM_CD
+		   , DANQ
+		   , DAN_CD
+		   , POJ_CD
+		   , SIZE_CD
+		   , LV_CD
+		   , SAN_CD
+		   , CMP_SAN
+		   , SAN_NAME
+		   , QTY
+		   , COST
+		   , AMER_CD
+		   , CH_CD
+		   , SMAN_CD
+		   , CHUL_NO
+		   , CHUL_CD
+		   , CHUL_NAME
+		   , FARM_NAME
+		   , NAK_TIME
+		   , TOT_QTY
+		   , TOT_AMT
+		   , IN_TIME
+		   , GUBN
+		) 
+		VALUES (
+		#{saleDate, jdbcType=VARCHAR},
+		#{chDate, jdbcType=VARCHAR},
+		#{cmpCd, jdbcType=VARCHAR},
+		#{seq, jdbcType=VARCHAR},
+		#{no1, jdbcType=VARCHAR},
+		#{no2, jdbcType=VARCHAR},
+		#{mejang, jdbcType=VARCHAR},
+		#{large, jdbcType=VARCHAR},
+		#{mid, jdbcType=VARCHAR},
+		#{small, jdbcType=VARCHAR},
+		#{cmpGood, jdbcType=VARCHAR},
+		#{pumName, jdbcType=VARCHAR},
+		#{goodName, jdbcType=VARCHAR},
+		#{mmCd, jdbcType=VARCHAR},		
+		#{danq, jdbcType=VARCHAR},
+		#{danCd, jdbcType=VARCHAR},
+		#{pojCd, jdbcType=VARCHAR},
+		#{sizeCd, jdbcType=VARCHAR},
+		#{lvCd, jdbcType=VARCHAR},
+		#{sanCd, jdbcType=VARCHAR},
+		#{cmpSan, jdbcType=VARCHAR},
+		#{sanName, jdbcType=VARCHAR},
+		#{qty, jdbcType=VARCHAR},
+		#{cost, jdbcType=VARCHAR},
+		#{amerCd, jdbcType=VARCHAR},
+		#{chCd, jdbcType=VARCHAR},
+		#{smanCd, jdbcType=VARCHAR},
+		#{chulNo, jdbcType=VARCHAR},
+		#{chulCd, jdbcType=VARCHAR},
+		#{chulName, jdbcType=VARCHAR},
+		#{farmName, jdbcType=VARCHAR},
+		#{nakTime, jdbcType=VARCHAR},
+		#{totQty, jdbcType=VARCHAR},
+		#{totAmt, jdbcType=VARCHAR},
+		SYSDATE,
+		#{gubn, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<delete id="deleteSaleDate"  parameterType="java.util.HashMap"> 
+	    DELETE FROM FLOWER.T_SALE_DATE
+	    WHERE SALE_DATE = #{v_ch_date , jdbcType=VARCHAR }	    
+	    AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }	  
+	</delete>
+	
+	<insert id="saveErrLog" parameterType="Map">
+		INSERT INTO T_REAL_ERR_LOG 
+		(
+		FILE_NAME, RECODE_ARR, TRAN_DATE, ERR_LOG
+		)
+		VALUES (#{filename, jdbcType=VARCHAR},
+		#{record, jdbcType=VARCHAR},
+		 SYSDATE,
+		 #{errLog, jdbcType=VARCHAR}
+		 )
+	 </insert>
+		 
+	 <select  id="getRealData" parameterType="Map" resultType="com.fpdisys.dist.real.domain.RealVO">
+		SELECT TA.*,
+		     TB.LV_NAME AS lvName
+		FROM
+		(
+			SELECT SALE_DATE AS saleDate,
+			     CH_DATE AS chDate,
+			     CMP_CD AS cmpCd,
+			     SEQ AS seq,
+			     NO1 AS no1,
+			     NO2 AS no2,
+			     MEJANG AS mejang,
+			     LARGE AS large,
+			     MID AS mid,
+			     SMALL AS small,
+			     CMP_GOOD AS cmpGood,
+			     PUM_NAME AS pumName,
+			     GOOD_NAME AS goodName,
+			     MM_CD AS mmCd,
+			     DANQ AS danQ,
+			     DAN_CD AS danCd,
+			     POJ_CD AS pojCd,
+			     SIZE_CD AS sizeCd,
+			     LV_CD AS lvCd,
+			     SAN_CD AS sanCd,
+			     CMP_SAN AS cmpSan,
+			     SAN_NAME AS sanName,
+			     QTY AS qty,
+			     COST AS cost,
+			     AMER_CD AS amerCd,
+			     CH_CD AS chCd,
+			     SMAN_CD AS smanCd,
+			     CHUL_NO AS chulNo,
+			     CHUL_CD AS chulCd,
+			     CHUL_NAME AS chulName,
+			     FARM_NAME AS farmName,
+			     NAK_TIME AS nakTime,
+			     TOT_QTY AS totQty,
+			     TOT_AMT AS totAmt,
+			     IN_TIME AS inTime,
+			     GUBN AS gbun
+			FROM (
+			SELECT *
+			FROM T_REAL
+			WHERE SALE_DATE BETWEEN TO_CHAR (SYSDATE - 24, 'YYYYMMDD')
+            AND TO_CHAR (SYSDATE, 'YYYYMMDD')
+            ORDER BY NAKTIME DESC)
+		) TA,
+		(
+		    SELECT * FROM T_LEVEL A, LEVELCHANGE_KR B WHERE A.LV_CD = B.STRCODE(+)
+		) TB
+		WHERE TA.LVCD = TB.KRCODE
+		<!-- AND ROWNUM <![CDATA[<]]>  7 -->
+		ORDER BY NAKTIME DESC
+ 	</select>
+ 	
+ 	<select  id="getRealData1" parameterType="Map" resultType="HashMap">
+		SELECT saleDate, cmpCd, mejang, pumName, goodName, qty, cost, (SUBSTR(nakTime,'9','2')||':'||SUBSTR(nakTime,'11','2')) as nakTime, lvCd, sanName_1, sanName, lvName
+		FROM
+		(
+		SELECT TA.*,
+			 CASE WHEN (#{cmpCd, jdbcType=VARCHAR} = '0000000001' AND #{flowerCd, jdbcType=VARCHAR} = '3')  THEN ''
+			 WHEN(INSTR(sanName_1,'충남')=1 OR INSTR(sanName_1,'충청남도')=1)  THEN '충남'
+             WHEN(INSTR(sanName_1,'충북')=1 OR INSTR(sanName_1,'충청북도')=1)  THEN '충북'
+             WHEN(INSTR(sanName_1,'전북')=1 OR INSTR(sanName_1,'전라북도')=1)  THEN '전북'
+             WHEN(INSTR(sanName_1,'전남')=1 OR INSTR(sanName_1,'전라남도')=1)  THEN '전남'
+             WHEN(INSTR(sanName_1,'경북')=1 OR INSTR(sanName_1,'경상북도')=1)  THEN '경북'
+             WHEN(INSTR(sanName_1,'경남')=1 OR INSTR(sanName_1,'경상남도')=1)  THEN '경남'
+            ELSE SUBSTR(sanName_1,0,2)
+            END sanName,
+  			NVL(TB.LV_NAME, '없음' ) AS lvName
+		FROM
+  		(SELECT 
+  			SALE_DATE	AS saleDate	 
+    		, CMP_CD	AS cmpCd
+    		, MEJANG	AS mejang
+    		, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME), PUM_NAME) AS pumName 
+    		, GOOD_NAME AS goodName
+    		, QTY		AS qty
+    		, COST		AS cost
+    		, NAK_TIME AS nakTime
+    		, LV_CD		AS lvCd
+    		, SAN_NAME	AS sanName_1
+  		FROM T_REAL
+  		WHERE 1=1
+		AND SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+			<!-- AND NAK_TIME BETWEEN #{searchSaleDate, jdbcType=VARCHAR}||'000000' AND #{searchSaleDate, jdbcType=VARCHAR}||'235959' -->
+  		<if test="cmpCd != null and cmpCd != ''">
+  			AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+  		</if>
+  		<if test="flowerCd != null and flowerCd != ''">
+  			AND MEJANG = #{flowerCd, jdbcType=VARCHAR}
+  		</if>
+  		<if test ="cmpCd!= null and cmpCd =='0000000001'" >
+			<if test="itemCd!=null and itemCd!='' ">
+				<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+	  				AND PUM_NAME IN('호접란', '팔레높시스')
+	  			</if>
+	  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+	  				AND PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+	  			</if>
+			</if>
+		</if>
+		<if test ="cmpCd!= null and cmpCd!='0000000001'" >
+			<if test="itemCd!=null and itemCd!='' ">
+				AND PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+			</if>
+		</if>
+  		<if test="itemCd2 != null and itemCd2 != ''">
+  			AND GOOD_NAME =#{itemCd2, jdbcType=VARCHAR}
+  		</if>
+  		ORDER BY nakTime DESC
+  		) TA,
+  		( SELECT * FROM T_LEVEL A, LEVELCHANGE_KR B WHERE A.LV_CD = B.STRCODE(+)
+  		) TB
+
+  		<if test="cmpCd != '0000000001' and cmpCd != '1508500020' and cmpCd != '6068207466' and cmpCd != '4108212335' and cmpCd != '6158209828'and cmpCd != '7368200686'">
+
+		WHERE TA.lvCd = TB.KRCODE(+)
+		</if>
+		<if test="cmpCd != '3848200087' and cmpCd != '1288202296'">
+		WHERE TA.lvCd = TB.LV_CD(+)
+		</if>
+		)
+		WHERE 1=1
+		<if test="sido != null and sido != ''">
+			<if test="sido != '충북' and sido != '충남' and sido != '전북'  and sido != '전남' and sido != '경북' and sido != '경남' ">
+				AND sanName LIKE #{sido, jdbcType=VARCHAR} ||'%'
+			</if>
+			<if test="sido == '충북'">
+				AND (sanName LIKE '충북%' OR sanName LIKE '충청북도%')
+			</if>
+			<if test="sido == '충남'">
+				AND (sanName LIKE '충남%' OR sanName LIKE '충청남도%')
+			</if>
+			<if test="sido == '전북'">
+				AND (sanName LIKE '전북%' OR sanName LIKE '전라북도%')
+			</if>
+			<if test="sido == '전남'">
+				AND (sanName LIKE '전남%' OR sanName LIKE '전라남도%')
+			</if>
+			<if test="sido == '경북'">
+				AND (sanName LIKE '경북%' OR sanName LIKE '경상북도%')
+			</if>
+			<if test="sido == '경남'">
+				AND (sanName LIKE '경남%' OR sanName LIKE '경상남도%')
+			</if>
+		</if>
+ 	</select>
+ 	
+ 	<select  id="getRealMainData" parameterType="Map" resultType="com.fpdisys.dist.real.domain.RealVO">
+		SELECT TA.*,
+		     TB.LV_NAME AS lvName
+		FROM
+		(
+			SELECT SALE_DATE AS saleDate,
+			     CH_DATE AS chDate,
+			     CMP_CD AS cmpCd,
+			     SEQ AS seq,
+			     NO1 AS no1,
+			     NO2 AS no2,
+			     MEJANG AS mejang,
+			     LARGE AS large,
+			     MID AS mid,
+			     SMALL AS small,
+			     CMP_GOOD AS cmpGood,
+			     PUM_NAME AS pumName,
+			     GOOD_NAME AS goodName,
+			     MM_CD AS mmCd,
+			     DANQ AS danQ,
+			     DAN_CD AS danCd,
+			     POJ_CD AS pojCd,
+			     SIZE_CD AS sizeCd,
+			     LV_CD AS lvCd,
+			     SAN_CD AS sanCd,
+			     CMP_SAN AS cmpSan,
+			     SAN_NAME AS sanName,
+			     QTY AS qty,
+			     COST AS cost,
+			     AMER_CD AS amerCd,
+			     CH_CD AS chCd,
+			     SMAN_CD AS smanCd,
+			     CHUL_NO AS chulNo,
+			     CHUL_CD AS chulCd,
+			     CHUL_NAME AS chulName,
+			     FARM_NAME AS farmName,
+			     NAK_TIME AS nakTime,
+			     TOT_QTY AS totQty,
+			     TOT_AMT AS totAmt,
+			     IN_TIME AS inTime,
+			     GUBN AS gbun
+			FROM T_REAL
+			WHERE SALE_DATE BETWEEN TO_CHAR (SYSDATE - 24, 'YYYYMMDD') AND TO_CHAR (SYSDATE, 'YYYYMMDD')
+			AND CMP_CD=#{cmpCd, jdbcType=VARCHAR}
+			AND MEJANG=#{flowerCd, jdbcType=VARCHAR}
+            ORDER BY NAKTIME DESC
+		) TA,
+		(
+		    SELECT * FROM T_LEVEL A, LEVELCHANGE_KR B WHERE A.LV_CD = B.STRCODE(+)
+		) TB
+		WHERE TA.LVCD = TB.LV_CD
+		AND ROWNUM <![CDATA[<]]>  7
+		ORDER BY NAKTIME DESC
+ 	</select>
+ 	
+ 	<select id="getRealSaleData" resultType="com.fpdisys.dist.real.domain.RealVO" resultMap="resultRealMap">
+ 		SELECT 
+ 			TO_CHAR(ADD_MONTHS(MAX(SALE_DATE), '0'), 'YYYY-MM-DD') AS SALE_DATE
+		FROM T_REAL
+		WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-100,'YYYYMMDD') AND TO_CHAR(SYSDATE,'YYYYMMDD')
+		AND MEJANG = #{searchProductGubun, jdbcType=VARCHAR}
+		AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+		GROUP BY SALE_DATE
+		ORDER BY SALE_DATE DESC
+ 	</select>
+ 	
+ 	<select id="getRealPumNameData" parameterType="HashMap" resultType="HashMap">
+		 	SELECT PUM_NAME
+			FROM T_REAL
+			WHERE 1=1
+			AND SALE_DATE = REPLACE(#{searchSaleDate, jdbcType=VARCHAR},'-','')
+			AND MEJANG = #{searchProductGubun, jdbcType=VARCHAR}
+			AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+			<if test="searchItemCd != null and searchItemCd != ''">
+				AND PUM_NAME LIKE '%'||#{searchItemCd, jdbcType=VARCHAR}||'%'
+			</if>
+			GROUP BY PUM_NAME 
+			ORDER BY PUM_NAME
+ 	</select>
+ 	
+ 	<select id="getRealSilData" resultType="com.fpdisys.dist.real.domain.RealVO" resultMap="resultRealMap">
+ 		SELECT * FROM (
+  			SELECT 
+    			ROWNUM AS RNUM
+    			, T1.SALE_DATE  
+    			, T1.PUM_NAME
+    			, T1.GOOD_NAME
+    			, T1.TOT_QTY
+    			, T1.TOT_AMT1
+    			, T1.TOT_AMT2
+    			, T1.AVG_AMT
+  			FROM (
+    			SELECT
+    				SALE_DATE 
+      				, PUM_NAME 
+      				, GOOD_NAME 
+      				, SUM(TOT_QTY) AS TOT_QTY
+      				, MAX(TOT_AMT) AS TOT_AMT1
+      				, MIN(TOT_AMT) AS TOT_AMT2
+      				, ROUND((MAX(TOT_AMT)+MIN(TOT_AMT))/2, 0) AS AVG_AMT
+    			FROM T_REAL
+    			WHERE 1=1
+    			<if test="searchSaleDate == null and searchSaleDate == ''">
+    				AND SALE_DATE BETWEEN TO_CHAR(SYSDATE-100,'YYYYMMDD') AND TO_CHAR(SYSDATE,'YYYYMMDD')
+    			</if>
+    			<if test="searchSaleDate != null and searchSaleDate != ''">
+    				AND SALE_DATE = REPLACE(#{searchSaleDate, jdbcType=VARCHAR},'-','')
+    			</if>
+    			AND MEJANG = #{flowerCd, jdbcType=VARCHAR}
+    			AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+    			<if test="itemCd != null and itemCd != ''">
+    				AND PUM_NAME LIKE '%' ||#{itemCd, jdbcType=VARCHAR}||'%'
+    			</if>
+    			GROUP BY SALE_DATE, PUM_NAME, GOOD_NAME
+    			ORDER BY TOT_QTY DESC
+  			) T1
+		)
+		<!-- WHERE RNUM BETWEEN '1' AND '6' -->
+	</select>
+	
+	<select id="getRealLvData" resultType="com.fpdisys.dist.real.domain.RealVO" resultMap="resultRealMap">
+ 		SELECT * FROM (
+			SELECT 
+		  		ROWNUM AS RNUM
+		  		, SALE_DATE
+		  		, LV_NAME
+		  		, TOT_QTY
+		  		, TOT_AMT2
+		  		, TOT_AMT1
+		  		, AVG_AMT
+		  		, PUM_NAME
+  				, GOOD_NAME
+			FROM(
+		  		SELECT
+		  			T1.SALE_DATE 
+		    		, T2.LV_NAME
+    				, SUM(T1.TOT_QTY) AS TOT_QTY
+		    		, MIN(T1.TOT_AMT) AS TOT_AMT2
+		    		, MAX(T1.TOT_AMT) AS TOT_AMT1
+		    		, ROUND((MAX(T1.TOT_AMT)+MIN(T1.TOT_AMT))/2, 0) AS AVG_AMT
+		    		, T1.PUM_NAME
+    				, T1.GOOD_NAME
+		  		FROM T_REAL T1,
+		  		(
+		      		SELECT *
+		      		FROM LEVELCHANGE_KR, T_LEVEL
+		      		WHERE STRCODE(+)=LV_CD
+		  		) T2
+		  		WHERE 1=1
+		  		AND T1.LV_CD = T2.LV_CD
+		  		<!-- AND T1.SALE_DATE BETWEEN TO_CHAR(SYSDATE-100,'YYYYMMDD') AND TO_CHAR(SYSDATE,'YYYYMMDD') -->
+		  		<if test="searchSaleDate == null and searchSaleDate == ''">
+    				AND T1.SALE_DATE BETWEEN TO_CHAR(SYSDATE-100,'YYYYMMDD') AND TO_CHAR(SYSDATE,'YYYYMMDD')
+    			</if>
+    			<if test="searchSaleDate != null and searchSaleDate != ''">
+    				AND T1.SALE_DATE = REPLACE(#{searchSaleDate, jdbcType=VARCHAR},'-','')
+    			</if>
+		  		AND T1.MEJANG = #{flowerCd, jdbcType=VARCHAR}
+    			AND T1.CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		  		AND T1.PUM_NAME LIKE '%'||#{pumName, jdbcType=VARCHAR}||'%'
+		  		AND T1.GOOD_NAME LIKE '%'||#{goodName, jdbcType=VARCHAR}||'%'
+		  		GROUP BY T1.SALE_DATE, T2.LV_NAME, T1.PUM_NAME, T1.GOOD_NAME
+		  		ORDER BY T1.SALE_DATE DESC, T2.LV_NAME, T1.PUM_NAME, T1.GOOD_NAME
+			)
+		)T3
+		<!-- WHERE T3.RNUM BETWEEN '1' AND '6' -->
+	</select>
+	
+	<select id="getRealInforData" resultType="com.fpdisys.dist.real.domain.RealVO" resultMap="resultRealMap">
+		SELECT
+			T1.AVG_AMT
+		  	, T1.TOT_QTY
+		  	, (
+		      	CASE WHEN T1.AVG_AMT <![CDATA[>]]> T2.AVG_AMT_AGO THEN 'ft_blue'
+		      	WHEN T1.AVG_AMT <![CDATA[<]]> T2.AVG_AMT_AGO THEN 'ft_red'
+		      	END ) AS AVG_AMT_COLOR
+		  	, ROUND((T1.AVG_AMT / T2.AVG_AMT_AGO)*100, 1) AS PER_AVG_AMT
+		  	, (
+		      	CASE WHEN T1.TOT_QTY <![CDATA[>]]> T2.TOT_QTY_AGO THEN 'ft_blue'
+		      	WHEN T1.TOT_QTY <![CDATA[<]]> T2.TOT_QTY_AGO THEN 'ft_red'
+		      	END ) AS TOT_QTY_COLOR
+		  	, ROUND((T1.TOT_QTY / T2.TOT_QTY_AGO)*100, 1) AS PER_TOT_QTY
+		FROM
+		(
+			SELECT 
+			   	TO_CHAR(ADD_MONTHS(SALE_DATE, 0), 'YYYYMM') AS SALE_DATE
+		   		, ROUND((MAX(TOT_AMT)+MIN(TOT_AMT))/2, 0) AS AVG_AMT
+		   		, SUM(TOT_QTY) AS TOT_QTY
+			FROM T_REAL T11,
+			(
+		   		SELECT *
+		   		FROM LEVELCHANGE_KR, T_LEVEL
+		   		WHERE STRCODE(+)=LV_CD
+			) T12
+			WHERE 1=1
+			AND T11.LV_CD = T12.LV_CD
+			AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+			AND MEJANG = #{flowerCd, jdbcType=VARCHAR}
+		  	AND PUM_NAME LIKE '%'||#{pumName, jdbcType=VARCHAR}||'%'
+		  	AND GOOD_NAME LIKE '%'||#{goodName, jdbcType=VARCHAR}||'%'
+		  	AND SALE_DATE LIKE '%'||TO_CHAR(ADD_MONTHS(#{searchSaleDate, jdbcType=VARCHAR}, 0), 'YYYYMM')||'%'
+		  	GROUP BY SALE_DATE
+		) T1
+		, (
+		  	SELECT 
+		    	TO_CHAR(ADD_MONTHS(SALE_DATE, 0), 'YYYYMM') AS SALE_DATE_AGO
+		    	, ROUND((MAX(TOT_AMT)+MIN(TOT_AMT))/2, 0) AS AVG_AMT_AGO
+		    	, SUM(TOT_QTY) AS TOT_QTY_AGO
+		  	FROM T_REAL T21,
+		  	(
+		    	SELECT *
+		    	FROM LEVELCHANGE_KR, T_LEVEL
+		    	WHERE STRCODE(+)=LV_CD
+		  	) T22
+		  	WHERE 1=1
+		  	AND T21.LV_CD = T22.LV_CD
+		  	AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		  	AND MEJANG = #{flowerCd, jdbcType=VARCHAR}
+		  	AND PUM_NAME LIKE '%'||#{pumName, jdbcType=VARCHAR}||'%'
+		  	AND GOOD_NAME LIKE '%'||#{goodName, jdbcType=VARCHAR}||'%'
+		  	AND SALE_DATE LIKE '%'||TO_CHAR(ADD_MONTHS(#{searchSaleDate, jdbcType=VARCHAR}, -1), 'YYYYMM')||'%'
+		  	GROUP BY TO_CHAR(ADD_MONTHS(SALE_DATE, 0), 'YYYYMM')
+		) T2
+	</select>
+	
+	<select id="getRealchartData" resultType="com.fpdisys.dist.real.domain.RealVO" resultMap="resultRealMap">
+		SELECT
+			TO_CHAR(TO_DATE(SALE_DATE), 'YY/MM/DD') AS SALE_DATE
+  			, MAX(TOT_AMT) AS TOT_AMT1
+  			, MIN(TOT_AMT) AS TOT_AMT2
+  			, ROUND((MAX(TOT_AMT)+MIN(TOT_AMT))/2, 0) AS AVG_AMT
+		FROM T_REAL T1
+		WHERE 1=1
+		AND SALE_DATE LIKE '%'||TO_CHAR(ADD_MONTHS(#{searchSaleDate, jdbcType=VARCHAR}, 0), 'YYYYMM')||'%'
+		AND T1.MEJANG = #{flowerCd, jdbcType=VARCHAR}
+		AND T1.CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+		AND T1.PUM_NAME LIKE '%'||#{pumName, jdbcType=VARCHAR}||'%'
+		AND T1.GOOD_NAME LIKE '%'||#{goodName, jdbcType=VARCHAR}||'%'
+		GROUP BY SALE_DATE
+	</select>
+	
+	<select id="selectKoreaLvCdChage" parameterType="java.lang.String" statementType="PREPARED" resultType="java.lang.String">
+        SELECT STRCODE 
+        FROM FLOWER.LEVELCHANGE_KR
+        WHERE KRCODE = #{lvCd , jdbcType=VARCHAR}      
+      </select>
+      
+	<select id="selectFlowerGubnNong" parameterType="java.util.HashMap"  statementType="PREPARED" resultType="java.lang.String">
+         SELECT F_GET_FLOWER_GUBUN_NONG(#{cmpGood},#{marketCd}) 
+         FROM dual       
+     </select>
+     
+	<insert id="insertSaleDate" parameterType="java.util.HashMap" >
+	INSERT INTO FLOWER.T_SALE_DATE(SALE_DATE
+                      ,CMP_CD
+                      ,FLOWER_GUBN
+                      ,PUM_NAME
+                      ,GOOD_NAME
+                      ,MM_CD
+                      ,DANQ
+                      ,DAN_CD
+                      ,POJ_CD
+                      ,SIZE_CD
+                      ,LV_CD
+                      ,SAN_CD
+                      ,TOT_QTY
+                      ,TOT_AMT
+                      ,MIN_AMT
+                      ,MAX_AMT
+                      ,AVG_AMT
+                      )
+    SELECT B.SALE_DATE
+          ,B.CMP_CD
+          ,B.MEJANG
+          ,B.PUM_NAME
+          ,B.GOOD_NAME
+          ,B.MM_CD
+          ,B.DANQ
+          ,B.DAN_CD
+          ,B.POJ_CD
+          ,B.SIZE_CD
+          ,B.LV_CD
+          ,B.SAN_CD
+          ,SUM(B.TOT_QTY)
+          ,SUM(B.TOT_AMT)
+          ,MIN(B.COST)
+          ,MAX(B.COST)
+          ,AVG(B.COST)
+    FROM FLOWER.T_SALE B
+    WHERE SALE_DATE = #{v_ch_date , jdbcType=VARCHAR }	  AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }
+    GROUP BY B.SALE_DATE ,B.CMP_CD ,B.MEJANG ,B.PUM_NAME ,B.GOOD_NAME ,B.MM_CD ,B.DANQ ,B.DAN_CD ,B.POJ_CD ,B.SIZE_CD ,B.LV_CD ,B.SAN_CD
+	</insert>
+	
+	<delete id="deleteSaleMonth"  parameterType="java.util.HashMap"> 
+	    DELETE FROM FLOWER.T_SALE_MONTH 
+	    WHERE SALE_MONTH = SUBSTR(#{v_ch_date , jdbcType=VARCHAR }, 1, 7) 
+	    AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }   
+	</delete>
+	
+	<insert id="insertSaleMonth" parameterType="java.util.HashMap" >
+	<![CDATA[
+	 INSERT INTO FLOWER.T_SALE_MONTH(SALE_MONTH
+	                   ,CMP_CD
+	                   ,FLOWER_GUBN
+                       ,PUM_NAME
+                       ,GOOD_NAME
+	                   ,MM_CD
+	                   ,DANQ
+	                   ,DAN_CD
+	                   ,POJ_CD
+	                   ,SIZE_CD
+	                   ,LV_CD
+	                   ,SAN_CD
+	                   ,TOT_QTY
+	                   ,TOT_AMT
+	                   ,MIN_AMT
+	                   ,MAX_AMT
+	                   ,AVG_AMT
+	                   )
+	SELECT SUBSTR(C.SALE_DATE, 1, 7)
+	      ,C.CMP_CD
+	      ,NVL(C.FLOWER_GUBN,0) AS FLOWER_GUBN
+          ,C.PUM_NAME
+          ,C.GOOD_NAME
+	      ,C.MM_CD
+	      ,C.DANQ
+	      ,C.DAN_CD
+	      ,C.POJ_CD
+	      ,C.SIZE_CD
+	      ,C.LV_CD
+	      ,C.SAN_CD
+	      ,SUM(C.TOT_QTY)
+	      ,SUM(C.TOT_AMT)
+	      ,MIN(C.MIN_AMT)
+	      ,MAX(C.MAX_AMT)
+	      ,NVL(SUM(C.TOT_AMT), 0) / CASE NVL(SUM(C.TOT_QTY2), 1) WHEN 0 THEN 1 ELSE NVL(SUM(C.TOT_QTY2), 1) END
+	  FROM (SELECT A.SALE_DATE
+                  ,A.CMP_CD
+				  ,A.FLOWER_GUBN
+                  ,A.PUM_NAME
+                  ,A.GOOD_NAME
+				  ,A.MM_CD
+				  ,A.DANQ
+				  ,A.DAN_CD
+				  ,A.POJ_CD
+				  ,A.SIZE_CD
+				  ,A.LV_CD
+				  ,A.SAN_CD
+				  ,A.TOT_QTY
+				  ,A.TOT_AMT
+				  ,NVL(A.TOT_QTY, 0) * 1000 / CASE NVL(A.DANQ, 0) * NVL(D.DAN_X, 0) WHEN 0 THEN 1 ELSE NVL(A.DANQ, 0) * NVL(D.DAN_X, 0) END AS TOT_QTY2
+				  ,A.MIN_AMT
+				  ,A.MAX_AMT
+			  FROM FLOWER.T_SALE_DATE A
+				   LEFT OUTER JOIN FLOWER.T_DANCD D
+								ON A.DAN_CD = D.DAN_CD
+			WHERE A.SALE_DATE >= SUBSTR(#{v_ch_date , jdbcType=VARCHAR }, 1, 7)||'-01'
+			   AND A.SALE_DATE <= SUBSTR(#{v_ch_date , jdbcType=VARCHAR }, 1, 7)||'-31'
+			   AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR } 
+		   ) C
+	  GROUP BY SUBSTR(C.SALE_DATE, 1, 7)
+            ,C.CMP_CD
+	         ,C.FLOWER_GUBN
+             ,C.PUM_NAME
+             ,C.GOOD_NAME
+	         ,C.MM_CD
+	         ,C.DANQ
+	         ,C.DAN_CD
+	         ,C.POJ_CD
+	         ,C.SIZE_CD
+	         ,C.LV_CD
+	         ,C.SAN_CD
+	]]>
+	</insert>
+     
+     <select id="selectPumAvg" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="resultRealMap">
+        SELECT SALE_DATE, PUM_NAME
+	    , SUM(TOT_QTY) TOT_QTY
+	    , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+	    , ROUND(MAX(TOT_AMT/TOT_QTY)) AS MAX_AMT
+	    , ROUND(MIN(TOT_AMT/TOT_QTY)) AS MIN_AMT
+		FROM T_REAL
+		WHERE SALE_DATE = TO_CHAR(SYSDATE,'YYYYMMDD')
+		<if test="sidoCd != null and sidoCd != ''">
+			AND CMP_CD = #{sidoCd , jdbcType=VARCHAR }
+		</if>
+		AND PUM_NAME LIKE #{itemCd , jdbcType=VARCHAR } ||'%'
+		<if test="itemCd1 != null and itemCd1 != ''">
+			AND GOOD_NAME LIKE #{itemCd1 , jdbcType=VARCHAR } ||'%'
+		</if>
+		GROUP BY SALE_DATE, PUM_NAME 
+      </select>
+      
+      <select id="selectLvCdAvg" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="resultRealMap">
+        SELECT 
+	        SALE_DATE
+	        , A.LV_CD
+	        , LV_NAME
+	        , SUM(TOT_QTY) AS TOT_QTY
+	        , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT 
+		FROM
+		(
+		    SELECT SALE_DATE, CH_DATE, CMP_CD, 
+		   SEQ, NO1, NO2, 
+		   MEJANG, LARGE, MID, 
+		   SMALL, CMP_GOOD, PUM_NAME, 
+		   GOOD_NAME, MM_CD, DANQ, 
+		   DAN_CD, POJ_CD, SIZE_CD, 
+		   LV_CD, SAN_CD, CMP_SAN, 
+		   SAN_NAME, QTY, COST, 
+		   AMER_CD, CH_CD, SMAN_CD, 
+		   CHUL_NO, CHUL_CD, CHUL_NAME, 
+		   FARM_NAME, NAK_TIME, TOT_QTY, 
+		   TOT_AMT, IN_TIME, GUBN
+		    FROM T_REAL
+		    WHERE SALE_DATE = TO_CHAR(SYSDATE,'YYYYMMDD')
+			<if test="sidoCd != null and sidoCd != ''">
+				AND CMP_CD = #{sidoCd , jdbcType=VARCHAR }
+			</if>
+			AND PUM_NAME LIKE #{itemCd , jdbcType=VARCHAR } ||'%'
+			<if test="itemCd1 != null and itemCd1 != ''">
+				AND GOOD_NAME LIKE #{itemCd1 , jdbcType=VARCHAR } ||'%'
+			</if>
+		) A,
+		(
+		    SELECT LV_CD, LV_NAME
+		    FROM T_LEVEL
+		) B
+		WHERE A.LV_CD = B.LV_CD
+		GROUP BY SALE_DATE, A.LV_CD, B.LV_NAME
+		ORDER BY LV_CD 
+      </select>
+      
+      
+      <select  id="getRealDataExcel" resultType="com.fpdisys.dist.real.domain.RealVO" resultMap="resultRealMap">
+		SELECT TA.*,
+  			NVL(TB.LV_NAME, '없음' ) AS LV_NAME
+		FROM
+  		(SELECT 
+  			SALE_DATE	 
+    		, CMP_CD
+    		, MEJANG
+    		, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME), PUM_NAME) AS PUM_NAME 
+    		, GOOD_NAME
+    		, QTY
+    		, COST
+    		, (SUBSTR(NAK_TIME,'9','2')||':'||SUBSTR(NAK_TIME,'11','2')) AS NAK_TIME
+    		, LV_CD
+    		, SAN_NAME
+  		FROM T_REAL
+  		WHERE 1=1
+		AND SALE_DATE = REPLACE(#{searchSaleDate, jdbcType=VARCHAR},'-','')
+			<!-- AND NAK_TIME BETWEEN #{searchSaleDate, jdbcType=VARCHAR}||'000000' AND #{searchSaleDate, jdbcType=VARCHAR}||'235959' -->
+  		<if test="cmpCd != null and cmpCd != ''">
+  			AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+  		</if>
+  		<if test="flowerCd != null and flowerCd != ''">
+  			AND MEJANG = #{flowerCd, jdbcType=VARCHAR}
+  		</if>
+  		<if test ="cmpCd!= null and cmpCd =='0000000001'" >
+			<if test="itemCd!=null and itemCd!='' ">
+				<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+	  				AND PUM_NAME IN('호접란', '팔레높시스')
+	  			</if>
+	  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+	  				AND PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+	  			</if>
+			</if>
+		</if>
+		<if test ="cmpCd!= null and cmpCd!='0000000001'" >
+			<if test="itemCd!=null and itemCd!='' ">
+				AND PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+			</if>
+		</if>
+  		<if test="itemCd2 != null and itemCd2 != ''">
+  			AND GOOD_NAME =#{itemCd2, jdbcType=VARCHAR}
+  		</if>
+  		) TA,
+  		( SELECT * FROM T_LEVEL A, LEVELCHANGE_KR B WHERE A.LV_CD = B.STRCODE(+)
+  		) TB
+  		<if test="cmpCd != '0000000001' and cmpCd != '1508500020' and cmpCd != '6068207466' and cmpCd != '4108212335'and cmpCd != '7368200686'">
+		WHERE TA.LV_CD = TB.KRCODE(+)
+		</if>
+		<if test="cmpCd != '3848200087' and cmpCd != '1288202296' ">
+		WHERE TA.LV_CD = TB.LV_CD(+)
+		</if>
+		ORDER BY NAK_TIME
+ 	</select>
+ 	
+ 	<select id="atMarketRealTotCnt" parameterType="java.util.HashMap" resultType="int">
+ 		SELECT SUM(TOT_QTY) FROM T_REAL
+ 		WHERE CMP_CD = '0000000001'
+ 		AND SALE_DATE = #{strDate, jdbcType=VARCHAR}
+ 	</select>
+ 	
+ 	<delete id="deleteAtRealData">
+ 		DELETE FROM T_REAL 
+ 		WHERE CMP_CD = '0000000001'
+ 		AND SALE_DATE = #{strDate, jdbcType=VARCHAR}
+ 	</delete>
+     
+</mapper>

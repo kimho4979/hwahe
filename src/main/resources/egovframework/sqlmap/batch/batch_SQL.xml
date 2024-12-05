@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.batch.mapper.BatchMapper">
+
+	<resultMap id="selectKindCodeListMap" type="com.fpdisys.dist.batch.domain.KindCodeListVO">
+		<result property="flowerGubn" column="FLOWER_GUBN" />
+		<result property="flowerCode" column="FLOWER_CODE" />
+		<result property="itemCd" column="ITEM_CD" />
+		<result property="kindCd" column="KIND_CD" />
+		<result property="marketCd" column="MARKET_CD" />
+		<result property="cmpGood" column="CMP_GOOD" />
+		<result property="large" column="LARGE" />
+		<result property="mid" column="MID" />
+		<result property="small" column="SMALL" />
+		<result property="lvCd" column="LV_CD" />
+		<result property="pumName" column="PUM_NAME" />
+		<result property="goodName" column="GOOD_NAME" />
+	</resultMap>
+	
+	<resultMap id="selectLargeCategoryMap" type="com.fpdisys.dist.batch.domain.CategoryLargeVO">
+		<result property="large" column="LARGE" />
+	</resultMap>
+	
+	<resultMap id="selectMidCategoryMap" type="com.fpdisys.dist.batch.domain.CategoryMidVO">
+		<result property="large" column="LARGE" />
+		<result property="mid" column="MID" />
+	</resultMap>
+
+	<resultMap id="selectSmallCategoryMap" type="com.fpdisys.dist.batch.domain.CategorySmallVO">
+		<result property="large" column="LARGE" />
+		<result property="mid" column="MID" />
+		<result property="small" column="SMALL" />
+	</resultMap>
+	
+	<select id="selectKindCodeList" parameterType="java.util.Map" resultMap="selectKindCodeListMap">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.selecKindCodeList */
+		SELECT MEJANG FLOWER_GUBN
+			, SUBSTR(CMP_GOOD, 1, 1) FLOWER_CODE
+			, SUBSTR(CMP_GOOD, 2, 3) ITEM_CD
+			, SUBSTR(CMP_GOOD, 5, 4) KIND_CD
+			, CMP_CD MARKET_CD
+			, CMP_GOOD
+			, NVL(LARGE, '00') LARGE
+			, NVL(MID, '00') MID
+			, NVL(SMALL, '00') SMALL
+			, LV_CD
+			, PUM_NAME
+			, GOOD_NAME
+		FROM T_SALE
+		WHERE CMP_CD = #{marketCd, jdbcType=VARCHAR}
+		AND CMP_GOOD = #{cmpGood, jdbcType=VARCHAR}
+		GROUP BY MEJANG, SUBSTR(CMP_GOOD, 1, 1), SUBSTR(CMP_GOOD, 2, 3), SUBSTR(CMP_GOOD, 5, 4),  CMP_CD, CMP_GOOD, LARGE, MID, SMALL, LV_CD, PUM_NAME, GOOD_NAME
+	]]>
+	</select>
+	
+	<select id="selectKindCodeInfo1" parameterType="egovframework.rte.psl.dataaccess.util.EgovMap" resultMap="selectKindCodeListMap">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.selectKindCodeInfo1 */
+		SELECT FLOWER_GUBN
+			, FLOWER_CODE
+			, ITEM_CD
+			, KIND_CD
+			, MARKET_CD
+			, CMP_GOOD
+			, NVL(LARGE, '00') LARGE
+			, NVL(MID, '00') MID
+			, NVL(SMALL, '00') SMALL
+			, LV_CD
+			, PUM_NAME
+			, GOOD_NAME
+		FROM T_INT_MAPPING
+		WHERE FLOWER_GUBN = #{flowerGubn, jdbcType=VARCHAR}
+		  AND FLOWER_CODE = #{flowerCode, jdbcType=CHAR}
+		  AND ITEM_CD = #{itemCd, jdbcType=CHAR}
+		  AND KIND_CD = #{kindCd, jdbcType=CHAR}
+		  AND CMP_GOOD = #{cmpGood, jdbcType=VARCHAR}
+		  AND MARKET_CD =  #{marketCd, jdbcType=VARCHAR}
+		  AND LARGE = #{large, jdbcType=VARCHAR}
+		  AND MID = #{mid, jdbcType=VARCHAR}
+		  AND SMALL = #{small, jdbcType=VARCHAR}
+		  AND LV_CD = #{lvCd, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<select id="selectItemCode" parameterType="com.fpdisys.dist.cmmn.integrated.domain.KindVO" resultMap="selectKindCodeListMap">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.selectItemCode */
+		SELECT FLOWER_GUBN
+			, FLOWER_CODE
+			, ITEM_CD
+			, ITEM_NM
+		FROM T_INT_ITEM
+		WHERE FLOWER_GUBN = #{flowerGubn, jdbcType=VARCHAR}
+		  AND ITEM_NM = #{itemNm, jdbcType=VARCHAR}
+		]]>
+	</select>
+	
+	<select id="selectKindCode" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO" resultMap="selectKindCodeListMap">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.selectKindCode */
+		SELECT FLOWER_GUBN
+			, FLOWER_CODE
+			, ITEM_CD
+			, KIND_CD
+			, KIND_NM
+		FROM T_INT_KIND
+		WHERE FLOWER_GUBN = #{flowerGubn, jdbcType=VARCHAR}
+		  AND FLOWER_CODE = #{flowerCode, jdbcType=CHAR}
+		  AND ITEM_CD = #{itemCd, jdbcType=CHAR}
+		  AND KIND_NM = #{kindNm, jdbcType=VARCHAR}
+		FETCH FIRST 1 ROWS ONLY
+	]]>
+	</select>
+	
+	
+	<select id="selectNoneMappedCode" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO" resultMap="selectKindCodeListMap">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.selectNoneMappedCode */
+		SELECT FLOWER_GUBN
+		FROM T_INT_MAPPING_NONE
+		WHERE FLOWER_GUBN = #{flowerGubn, jdbcType=VARCHAR}
+		  AND MARKET_CD =  #{marketCd, jdbcType=VARCHAR}
+		  AND CMP_GOOD = #{cmpGood, jdbcType=VARCHAR}
+		  AND LARGE = #{large, jdbcType=VARCHAR}
+		  AND MID = #{mid, jdbcType=VARCHAR}
+		  AND SMALL = #{small, jdbcType=VARCHAR}
+		  AND LV_CD = #{lvCd, jdbcType=VARCHAR}
+	]]>
+	</select>
+	
+	<select id="selectCoflicedKindCodeInfo" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO" resultMap="selectKindCodeListMap">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.selectCoflicedKindCodeInfo */
+		SELECT FLOWER_GUBN
+			, FLOWER_CODE
+			, ITEM_CD
+			, KIND_CD
+			, MARKET_CD
+			, CMP_GOOD
+			, LARGE
+			, MID
+			, SMALL
+			, LV_CD
+			, PUM_NAME
+			, GOOD_NAME
+		FROM T_INT_MAPPING_CONFLICTED
+		WHERE FLOWER_GUBN = #{flowerGubn, jdbcType=VARCHAR}
+		  AND FLOWER_CODE = #{flowerCode, jdbcType=CHAR}
+		  AND ITEM_CD = #{itemCd, jdbcType=CHAR}
+		  AND KIND_CD = #{kindCd, jdbcType=CHAR}
+		  AND MARKET_CD =  #{marketCd, jdbcType=VARCHAR}
+		  AND CMP_GOOD = #{cmpGood, jdbcType=VARCHAR}
+		  AND LARGE = #{large, jdbcType=VARCHAR}
+		  AND MID = #{mid, jdbcType=VARCHAR}
+		  AND SMALL = #{small, jdbcType=VARCHAR}
+		  AND LV_CD = #{lvCd, jdbcType=VARCHAR}
+		  AND PUM_NAME = #{pumName, jdbcType=VARCHAR}
+		  AND GOOD_NAME = #{goodName, jdbcType=VARCHAR}
+	]]>
+	</select>
+	
+	<insert id="insertKindCode" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.insertKindCode */
+		INSERT INTO T_INT_MAPPING ( FLOWER_GUBN
+			, FLOWER_CODE
+			, ITEM_CD
+			, KIND_CD
+			, MARKET_CD
+			, CMP_GOOD
+			, LARGE
+			, MID
+			, SMALL
+			, LV_CD
+			, PUM_NAME
+			, GOOD_NAME
+			, USE_YN
+			, REG_IP
+			, REG_DT
+			, REG_ID
+		) VALUES (
+			#{flowerGubn, jdbcType=VARCHAR}
+			, #{flowerCode, jdbcType=CHAR}
+			, #{itemCd, jdbcType=CHAR}
+			, #{kindCd, jdbcType=CHAR}
+			, #{marketCd, jdbcType=VARCHAR}
+			, #{cmpGood, jdbcType=VARCHAR}
+			, #{large, jdbcType=VARCHAR}
+			, #{mid, jdbcType=VARCHAR}
+			, #{small, jdbcType=VARCHAR}
+			, #{lvCd, jdbcType=VARCHAR}
+			, #{pumName, jdbcType=VARCHAR}
+			, #{goodName, jdbcType=VARCHAR}
+			, 'Y'
+			, '127.0.0.1'
+			, SYSDATE
+			, 'system'
+		)
+	]]>
+	</insert>
+	
+	<insert id="insertConflictedKindCode" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.insertConflictedKindCode */
+		INSERT INTO T_INT_MAPPING_CONFLICTED ( FLOWER_GUBN
+			, FLOWER_CODE
+			, ITEM_CD
+			, KIND_CD
+			, MARKET_CD
+			, CMP_GOOD
+			, LARGE
+			, MID
+			, SMALL
+			, LV_CD
+			, PUM_NAME
+			, GOOD_NAME
+			, USE_YN
+			, REG_IP
+			, REG_DT
+			, REG_ID
+		) VALUES (
+			#{flowerGubn, jdbcType=VARCHAR}
+			, #{flowerCode, jdbcType=CHAR}
+			, #{itemCd, jdbcType=CHAR}
+			, #{kindCd, jdbcType=CHAR}
+			, #{marketCd, jdbcType=VARCHAR}
+			, #{cmpGood, jdbcType=VARCHAR}
+			, #{large, jdbcType=VARCHAR}
+			, #{mid, jdbcType=VARCHAR}
+			, #{small, jdbcType=VARCHAR}
+			, #{lvCd, jdbcType=VARCHAR}
+			, #{pumName, jdbcType=VARCHAR}
+			, #{goodName, jdbcType=VARCHAR}
+			, 'Y'
+			,'127.0.0.1'
+			, SYSDATE
+			, 'system'
+		)
+	]]>
+	</insert>
+	
+	<insert id="insertNoneMappedCode" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.insertNoneMappedCode */
+		INSERT INTO T_INT_MAPPING_NONE ( FLOWER_GUBN
+			, MARKET_CD
+			, CMP_GOOD
+			, LARGE
+			, MID
+			, SMALL
+			, LV_CD
+			, PUM_NAME
+			, GOOD_NAME
+			, USE_YN
+			, REG_IP
+			, REG_DT
+			, REG_ID
+		) VALUES (
+			#{flowerGubn, jdbcType=VARCHAR}
+			, #{marketCd, jdbcType=VARCHAR}
+			, #{cmpGood, jdbcType=VARCHAR}
+			, #{large, jdbcType=VARCHAR}
+			, #{mid, jdbcType=VARCHAR}
+			, #{small, jdbcType=VARCHAR}
+			, #{lvCd, jdbcType=VARCHAR}
+			, #{pumName, jdbcType=VARCHAR}
+			, #{goodName, jdbcType=VARCHAR}
+			, 'Y'
+			,'127.0.0.1'
+			, SYSDATE
+			, 'system'
+		)
+	]]>
+	</insert>
+	
+	<select id="selectLargeCategory" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO" resultMap="selectLargeCategoryMap">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.selectLargeCategory */
+		SELECT LARGE
+		FROM T_GOODL
+		WHERE LARGE = #{large, jdbcType=VARCHAR}
+	]]>
+	</select>
+
+	<select id="selectMidCategory" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO" resultMap="selectMidCategoryMap">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.selectMidCategory */
+		SELECT LARGE
+			, MID
+		FROM T_GOODM
+		WHERE LARGE = #{large, jdbcType=VARCHAR}
+		  AND MID = #{mid, jdbcType=VARCHAR}
+	]]>
+	</select>
+
+	<select id="selectSmallCategory" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO" resultMap="selectSmallCategoryMap">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.selectSmallCategory */
+		SELECT LARGE
+			, MID
+			, SMALL
+		FROM T_GOODN
+		WHERE LARGE = #{large, jdbcType=VARCHAR}
+		  AND MID = #{mid, jdbcType=VARCHAR}
+		  AND SMALL = #{small, jdbcType=VARCHAR}
+	]]>
+	</select>
+
+	<insert id="insertLargeCategory" parameterType="com.fpdisys.dist.batch.domain.CategoryLargeVO">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.insertLargeCategory */
+		INSERT INTO T_GOODL (
+			LARGE
+			, LARGE_NAME
+		) VALUES (
+			#{large, jdbcType=VARCHAR}
+			, #{largeName, jdbcType=VARCHAR}
+		)
+	]]>
+	</insert>
+	
+	<insert id="insertMidCategory" parameterType="com.fpdisys.dist.batch.domain.CategoryMidVO">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.insertMidCategory */
+		INSERT INTO T_GOODM (
+			LARGE
+			, MID
+			, MID_NAME
+			, GUBN
+			, BIGO
+		) VALUES (
+			#{large, jdbcType=VARCHAR}
+			, #{mid, jdbcType=VARCHAR}
+			, #{midName, jdbcType=VARCHAR}
+			, #{gubn, jdbcType=VARCHAR}
+			, #{bigo, jdbcType=VARCHAR}
+		)
+	]]>
+	</insert>
+	
+	<insert id="insertSmallCategory" parameterType="com.fpdisys.dist.batch.domain.CategorySmallVO">
+	<![CDATA[
+		/* com.fpdisys.dist.batch.mapper.BatchMapper.insertSmallCategory */
+		INSERT INTO T_GOODN (
+			LARGE
+			, MID
+			, SMALL
+			, GOOD_NAME
+			, MANAGE_CD
+			, GUBN
+			, BIGO
+		) VALUES (
+			#{large, jdbcType=VARCHAR}
+			, #{mid, jdbcType=VARCHAR}
+			, #{small, jdbcType=VARCHAR}
+			, #{goodName, jdbcType=VARCHAR}
+			, #{manageCd, jdbcType=VARCHAR}
+			, #{gubn, jdbcType=VARCHAR}
+			, #{bigo, jdbcType=VARCHAR}
+		)
+	]]>
+	</insert>
+	
+	<select id="selectMaxKindCd" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO" resultType="String">
+	<![CDATA[
+		/* */
+		SELECT TO_CHAR(LPAD(MAX(NVL(TO_NUMBER(KIND_CD), 0)) + 1, 5, '0'))
+		FROM T_INT_KIND
+		WHERE FLOWER_GUBN = #{flowerGubn, jdbcType=VARCHAR}
+		  AND FLOWER_CODE = #{flowerCode, jdbcType=CHAR}
+		  AND ITEM_CD = #{itemCd, jdbcType=CHAR}
+	]]>
+	</select>
+	
+	<insert id="insertIntKindCode" parameterType="com.fpdisys.dist.batch.domain.KindCodeListVO">
+	<![CDATA[
+		/**/
+		INSERT INTO T_INT_KIND (
+			FLOWER_GUBN
+			, FLOWER_CODE
+			, ITEM_CD
+			, KIND_CD
+			, KIND_NM
+			, USE_YN
+			, REG_IP
+			, REG_DT
+			, REG_ID
+		) VALUES (
+			#{flowerGubn, jdbcType=VARCHAR}
+			, #{flowerCode, jdbcType=CHAR}
+			, #{itemCd, jdbcType=CHAR}
+			, #{kindCd, jdbcType=CHAR}
+			, #{goodName, jdbcType=VARCHAR}
+			, 'Y'
+			, '127.0.0.1'
+			, SYSDATE
+			, 'system'
+		)
+	]]>
+	</insert>
+	
+</mapper>

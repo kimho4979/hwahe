@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.haa04.mapper.Haa04Mapper">
+
+	<select id="selectMainList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT T2.SALE_MONTH
+			, SUBSTR (T1.SALE_MONTH, 6, 7) AS MON
+			,NVL(T2.TOT_AMT,0) AS TOT_AMT
+			,NVL(T2.TOT_QTY,0) AS TOT_QTY
+			,T1.SALE_YEAR
+			,T4.SALE_YEAR AS AGO_SALE_YEAR
+			,NVL(T1.YEAR_AMT,0) AS YEAR_AMT
+			,NVL(T1.YEAR_QTY,0) AS YEAR_QTY
+			,T3.AGO_TOT_AMT
+			,T3.AGO_TOT_QTY
+			,T4.AVG_YEAR_AMT
+			,T4.AVG_YEAR_QTY
+			,NVL(ABS(ROUND(100-(T2.TOT_AMT/T3.AGO_TOT_AMT*100),2)),0) AS TOT_AMT_COMP
+			,TRUNC((((T2.TOT_AMT/T3.AGO_TOT_AMT)-1)*100),0) AS M_AMT_COMP
+			,CASE
+				WHEN T2.TOT_AMT &gt; T3.AGO_TOT_AMT THEN 'red'
+				WHEN T2.TOT_AMT &lt; T3.AGO_TOT_AMT THEN 'blue'
+				ELSE 'green' END AS TOT_AMT_COL
+			,NVL(ABS(ROUND(100-(T2.TOT_QTY/T3.AGO_TOT_QTY*100),2)),0) AS TOT_QTY_COMP
+			,TRUNC((((T2.TOT_QTY/T3.AGO_TOT_QTY)-1)*100),0) AS M_QTY_COMP
+			,CASE
+				WHEN T2.TOT_QTY &gt; T3.AGO_TOT_QTY THEN 'red'
+				WHEN T2.TOT_QTY &lt; T3.AGO_TOT_QTY THEN 'blue'
+				ELSE 'green' 
+			END AS TOT_QTY_COL
+			,NVL(ABS(ROUND(100-(T2.TOT_AMT/T4.AVG_YEAR_AMT*100),2)),0) AS YEAR_AMT_COMP
+			,CASE
+				WHEN T2.TOT_AMT &gt; T4.AVG_YEAR_AMT THEN 'red'
+				WHEN T2.TOT_AMT &lt; T4.AVG_YEAR_AMT THEN 'blue'
+				ELSE 'green' 
+			END AS YEAR_AMT_COL
+			,NVL(ABS(ROUND(100-(T2.TOT_QTY/T4.AVG_YEAR_QTY*100),2)),0) AS YEAR_QTY_COMP
+			,CASE
+				WHEN T2.TOT_QTY &gt; T4.AVG_YEAR_QTY THEN 'red'
+				WHEN T2.TOT_QTY &lt; T4.AVG_YEAR_QTY THEN 'blue'
+				ELSE 'green' END AS YEAR_QTY_COL
+		FROM
+		(
+			SELECT #{SALE_MONTH, jdbcType=VARCHAR} AS SALE_MONTH
+				,SUBSTR(T2.SALE_MONTH,1,4) AS SALE_YEAR
+				,SUM(T2.TOT_AMT) AS YEAR_AMT
+				,SUM(T2.TOT_QTY) AS YEAR_QTY
+			FROM T_SALE_MONTH T2
+			WHERE CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+			AND SUBSTR(SALE_MONTH,1,4) =#{SALE_YEAR, jdbcType=VARCHAR}
+			AND SALE_MONTH BETWEEN  #{SALE_YEAR, jdbcType=VARCHAR}||'-01' AND #{SALE_MONTH, jdbcType=VARCHAR}
+			<if test="FLOWER_GUBUN !=null and FLOWER_GUBUN != ''">
+				AND FLOWER_GUBN = #{FLOWER_GUBUN, jdbcType=VARCHAR}
+			</if>
+			<if test="searchFlower != null and searchFlower != ''">
+		        AND FLOWER_GUBN IN 
+		        <foreach item="item" collection="searchFlower" open="(" separator="," close=")">
+				        #{item}
+				 </foreach>
+			 </if>
+			GROUP BY SUBSTR(SALE_MONTH,1,4)
+		) T1
+		LEFT OUTER JOIN
+		(
+			SELECT SALE_MONTH
+				,SUM(TOT_AMT) AS TOT_AMT
+				,SUM(TOT_QTY) AS TOT_QTY
+			FROM T_SALE_MONTH T1
+			WHERE CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+			AND SALE_MONTH =#{SALE_MONTH, jdbcType=VARCHAR}
+			<if test="FLOWER_GUBUN !=null and FLOWER_GUBUN != ''">
+				AND FLOWER_GUBN = #{FLOWER_GUBUN, jdbcType=VARCHAR}
+			</if>
+			<if test="searchFlower != null and searchFlower != ''">
+		        AND FLOWER_GUBN IN 
+		        <foreach item="item" collection="searchFlower" open="(" separator="," close=")">
+				        #{item}
+				 </foreach>
+			 </if>
+			GROUP BY SALE_MONTH
+		) T2 
+		ON T1.SALE_MONTH = T2.SALE_MONTH
+		LEFT OUTER JOIN
+		(
+			SELECT #{SALE_MONTH, jdbcType=VARCHAR} AS SALE_MONTH
+				,SUM(TOT_AMT) AS AGO_TOT_AMT
+				,SUM(TOT_QTY) AS AGO_TOT_QTY
+			FROM T_SALE_MONTH
+			WHERE CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+			AND SALE_MONTH = #{AGO_SALE_MONTH, jdbcType=VARCHAR}
+			<if test="FLOWER_GUBUN !=null and FLOWER_GUBUN != ''">
+				AND FLOWER_GUBN = #{FLOWER_GUBUN, jdbcType=VARCHAR}
+			</if>
+			<if test="searchFlower != null and searchFlower != ''">
+		        AND FLOWER_GUBN IN 
+		        <foreach item="item" collection="searchFlower" open="(" separator="," close=")">
+				        #{item}
+				 </foreach>
+			 </if>
+			GROUP BY SALE_MONTH
+		) T3
+		ON T1.SALE_MONTH = T3.SALE_MONTH
+		LEFT OUTER JOIN
+		(
+			SELECT #{SALE_MONTH, jdbcType=VARCHAR} AS SALE_MONTH
+				,SUBSTR(SALE_MONTH,1,4) AS SALE_YEAR
+				,TRUNC((SUM(TOT_AMT)/12),0) AS AVG_YEAR_AMT
+				,TRUNC((SUM(TOT_QTY)/12),0) AS AVG_YEAR_QTY
+			FROM T_SALE_MONTH
+			WHERE CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+			AND SUBSTR(SALE_MONTH,1,4) = #{AGO_SALE_YEAR, jdbcType=VARCHAR}
+			<if test="FLOWER_GUBUN !=null and FLOWER_GUBUN != ''">
+				AND FLOWER_GUBN = #{FLOWER_GUBUN, jdbcType=VARCHAR}
+			</if>
+			<if test="searchFlower != null and searchFlower != ''">
+		        AND FLOWER_GUBN IN 
+		        <foreach item="item" collection="searchFlower" open="(" separator="," close=")">
+				        #{item}
+				 </foreach>
+			 </if>
+			GROUP BY SUBSTR(SALE_MONTH,1,4)
+		) T4
+		ON T1.SALE_MONTH = T4.SALE_MONTH
+	</select>
+
+	<select id="graphMainAmtList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT DECODE(T1.SALE_MONTH,NULL, T2.SALE_MONTH,T1.SALE_MONTH) AS SALE_MONTH
+			,TRUNC((T1.AGO_TOT_AMT/100000),0) AS AGO_TOT_AMT
+			,T1.AGO_TOT_QTY
+			,TRUNC((T2.TOT_AMT/100000),0) AS TOT_AMT
+			,T2.TOT_QTY
+		FROM
+		(
+			SELECT SUBSTR(SALE_MONTH,6,7) AS SALE_MONTH
+				,SUM(TOT_AMT) AS AGO_TOT_AMT
+				,SUM(TOT_QTY) AS AGO_TOT_QTY
+			FROM T_SALE_MONTH
+			WHERE SUBSTR(SALE_MONTH,1,4) = #{AGO_SALE_YEAR, jdbcType=VARCHAR}
+			AND CMP_CD = #{CMP_CD, jdbcType=VARCHAR}
+			<if test="FLOWER_GUBUN !=null and FLOWER_GUBUN != ''">
+				AND FLOWER_GUBN = #{FLOWER_GUBUN, jdbcType=VARCHAR}
+			</if>
+			<if test="searchFlower != null and searchFlower != ''">
+		        AND FLOWER_GUBN IN 
+		        <foreach item="item" collection="searchFlower" open="(" separator="," close=")">
+				        #{item}
+				 </foreach>
+			 </if>
+			GROUP BY SALE_MONTH
+		) T1
+		FULL OUTER JOIN
+		(
+			SELECT SUBSTR(SALE_MONTH,6,7) AS SALE_MONTH
+				,SUM(TOT_AMT) AS TOT_AMT
+				,SUM(TOT_QTY) AS TOT_QTY
+			FROM T_SALE_MONTH
+			WHERE SUBSTR(SALE_MONTH,1,4) = #{SALE_YEAR, jdbcType=VARCHAR}
+			AND CMP_CD =#{CMP_CD, jdbcType=VARCHAR}
+			<if test="FLOWER_GUBUN !=null and FLOWER_GUBUN != ''">
+				AND FLOWER_GUBN = #{FLOWER_GUBUN, jdbcType=VARCHAR}
+			</if>
+			<if test="searchFlower != null and searchFlower != ''">
+		        AND FLOWER_GUBN IN 
+		        <foreach item="item" collection="searchFlower" open="(" separator="," close=")">
+				        #{item}
+				 </foreach>
+			 </if>
+			GROUP BY SALE_MONTH
+		) T2
+		ON T1.SALE_MONTH = T2.SALE_MONTH
+		ORDER BY DECODE(T1.SALE_MONTH,NULL, T2.SALE_MONTH,T1.SALE_MONTH)
+	</select>
+</mapper>

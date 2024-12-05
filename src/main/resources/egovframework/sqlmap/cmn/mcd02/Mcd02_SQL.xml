@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mcd02.mapper.Mcd02Mapper">
+	<resultMap id="Mcd02ResultMap" type="com.fpminput.mntr.mcd02.domain.Mcd02VO">	
+		<result property="seq"				column="SEQ"/>
+		<result property="bbsGubn"			column="BBS_GUBN"/>
+		<result property="title"			column="TITLE"/>
+		<result property="content"			column="CONTENT"/>
+		<result property="dispYn"			column="DISP_YN"/>
+		<result property="compCode"			column="COMP_CODE"/>
+		<result property="insDt"			column="INS_DT"/>
+		<result property="insId"			column="INS_ID"/>
+		<result property="uptDt"			column="UPT_DT"/>
+		<result property="uptId"			column="UPT_ID"/>
+		<result property="fileSeq"			column="FILE_SEQ"/>
+		<result property="originFileName"	column="ORIGIN_FILE_NAME"/>
+		<result property="storedFileName"	column="STORED_FILE_NAME"/>
+		<result property="filePath"			column="FILE_PATH"/>
+		<result property="fileSize"			column="FILE_SIZE"/>
+		<result property="fileExt"			column="FILE_EXT"/>
+		
+		<result property="eventGp" column="EVENT_GP"/>
+		<result property="eventGpNm" column="EVENT_GP_NM"/>
+		<result property="eventNm" column="EVENT_NM"/>
+		<result property="eventYmd" column="EVENT_YMD"/>
+		<result property="eventTim" column="EVENT_TIM"/>
+		<result property="siNm" column="SI_NM"/>
+		<result property="addr" column="ADDR"/>
+		<result property="eventPls" column="EVENT_PLS"/>
+		<result property="cdId" column="CD_ID"/>
+		<result property="cdNm" column="CD_NM"/>		
+		
+	</resultMap>
+	
+	<!--  조회 -->
+	<select id="selectGridList" parameterType="com.fpminput.mntr.mcd02.domain.Mcd02VO" resultMap="Mcd02ResultMap">
+	SELECT A.EVENT_GP
+	     , B.CD_NM AS EVENT_GP_NM
+	     , A.EVENT_NM
+	     , TO_CHAR(TO_DATE(A.EVENT_YMD, 'YYYYMMDD'), 'YYYY-MM-DD') AS EVENT_YMD
+	     , TO_CHAR(TO_DATE(A.EVENT_TIM, 'HH24MISS'), 'HH24:MI:SS') AS EVENT_TIM
+	     , A.SI_NM
+	     , A.ADDR
+	     , A.EVENT_PLS
+	  FROM T_SCH_INFO A
+	     , TB_GEN_CODE B
+	 WHERE A.EVENT_GP = B.CD_ID
+	   AND A.EVENT_YMD = REPLACE(#{searchDate},'-','')
+	   AND B.GP_ID = 'EVENT_GP'
+	 ORDER BY EVENT_YMD, EVENT_TIM, EVENT_GP
+	</select>
+	
+	<!-- 팝업 시 공통코드 조회 -->
+	<select id="selectAreaNm" parameterType="com.fpminput.mntr.mcd02.domain.Mcd02VO" resultMap="Mcd02ResultMap">
+	SELECT CD_ID, CD_NM
+	  FROM TB_GEN_CODE
+	 WHERE GP_ID LIKE 'AREA_NM'
+	 ORDER BY SEQ
+	</select>
+	
+	<!-- 행사일정 등록 -->
+	<insert id="insertEventSch"  parameterType="java.util.HashMap">
+	INSERT INTO T_SCH_INFO
+	(
+	    EVENT_GP,
+	    EVENT_YMD,
+	    EVENT_TIM,
+	    EVENT_NM,
+	    SI_NM,
+	    ADDR,
+	    EVENT_PLS,
+	    REG_DT
+	)
+	VALUES
+	(
+	    #{eventGp, jdbcType=VARCHAR},
+	    REPLACE(#{eventYmd, jdbcType=VARCHAR}, '-', ''),
+	    #{eventTim, jdbcType=VARCHAR},
+	    #{eventNm, jdbcType=VARCHAR},
+	    #{siNm, jdbcType=VARCHAR},
+	    #{addr, jdbcType=VARCHAR},
+	    #{eventPls, jdbcType=VARCHAR},
+	    TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')    
+	)
+	</insert>
+	
+	<!--  행사일정 삭제 -->
+	<delete id="deleteEventSch"  parameterType="java.util.HashMap" >
+	DELETE FROM T_SCH_INFO
+	 WHERE EVENT_GP = #{eventGp, jdbcType=VARCHAR}
+	   AND EVENT_YMD = REPLACE(#{eventYmd, jdbcType=VARCHAR}, '-', '')
+	   AND EVENT_TIM = REPLACE(#{eventTim, jdbcType=VARCHAR}, ':', '')
+	   AND EVENT_NM = #{eventNm, jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 행사일정 수정 -->
+	<update id="updateEventSch"  parameterType="java.util.HashMap" >
+	UPDATE T_SCH_INFO
+	   SET SI_NM = #{siNm, jdbcType=VARCHAR}
+	     , ADDR = #{addr, jdbcType=VARCHAR}
+	     , EVENT_PLS = #{eventPls, jdbcType=VARCHAR}
+	 WHERE EVENT_GP = #{eventGp, jdbcType=VARCHAR}
+	   AND EVENT_YMD = REPLACE(#{eventYmd, jdbcType=VARCHAR}, '-', '')
+	   AND EVENT_TIM = REPLACE(#{eventTim, jdbcType=VARCHAR}, ':', '')
+	   AND EVENT_NM = #{eventNm, jdbcType=VARCHAR}
+	</update>
+</mapper>

@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.main.mapper.ChartStatisticsMapper">
+	<select id="selectPumMokSaledate" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT TO_CHAR(ADD_MONTHS(MAX(SALE_DATE), '0'), 'YYYY-MM-DD') AS SALE_DATE
+		  FROM T_SALE_DATE
+		 WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-30,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		 GROUP BY SALE_DATE
+		 ORDER BY SALE_DATE DESC
+ 	</select>
+ 	
+ 	<select id="selectPumStatsTotList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT SALE_DATE /* ChartStatistics_SQL.selectPumStatsTotList */
+		     , PUM_NAME
+		     , CMP_CD
+		     , MEJANG
+		     , SUM(QTY) AS QTY 
+		     , MAX(COST) AS MAX_AMT
+		     , MIN(COST) AS MIN_AMT
+		     , SUM(TOT_QTY) AS TOT_QTY
+		     , SUM(TOT_AMT) AS TOT_AMT
+		  FROM T_SALE
+		 WHERE SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+		   AND MEJANG IS NOT NULL  		 
+		 GROUP BY SALE_DATE, PUM_NAME, CMP_CD, MEJANG
+ 	</select>
+ 	
+ 	<insert id="insertPumStatsTot" parameterType="java.util.HashMap">
+ 		INSERT /* ChartStatistics_SQL.insertPumStatsTot */ 
+ 		  INTO TB_PUM_STATS_TOT
+ 		     (
+ 		       SALE_DATE		 
+		     , PUM_NAME		 
+			 , CMP_CD        
+		     , MEJANG        
+		     , QTY           
+		     , MAX_AMT       
+		     , MIN_AMT       
+		     , TOT_QTY       
+		     , TOT_AMT
+		     , IN_TIME       
+ 		      )
+		VALUES
+			(
+ 		       #{saleDate, jdbcType=VARCHAR}
+		     , #{pumName, jdbcType=VARCHAR}		 
+			 , #{cmpCd, jdbcType=VARCHAR}        
+		     , #{mejang, jdbcType=VARCHAR}        
+		     , #{qty, jdbcType=INTEGER}           
+		     , #{maxAmt, jdbcType=INTEGER}       
+		     , #{minAmt, jdbcType=INTEGER}       
+		     , #{totQty, jdbcType=INTEGER}       
+		     , #{totAmt, jdbcType=DECIMAL}   
+		     , SYSDATE    
+ 		      )
+ 	
+ 	</insert>
+ 	
+ 	<delete id="deletePumStatsTot" parameterType="java.util.HashMap">
+ 		DELETE /* ChartStatistics_SQL.deletePumStatsTot */
+ 		  FROM TB_PUM_STATS_TOT
+ 		 WHERE SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+ 	</delete>
+ 	
+ 	<select id="selectPumStatsTot" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT /* ChartStatistics_SQL.selectPumStatsTot */
+			   SUM(A.QTY) AS TOT_QTY
+		     , MAX(A.MAX_AMT) AS MAX_AMT
+		     , MIN(A.MIN_AMT) AS MIN_AMT
+		     , ROUND(SUM(A.TOT_AMT) / SUM(A.QTY)) AS AVG_AMT
+		FROM (
+				SELECT RANK() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RNUM
+				     , SUM(QTY) AS QTY
+				     , MAX(MAX_AMT) AS MAX_AMT
+				     , MIN(MIN_AMT) AS MIN_AMT
+				     , SUM(TOT_AMT) AS TOT_AMT
+				 FROM TB_PUM_STATS_TOT
+				WHERE SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+				  AND CMP_CD = #{cmpCd, jdbcType=VARCHAR}
+				  AND MEJANG = #{searchGubn, jdbcType=VARCHAR}
+				GROUP BY PUM_NAME, CMP_CD, MEJANG
+		 	) A
+ 	</select>
+ 	
+ 	<select id="selectPumStatsList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		
+		SELECT /* ChartStatistics_SQL.selectPumStatsList  */
+		       B.CMP_CD
+		     , B.FLOWER_GUBN
+	         , B.SALE_DATE
+	         , B.PUM_NAME
+	         , MAX(B.MAX_AMT) AS MAX_AMT
+	         , MIN(B.MIN_AMT) AS MIN_AMT
+	         , SUM(B.TOT_AMT) AS TOT_AMT
+	         , SUM(B.TOT_QTY) AS TOT_QTY
+	    FROM
+ 		     (
+	          SELECT TA.CMP_CD
+	               , TA.FLOWER_GUBN
+		           , TA.SALE_DATE
+		           , DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS PUM_NAME
+		           , TA.MAX_AMT
+		           , TA.MIN_AMT
+		           , TA.TOT_AMT
+		           , TA.TOT_QTY
+		      FROM
+			        (
+			            SELECT CMP_CD
+			                 , SALE_DATE
+			                 , FLOWER_GUBN
+			                 , MAX_AMT
+			                 , MIN_AMT
+			                 , AVG_AMT
+			                 , TOT_AMT
+			                 , TOT_QTY
+			                 , DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME
+			              FROM T_SALE_DATE A
+			              WHERE 1=1
+			                AND A.SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+			                AND A.TOT_AMT <![CDATA[<>]]> 0
+			                AND A.FLOWER_GUBN IS NOT NULL
+			          )TA,
+			        (
+			            SELECT 
+			            MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+			            FROM FLOWER.TB_KIND_MAP
+			            WHERE 1=1
+			            GROUP BY PUM_NM_MAP
+			        ) TB
+			 WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+		     ) B
+		 WHERE 1=1
+		   AND B.FLOWER_GUBN IS NOT NULL
+		 GROUP BY B.CMP_CD, B.FLOWER_GUBN, SALE_DATE, PUM_NAME
+ 	</select>
+ 	<select id="selectPumStats" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT CMP_CD /* ChartStatistics_SQL.selecjtPumStats */
+		     , SALE_DATE
+		     , PUM_NAME
+		     , MAX_AMT
+		     , MIN_AMT
+		     , AVG_AMT
+		     , TOT_AMT
+		     , TOT_QTY
+		     , RNUM
+			 , ROUND((RATIO_TO_REPORT(TOT_QTY) OVER() * 100), 1) || '%' AS QTY_RATE 
+		 FROM (
+				SELECT /* ChartStatistics_SQL.selectPumStats */
+					   CMP_CD
+				     , SALE_DATE
+				     , PUM_NAME
+				     , MAX_AMT
+				     , MIN_AMT
+				     , AVG_AMT
+				     , TOT_AMT
+				     , TOT_QTY
+				     , RNUM 
+				FROM (  SELECT CMP_CD
+						     , SALE_DATE
+						     , PUM_NAME
+						     , MAX(MAX_AMT) AS MAX_AMT
+						     , MIN(MIN_AMT) AS MIN_AMT
+						     , TRUNC(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+						     , SUM(TOT_AMT) AS  TOT_AMT
+						     , SUM(TOT_QTY) AS  TOT_QTY
+						     , ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RNUM  
+						  FROM TB_PUM_STATS
+					     WHERE 1=1
+						  AND CMP_CD		= #{cmpCd, jdbcType=VARCHAR}
+						  AND FLOWER_GUBN 	= #{searchGubn, jdbcType=VARCHAR}
+						  AND SALE_DATE 	= #{searchSaleDate, jdbcType=VARCHAR}
+						GROUP BY CMP_CD, SALE_DATE, PUM_NAME
+						ORDER BY TOT_QTY DESC
+					  ) X
+				 WHERE RNUM <![CDATA[<=]]> 6
+				 UNION ALL
+				 SELECT /* ChartStatistics_SQL.selectPumStats */
+					   MAX(CMP_CD)		AS CMP_CD
+		     		 , MAX(SALE_DATE)   AS SALE_DATE
+				     , '기타'			AS PUM_NAME
+				     , MAX(MAX_AMT) 	AS MAX_AMT
+				     , MIN(MIN_AMT) 	AS MIN_AMT
+				     , TRUNC(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+				     , SUM(TOT_AMT) 	AS TOT_AMT
+				     , SUM(TOT_QTY) 	AS TOT_QTY
+				     , 7  AS RNUM
+				  FROM (  SELECT CMP_CD
+						     , SALE_DATE
+						     , PUM_NAME
+						     , MAX(MAX_AMT) AS MAX_AMT
+						     , MIN(MIN_AMT) AS MIN_AMT
+						     , SUM(TOT_AMT) AS  TOT_AMT
+						     , SUM(TOT_QTY) AS  TOT_QTY
+						     , ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS RNUM  
+						  FROM TB_PUM_STATS
+					     WHERE 1=1
+						  AND CMP_CD		= #{cmpCd, jdbcType=VARCHAR}
+						  AND FLOWER_GUBN 	= #{searchGubn, jdbcType=VARCHAR}
+						  AND SALE_DATE 	= #{searchSaleDate, jdbcType=VARCHAR}
+						GROUP BY CMP_CD, SALE_DATE, PUM_NAME
+						ORDER BY TOT_QTY DESC
+					  ) X
+				 WHERE RNUM <![CDATA[>]]> 6
+			)
+		WHERE SALE_DATE IS NOT NULL
+ 	</select>
+ 	
+ 	<insert id="insertPumStats" parameterType="java.util.HashMap">
+ 		INSERT /* ChartStatistics_SQL.insertPumStats */ 
+ 		  INTO TB_PUM_STATS
+ 		     (
+ 		       SALE_DATE
+		     , PUM_NAME
+			 , CMP_CD
+		     , FLOWER_GUBN
+		     , MAX_AMT
+		     , MIN_AMT
+		     , TOT_AMT
+		     , TOT_QTY
+		     , IN_TIME
+ 		      )
+		VALUES
+			(
+ 		       #{saleDate, jdbcType=VARCHAR}
+		     , #{pumName, jdbcType=VARCHAR}
+			 , #{cmpCd, jdbcType=VARCHAR}
+		     , #{flowerGubn, jdbcType=VARCHAR}
+		     , #{maxAmt, jdbcType=INTEGER}
+		     , #{minAmt, jdbcType=INTEGER}
+		     , #{totAmt, jdbcType=DECIMAL}
+		     , #{totQty, jdbcType=INTEGER}
+		     , SYSDATE
+ 		      )
+ 	
+ 	</insert>
+ 	
+ 	<delete id="deletePumStats" parameterType="java.util.HashMap">
+ 		DELETE /* ChartStatistics_SQL.deletePumStats */
+ 		  FROM TB_PUM_STATS
+ 		 WHERE SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+ 	</delete>
+ 	
+ 	<select id="selectAreaSaleDate" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT TO_CHAR(ADD_MONTHS(MAX(SALE_DATE), '0'), 'YYYY-MM-DD') AS SALE_DATE
+		  FROM T_SALE_DATE
+		 WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-30,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		 GROUP BY SALE_DATE
+		 ORDER BY SALE_DATE DESC
+ 	</select>
+ 	
+ 	<select id="selectChartAreaMapList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT SALE_DATE /* ChartStatistics_SQL.selectPumStats */
+		     , CODE
+		     , ROUND(SUM(TOT_QTY),1) AS TOT_QTY
+		     , ROUND(SUM(TOT_AMT)/10000,1) AS TOT_AMT
+		FROM(
+			SELECT CASE WHEN SAN_BIGO LIKE '강원%' THEN 100
+			            WHEN SAN_BIGO LIKE '경기%' THEN 200 
+			            WHEN SAN_BIGO LIKE '경상남도%' OR SAN_BIGO LIKE '경남%' THEN 300 
+			            WHEN SAN_BIGO LIKE '경상북도%' OR SAN_BIGO LIKE '경북%' THEN 400
+			            WHEN SAN_BIGO LIKE '광주%' THEN 500
+			            WHEN SAN_BIGO LIKE '대구%' THEN 600
+			            WHEN SAN_BIGO LIKE '대전%' THEN 700
+			            WHEN SAN_BIGO LIKE '부산%' THEN 800
+			            WHEN SAN_BIGO LIKE '서울%' THEN 90000
+			            WHEN SAN_BIGO LIKE '울산%' THEN 1000
+			            WHEN SAN_BIGO LIKE '인천%' THEN 1100
+			            WHEN SAN_BIGO LIKE '전라남도%' OR SAN_BIGO LIKE '전남%' THEN 1200
+			            WHEN SAN_BIGO LIKE '전라북도%' OR SAN_BIGO LIKE '전북%' THEN 1300
+			            WHEN SAN_BIGO LIKE '제주%' THEN 1400
+			            WHEN SAN_BIGO LIKE '충청남도%' OR SAN_BIGO LIKE '충남%' THEN 1500
+			            WHEN SAN_BIGO LIKE '충청북도%' OR SAN_BIGO LIKE '충북%' THEN 1600
+			            WHEN SAN_BIGO LIKE '세종%' THEN 1700
+			            END AS CODE
+			     , TOT_AMT
+			     , TOT_QTY
+			     , SALE_DATE
+			FROM
+			    (
+			    SELECT B.SALE_DATE 		AS SALE_DATE
+			         , C.SAN_BIGO		AS SAN_BIGO
+			      	 , SUM(B.TOT_AMT) 	AS TOT_AMT
+			      	 , SUM(B.TOT_QTY) 	AS TOT_QTY
+			    FROM
+			        (
+			          SELECT SALE_DATE
+			          	   , SAN_CD
+			          	   , SUM(TOT_AMT) AS TOT_AMT
+			          	   , SUM(TOT_QTY) AS TOT_QTY
+			          FROM T_SALE_DATE A
+			          WHERE 1=1
+			          AND A.FLOWER_GUBN IS NOT NULL
+			          AND SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+			          AND A.TOT_AMT != 0
+			          GROUP BY SALE_DATE, SAN_CD
+			        )B, T_LOCAL C
+			    WHERE 1=1
+			    AND B.SAN_CD  = C.SAN_CD(+)
+			    GROUP BY C.SAN_BIGO, B.SALE_DATE
+			    )
+			WHERE 1=1
+			  AND SAN_BIGO IS NOT NULL
+			)
+		GROUP BY SALE_DATE, CODE
+ 	</select>
+ 	<select id="selectChartAreaMap" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT SALE_DATE
+		     , CODE
+		     , TOT_QTY
+		     , TOT_AMT
+		  FROM TB_CHART_AREA_MAP
+		 WHERE SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR} 
+ 	</select>
+	
+	<insert id="insertChartAreaMap" parameterType="java.util.HashMap">
+ 		INSERT /* ChartStatistics_SQL.insertChartAreaMap */ 
+ 		  INTO TB_CHART_AREA_MAP
+ 		     (
+ 		       SALE_DATE
+		     , CODE
+		     , TOT_QTY
+		     , TOT_AMT
+		     , IN_TIME
+ 		      )
+		VALUES
+			(
+ 		       #{saleDate, jdbcType=VARCHAR}
+		     , #{code, jdbcType=VARCHAR}
+		     , #{totQty, jdbcType=INTEGER}
+		     , #{totAmt, jdbcType=DECIMAL}
+		     , SYSDATE
+ 		      )
+ 	</insert>
+ 	
+ 	<delete id="deleteChartAreaMap" parameterType="java.util.HashMap">
+ 		DELETE /* ChartStatistics_SQL.deleteChartAreaMap */
+ 		  FROM TB_CHART_AREA_MAP
+ 		 WHERE SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+ 	</delete>
+ 	
+ 	<select id="selectChartAreaList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT SALE_DATE
+		     , B.PUM_NAME
+		     , C.SAN_BIGO
+		     , MAX(B.MAX_AMT) AS MAX_AMT
+		     , MIN(B.MIN_AMT) AS MIN_AMT
+		     , TRUNC(SUM(B.TOT_AMT)/SUM(B.TOT_QTY)) AS AVG_AMT
+		     , SUM(B.TOT_AMT) AS  TOT_AMT
+		     , SUM(B.TOT_QTY) AS  TOT_QTY
+		FROM
+		    (
+		    SELECT TA.SALE_DATE
+		         , DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS PUM_NAME
+		         , SAN_CD
+		         , TA.MAX_AMT
+		         , TA.MIN_AMT
+		         , TA.TOT_AMT
+		         , TA.TOT_QTY
+		    FROM
+		        (
+		          SELECT SALE_DATE
+		              , MAX_AMT
+		              , MIN_AMT
+		              , AVG_AMT
+		              , SAN_CD
+		              , TOT_AMT
+		              , TOT_QTY
+		              , DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME
+		           FROM T_SALE_DATE A
+		          WHERE 1=1
+		            AND SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+		            AND FLOWER_GUBN IS NOT NULL
+		            AND A.TOT_AMT <![CDATA[<>]]> 0
+		        )TA,
+		        (
+		         SELECT MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+		           FROM FLOWER.TB_KIND_MAP
+		          GROUP BY PUM_NM_MAP
+		        ) TB
+		    WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+		    )B, T_LOCAL C
+		WHERE 1=1
+		  AND B.SAN_CD  = C.SAN_CD(+)
+		  AND SAN_BIGO IS NOT NULL
+		GROUP BY SALE_DATE,PUM_NAME, C.SAN_BIGO
+				    
+ 	</select>
+ 	
+ 	<select id="selectChartArea" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT PUM_NAME	/* ChartStatistics_SQL.selectChartArea */
+		     , SAN_CD_NM
+		     , CHART_X  
+		     , MAX_AMT
+		     , MIN_AMT
+		     , AVG_AMT
+		     , TOT_AMT
+		     , TOT_QTY
+		     , RNUM 
+		  FROM (
+				SELECT PUM_NAME
+				     , SAN_BIGO AS  SAN_CD_NM
+				     , REPLACE(SAN_BIGO ||CHR(13)||CHR(10)||'('|| PUM_NAME||')', ' ', CHR(10)) AS  CHART_X  
+				     , MAX_AMT
+				     , MIN_AMT
+				     , AVG_AMT
+				     , TOT_AMT
+				     , TOT_QTY
+				     , RANK() OVER (ORDER BY TOT_QTY DESC, TOT_AMT DESC) AS RNUM  
+				FROM TB_CHART_AREA
+		       WHERE 1=1
+		         AND SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR} 
+		    <if test='searchAreaKeyword != null and searchAreaKeyword !=""'>
+				AND SAN_BIGO LIKE #{searchAreaKeyword, jdbcType=VARCHAR} || '%'
+			</if>
+			<if test='searchAreaKeyword2 != null and searchAreaKeyword2 !=""'>
+			     OR SAN_BIGO LIKE #{searchAreaKeyword2, jdbcType=VARCHAR} || '%'
+			</if>
+		        )
+		 WHERE 1=1
+		   AND RNUM <![CDATA[<=]]> 6
+ 	</select>
+ 	
+ 	<insert id="insertChartArea" parameterType="java.util.HashMap">
+ 		INSERT /* ChartStatistics_SQL.insertChartArea */ 
+ 		  INTO TB_CHART_AREA
+ 		     (
+ 		       SALE_DATE
+		     , PUM_NAME
+		     , SAN_BIGO
+		     , MAX_AMT
+		     , MIN_AMT
+		     , AVG_AMT
+		     , TOT_AMT
+		     , TOT_QTY
+		     , IN_TIME
+ 		      )
+		VALUES
+			(
+ 		       #{saleDate, jdbcType=VARCHAR}
+		     , #{pumName, jdbcType=VARCHAR}
+		     , #{sanBigo, jdbcType=VARCHAR}
+		     , #{maxAmt, jdbcType=INTEGER}       
+		     , #{minAmt, jdbcType=INTEGER}       
+		     , #{avgAmt, jdbcType=DECIMAL} 
+		     , #{totAmt, jdbcType=DECIMAL} 
+		     , #{totQty, jdbcType=INTEGER}
+		     , SYSDATE       
+ 		      )
+ 	</insert>
+ 	
+ 	<delete id="deleteChartArea" parameterType="java.util.HashMap">
+ 		DELETE /* ChartStatistics_SQL.deleteChartArea */
+ 		  FROM TB_CHART_AREA
+ 		 WHERE SALE_DATE = #{searchSaleDate, jdbcType=VARCHAR}
+ 	</delete>
+ 	
+ 	<select id="selectSearchPumMokSaleDate" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT TO_CHAR(ADD_MONTHS(MAX(SALE_DATE), '0'), 'YYYY-MM-DD') AS SALE_DATE
+		  FROM TB_PUM_STATS
+		 WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-30,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		   AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+		   AND FLOWER_GUBN = #{searchGubn, jdbcType=VARCHAR}
+		 GROUP BY SALE_DATE
+		 ORDER BY SALE_DATE DESC
+ 	</select>
+ 	
+ 	<select id="selectSearchAreaSaleDate" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+ 		SELECT TO_CHAR(ADD_MONTHS(MAX(SALE_DATE), '0'), 'YYYY-MM-DD') AS SALE_DATE
+		  FROM TB_CHART_AREA
+		 WHERE SALE_DATE BETWEEN TO_CHAR(SYSDATE-30,'YYYY-MM-DD') AND TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		 GROUP BY SALE_DATE
+		 ORDER BY SALE_DATE DESC
+ 	</select>
+ 	
+</mapper>

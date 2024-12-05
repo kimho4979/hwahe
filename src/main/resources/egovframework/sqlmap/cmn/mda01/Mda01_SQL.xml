@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mda01.mapper.Mda01Mapper">
+
+	<!-- 정산정보관리 계량/비계량 설정 정보 조회 -->
+	<select id="selectkpiList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT a.* FROM (
+			SELECT
+				'' || count(1) OVER() TOTAL_COUNT, 
+				ROWNUM AS rn, a.* FROM (
+				SELECT
+					KPI_SEQ
+					,START_DT
+         			,END_DT
+					,START_DT || '일 ~ ' || END_DT || '일' as KPI_DATE
+					,CASE WHEN KPI_GROUP = 'P' THEN '생산'
+						WHEN KPI_GROUP = 'C' THEN '소비'
+						WHEN KPI_GROUP = 'A' THEN '공통'
+					END AS KPI_GROUP
+					,CASE WHEN TYPE_SHIPMNT_EX = 'Y' THEN '출하예정물량 ' END ||
+						CASE WHEN TYPE_SHIPMNT = 'Y' THEN '출하물량 ' END ||
+						CASE WHEN TYPE_CROP = 'Y' THEN '작황동향 ' END ||
+						CASE WHEN TYPE_CULT = 'Y' THEN '재배동향 ' END ||
+						CASE WHEN TYPE_CONS_TREND = 'Y' THEN '소비동향 ' END ||
+						CASE WHEN TYPE_CONS_PRICE = 'Y' THEN '소매가격 ' END 
+					 AS TYPE
+					,CASE WHEN TYPE_CONDITION = 'A' THEN 'AND'
+						  WHEN TYPE_CONDITION = 'O' THEN 'OR'
+					END AS TYPE_CONDITION
+					,CASE WHEN INDICATOR_TYPE = 'K' THEN '계량'
+						WHEN INDICATOR_TYPE = 'N' THEN '비계량'
+					END AS INDICATOR_TYPE
+					,PRICE || '원' AS PRICE
+					,TO_CHAR(INS_DT , 'yyyy-mm-dd') AS INS_DT
+					,INS_ID
+					,TO_CHAR(UPT_DT , 'yyyy-mm-dd') AS UPT_DT
+					,UPT_ID
+				FROM
+					T_KPI
+				WHERE
+					1=1
+			) a
+			ORDER BY TYPE, KPI_GROUP, START_DT
+		) a <![CDATA[	where a.rn > ( nvl(#{pageNumber , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10) and rn <= nvl(#{pageNumber , jdbcType=VARCHAR }, 1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	</select>
+	
+	<!-- 정산정보관리 계량/비계량 설정 등록전 기간 체크 -->
+	<select id="checkInsertBefore" parameterType="java.util.HashMap" statementType="PREPARED" resultType="int">
+		SELECT
+			COUNT(1)
+		FROM T_KPI
+		WHERE
+		  KPI_GROUP = #{kpiGroup}
+		  <if test="kpiSeq !=null and kpiSeq != ''">
+		  AND KPI_SEQ != #{kpiSeq}
+		  </if>
+		  
+		  AND (
+		      TYPE_SHIPMNT_EX	= NVL(#{typeShipmntEx},'N') OR
+		      TYPE_SHIPMNT		= NVL(#{typeShipmnt},'N') OR
+		      TYPE_CROP			= NVL(#{typeCrop},'N') OR
+		      TYPE_CULT			= NVL(#{typeCult},'N') OR
+		      TYPE_CONS_TREND	= NVL(#{typeConsTrend},'N') OR
+		      TYPE_CONS_PRICE	= NVL(#{typeConsPrice},'N') 
+		  )
+		  AND (
+		      (START_DT <![CDATA[>=]]> #{startDt} AND START_DT <![CDATA[<]]> #{endDt} AND END_DT <![CDATA[>=]]> #{endDt} )
+		      OR
+		      (START_DT <![CDATA[<=]]> #{startDt} AND END_DT <![CDATA[>]]> #{startDt} AND START_DT <![CDATA[<]]> #{endDt} AND END_DT <![CDATA[>=]]> #{endDt} )
+		      OR
+		      (START_DT <![CDATA[<=]]> #{startDt} AND END_DT <![CDATA[>]]> #{startDt} AND END_DT <![CDATA[<]]> #{endDt} )
+		      OR
+		      (START_DT = #{startDt} AND END_DT = #{endDt})
+		  )
+	</select>
+	
+	<!-- 정산정보관리 계량/비계량 설정 등록 -->
+	<insert id="insertKpiInput" parameterType="java.util.HashMap">
+		<selectKey keyProperty="kpiSeq" resultType="String" order="BEFORE">
+			SELECT NVL(MAX(KPI_SEQ),0)+1 FROM T_KPI
+		</selectKey>
+		INSERT INTO T_KPI(
+			KPI_SEQ
+			,START_DT
+			,END_DT
+			,KPI_GROUP
+			,TYPE_SHIPMNT_EX
+			,TYPE_SHIPMNT
+			,TYPE_CROP
+			,TYPE_CULT
+			,TYPE_CONS_TREND
+			,TYPE_CONS_PRICE
+			,INDICATOR_TYPE
+			,PRICE
+			,INS_DT
+			,INS_ID
+			,TYPE_CONDITION
+		)VALUES(
+			#{kpiSeq}
+			,#{startDt}
+			,#{endDt}
+			,#{kpiGroup}
+			,#{typeShipmntEx}
+			,#{typeShipmnt}
+			,#{typeCrop}
+			,#{typeCult}
+			,#{typeConsTrend}
+			,#{typeConsPrice}
+			,#{indicatorType}
+			,#{price}
+			,SYSDATE
+			,#{SESSION_USER_ID}
+			,NVL(#{typeCondition}, 'A')
+		)
+	</insert>
+	
+	<!-- 정산정보고나리 계량/비계량 설정 삭제 -->
+	<delete id="deleteKpiInput" parameterType="java.util.List">
+		DELETE FROM T_KPI
+		WHERE 
+			KPI_SEQ IN 
+				<foreach collection="list" item="data" index="i" open="(" separator="," close=")">
+					#{data}
+				</foreach>
+	</delete>
+	
+	<!-- 정산정보고나리 계량/비계량 상세내용 조회 -->
+	<select id="detailKpiInput" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT
+			KPI_SEQ
+			,START_DT
+			,END_DT
+			,KPI_GROUP
+			,TYPE_SHIPMNT_EX
+			,TYPE_SHIPMNT
+			,TYPE_CROP
+			,TYPE_CULT
+			,TYPE_CONS_TREND
+			,TYPE_CONS_PRICE
+			,INDICATOR_TYPE
+			,PRICE
+			,INS_DT
+			,INS_ID
+			,UPT_DT
+			,UPT_ID
+			,TYPE_CONDITION
+		FROM
+			T_KPI
+		WHERE
+			KPI_SEQ = #{KPI_SEQ}
+	</select>
+	
+	<!-- 정산정보관리 계량/비계량 설정 수정 -->
+	<update id="updateKpiInput" parameterType="java.util.HashMap">
+		UPDATE T_KPI SET
+			KPI_SEQ         = #{kpiSeq}
+			,START_DT        = #{startDt}
+			,END_DT          = #{endDt}
+			,KPI_GROUP       = #{kpiGroup}
+			,TYPE_SHIPMNT_EX = #{typeShipmntEx}
+			,TYPE_SHIPMNT    = #{typeShipmnt}
+			,TYPE_CROP       = #{typeCrop}
+			,TYPE_CULT       = #{typeCult}
+			,TYPE_CONS_TREND = #{typeConsTrend}
+			,TYPE_CONS_PRICE = #{typeConsPrice}
+			,INDICATOR_TYPE  = #{indicatorType}
+			,PRICE           = #{price}
+			,UPT_DT          = SYSDATE
+			,UPT_ID          = #{SESSION_USER_ID}
+			,TYPE_CONDITION  = NVL(#{typeCondition}, 'A')
+		WHERE 
+			KPI_SEQ = #{kpiSeq}
+	</update>
+	
+	<!-- 정산정보관리 계량/비계량 변경 이력관리 등록, 수정 -->
+	<insert id="kpiInputLog" parameterType="java.util.HashMap">
+		INSERT INTO T_KPI_LOG(
+			KPI_LOG_SEQ
+			,KPI_LOG_TYPE
+			,KPI_SEQ
+			,START_DT
+			,END_DT
+			,KPI_GROUP
+			,TYPE_SHIPMNT_EX
+			,TYPE_SHIPMNT
+			,TYPE_CROP
+			,TYPE_CULT
+			,TYPE_CONS_TREND
+			,TYPE_CONS_PRICE
+			,INDICATOR_TYPE
+			,PRICE
+			,INS_DT
+			,INS_ID	
+			,TYPE_CONDITION
+		)
+		SELECT 
+			(SELECT NVL(MAX(KPI_LOG_SEQ),0)+1 FROM T_KPI_LOG)
+			,#{kpiLogType}
+			,KPI_SEQ
+			,START_DT
+			,END_DT
+			,KPI_GROUP
+			,TYPE_SHIPMNT_EX
+			,TYPE_SHIPMNT
+			,TYPE_CROP
+			,TYPE_CULT
+			,TYPE_CONS_TREND
+			,TYPE_CONS_PRICE
+			,INDICATOR_TYPE
+			,PRICE
+			,SYSDATE
+			,#{SESSION_USER_ID}
+			,TYPE_CONDITION
+		FROM
+			T_KPI
+		WHERE
+			KPI_SEQ = #{kpiSeq}
+	</insert>
+	
+	
+	<!-- 정산정보관리 계량/비계량 설정 변경이력 조회 -->
+	<sql id="logWhere">
+		<!-- 0 은 전체보기 -->
+		<if test="searchType == 1">AND TYPE_SHIPMNT_EX = 'Y'</if>
+		<if test="searchType == 2">AND TYPE_SHIPMNT = 'Y'</if>
+		<if test="searchType == 3">AND TYPE_CROP = 'Y'</if>
+		<if test="searchType == 4">AND TYPE_CULT = 'Y'</if>
+		<if test="searchType == 5">AND TYPE_CONS_TREND = 'Y'</if>
+		<if test="searchType == 6">AND TYPE_CONS_PRICE = 'Y'</if>
+		<if test="searchGroup == 1">AND KPI_GROUP = 'P'</if>
+		<if test="searchGroup == 2">AND KPI_GROUP = 'C'</if>
+		<if test="searchLogType == 1">AND KPI_LOG_TYPE = 1</if>
+		<if test="searchLogType == 2">AND KPI_LOG_TYPE = 2</if>
+		<if test="searchLogType == 3">AND KPI_LOG_TYPE = 3</if>
+		<if test="searchWord != null and searchWord != ''">
+			AND UPPER(INS_ID) LIKE '%' || UPPER(#{searchWord}) || '%'
+		</if>
+	</sql>
+	<select id="selectKpiLogList" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT a.* FROM (
+			SELECT
+				'' || count(1) OVER() TOTAL_COUNT, 
+				ROWNUM AS rn, a.* FROM (
+				SELECT
+					KPI_LOG_SEQ
+					,KPI_SEQ
+					,CASE WHEN KPI_LOG_TYPE = 1 THEN '등록'
+						WHEN KPI_LOG_TYPE = 2 THEN '수정'
+						WHEN KPI_LOG_TYPE = 3 THEN '삭제'
+					END AS KPI_LOG_TYPE
+					,START_DT || '일 ~ ' || END_DT || '일' as KPI_DATE
+					,CASE WHEN KPI_GROUP = 'P' THEN '생산'
+						WHEN KPI_GROUP = 'C' THEN '소비'
+						WHEN KPI_GROUP = 'A' THEN '공통'
+					END AS KPI_GROUP
+					,CASE WHEN TYPE_SHIPMNT_EX = 'Y' THEN '출하예정물량 ' END ||
+						CASE WHEN TYPE_SHIPMNT = 'Y' THEN '출하물량 ' END ||
+						CASE WHEN TYPE_CROP = 'Y' THEN '작황동향 ' END ||
+						CASE WHEN TYPE_CULT = 'Y' THEN '재배동향 ' END ||
+						CASE WHEN TYPE_CONS_TREND = 'Y' THEN '소비동향 ' END ||
+						CASE WHEN TYPE_CONS_PRICE = 'Y' THEN '소매가격 ' END 
+					 AS TYPE
+					 ,CASE WHEN TYPE_CONDITION = 'A' THEN 'AND'
+						  WHEN TYPE_CONDITION = 'O' THEN 'OR'
+					END AS TYPE_CONDITION
+					,CASE WHEN INDICATOR_TYPE = 'K' THEN '계량'
+						WHEN INDICATOR_TYPE = 'N' THEN '비계량'
+					END AS INDICATOR_TYPE
+					,PRICE || '원' AS PRICE
+					,TO_CHAR(INS_DT , 'yyyy-mm-dd') AS INS_DT
+					,INS_ID
+				FROM
+					T_KPI_LOG
+				WHERE 1=1
+					<include refid="logWhere"/>				
+				ORDER BY KPI_SEQ DESC, INS_ID, KPI_LOG_TYPE
+			) a
+		) a <![CDATA[	where a.rn > ( nvl(#{pageNumber , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10) and rn <= nvl(#{pageNumber , jdbcType=VARCHAR }, 1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	</select>
+	
+</mapper>

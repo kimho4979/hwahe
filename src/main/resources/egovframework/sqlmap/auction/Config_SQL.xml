@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.data.mapper.ConfigMapper">
+	<update id="updateList" parameterType="java.util.HashMap">
+		UPDATE T_DAILY_CONFIG
+		SET
+		RK = #{RK}
+		,DAN = #{DAN}
+		,CMP_GOOD = #{CMP_GOOD, jdbcType=VARCHAR}
+		,GOOD_NAME = #{GOOD_NAME, jdbcType=VARCHAR}
+		WHERE
+		PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR}
+		AND CONFIG = #{CONFIG, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="insertList" parameterType="java.util.HashMap">
+ 		INSERT INTO T_DAILY_CONFIG
+		(
+			CONFIG
+			, PUM_NAME
+       	    , CMP_GOOD
+       	    , GOOD_NAME
+       	    , RK
+			, DAN
+		) 
+		VALUES 
+		(   #{CONFIG, jdbcType=VARCHAR}
+			, #{PUM_NAME, jdbcType=VARCHAR}
+            , #{CMP_GOOD, jdbcType=VARCHAR}
+            , #{GOOD_NAME, jdbcType=VARCHAR}
+            , #{RK}
+            , #{DAN}
+		)     
+ 	</insert>
+ 	
+ 	<delete id="deleteList" parameterType="java.util.HashMap">
+		DELETE FROM T_DAILY_CONFIG
+		WHERE
+		PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR}
+		AND CONFIG = #{CONFIG, jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="selectDailyConfig" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT *
+		FROM T_DAILY_CONFIG
+		WHERE CONFIG = #{CONFIG}
+		ORDER BY RK
+	</select>
+	
+	<select id="selectPumJongInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT A.P_MOK_CODE, B.P_JONG_NAME, B.PUM_CODE 
+		FROM FLOWER.A_PUM_MOK_INFO A
+		INNER JOIN FLOWER.A_PUM_JONG_INFO B
+		ON A.P_MOK_CODE = B.P_MOK_CODE
+		WHERE A.P_MOK_NAME = #{PUM_NAME, jdbcType=VARCHAR}
+		AND A.FLOWER_CODE = '1'
+		AND B.P_JONG_NAME =  #{GOOD_NAME, jdbcType=VARCHAR}
+	</select>
+	<select id="selectNeisKey" resultType="string">
+		SELECT CONFIG_VAL
+		FROM T_CONFIG
+		WHERE CONFIG_CODE = #{type}
+	</select>
+	
+	<update id="authKeyUpdate" parameterType="java.util.HashMap" flushCache="true">
+		UPDATE T_CONFIG
+		SET CONFIG_VAL = #{key}
+		WHERE CONFIG_CODE = #{configCode}
+	</update>
+	<update id="updateCompCode" parameterType="string">
+		UPDATE T_USER
+		SET COMP_CODE = 'nresearch'
+		WHERE USER_ID = #{userId}
+	</update>
+	<update id="removeCompCode" parameterType="string">
+		UPDATE T_USER
+		SET COMP_CODE = ' '
+		WHERE USER_ID = #{userId}
+	</update>
+	
+	<select id="selectConfig" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		
+		<if test="IP != 'all'">
+			SELECT * FROM T_CONFIG WHERE CONFIG_INFO LIKE '%' || #{IP} || '%'
+		</if>
+		<if test="IP == 'all'">
+			SELECT * FROM T_CONFIG WHERE CONFIG_INFO LIKE '%관리자IP%'
+			OR CONFIG_INFO LIKE '%상황판IP%'
+		</if>
+		ORDER BY CONFIG_CODE 
+	</select>
+	<select id="authKeySelect" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		select config_code, config_info, config_val
+		from t_config
+		where config_code  BETWEEN 1 and 4
+		order by config_code
+	</select>
+	
+	<insert id="insertIpData" parameterType="java.util.HashMap">
+		INSERT INTO T_CONFIG (CONFIG_CODE,CONFIG_VAL,CONFIG_INFO) VALUES
+		(#{CONFIG_CODE},#{CONFIG_VAL},#{CONFIG_INFO})
+	</insert>
+	
+	<update id="updateIpData" parameterType="java.util.HashMap">
+		UPDATE T_CONFIG SET 
+		CONFIG_VAL = #{CONFIG_VAL}
+		WHERE CONFIG_CODE = #{CONFIG_CODE}
+		AND CONFIG_INFO = #{CONFIG_INFO}
+	</update>
+	
+	<delete id="deleteIpData" parameterType="java.util.HashMap">
+		DELETE FROM T_CONFIG 
+		WHERE CONFIG_CODE = #{CONFIG_CODE}
+		AND CONFIG_INFO = #{CONFIG_INFO}
+	</delete>
+	
+</mapper>

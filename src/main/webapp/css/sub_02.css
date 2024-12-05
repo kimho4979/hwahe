@@ -1,0 +1,137 @@
+@charset "utf-8";
+
+.scroll_x{overflow-x:auto; }
+
+/*** 절화류 생산조사 ***/
+.content_02{width:1200px; margin:0 auto; /* margin-bottom:100px; */ overflow: auto;}
+
+/* title */
+.title_box{width:100%; overflow:hidden; height:auto;}
+.tit_tag{font-size:18px; color:#6b6b6b;  display:inline-block; vertical-align:middle; margin-right:20px;}
+.select_type_01{display:inline-block; width:175px;height:50px; }
+.select_type_01 select{font-size:16px;}
+
+/* total data */
+.total_data{ margin-top:40px; overflow:hidden;}
+.total_data ul{border-radius:20px; background:#5b5d67; display:flex; }
+.total_data ul li{width:100%; text-align:center; border-right:1px solid #f4f4f5; padding:40px 0;}
+.total_data ul li:last-child{border-right:0;}
+.td_tit{font-size:20px; line-height:20px; color:#93d6f0;}
+.data_num{font-size:24px; line-height:24px; color:#ffffff; font-weight:bold; margin-top:15px;}
+
+.map_data{margin-top:95px; background:url(../img/map.png) center no-repeat;     background-size: contain;}
+.area{overflow:visible; width:100%; height:250px; position:relative;}
+.area.a2{margin-top:60px;}
+.area.a1 .city_data.capital{float:left;}
+.area.a1 .city_data.gw{float:right;}
+.area.a2 .city_data.ct{float:left;}
+.area.a2 .city_data.tk{float:right;}
+.area.a3{margin-top:60px;}
+.area.a3 .city_data.kj{float:left;}
+.area.a3 .city_data.jeju{float:right;}
+.area.a3 .city_data.pk{float:right;}
+
+.city_data{width:280px; height:250px; border:2px solid #dbdbdb; border-radius:10px; position:relative; background:#ffffff;}
+.city_data .c_name{position:absolute; width:190px; height:40px; border-top-right-radius:10px; border-bottom-right-radius:10px; background:#dddddd; color:#ffffff; line-height:40px; text-align:center; top:30px; left:-2px; font-weight:bold; letter: spacing 0;px;}
+.city_data.capital::before{content:''; width:230px; height:2px; background:#dbdbdb; position:absolute; right:-230px; top:50%; transform:translateY(-50%); }
+.city_data.capital::after{content:''; width:20px; height:20px; background-size: cover; background:url(../img/ico_point.png) center no-repeat; position:absolute; top:50%; transform:translateY(-50%); right:-230px;}
+.city_data.capital .c_name{background:#61bfe9;}
+
+.city_data.gw::before{content:''; width:250px; height:2px; background:#dbdbdb; position:absolute; left:-250px; top:50%; transform:translateY(-50%); }
+.city_data.gw::after{content:''; width:20px; height:20px; background-size: cover; background:url(../img/ico_point.png) center no-repeat; position:absolute; top:50%; transform:translateY(-50%); left:-250px;}
+.city_data.gw .c_name{background:#99d1e7;}
+
+.city_data.ct::before{content:''; width:230px; height:2px; background:#dbdbdb; position:absolute; right:-215px; top:25%; transform:translateY(-50%) rotate(-30deg); }
+.city_data.ct::after{content:''; width:20px; height:20px; background-size: cover; background:url(../img/ico_point.png) center no-repeat; position:absolute; top:1%; transform:translateY(-50%); right:-215px; z-index:999999;}
+.city_data.ct .c_name{background:#4987b7;}
+
+.city_data.tk::before{content:''; width:237px; height:2px; background:#dbdbdb; position:absolute; left:-230px; top:35%; transform:translateY(-50%) rotate(20deg); }
+.city_data.tk::after{content:''; width:20px; height:20px; background-size: cover; background:url(../img/ico_point.png) center no-repeat; position:absolute; top:19%; transform:translateY(-50%); left:-230px;}
+.city_data.tk .c_name{background:#5d6bab;}
+
+.city_data.kj::before{content:''; width:270px; height:2px; background:#dbdbdb; position:absolute; right:-230px; top:2%; transform:translateY(-50%) rotate(-45deg); }
+.city_data.kj::after{content:''; width:20px; height:20px; background-size: cover; background:url(../img/ico_point.png) center no-repeat; position:absolute; top:-37%; transform:translateY(-50%); right:-200px;}
+.city_data.kj .c_name{background:#596183;}
+
+.city_data.jeju{margin-right:40px;}
+.city_data.jeju::before{content:''; width:140px; height:2px; background:#dbdbdb; position:absolute;  top:40%; transform:translateY(-50%); left:-140px;}
+.city_data.jeju::after{content:''; width:20px; height:20px; background-size: cover; background:url(../img/ico_point.png) center no-repeat; position:absolute; top:40%; transform:translateY(-50%); left:-150px;}
+.city_data.jeju .c_name{background:#5b5d67;}
+
+.city_data.pk::before{content:''; width:320px; height:2px; background:#dbdbdb; position:absolute; left:-280px; top:-33%; transform:translateY(-50%) rotate(30deg); }
+.city_data.pk::after{content:''; width:20px; height:20px; background-size: cover; background:url(../img/ico_point.png) center no-repeat; position:absolute; top:-65%; transform:translateY(-50%); left:-265px;}
+.city_data.pk .c_name{background:#5d6b99;}
+
+
+.city_data .cd_detail{margin-top:105px;}
+.city_data .cd_detail dl{width:100%; padding-bottom:15px; width:100%; font-size:16px; line-height:16px;  box-sizing:border-box;}
+.city_data .cd_detail dl:last-child{padding-bottom:0; }
+.city_data .cd_detail dl dt{display:inline-block; text-align:left; width:49%; box-sizing:border-box; padding:0 20px;}
+.city_data .cd_detail dl dt .cd_tit{ color:#777777; letter-spacing: 0;}
+.city_data .cd_detail dl dt .cd_tit::before{content:"·";}
+.city_data .cd_detail dl dd{display:inline-block; text-align:left;  width:49%;  box-sizing:border-box;  padding:0 20px; }
+.city_data .cd_detail dl dd .txt_data{color:#444444;  letter-spacing: 0; text-align:right;}
+
+@media screen and (max-width: 1750px) {
+	
+}
+
+@media screen and (max-width: 1650px) {
+	
+}
+
+@media screen and (max-width: 1526px) {
+
+}
+
+@media screen and (max-width: 1280px) {
+	.content_02{padding:0 10px;}
+}
+
+
+@media screen and (max-width: 1180px) {
+	
+	
+
+
+   }
+
+@media screen and (max-width: 1090px) {
+	
+
+
+
+
+}
+   
+   
+@media screen and (max-width: 630px) {
+	
+
+
+}
+
+@media screen and (max-width: 600px) {
+	
+	
+}
+
+@media screen and (max-width: 320px){
+  .content_02{min-width:320px;}
+  
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

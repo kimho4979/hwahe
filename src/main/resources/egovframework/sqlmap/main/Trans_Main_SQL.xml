@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpditrans.trans.main.mapper.TranMainMapper">
+
+    
+ <select id="marketJungInsert" statementType="CALLABLE" parameterType="Map" resultType="Map">  	
+	 {	SP_EPIS_MARKET_JUNG_INSERT (
+	    #{fileName, jdbcType=VARCHAR}
+	    ,#{recordText, jdbcType=VARCHAR}
+	    ,#{oRetMessage, mode=OUT, javaType=string, jdbcType=VARCHAR}
+        ,#{intProCessCnt, mode=OUT, javaType=int, jdbcType=NUMERIC}
+		)
+	 }  
+</select>
+
+ <select id="marketJungPrepare" statementType="CALLABLE" parameterType="Map" resultType="Map">  	
+	 {	SP_EPIS_MARKET_JUNG_PREPARE (
+	    #{fileName, jdbcType=VARCHAR}
+	    ,#{saleDate, jdbcType=VARCHAR}
+	    ,#{cmpCd, jdbcType=VARCHAR}
+	    ,#{oRetMessage, mode=OUT, javaType=string, jdbcType=VARCHAR}
+        ,#{intProCessCnt, mode=OUT, javaType=int, jdbcType=NUMERIC}
+		)
+	 }  
+</select>
+
+ <select id="marketJungMagam" statementType="CALLABLE" parameterType="Map" resultType="Map">  	
+	 {	SP_EPIS_MARKET_JUNG_MAGAM (
+	    #{fileName, jdbcType=VARCHAR}
+	    ,#{recordText, jdbcType=VARCHAR}
+	    ,#{oRetMessage, mode=OUT, javaType=string, jdbcType=VARCHAR}
+        ,#{intProCessCnt, mode=OUT, javaType=int, jdbcType=NUMERIC}
+		)
+	 }  
+</select>
+
+ <insert id="insertTest" parameterType="Map">
+     INSERT INTO TEMP_TEST ( FILENAME,RECODE )
+VALUES ( #{filename, jdbcType=VARCHAR}
+		,#{recode, jdbcType=VARCHAR}
+ )
+     
+ </insert>
+ 
+</mapper>

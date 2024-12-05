@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hab08.mapper.Hab08Mapper">
+    
+   	<!-- 부류별 품목 및 품종 -->
+	<select id="hab08Button" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT PUM_NAME
+             , PUM_CODE
+             , TOT_QTY
+          FROM ( SELECT SUM(TOT_QTY) AS TOT_QTY
+                      , PUM_NAME
+                      , PUM_CODE  
+                      , ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS ROW_NUM
+                   FROM ( SELECT A.SALE_DATE, A.FLOWER_GUBN, A.FLOWER_CODE, A.ITEM_CD, A.KIND_CD
+                               , A.MARKET_CD, A.CMP_GOOD, A.LARGE, A.MID, A.SMALL
+                               , A.LV_CD, A.TOT_QTY
+                               
+                               <if test ="searchProductGubun == 1" >
+                               , B.ITEM_NM AS PUM_NAME
+                               , (B.FLOWER_CODE||B.ITEM_CD) AS PUM_CODE
+                               </if>
+                               <if test ="searchProductGubun != 1" >
+                               , C.KIND_NM AS PUM_NAME
+                               , (C.FLOWER_CODE||C.ITEM_CD||C.KIND_CD) AS PUM_CODE
+                               </if>
+                               
+                            FROM T_INT_SALE A
+                               , T_INT_ITEM B
+                               , T_INT_KIND C
+                           WHERE A.FLOWER_GUBN = B.FLOWER_GUBN
+                             AND A.FLOWER_CODE = B.FLOWER_CODE
+                             AND A.ITEM_CD = B.ITEM_CD
+                             AND A.FLOWER_GUBN = C.FLOWER_GUBN
+                             AND A.FLOWER_CODE = C.FLOWER_CODE
+                             AND A.ITEM_CD = C.ITEM_CD
+                             AND A.KIND_CD = C.KIND_CD
+                             AND A.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+							<if test ="searchProductGubun == 1" >
+                             AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+							</if>
+							<if test ="searchProductGubun == 2" >
+                             AND A.SALE_DATE BETWEEN TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw'), 'YYYY-MM-DD') AND TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw')+1, 'YYYY-MM-DD')
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+							</if>
+							<if test ="searchProductGubun == 3" >
+                             AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+							</if>
+                        )
+                  GROUP BY PUM_NAME, PUM_CODE
+               )
+	</select>
+	
+	
+	<!-- 일자별 경매정보 보기 : 물량비중 -->
+	<select id="hab08Chart1" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT A.MARKET_CD AS CMP_CD
+             , B.MARKET_NAME
+             , A.TOT_QTY
+             , ROUND((RATIO_TO_REPORT(A.TOT_QTY) OVER()), 3)*100||'%' AS PER
+          FROM ( SELECT MARKET_CD
+                      , SUM(TOT_QTY) AS TOT_QTY
+                      , ROW_NUMBER() OVER (ORDER BY SUM(TOT_QTY) DESC) AS ROW_NUM
+                   FROM ( SELECT A.SALE_DATE, A.FLOWER_GUBN, A.FLOWER_CODE, A.ITEM_CD, A.KIND_CD
+                               , A.MARKET_CD, A.CMP_GOOD, A.LARGE, A.MID, A.SMALL
+                               , A.LV_CD, A.TOT_QTY
+                               , B.ITEM_NM
+                               , C.KIND_NM
+                            FROM T_INT_SALE A
+                               , T_INT_ITEM B
+                               , T_INT_KIND C
+                           WHERE A.FLOWER_GUBN = B.FLOWER_GUBN
+                             AND A.FLOWER_CODE = B.FLOWER_CODE
+                             AND A.ITEM_CD = B.ITEM_CD
+                             AND A.FLOWER_GUBN = C.FLOWER_GUBN
+                             AND A.FLOWER_CODE = C.FLOWER_CODE
+                             AND A.ITEM_CD = C.ITEM_CD
+                             AND A.KIND_CD = C.KIND_CD
+                             AND A.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+							<if test ="searchProductGubun == 1" >
+                             AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+							</if>
+							<if test ="searchProductGubun == 2" >
+                             AND A.SALE_DATE BETWEEN TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw'), 'YYYY-MM-DD') AND TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw')+1, 'YYYY-MM-DD')
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+							</if>
+							<if test ="searchProductGubun == 3" >
+                             AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                             AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+							</if>
+							<if test="searchItemCd != null and searchItemCd != ''">
+								<if test ="searchProductGubun == 1" >
+                             AND A.FLOWER_CODE||A.ITEM_CD = #{searchItemCd, jdbcType=VARCHAR}
+								</if>
+								<if test ="searchProductGubun == 2" >
+                             AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+								</if>
+								<if test ="searchProductGubun == 3" >
+                             AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+								</if>
+							</if>
+                        )
+                  GROUP BY MARKET_CD
+               ) A LEFT OUTER JOIN T_JOINT_MARKET B ON A.MARKET_CD = B.MARKET_CD
+           ORDER BY A.MARKET_CD
+	</select>
+	
+	
+	<!-- 일자별 경매정보 보기 : 일자별 평균단가 -->
+	<select id="hab08Chart2" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+        SELECT T1.SALE_DATE
+             , T1.ROW_NUM||'주차' AS WEEKLY_NM
+             , CASE WHEN MAX(T1.COL_1) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_1),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_1),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_1),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_1),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_1),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_1),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_1) 
+                END AS COL_0000000001 
+             , CASE WHEN MAX(T1.COL_2) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_2),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_2),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_2),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_2),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_2),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_2),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_2) 
+                END AS COL_1288202296 
+             , CASE WHEN MAX(T1.COL_3) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_3),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_3),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_3),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_3),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_3),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_3),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_3) 
+                END AS COL_1508500020 
+             , CASE WHEN MAX(T1.COL_4) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_4),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_4),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_4),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_4),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_4),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_4),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_4) 
+                END AS COL_3848200087 
+     
+     
+             , CASE WHEN MAX(T1.COL_5) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_5),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_5),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_5),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_5),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_5),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_5),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_5) 
+                END AS COL_4108212335 
+             , CASE WHEN MAX(T1.COL_6) IS NULL THEN CASE WHEN LEAD(MAX(T1.COL_6),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LEAD(MAX(T1.COL_6),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LEAD(MAX(T1.COL_6),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         
+                                                         <if test ="searchProductGubun == 2" >
+                                                         WHEN LAG(MAX(T1.COL_6),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),1) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),2) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),3) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),4) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),5) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         WHEN LAG(MAX(T1.COL_6),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM) IS NOT NULL THEN LAG(MAX(T1.COL_6),6) OVER (ORDER BY T1.SALE_DATE , T1.ROW_NUM)
+                                                         </if>
+                                                         
+                                                         ELSE 0
+                                                     END
+                    ELSE MAX(T1.COL_6) 
+                END AS COL_6068207466
+          FROM ( SELECT SALE_DATE
+                      , ROW_NUM
+                      , DECODE(MARKET_CD, '0000000001', AVG_AMT, NULL) AS COL_1
+                      , DECODE(MARKET_CD, '1288202296', AVG_AMT, NULL) AS COL_2
+                      , DECODE(MARKET_CD, '1508500020', AVG_AMT, NULL) AS COL_3
+                      , DECODE(MARKET_CD, '3848200087', AVG_AMT, NULL) AS COL_4
+                      , DECODE(MARKET_CD, '4108212335', AVG_AMT, NULL) AS COL_5
+                      , DECODE(MARKET_CD, '6068207466', AVG_AMT, NULL) AS COL_6
+                   FROM ( SELECT MARKET_CD
+                               , SALE_DATE AS SALE_DATE
+                               , ROUND(SUM(TOT_AMT)/SUM(TOT_QTY)) AS AVG_AMT
+                               , ROW_NUM
+                            FROM ( SELECT A.SALE_DATE, A.FLOWER_GUBN, A.FLOWER_CODE, A.ITEM_CD, A.KIND_CD
+                                        , A.MARKET_CD, A.CMP_GOOD, A.LARGE, A.MID, A.SMALL
+                                        , A.LV_CD, A.TOT_QTY, A.TOT_AMT
+                                        , B.ITEM_NM
+                                        , C.KIND_NM
+                                        , D.ROW_NUM
+                                     FROM T_INT_SALE A
+                                        , T_INT_ITEM B
+                                        , T_INT_KIND C
+                                        , ( SELECT SALE_DATE
+                                                 , ROW_NUMBER() OVER (ORDER BY ROW_NUM DESC) AS ROW_NUM
+                                              FROM ( SELECT SALE_DATE
+                                                          , ROW_NUMBER() OVER (ORDER BY SALE_DATE DESC) AS ROW_NUM
+                                                       FROM T_INT_SALE 
+                                                      WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+														<if test ="searchProductGubun == 1" >
+                                                        AND SALE_DATE BETWEEN TO_CHAR((TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') - 63),'YYYY-MM-DD') AND #{searchDate, jdbcType=VARCHAR}
+                                                        AND (TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+														</if>
+														<if test ="searchProductGubun == 2" >
+                                                        AND SALE_DATE BETWEEN TO_CHAR((TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') - 63),'YYYY-MM-DD') AND TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw')+1, 'YYYY-MM-DD')
+                                                        AND (TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+														</if>
+														<if test ="searchProductGubun == 3" >
+                                                        AND SALE_DATE BETWEEN TO_CHAR((TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD') - 63),'YYYY-MM-DD') AND #{searchDate, jdbcType=VARCHAR}
+                                                        AND (TO_CHAR(TO_DATE(SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+														</if>
+														<if test="searchItemCd != null and searchItemCd != ''">
+															<if test ="searchProductGubun == 1" >
+                                                        AND FLOWER_CODE||ITEM_CD = #{searchItemCd, jdbcType=VARCHAR}
+															</if>
+															<if test ="searchProductGubun == 2" >
+                                                        AND FLOWER_CODE||ITEM_CD||KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+															</if>
+															<if test ="searchProductGubun == 3" >
+                                                        AND FLOWER_CODE||ITEM_CD||KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+															</if>
+														</if>
+                                                       GROUP BY SALE_DATE
+                                                   )
+                                             WHERE ROW_NUM <![CDATA[<=]]> 6
+                                          ) D
+                                       , ( SELECT A.MARKET_CD
+                                             FROM T_INT_SALE A
+                                                , T_INT_ITEM B
+                                                , T_INT_KIND C
+                                            WHERE A.FLOWER_GUBN = B.FLOWER_GUBN
+                                              AND A.FLOWER_CODE = B.FLOWER_CODE
+                                              AND A.ITEM_CD = B.ITEM_CD
+                                              AND A.FLOWER_GUBN = C.FLOWER_GUBN
+                                              AND A.FLOWER_CODE = C.FLOWER_CODE
+                                              AND A.ITEM_CD = C.ITEM_CD
+                                              AND A.KIND_CD = C.KIND_CD
+                                              AND A.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+											<if test ="searchProductGubun == 1" >
+                                              AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                                              AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+											</if>
+											<if test ="searchProductGubun == 2" >
+                                              AND A.SALE_DATE BETWEEN TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw'), 'YYYY-MM-DD') AND TO_CHAR(TRUNC(TO_DATE(#{searchDate, jdbcType=VARCHAR}, 'YYYY-MM-DD'), 'iw')+1, 'YYYY-MM-DD')
+                                              AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+											</if>
+											<if test ="searchProductGubun == 3" >
+                                              AND A.SALE_DATE = #{searchDate, jdbcType=VARCHAR}
+                                              AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+											</if>
+                                            <if test="searchItemCd != null and searchItemCd != ''">
+												<if test ="searchProductGubun == 1" >
+                                              AND A.FLOWER_CODE||A.ITEM_CD = #{searchItemCd, jdbcType=VARCHAR}
+												</if>
+												<if test ="searchProductGubun == 2" >
+                                              AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+												</if>
+												<if test ="searchProductGubun == 3" >
+                                              AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+												</if>
+											</if>
+                                            GROUP BY A.MARKET_CD
+                                         ) E
+                                   WHERE A.FLOWER_GUBN = B.FLOWER_GUBN
+                                     AND A.FLOWER_CODE = B.FLOWER_CODE
+                                     AND A.ITEM_CD = B.ITEM_CD
+                                     AND A.FLOWER_GUBN = C.FLOWER_GUBN
+                                     AND A.FLOWER_CODE = C.FLOWER_CODE
+                                     AND A.ITEM_CD = C.ITEM_CD
+                                     AND A.KIND_CD = C.KIND_CD
+                                     AND A.SALE_DATE = D.SALE_DATE
+                                     AND A.MARKET_CD = E.MARKET_CD
+                                     AND A.FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+									<if test ="searchProductGubun == 1" >
+                                     AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '4', '6'))
+									</if>
+									<if test ="searchProductGubun == 2" >
+                                     AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2', '3'))
+									</if>
+									<if test ="searchProductGubun == 3" >
+                                     AND (TO_CHAR(TO_DATE(A.SALE_DATE, 'YYYY-MM-DD'), 'd') IN ('2'))
+									</if>
+									<if test="searchItemCd != null and searchItemCd != ''">
+										<if test ="searchProductGubun == 1" >
+                                     AND A.FLOWER_CODE||A.ITEM_CD = #{searchItemCd, jdbcType=VARCHAR}
+										</if>
+										<if test ="searchProductGubun == 2" >
+                                     AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+										</if>
+										<if test ="searchProductGubun == 3" >
+                                     AND A.FLOWER_CODE||A.ITEM_CD||A.KIND_CD = #{searchItemCd, jdbcType=VARCHAR}
+										</if>
+									</if>
+                                 )
+                           GROUP BY MARKET_CD, SALE_DATE, ROW_NUM
+                           ORDER BY MARKET_CD, SALE_DATE
+                        )
+               ) T1
+         GROUP BY T1.SALE_DATE, T1.ROW_NUM
+         ORDER BY T1.SALE_DATE
+    </select>
+    	
+</mapper>

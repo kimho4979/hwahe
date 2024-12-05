@@ -1,0 +1,78 @@
+/*************************************** 성우경 추가 2021.09.10 ~ **************************************/
+
+/** 경매통계 **/
+.search_box_new{width:100%; overflow:hidden; height:auto; box-sizing:border-box; position:relative;}
+.search_box_new .sbn_tit_01{ color: #6b6b6b;   vertical-align: middle; font-weight:bold; font-size:18px; line-height:32px;}
+.search_box_new .sbn_tit_01::before{content:'·'; display:inline-block; color:#6b6b6b; }
+.search_box_new .grow_check_box{ box-sizing:border-box;}
+.search_box_new .grow_check_box li{ line-height:34px; padding:7px 0;}
+.search_box_new .sb_common_01{width:100%; overflow:hidden; height:auto; box-sizing:border-box; position:relative; padding:20px 20px; background:#efefef;}
+.search_box_new select{color:#6b6b6b; width:100%;}
+.search_box_new .calendar input{width:100%; height:100%; border:none; box-sizing:border-box; color: #6b6b6b; font-size: 16px; width: 170px;     height: 45px; border:1px solid #aaaaaa; border-radius: 4px; padding-top: 2px;  box-sizing:border-box; background:#ffffff; }
+.date-from-to{display:inline-block; box-sizing:border-box;}
+.date-from-to .calendar{display:inline-block;}
+.calendar{position:relative;}
+.calendar .ui-datepicker-trigger{position:absolute; top:50%; right:10px; transform:translateY(-50%);}
+.calendar_new{position:relative; display:inline-block;}
+.calendar_new input{width:100%; height:100%; border:none; box-sizing:border-box; color: #6b6b6b; font-size: 16px; width: 170px;     height: 45px; border:1px solid #aaaaaa; border-radius: 4px; padding-top: 2px;  box-sizing:border-box; background:#ffffff; }
+
+.calendar_new .AXanchor{position:absolute!important; top:50%!important; right:10px!important; transform:translateY(-50%)!important; width:32px!important; height:32px!important; left:calc(100% - 42px)!important; font-size:0; box-sizing:border-box!important; }
+.calendar_new .AXanchor .AXanchorDateHandle{width:100%!important; height:100%!important;}
+.search_box_new .search_btn {  width: 120px;     text-align: center;     height: 45px;     background: #888888; display:inline-block; float:right;}
+.search_box_new .search_btn a { display: block; color: #fff; font-size: 18px;  line-height: 45px;}
+.search_box_new .search_btn a img{vertical-align:-8%;}
+.info_box.h-type-01{height:320px;}
+
+
+/*** 스크롤 테이블 ***/
+#tblBackground {
+    width: 100%;
+    table-layout: fixed;
+}
+
+#divHeadScroll {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#tblHead {
+    table-layout: fixed;
+    background-color: #efefef;
+    border-collapse: collapse;
+}
+
+#divBodyScroll {
+    width: 100%;
+    height: 600px;
+    overflow-x: scroll;
+    overflow-y: scroll;
+    border-top: 1px solid #d0d0d0;
+}
+
+#tblBody {
+    /*
+         * tblBody의 데이터는 필요한 열의 수만큼만 만드시고 헤더와 col의 width는 동일해야 합니다.
+         */
+    width: 1100px;
+    table-layout: fixed;
+    height: 30px;
+    border-collapse: collapse;
+}
+
+.table_type_01.body tbody tr:first-child td{border-top:0;}
+
+@media screen and (max-width: 990px) {
+    .search_box_new.statistic .col_wrap .colb{margin-top:20px;}
+    .grow_check_box{padding:10px 10px}
+    .info_box.h-type-01{height:auto;}
+    .sb_common_01.w50p{width:100%!important;}
+}
+
+@media screen and (max-width: 600px) {
+    .date-from-to{width:100%;}
+    .date-from-to .calendar{width:calc(50% - 9px);}
+    .date-from-to .calendar input{width:100%;}
+    .search_box_new .search_btn{width:100%; margin-top:20px;}
+    .search_box_new .search_btn a{width:100%;}
+}

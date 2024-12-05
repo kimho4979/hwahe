@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.api.mapper.ApiViewMapper">
+
+	<resultMap id="resultSettingMap" type="com.fpdisys.dist.api.domain.ApiViewVO">
+		<result property="openGubn" 	column="OPEN_GUBN"/>
+		<result property="maxCallCnt"	column="MAX_CALL_CNT"/>
+		<result property="openTerm" 	column="OPEN_TERM"/>
+		<result property="regDt" 		column="REG_DT"/>
+		<result property="uptDt" 		column="UPT_DT"/>
+		<result property="uptTime" 		column="UPT_TIME"/>
+	</resultMap>
+
+	<!-- 공공데이터 신청 사용자 입력 -->
+	<insert id="insertApiUser" parameterType="java.util.HashMap">
+		INSERT INTO TB_API_USER 
+		(
+			USR_ID
+			, SERVICE_KEY
+			, COMP_NM
+			, COMP_MGR
+			, COMP_TEL
+			, IP
+			, REG_DT
+		)
+		VALUES(
+			#{userId}
+			, #{serviceKey}
+			, #{compNm}
+			, #{compMgr}
+			, #{compTel}
+			, #{ip}
+			, SYSDATE
+		)
+	</insert>
+	
+	<!-- 공공데이터 개방 신청 자동승인, 활용기간, 트래픽 조회 -->
+	<select id="selectSettingList" parameterType="com.fpdisys.dist.api.domain.ApiViewVO" resultMap="resultSettingMap">
+		SELECT
+			OPEN_GUBN
+			, MAX_CALL_CNT
+			, OPEN_TERM
+		FROM TB_API_SETTING
+	</select>
+	
+	<!-- 공공데이터 개방 신청 :: 상세기능 정보 --> 
+	<select id="selectDetailFunctionList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			T1.REQ_DATA_CD
+			, T1.REQ_DATA_NM
+			, T1.MENUAL
+			, T2.MAX_CALL_CNT
+		FROM TB_API_REQDATA_CD T1, TB_API_SETTING T2
+	</select>
+	
+	<!-- 공공데이터 개방 신청 정보 입력 -->
+	<insert id="insertApiData" parameterType="java.util.HashMap">
+		INSERT INTO TB_API_OPEN(
+			SERVICE_KEY
+			, REQ_DATA_CD
+			, OPEN_STR_DT
+			, OPEN_END_DT
+			, USE_YN
+			, REG_DT
+			, SYS_FMT
+			, USE_INFO
+			, DEL_YN
+		)VALUES(
+			(SELECT NVL(SERVICE_KEY,' ') FROM TB_API_USER WHERE USR_ID = #{userId})
+			, #{allSelect}
+			, SYSDATE
+			, ADD_MONTHS(SYSDATE, #{openTerm})
+			, (SELECT OPEN_GUBN FROM TB_API_SETTING)
+			, SYSDATE
+			, #{rBtn1}
+			, #{rBtn2}
+			, 'N'
+		)
+	</insert>
+	
+	<!-- 공공데이터 개방 신청 :: 회원 정보 --> 
+	<select id="selectMemberList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			USR_ID
+			, SERVICE_KEY
+			, COMP_NM
+			, COMP_MGR
+			, SUBSTR(COMP_TEL,0,3) AS PNUM01
+			, SUBSTR(COMP_TEL,4,4) AS PNUM02
+			, SUBSTR(COMP_TEL,8,4) AS PNUM03
+			, IP
+			, REG_DT
+		FROM TB_API_USER
+		WHERE 1=1
+		AND USR_ID = #{userId}
+	</select>
+	
+	<!-- 공공데이터 개방 신청 :: 신청한 데이터 --> 
+	<select id="selectExsistList" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT 
+			T5.USR_ID
+			, T5.SERVICE_KEY
+			, T5.REQ_DATA_CD
+			, T5.REQ_DATA_NM
+			, T5.MENUAL
+			, T4.MAX_CALL_CNT
+			, T5.SYS_FMT
+      		, T5.USE_INFO
+      		, T5.DEL_YN
+		FROM
+		(
+			SELECT
+				T1.USR_ID
+				, T1.SERVICE_KEY
+				, NVL(T2.REQ_DATA_CD,0) AS REQ_DATA_CD
+				, T3.REQ_DATA_NM
+				, T3.MENUAL
+				, T2.SYS_FMT
+        		, T2.USE_INFO
+        		, T2.DEL_YN
+			FROM TB_API_USER T1
+			LEFT OUTER JOIN TB_API_OPEN T2 ON T1.SERVICE_KEY = T2.SERVICE_KEY
+			LEFT OUTER JOIN TB_API_REQDATA_CD T3 ON T2.REQ_DATA_CD = T3.REQ_DATA_CD
+			WHERE 1=1
+			AND USR_ID = #{userId}
+			<!-- AND SERVICE_KEY = #{serviceKey} -->
+			<if test = "delYnGubn != null and delYnGubn != ''">
+				AND T2.DEL_YN = 'N'
+			</if>
+		) T5, TB_API_SETTING T4
+	</select>
+	
+	<!-- 공공데이터 개방 재신청 정보 입력 -->
+	<update id="updateApiData" parameterType="java.util.HashMap">
+		UPDATE TB_API_USER SET
+			SERVICE_KEY = #{serviceKey}
+			, COMP_NM = #{compNm}
+			, COMP_MGR = #{compMgr}
+			, COMP_TEL = #{compTel}
+			, IP = #{ip}
+		WHERE 1=1
+		AND USR_ID = #{userId}
+	</update>
+	
+	<!-- 공공데이터 개방 수정 정보 입력 -->
+	<update id="updateApiDataInUser" parameterType="java.util.HashMap">
+		UPDATE TB_API_OPEN SET
+			DEL_YN = #{userNo}
+			, OPEN_END_DT = ADD_MONTHS(SYSDATE, +#{openTerm})
+		WHERE SERVICE_KEY = #{serviceKey}
+		AND REQ_DATA_CD = #{allSelect}
+	</update>
+</mapper>

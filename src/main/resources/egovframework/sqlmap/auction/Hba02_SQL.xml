@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hba02.mapper.Hba02Mapper">
+
+<select id="selectHba02" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.hba02.domain.Hba02VO">  
+SELECT   TOTAL_COUNT
+            ,RNUM
+            ,ANUM
+            ,REG_MONTH 
+            ,TITLE    
+            ,WRITE_NAME
+            ,INS_DT
+            ,ORIGINAL_FILE_NAME 
+            ,SEQ_NO 
+            ,GUBN 
+            ,STORED_FILE_NAME    
+FROM(                                          
+        SELECT   COUNT(*) OVER() AS TOTAL_COUNT
+                    ,RNUM
+                    ,ANUM
+                    ,REG_MONTH 
+                    ,TITLE    
+                    ,WRITE_NAME
+                    ,INS_DT  
+                    ,ORIGINAL_FILE_NAME 
+                    ,SEQ_NO 
+                    ,GUBN  
+                    ,STORED_FILE_NAME                
+        FROM (                 
+                SELECT  ROW_NUMBER() OVER (ORDER BY T.SEQ_NO DESC, TITLE) AS RNUM  
+                ,ROW_NUMBER() OVER (ORDER BY T.SEQ_NO ASC, TITLE) AS ANUM  
+                            ,T.REG_MONTH 
+                            ,T.TITLE    
+                            ,T.WRITE_NAME
+                            ,TO_CHAR(T.INS_DT,'YYYY-MM-DD') AS INS_DT
+                            ,T1.ORIGINAL_FILE_NAME    AS    ORIGINAL_FILE_NAME
+                            ,T.SEQ_NO
+                            ,T.GUBN
+                            ,T1.STORED_FILE_NAME AS STORED_FILE_NAME                               
+                FROM T_FORECAST_REPORT  T 
+                LEFT OUTER JOIN 
+				(  SELECT SEQ_NO
+                     , FORECAST_SEQ
+                     , ORIGINAL_FILE_NAME
+                     , STORED_FILE_NAME
+                FROM T_FORECAST_REPORT_FILE 
+                WHERE ROWID IN (SELECT MAX(ROWID) FROM T_FORECAST_REPORT_FILE GROUP BY FORECAST_SEQ)) T1  
+                ON T.SEQ_NO = T1.FORECAST_SEQ    
+                WHERE 1=1 
+                AND T.GUBN='2'   
+                AND T.USE_YN='Y'
+                 <if test="searchType!=null and searchType=='searchTitle'">
+               <![CDATA[ 
+            	   AND T.TITLE LIKE '%' || #{searchValue, jdbcType=VARCHAR} || '%'
+            	 ]]>
+            	</if>
+            	<if test="searchType!=null and searchType=='searchFileNm'" >
+            	<![CDATA[ 
+            	  AND T1.ORIGINAL_FILE_NAME LIKE '%' || #{searchValue, jdbcType=VARCHAR} || '%'
+            	]]>
+            	</if>
+            	<if test="searchType!=null and searchType=='searchRegerNm'">
+            	<![CDATA[ 
+            	  AND T.WRITE_NAME LIKE '%' || #{searchValue, jdbcType=VARCHAR} || '%'
+            	]]>
+            	</if> 
+                ORDER BY   T.SEQ_NO DESC,   T.TITLE   
+                )
+)
+   WHERE
+    RNUM BETWEEN #{START} AND #{END}
+	</select>
+	
+	<insert id="insertForecast"  parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			  SELECT MAX(SEQ_NO)+1 FROM T_FORECAST_REPORT
+		</selectKey>
+ 	INSERT INTO T_FORECAST_REPORT
+       (     SEQ_NO
+            ,REG_MONTH                    
+            ,TITLE            
+            ,WRITE_NAME    
+            ,INS_DT
+            ,GUBN
+            ,USE_YN        
+       ) 
+       VALUES 
+       (    #{IDX}
+            ,TO_CHAR(SYSDATE,'YYYY-MM')      
+            ,#{TITLE, jdbcType=VARCHAR}  
+            ,'admin'           
+            ,TO_CHAR(SYSDATE,'YYYY-MM-DD') 
+            ,'2'
+            ,'Y'  
+       ) 
+ </insert>
+ 
+  <insert id="insertForecastFile"  parameterType="java.util.HashMap">
+ 	INSERT INTO T_FORECAST_REPORT_FILE
+       (     
+       		 SEQ_NO
+            ,FORECAST_SEQ                    
+            ,ORIGINAL_FILE_NAME            
+            ,STORED_FILE_NAME    
+            ,FILE_SIZE
+            ,CREA_ID                            
+       ) 
+       VALUES 
+       (    
+             (SELECT MAX(SEQ_NO)+1 FROM T_FORECAST_REPORT_FILE)
+            ,#{CROP_IDX, jdbcType=VARCHAR}      
+            ,#{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}  
+            ,#{STORED_FILE_NAME, jdbcType=VARCHAR}            
+            ,#{FILE_SIZE, jdbcType=VARCHAR}           
+            ,'ADMIN'    
+       )         
+ </insert>
+ 
+ <select id="selectFileDown" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+ 		SELECT ORIGINAL_FILE_NAME
+ 			   ,STORED_FILE_NAME
+ 	    FROM T_FORECAST_REPORT_FILE
+ 	    WHERE FORECAST_SEQ = #{seq}
+ </select>
+
+ 
+ <update id="updateForecast"  parameterType="java.util.HashMap">
+		UPDATE T_FORECAST_REPORT SET
+			   TITLE = #{TITLE, jdbcType=VARCHAR}
+	    WHERE SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}	
+ </update>
+ 
+   <update id="updateForecastFile"  parameterType="java.util.HashMap">
+   		UPDATE T_FORECAST_REPORT_FILE SET 
+   			 SEQ_NO =  (SELECT MAX(SEQ_NO)+1 FROM T_FORECAST_REPORT_FILE)              
+            ,ORIGINAL_FILE_NAME = #{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}             
+            ,STORED_FILE_NAME = #{STORED_FILE_NAME, jdbcType=VARCHAR} 
+            ,FILE_SIZE = #{FILE_SIZE, jdbcType=VARCHAR} 
+		WHERE FORECAST_SEQ = #{SEQ_NO, jdbcType=VARCHAR}	
+
+   </update>
+   
+   <delete id="deleteSugeup" parameterType="java.util.HashMap">
+   		DELETE FROM T_FORECAST_REPORT
+   		WHERE SEQ_NO = #{seqNo}	  
+   </delete>
+		
+	<delete id="deleteSugeupFile" parameterType="java.util.HashMap">
+   		DELETE FROM T_FORECAST_REPORT_FILE
+   		WHERE FORECAST_SEQ = #{CROP_IDX}	  
+   </delete>
+
+</mapper>

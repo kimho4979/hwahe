@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>rMate Chart for HTML5 - Candle Line chart</title>
+<!-- rMateChartH5 에서 사용하는 스타일 -->
+<link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/>
+
+<!-- IE7, 8 에서 차트 생성하고자 하는 경우 -->
+<!--[if IE]><script language="javascript" type="text/javascript" src="../rMateChartH5/JS/excanvas.js"></script><![endif]-->
+
+<!-- rMateChartH5 라이센스 -->
+<script language="javascript" type="text/javascript" src="../LicenseKey/rMateChartH5License.js"></script>
+
+<!-- 실제적인 rMateChartH5 라이브러리 -->
+<script language="javascript" type="text/javascript" src="../rMateChartH5/JS/rMateCandleChartH5.js"></script>
+
+<!-- rMateChartH5 테마 js -->
+<script type="text/javascript" src="../rMateChartH5/Assets/Theme/theme.js"></script>
+
+<script type="text/javascript">
+
+// -----------------------차트 설정 시작-----------------------
+
+// rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.
+var chartVars = "rMateOnLoadCallFunction=chartReadyHandler";
+
+// rMateChart 를 생성합니다.
+// 파라메터 (순서대로) 
+//  1. 차트의 id ( 임의로 지정하십시오. ) 
+//  2. 차트가 위치할 div 의 id (즉, 차트의 부모 div 의 id 입니다.)
+//  3. 차트 생성 시 필요한 환경 변수들의 묶음인 chartVars
+//  4. 차트의 가로 사이즈 (생략 가능, 생략 시 100%)
+//  5. 차트의 세로 사이즈 (생략 가능, 생략 시 100%)
+rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+
+var dataURL = "http://demo.riamore.net/demo/chart/makeLazyData.jsp?index=";
+
+// 차트의 속성인 rMateOnLoadCallFunction 으로 설정된 함수.
+// rMate 차트 준비가 완료된 경우 이 함수가 호출됩니다.
+// 이 함수를 통해 차트에 레이아웃과 데이터를 삽입합니다.
+// 파라메터 : id - rMateChartH5.create() 사용 시 사용자가 지정한 id 입니다.
+function chartReadyHandler(id) {
+	document.getElementById(id).setLayout(layoutStr);
+	document.getElementById(id).setDataURL(dataURL + 0);
+}
+
+// 차트에 출력할 아이템 갯수
+var visibleItemSize = 15;
+
+// 스트링 형식으로 레이아웃 정의.
+var layoutStr = '<rMateChart backgroundColor="#FFFFFF"  borderStyle="none">'
+					+'<Options>'
+						+'<Caption text="차트 영역을 드래그 하여 스크롤바가 반대쪽까지 이동하면" fontSize="12" color="#999999" fontFamily="맑은 고딕"/>'
+						+'<SubCaption text="새로운 데이터를 받아와 차트에 삽입합니다." fontSize="12" fontFamily="맑은 고딕"/>'
+					+'</Options>'
+					+'<NumberFormatter id="nft" precision="0"/>'
+					/*	
+						mainChart와 subChart로 나뉘어져 캔들, 막대차를 사용할 수 있는 DualChart를 설정합니다.
+						mainChart - DualChart에서 주 차트를 설정합니다.
+						subChart - DualChart에서 보조 차트를 설정합니다.
+						dataSelector - 캔들차트 데이터가 많을 경우 데이터를 쪼개어 볼 수 있도록 설정합니다.
+						leftGutterSyncEnalbe - mainChart와 subChart의 왼쪽 여백을 동기화 시킵니다.
+						rightGuttersSyncEnable - mainChart와 subChart의 오른쪽 여백을 동기화 시킵니다.
+					*/
+					+'<DualChart leftGutterSyncEnable="true" rightGutterSyncEnable="true">'
+						/* mainChart시작 */
+						+'<mainChart>'
+							/* 
+								캔들라인을 사용하시려면 CandleLine2DChart를 정의하여 주십시오. 
+								lazyJsFunction - 차트 영역을 마우스 클릭 후 드래그 시에 스크롤바가 맞은편에 다다르면 설정된 콜백 함수를 실행합니다.
+							*/
+							+'<CandleLine2DChart showDataTips="true" paddingBottom="0" lazyJsFunction="lazyDataFunc">'
+								+'<horizontalAxis>'
+									+'<CategoryAxis id="hAxis" categoryField="index"/>'
+								+'</horizontalAxis>'
+								+'<verticalAxis>'
+									+'<LinearAxis baseAtZero="false" formatter="{nft}"/>'
+								+'</verticalAxis>'
+								+'<series>'
+									/*	
+										CandleLine2DChart의 series속성으로 CandleLine2DSeries를 정의하여 주십시오.
+										yField - 표현하고자하는 데이터의 필드명을 설정합니다.
+									*/
+									+'<CandleLine2DSeries yField="data1" showMaxValueLabel="true" showMinValueLabel="true" upLabelJsFunction="maxLabelFunc" downLabelJsFunction="minLabelFunc">'
+										+'<lineStroke>'
+											+'<Stroke color="#f6a44c" weight="2"/>'
+										+'</lineStroke>'
+									+'</CandleLine2DSeries>'
+								+'</series>'
+								+'<horizontalAxisRenderers>'
+									+'<Axis2DRenderer placement="bottom" axis="{hAxis}" showLine="true" tickLength="0"/>'
+								+'</horizontalAxisRenderers>'
+							+'</CandleLine2DChart>'
+						+'</mainChart>'
+						/* mainChart 끝 */
+						/* subChart 시작 */
+						+'<subChart>'
+							// subChart의 column2DChart의 height크기를 전체 height크기 중 20%를 설정하도록 합니다.
+							+'<Column2DChart showDataTips="true" height="20%" paddingTop="0" paddingBottom="0" gutterTop="6" gutterBottom="6">'	
+								+'<horizontalAxis>'
+									+'<CategoryAxis id="hAxis" categoryField="index"/>'
+								+'</horizontalAxis>'
+								+'<verticalAxis>'
+									+'<LinearAxis id="vAxis" formatter="{nft}"/>'
+								+'</verticalAxis>'
+								+'<series>'
+									+'<Column2DSeries yField="trdvolume">'
+										+'<fill>'
+											+'<SolidColor color="#5487a2"/>'
+										+'</fill>'
+									+'</Column2DSeries>'
+								+'</series>'
+								+'<horizontalAxisRenderers>'
+									+'<Axis2DRenderer axis="{hAxis}" showLabels="false" showLine="true" tickLength="0"/>'
+								+'</horizontalAxisRenderers>'
+							+'</Column2DChart>'
+						+'</subChart>'
+						/* subChart 끝 */
+						/* dataSelector 시작 */
+						+'<dataSelector>'
+							/*
+								DualScrollBar를 설정하여 데이터를 쪼개어 mainChart와 subChart에 데이터를 할당하도록 설정합니다.
+								visibleItemSize - 화면에 출력된 아이템 갯수
+								inverted - 스크롤의 시작방향을 반대방향으로 설정합니다.
+							*/
+							+'<DualScrollBar visibleItemSize="'+visibleItemSize+'"/>'
+						+'</dataSelector>'
+						/* dataSelector 끝 */
+					+'</DualChart>'
+				+'</rMateChart>';
+
+var xhr, // ajax 객체
+	index = 19; // 차트에 삽입된 총 데이터 갯수. 이 변수를 가지고 새로운 데이터의 index를 설정합니다.
+
+// 화면에 출력되는 아이템의 갯수를 변경합니다.
+function changeVisibleItem(value){
+	visibleItemSize += value;
+	if(visibleItemSize > index)
+		visibleItemSize = index;
+	else if(visibleItemSize < 10)
+		visibleItemSize = 10;
+	document.getElementById("chart1").visibleItemSize(visibleItemSize);
+}
+
+/*
+// 레이아웃에 설정된 lazyJsFunction의 값으로 설정된 콜백 함수입니다.
+// 차트 영역을 드래그 하여 스크롤 바가 반대편 영역에 다다르면 해당 콜백 함수를 실행하게 됩니다.
+// 이 함수를 실행하였을 경우 새로운 데이터를 가져와 차트에 삽입할 수 있습니다.
+// 파라메터
+// id : 해당 콜백 함수를 실행하는 차트의 id입니다.
+*/
+function lazyDataFunc(id){
+	var param = {};
+	// 데이터 가져올 url
+	param.url = dataURL + (index + 1);
+	// 성공 콜백함수
+	param.success = function(){
+		var data;
+		if(xhr.readyState == 4 && xhr.status >= 200 && xhr.status < 300){
+			if(xhr.responseXML.xml)
+				data = xhr.responseXML.xml;
+			else
+				data = xhr.responseXML;
+			document.getElementById(id).addData(data);
+			index += 20; // 데이터를 20개씩 받아오기에
+		}
+	}
+	ajax(param);
+}
+
+// 레이아웃에서 설정한 maxLabelJsFunction에 설정된 콜백 함수입니다.
+function maxLabelFunc(seriesId, index, data, values){
+	var max = getTypeNum(values.slice(1,values.length));
+	return '<font color="#f6a44c">High : ' + insertComma(max[0]) + '</font>';
+}
+
+// 레이아웃에서 설정한 minLabelJsFunction에 설정된 콜백 함수입니다.
+function minLabelFunc(seriesId, index, data, values){
+	var min = getTypeNum(values.slice(1,values.length));
+	return 'Low : ' + insertComma(min[min.length - 1]);
+}
+
+//숫자에 천단위 콤마 찍어 반환하는 함수.
+function insertComma(n) {
+	var reg = /(^[+-]?\d+)(\d{3})/; // 정규식
+	n += "";
+	while (reg.test(n))
+	n = n.replace(reg, '$1' + "," + '$2');
+	return n;
+}
+
+function getTypeNum(){
+	return Array.prototype.slice.call(arguments, 0).sort()[0];
+}
+
+// ajax
+function ajax(options){
+	if(window.ActiveXObject)
+		xhr = new ActiveXObject("Microsoft.XMLHTTP");
+	else
+		xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = options.success;
+
+	xhr.open("get", options.url, true);
+	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+	
+	try{
+		xhr.send(null);
+	}catch(e){
+		alert(e.message);
+	}
+}
+
+
+/**
+ * rMateChartH5 3.0이후 버전에서 제공하고 있는 테마기능을 사용하시려면 아래 내용을 설정하여 주십시오.
+ * 테마 기능을 사용하지 않으시려면 아래 내용은 삭제 혹은 주석처리 하셔도 됩니다.
+ *
+ * -- rMateChartH5.themes에 등록되어있는 테마 목록 --
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * -------------------------------------------------
+ *
+ * rMateChartH5.themes 변수는 theme.js에서 정의하고 있습니다.
+ */
+rMateChartH5.registerTheme(rMateChartH5.themes);
+
+/**
+ * 샘플 내의 테마 버튼 클릭 시 호출되는 함수입니다.
+ * 접근하는 차트 객체의 테마를 변경합니다.
+ * 파라메터로 넘어오는 값
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * - default
+ *
+ * default : 테마를 적용하기 전 기본 형태를 출력합니다.
+ */
+function rMateChartH5ChangeTheme(theme){
+	document.getElementById("chart1").setTheme(theme);
+}
+
+// -----------------------차트 설정 끝 -----------------------
+
+</script>
+<!-- 샘플 작동을 위한 css와 js -->
+<script type="text/javascript" src="./Web/JS/common.js"></script>
+<script type="text/javascript" src="./Web/JS/sample_util.js"></script>
+<link rel="stylesheet" type="text/css" href="./Web/sample.css"/>
+
+<!-- SyntaxHighlighter -->
+<script type="text/javascript" src="./Web/syntax/shCore.js"></script>
+<script type="text/javascript" src="./Web/syntax/shBrushJScript.js"></script>
+<link type="text/css" rel="stylesheet" href="./Web/syntax/shCoreDefault.css"/>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">
+			<div class="headerTitle">Candle Lazy Data</div>
+			<!--<div class="themeButtons">
+				<div class="button theme_default" onclick="rMateChartH5ChangeTheme('default')">Default</div>
+				<div class="button theme_pastel" onclick="rMateChartH5ChangeTheme('pastel')"></div>
+				<div class="button theme_simple" onclick="rMateChartH5ChangeTheme('simple')"></div>
+			</div>-->
+		</div>
+		<div id="content">
+			<!-- 차트가 삽입될 DIV -->
+			<div id="chartHolder"></div>
+		</div>
+		<div class="sampleButtons" style="margin-top:10px;">
+			<div class="cancle_button button_right button_minus" onclick="changeVisibleItem(10)"></div>
+			<div class="cancle_button button_right button_plus" onclick="changeVisibleItem(-10)"></div>
+		</div>
+		<div id="updater">
+			<div>Layout과 Data를 수정 후 적용 할 수 있습니다.</div>
+			<div id="updaterTab">
+				<ul id="updaterTabUl">
+					<li id="updaterTabUlSource" class="active_tab">Source</li>
+					<li id="updaterTabUlLayout" class="non_active_li">Layout</li>
+					<li id="updaterTabUlData" class="non_active_li">Data</li>
+					<li id="updaterTabUlBlank">
+						<span id="btn_update">수정적용</span>
+					</li>
+				</ul>
+			</div>
+			<div id="updaterTarea">
+				<pre id="updaterTareaSource" class="brush:js toolbar:false" name="updaterTareaSource"></pre>
+				<textarea id="updaterTareaLayout" class="updaterTextarea" spellcheck="false"></textarea>
+				<textarea id="updaterTareaData" class="updaterTextarea" spellcheck="false"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

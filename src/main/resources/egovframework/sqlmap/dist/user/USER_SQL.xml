@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.user.mapper.UserMapper">
+ <resultMap id="userResultMap" type="com.fpdisys.dist.user.domain.User">
+ 		<result property="userCd" column="USER_CD" />
+ 		<result property="email" column="EMAIL" />
+ 		<result property="hpNo" column="HP_NO" />
+ 		<result property="userNm" column="USER_NM" />
+ 		<result property="userPs" column="USER_PS" />
+ 		<result property="userType" column="USER_TYPE" />
+ 		<result property="userTypeNm" column="USER_TYPE_NM" />
+ 		<result property="useYn" column="USE_YN" />
+ 		<result property="remark" column="REMARK" />
+ 		<result property="passErrNum" column="PASS_ERR_NUM" />
+ 		<result property="lastLoginDate" column="LAST_LOGIN_DATE" />
+ 		<result property="passwordUpdateDate" column="PASSWORD_UPDATE_DATE" />
+ </resultMap>
+ 
+ <resultMap id="userAuthResultMap" type="com.fpdisys.dist.user.domain.UserAuth">
+ <result property="grpAuthCd" column="GRP_AUTH_CD" />
+  <result property="grpAuthNm" column="GRP_AUTH_NM" />
+ <result property="remark" column="REMARK" />
+  <result property="useYn" column="USE_YN" />
+   <result property="userCd" column="USER_CD" />
+   <result property="userNm" column="USER_NM" />
+</resultMap>
+	<select id="selectAllUserList" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="userResultMap">
+		SELECT A.USER_CD,
+       A.EMAIL,
+       A.HP_NO,
+       TO_CHAR(A.LAST_LOGIN_DATE,'YYYYMMDD') AS LAST_LOGIN_DATE ,
+        TO_CHAR(A.PASSWORD_UPDATE_DATE,'YYYYMMDD') AS PASSWORD_UPDATE_DATE,
+       A.USER_NM,
+       A.USER_PS,
+       A.USER_TYPE,
+       A.USE_YN,
+       A.REMARK,
+       A.PASS_ERR_NUM
+  FROM USER_M A
+	</select>
+	
+	<select id="selectAllUserAuthList" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="userAuthResultMap">
+		SELECT A.GRP_AUTH_CD,
+       A.USER_CD,
+       A.REMARK,
+       A.USE_YN
+  FROM USER_AUTH_M A
+	</select>
+	
+<select id="selectUserFindOne" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="userResultMap">	
+		SELECT A.USER_CD,
+       A.EMAIL,
+       A.HP_NO,
+       A.LAST_LOGIN_DATE,
+       A.PASSWORD_UPDATE_DATE,
+       A.USER_NM,
+       A.USER_PS,
+       A.USER_TYPE,
+       CASE 
+         WHEN  A.USER_TYPE ='S' THEN '슈퍼관리자'
+         WHEN  A.USER_TYPE ='A' THEN '관리자'
+         WHEN  A.USER_TYPE ='D' THEN '개발자'
+         WHEN A.USER_TYPE ='U' THEN '사용자'
+        END   AS USER_TYPE_NM ,    
+       A.USE_YN,
+       A.REMARK,
+       A.PASS_ERR_NUM
+  FROM USER_M A 
+  WHERE A.USER_CD =  #{userCd     , jdbcType=VARCHAR}
+ 
+</select>    
+<select id="countUserCd" parameterType="java.util.HashMap" statementType="PREPARED" resultType="int">	
+SELECT COUNT(*) 
+FROM USER_M
+WHERE USER_CD =  #{userCd     , jdbcType=VARCHAR}
+ </select>
+
+<select id="loginCheck" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="userResultMap">	
+SELECT A.USER_CD,
+       A.EMAIL,
+       A.HP_NO,
+       A.LAST_LOGIN_DATE,
+       A.PASSWORD_UPDATE_DATE,
+       A.USER_NM,
+       A.USER_PS,
+       A.USER_TYPE,
+       CASE 
+         WHEN  A.USER_TYPE ='S' THEN '슈퍼관리자'
+         WHEN  A.USER_TYPE ='A' THEN '관리자'
+         WHEN  A.USER_TYPE ='D' THEN '개발자'
+         WHEN A.USER_TYPE ='U' THEN '사용자'
+        END   AS USER_TYPE_NM ,    
+       A.USE_YN,
+       A.REMARK,
+       A.PASS_ERR_NUM
+  FROM USER_M A 
+  WHERE A.USER_CD =  #{userCd     , jdbcType=VARCHAR}
+  AND A.USER_PS =#{userPs ,jdbcType=VARCHAR}  
+</select>
+<insert id="insertUser" parameterType="java.util.HashMap">
+INSERT INTO USER_M
+ ( USER_CD,
+ INS_DT,
+ INS_USER,
+ EMAIL,
+ HP_NO,
+ USER_NM,
+ USER_PS,
+ USER_TYPE,
+ USE_YN,
+ PASS_ERR_NUM
+  )
+VALUES 
+ ( 
+ #{userCd     , jdbcType=VARCHAR},
+ sysdate,
+ #{userId     , jdbcType=VARCHAR},
+ #{email     , jdbcType=VARCHAR},
+ #{hpNo     , jdbcType=VARCHAR},
+ #{userNm     , jdbcType=VARCHAR},
+ #{userPs     , jdbcType=VARCHAR},
+ #{userType     , jdbcType=VARCHAR},
+ #{useYn     , jdbcType=VARCHAR},
+ 0
+  )
+</insert>
+<update id="updateUser" parameterType="java.util.HashMap">>
+UPDATE USER_M
+SET  UPT_DT = sysdate, 
+UPT_USER =  #{userId     , jdbcType=VARCHAR},
+EMAIL =  #{email     , jdbcType=VARCHAR}, 
+HP_NO = #{hpNo     , jdbcType=VARCHAR}, 
+USER_NM = #{userNm     , jdbcType=VARCHAR}, 
+USER_PS = #{userPs     , jdbcType=VARCHAR}, 
+USER_TYPE = #{userType     , jdbcType=VARCHAR}, 
+USE_YN = #{useYn     , jdbcType=VARCHAR}, 
+REMARK = #{remark     , jdbcType=VARCHAR}  
+WHERE  USER_CD = #{userCd     , jdbcType=VARCHAR}
+
+</update>
+
+<insert id="insertUserAuth" parameterType="java.util.HashMap">
+INSERT INTO USER_AUTH_M 
+       ( 
+           GRP_AUTH_CD,
+           USER_CD,
+           INS_DT,
+           INS_USER,
+           USE_YN 
+       ) 
+       VALUES 
+       ( 
+           #{grpAuthCd     , jdbcType=VARCHAR},
+           #{userId     , jdbcType=VARCHAR},
+           sysdate,
+           #{userId     , jdbcType=VARCHAR},
+           #{useYn     , jdbcType=VARCHAR} 
+       )  
+
+</insert>
+
+
+</mapper>

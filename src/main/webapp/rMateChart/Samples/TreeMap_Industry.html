@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>rMate Chart for HTML5 - TreeMap Chart</title>
+
+<!-- rMateChartH5 에서 사용하는 스타일 -->
+<link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/>
+
+<!-- IE7, 8 에서 차트 생성하고자 하는 경우 -->
+<!--[if IE]><script language="javascript" type="text/javascript" src="../rMateChartH5/JS/excanvas.js"></script><![endif]-->
+
+<!-- rMateChartH5 라이센스 -->
+<script language="javascript" type="text/javascript" src="../LicenseKey/rMateChartH5License.js"></script>
+
+<!-- 실제적인 rMateChartH5 라이브러리 -->
+<script language="javascript" type="text/javascript" src="../rMateChartH5/JS/rMateTreeMapH5.js"></script>
+
+<!-- rMateChartH5 테마 js -->
+<script type="text/javascript" src="../rMateChartH5/Assets/Theme/theme.js"></script>
+
+<script type="text/javascript">
+
+// -----------------------차트 설정 시작-----------------------
+
+// rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.
+var chartVars = "rMateOnLoadCallFunction=chartReadyHandler";
+
+// rMateChart 를 생성합니다.
+// 파라메터 (순서대로) 
+//  1. 차트의 id ( 임의로 지정하십시오. ) 
+//  2. 차트가 위치할 div 의 id (즉, 차트의 부모 div 의 id 입니다.)
+//  3. 차트 생성 시 필요한 환경 변수들의 묶음인 chartVars
+//  4. 차트의 가로 사이즈 (생략 가능, 생략 시 100%)
+//  5. 차트의 세로 사이즈 (생략 가능, 생략 시 100%)
+rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+
+// 차트의 속성인 rMateOnLoadCallFunction 으로 설정된 함수.
+// rMate 차트 준비가 완료된 경우 이 함수가 호출됩니다.
+// 이 함수를 통해 차트에 레이아웃과 데이터를 삽입합니다.
+// 파라메터 : id - rMateChartH5.create() 사용 시 사용자가 지정한 id 입니다.
+function chartReadyHandler(id) {
+	document.getElementById(id).setLayout(layoutStr);
+	document.getElementById(id).setData(chartData);
+}
+
+// 스트링 형식으로 레이아웃 정의.
+var layoutStr = 
+	'<rMateChart>'
+		+'<Options>'
+			+'<Caption text="전국산업분류"/>'
+		+'</Options>'
+		/*
+			TreeMapChart를 설정하기 위하여 TreeMapChart 노드를 설정하도록 합니다.
+			buttonMode - 각 차트 아이템에 마우스 오버시 손가락 표시를 나타내도록 설정합니다.
+		*/
+		+'<TreeMapChart showDataTips="true" buttonMode="true">'
+			+'<series>'
+				/*
+					TreeMapChart의 series속성으로 TreeMapSeries를 설정하도록 합니다.
+					weightField - 트리 맵으로 출력하려는 데이터 값 필드 명을 설정합니다.
+					nameField - 트리 맵 안에 출력할 문자열의 필드 명을 설정합니다.
+					groupField - 차트 데이터가 계층형 데이터일 해당 데이터들 중 그룹으로 가져올 데이터 필드 명을 설정합니다.
+					labelPosition - weightField, nameField 값이 표현하는 문자열을 트리 맵에 출력할지 설정합니다.
+					showGroupHeader - 차트 데이터가 계층형 데이터일 경우 각 계층에 해당하는 대표 문자열을 출력할지 설정합니다.
+					groupNameField - showGroupHeader가 true일 경우 groupHeader에 출력할 문자열의 데이터 필드 명을 설정합니다.
+				*/
+				+'<TreeMapSeries weightField="total" groupHeaderFontFamily="맑은 고딕" groupHeaderFontWeight="bold" showGroupHeader="true" groupField="items" displayName="Industry" groupNameField="name" color="#ffffff" nameField="industry" labelPosition="inside" groupHeaderHeight="23" groupLabelYOffset="-2">'
+					+'<groupHeaderColor>'
+						+'<SolidColor color="#f6f6f6"/>'
+					+'</groupHeaderColor>'
+					+'<showDataEffect>'
+						+'<SeriesZoom relativeTo="series" horizontalFocus="center" verticalFocus="middle" duration="1000" elementOffset="2"/>'
+					+'</showDataEffect>'
+				+'</TreeMapSeries>'
+			+'</series>'
+		+'</TreeMapChart>'
+	+'</rMateChart>';
+
+// 차트 데이터
+var chartData = [{
+		"name":"대한민국",
+		"items": [{
+			"name":"서울",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":18},
+				{"industry":"광업","total":22},
+				{"industry":"제조업","total":58551},
+				{"industry":"전기 가스 증기 및 수도사업","total":122},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":448},
+				{"industry":"건설업","total":21027},
+				{"industry":"도매 및 소매업","total":226629},
+				{"industry":"운수업","total":93368},
+				{"industry":"숙박 및 음식점업","total":123634},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":19240},
+				{"industry":"금융 및 보험업","total":10165},
+				{"industry":"부동산업 및 임대업","total":34629},
+				{"industry":"전문 과학 및 기술 서비스업","total":33624},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":12495},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":1267},
+				{"industry":"교육 서비스업	","total":32240},
+				{"industry":"보건업 및 사회복지 서비스업","total":24984},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":21122},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":71509}
+			]
+		},{
+			"name":"부산",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":88},
+				{"industry":"광업","total":11},
+				{"industry":"제조업","total":27751},
+				{"industry":"전기 가스 증기 및 수도사업","total":60},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":390},
+				{"industry":"건설업","total":7164},
+				{"industry":"도매 및 소매업","total":78037},
+				{"industry":"운수업","total":28107},
+				{"industry":"숙박 및 음식점업","total":49516},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":1547},
+				{"industry":"금융 및 보험업","total":3263},
+				{"industry":"부동산업 및 임대업","total":9352},
+				{"industry":"전문 과학 및 기술 서비스업","total":5715},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":3864},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":677},
+				{"industry":"교육 서비스업	","total":11817},
+				{"industry":"보건업 및 사회복지 서비스업","total":7721},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":6647},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":30256}
+			]
+		},{
+			"name":"대구",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":17},
+				{"industry":"광업","total":9},
+				{"industry":"제조업","total":25426},
+				{"industry":"전기 가스 증기 및 수도사업","total":53},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":279},
+				{"industry":"건설업","total":5708},
+				{"industry":"도매 및 소매업","total":52854},
+				{"industry":"운수업","total":19938},
+				{"industry":"숙박 및 음식점업","total":32453},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":1067},
+				{"industry":"금융 및 보험업","total":2218},
+				{"industry":"부동산업 및 임대업","total":5653},
+				{"industry":"전문 과학 및 기술 서비스업","total":4066},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":2160},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":417},
+				{"industry":"교육 서비스업	","total":10583},
+				{"industry":"보건업 및 사회복지 서비스업","total":6072},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":5451},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":21293}
+			]
+		},{
+			"name":"인천",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":22},
+				{"industry":"광업","total":28},
+				{"industry":"제조업","total":22175},
+				{"industry":"전기 가스 증기 및 수도사업","total":69},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":379},
+				{"industry":"건설업","total":4850},
+				{"industry":"도매 및 소매업","total":42776},
+				{"industry":"운수업","total":22735},
+				{"industry":"숙박 및 음식점업","total":32199},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":688},
+				{"industry":"금융 및 보험업","total":1649},
+				{"industry":"부동산업 및 임대업","total":7002},
+				{"industry":"전문 과학 및 기술 서비스업","total":2850},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1946},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":455},
+				{"industry":"교육 서비스업	","total":7177},
+				{"industry":"보건업 및 사회복지 서비스업","total":5960},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":5835},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":19195}
+			]
+		},{
+			"name":"광주",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":17},
+				{"industry":"광업","total":13},
+				{"industry":"제조업","total":7816},
+				{"industry":"전기 가스 증기 및 수도사업","total":45},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":147},
+				{"industry":"건설업","total":4112},
+				{"industry":"도매 및 소매업","total":29827},
+				{"industry":"운수업","total":10128},
+				{"industry":"숙박 및 음식점업","total":18048},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":818},
+				{"industry":"금융 및 보험업","total":1454},
+				{"industry":"부동산업 및 임대업","total":3710},
+				{"industry":"전문 과학 및 기술 서비스업","total":2508},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1513},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":263},
+				{"industry":"교육 서비스업	","total":6911},
+				{"industry":"보건업 및 사회복지 서비스업","total":4112},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":3880},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":13486}
+			]
+		},{
+			"name":"대전",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":7},
+				{"industry":"광업","total":5},
+				{"industry":"제조업","total":7085},
+				{"industry":"전기 가스 증기 및 수도사업","total":27},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":123},
+				{"industry":"건설업","total":3452},
+				{"industry":"도매 및 소매업","total":28732},
+				{"industry":"운수업","total":10661},
+				{"industry":"숙박 및 음식점업","total":19166},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":977},
+				{"industry":"금융 및 보험업","total":1347},
+				{"industry":"부동산업 및 임대업","total":3782},
+				{"industry":"전문 과학 및 기술 서비스업","total":2573},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1548},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":249},
+				{"industry":"교육 서비스업	","total":5473},
+				{"industry":"보건업 및 사회복지 서비스업","total":4458},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":3394},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":12617}
+			]
+		},{
+			"name":"울산",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":21},
+				{"industry":"광업","total":14},
+				{"industry":"제조업","total":6096},
+				{"industry":"전기 가스 증기 및 수도사업","total":28},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":179},
+				{"industry":"건설업","total":2813},
+				{"industry":"도매 및 소매업","total":19089},
+				{"industry":"운수업","total":6850},
+				{"industry":"숙박 및 음식점업","total":17030},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":293},
+				{"industry":"금융 및 보험업","total":896},
+				{"industry":"부동산업 및 임대업","total":2429},
+				{"industry":"전문 과학 및 기술 서비스업","total":1488},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1119},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":191},
+				{"industry":"교육 서비스업	","total":4518},
+				{"industry":"보건업 및 사회복지 서비스업","total":2551},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":2721},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":8667}
+			]
+		},{
+			"name":"세종",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":6},
+				{"industry":"광업","total":7},
+				{"industry":"제조업","total":761},
+				{"industry":"전기 가스 증기 및 수도사업","total":7},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":26},
+				{"industry":"건설업","total":375},
+				{"industry":"도매 및 소매업","total":1613},
+				{"industry":"운수업","total":564},
+				{"industry":"숙박 및 음식점업","total":1664},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":40},
+				{"industry":"금융 및 보험업","total":97},
+				{"industry":"부동산업 및 임대업","total":450},
+				{"industry":"전문 과학 및 기술 서비스업","total":139},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":89},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":57},
+				{"industry":"교육 서비스업	","total":280},
+				{"industry":"보건업 및 사회복지 서비스업","total":263},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":200},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":830}
+			]
+		},{
+			"name":"경기",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":237},
+				{"industry":"광업","total":90},
+				{"industry":"제조업","total":106817},
+				{"industry":"전기 가스 증기 및 수도사업","total":215},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":1683},
+				{"industry":"건설업","total":23442},
+				{"industry":"도매 및 소매업","total":181230},
+				{"industry":"운수업","total":80330},
+				{"industry":"숙박 및 음식점업","total":134475},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":5135},
+				{"industry":"금융 및 보험업","total":6828},
+				{"industry":"부동산업 및 임대업","total":34887},
+				{"industry":"전문 과학 및 기술 서비스업","total":15962},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":8583},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":1721},
+				{"industry":"교육 서비스업	","total":38995},
+				{"industry":"보건업 및 사회복지 서비스업","total":29241},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":22868},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":80477}
+			]
+		},{
+			"name":"강원",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":212},
+				{"industry":"광업","total":140},
+				{"industry":"제조업","total":6804},
+				{"industry":"전기 가스 증기 및 수도사업","total":136},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":352},
+				{"industry":"건설업","total":5444},
+				{"industry":"도매 및 소매업","total":31607},
+				{"industry":"운수업","total":10176},
+				{"industry":"숙박 및 음식점업","total":35714},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":667},
+				{"industry":"금융 및 보험업","total":1559},
+				{"industry":"부동산업 및 임대업","total":3453},
+				{"industry":"전문 과학 및 기술 서비스업","total":2190},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1397},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":807},
+				{"industry":"교육 서비스업	","total":5770},
+				{"industry":"보건업 및 사회복지 서비스업","total":3994},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":3956},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":15025}
+			]
+		},{
+			"name":"충북",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":162},
+				{"industry":"광업","total":85},
+				{"industry":"제조업","total":10599},
+				{"industry":"전기 가스 증기 및 수도사업","total":64},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":378},
+				{"industry":"건설업","total":4703},
+				{"industry":"도매 및 소매업","total":29093},
+				{"industry":"운수업","total":10423},
+				{"industry":"숙박 및 음식점업","total":24477},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":564},
+				{"industry":"금융 및 보험업","total":1279},
+				{"industry":"부동산업 및 임대업","total":3294},
+				{"industry":"전문 과학 및 기술 서비스업","total":1989},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1517},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":540},
+				{"industry":"교육 서비스업	","total":5371},
+				{"industry":"보건업 및 사회복지 서비스업","total":3829},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":3585},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":13659}
+			]
+		},{
+			"name":"충남",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":254},
+				{"industry":"광업","total":116},
+				{"industry":"제조업","total":13452},
+				{"industry":"전기 가스 증기 및 수도사업","total":105},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":396},
+				{"industry":"건설업","total":5357},
+				{"industry":"도매 및 소매업","total":37903},
+				{"industry":"운수업","total":12199},
+				{"industry":"숙박 및 음식점업","total":31562},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":670},
+				{"industry":"금융 및 보험업","total":1628},
+				{"industry":"부동산업 및 임대업","total":4523},
+				{"industry":"전문 과학 및 기술 서비스업","total":2311},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1797},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":766},
+				{"industry":"교육 서비스업	","total":6177},
+				{"industry":"보건업 및 사회복지 서비스업","total":5302},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":3901},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":17579}
+			]
+		},{
+			"name":"전북",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":270},
+				{"industry":"광업","total":100},
+				{"industry":"제조업","total":10471},
+				{"industry":"전기 가스 증기 및 수도사업","total":138},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":336},
+				{"industry":"건설업","total":4839},
+				{"industry":"도매 및 소매업","total":37968},
+				{"industry":"운수업","total":15000},
+				{"industry":"숙박 및 음식점업","total":24783},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":730},
+				{"industry":"금융 및 보험업","total":1692},
+				{"industry":"부동산업 및 임대업","total":3816},
+				{"industry":"전문 과학 및 기술 서비스업","total":2400},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1560},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":897},
+				{"industry":"교육 서비스업	","total":7464},
+				{"industry":"보건업 및 사회복지 서비스업","total":5524},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":3471},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":18197}
+			]
+		},{
+			"name":"전남",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":397},
+				{"industry":"광업","total":1032},
+				{"industry":"제조업","total":10995},
+				{"industry":"전기 가스 증기 및 수도사업","total":236},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":419},
+				{"industry":"건설업","total":5629},
+				{"industry":"도매 및 소매업","total":38273},
+				{"industry":"운수업","total":9395},
+				{"industry":"숙박 및 음식점업","total":28658},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":744},
+				{"industry":"금융 및 보험업","total":1725},
+				{"industry":"부동산업 및 임대업","total":2346},
+				{"industry":"전문 과학 및 기술 서비스업","total":1917},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1328},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":1232},
+				{"industry":"교육 서비스업	","total":6164},
+				{"industry":"보건업 및 사회복지 서비스업","total":4867},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":3636},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":17896}
+			]
+		},{
+			"name":"경북",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":328},
+				{"industry":"광업","total":127},
+				{"industry":"제조업","total":22842},
+				{"industry":"전기 가스 증기 및 수도사업","total":186},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":680},
+				{"industry":"건설업","total":8040},
+				{"industry":"도매 및 소매업","total":50903},
+				{"industry":"운수업","total":16671},
+				{"industry":"숙박 및 음식점업","total":45430},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":998},
+				{"industry":"금융 및 보험업","total":2339},
+				{"industry":"부동산업 및 임대업","total":4505},
+				{"industry":"전문 과학 및 기술 서비스업","total":2991},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":2037},
+				{"industry":"공공행정 국방 및 사회보장 행정	","total":1257},
+				{"industry":"교육 서비스업	","total":9443},
+				{"industry":"보건업 및 사회복지 서비스업","total":6636},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":5514},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":24807}
+			]
+		},{
+			"name":"경남",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":257},
+				{"industry":"광업","total":66},
+				{"industry":"제조업","total":30922},
+				{"industry":"전기 가스 증기 및 수도사업","total":144},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":686},
+				{"industry":"건설업","total":8431},
+				{"industry":"도매 및 소매업","total":60303},
+				{"industry":"운수업","total":19284},
+				{"industry":"숙박 및 음식점업","total":54746},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":1080},
+				{"industry":"금융 및 보험업","total":2716},
+				{"industry":"부동산업 및 임대업","total":7586},
+				{"industry":"전문 과학 및 기술 서비스업","total":4134},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":2411},
+				{"industry":"공공행정 국방 및 사회보장 행정","total":1059},
+				{"industry":"교육 서비스업	","total":12583},
+				{"industry":"보건업 및 사회복지 서비스업","total":8489},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":6288},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":27728}
+			]
+		},{
+			"name":"제주",
+			"items" : [
+				{"industry":"농업 임업 및 어업","total":395},
+				{"industry":"광업","total":18},
+				{"industry":"제조업","total":2053},
+				{"industry":"전기 가스 증기 및 수도사업","total":33},
+				{"industry":"하수 · 폐기물 처리 원료재생 및 환경복원업","total":64},
+				{"industry":"건설업","total":1767},
+				{"industry":"도매 및 소매업","total":13551},
+				{"industry":"운수업","total":5810},
+				{"industry":"숙박 및 음식점업","total":12670},
+				{"industry":"출판 영상 방송통신 및 정보서비스업","total":283},
+				{"industry":"금융 및 보험업","total":653},
+				{"industry":"부동산업 및 임대업","total":1213},
+				{"industry":"전문 과학 및 기술 서비스업","total":865},
+				{"industry":"사업시설관리 및 사업지원 서비스업","total":1083},
+				{"industry":"공공행정 국방 및 사회보장 행정","total":214},
+				{"industry":"교육 서비스업","total":2519},
+				{"industry":"보건업 및 사회복지 서비스업","total":1700},
+				{"industry":"예술 스포츠 및 여가관련 서비스업","total":1504},
+				{"industry":"협회 및 단체 수리  및 기타 개인 서비스업","total":5332}
+			]
+		}]
+	}
+];
+
+/**
+ * rMateChartH5 3.0이후 버전에서 제공하고 있는 테마기능을 사용하시려면 아래 내용을 설정하여 주십시오.
+ * 테마 기능을 사용하지 않으시려면 아래 내용은 삭제 혹은 주석처리 하셔도 됩니다.
+ *
+ * -- _rMateChartH5Theme에 등록되어있는 테마 목록 --
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * -------------------------------------------------
+ *
+ * _rMateChartH5Theme 변수는 theme.js에서 정의하고 있습니다.
+ */
+rMateChartH5.registerTheme(rMateChartH5.themes);
+
+/**
+ * 샘플 내의 테마 버튼 클릭 시 호출되는 함수입니다.
+ * 접근하는 차트 객체의 테마를 변경합니다.
+ * 파라메터로 넘어오는 값
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * - default
+ *
+ * default : 테마를 적용하기 전 기본 형태를 출력합니다.
+ */
+function rMateChartH5ChangeTheme(theme){
+	document.getElementById("chart1").setTheme(theme);
+}
+
+// -----------------------차트 설정 끝 -----------------------
+
+</script>
+<!-- 샘플 작동을 위한 css와 js -->
+<script type="text/javascript" src="./Web/JS/common.js"></script>
+<script type="text/javascript" src="./Web/JS/sample_util.js"></script>
+<link rel="stylesheet" type="text/css" href="./Web/sample.css"/>
+
+<!-- SyntaxHighlighter -->
+<script type="text/javascript" src="./Web/syntax/shCore.js"></script>
+<script type="text/javascript" src="./Web/syntax/shBrushJScript.js"></script>
+<link type="text/css" rel="stylesheet" href="./Web/syntax/shCoreDefault.css"/>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">
+			<div class="headerTitle">TreeMap Industry</div>
+			<!--<div class="themeButtons">
+				<div class="button theme_default" onclick="rMateChartH5ChangeTheme('default')">Default</div>
+				<div class="button theme_pastel" onclick="rMateChartH5ChangeTheme('pastel')"></div>
+				<div class="button theme_simple" onclick="rMateChartH5ChangeTheme('simple')"></div>
+			</div>-->
+		</div>
+		<div id="content">
+			<!-- 차트가 삽입될 DIV -->
+			<div id="chartHolder"></div>
+		</div>
+		<div id="updater">
+			<div>Layout과 Data를 수정 후 적용 할 수 있습니다.</div>
+			<div id="updaterTab">
+				<ul id="updaterTabUl">
+					<li id="updaterTabUlSource" class="active_tab">Source</li>
+					<li id="updaterTabUlLayout" class="non_active_li">Layout</li>
+					<li id="updaterTabUlData" class="non_active_li">Data</li>
+					<li id="updaterTabUlBlank">
+						<span id="btn_update">수정적용</span>
+					</li>
+				</ul>
+			</div>
+			<div id="updaterTarea">
+				<pre id="updaterTareaSource" class="brush:js toolbar:false" name="updaterTareaSource"></pre>
+				<textarea id="updaterTareaLayout" class="updaterTextarea" spellcheck="false"></textarea>
+				<textarea id="updaterTareaData" class="updaterTextarea" spellcheck="false"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpdisys.admin.menu.mapper.AdminMenuMapper">
+ <resultMap id="menuResultMap" type="com.fpdisys.admin.menu.domain.AdminMenuVO">
+	      <result property="sysCd" column="SYS_CD"/>
+	       <result property="mnuCd" column="MNU_CD"/>
+	        <result property="mnuNm" column="MNU_Nm"/>
+	      <result property="progCd" column="PROG_CD"/>
+     	  <result property="progNm" column="PROG_NM"/>
+     	   <result property="icon" column="ICON"/>
+	        <result property="mnuLv" column="MNU_LV"/>
+	        <result property="mnuIx" column="MNU_IX"/>
+	        <result property="mnuUpCd" column="MNUUP_CD"/>       
+			<result property="remark" column="REMARK"/>
+			<result property="useYn" column="USE_YN"/>
+	    <result property="regDt" column="INS_DT"/>
+        <result property="insId" column="INS_ID"/>
+        <result property="sUptDt" column="UPT_DT"/>
+        <result property="uptId" column="UPT_ID"/>    
+        <result property="grpAuthCd" column="GRP_AUTH_CD"/>
+    </resultMap>
+    <select id="getFindAllByOrderByMnuLvAscMnuIxAsc" resultMap="menuResultMap"  statementType="PREPARED" parameterType="java.util.HashMap" >
+      SELECT A.SYS_CD,
+       A.MNU_CD,
+       A.PROG_CD,
+       B.PROG_NM,
+       A.GRP_AUTH_CD,
+       A.ICON,
+       A.MNU_IX,
+       A.MNU_LV,
+       A.MNU_NM,
+       A.MNUUP_CD,
+       A.REMARK,
+       A.USE_YN,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_MNU A LEFT OUTER JOIN T_PROG B
+   ON A.SYS_CD= B.SYS_CD
+   AND A.PROG_CD = B.PROG_CD
+   
+   where 
+   	1=1
+   	AND A.USE_YN='Y'
+   	   <if test="searchSysCd!=null and searchSysCd!='' ">
+   			
+		 AND A.SYS_CD= #{searchSysCd , jdbcType=VARCHAR }
+   </if>
+   <if test="grpAuthCd!=null and grpAuthCd!=''">
+		 AND A.GRP_AUTH_CD= #{grpAuthCd , jdbcType=VARCHAR }
+   </if>
+   ORDER BY A.MNU_LV ,A.MNU_IX, A.MNU_CD ASC  
+    </select>  
+    
+     <insert id="insertAdminMenu" parameterType="java.util.HashMap"  >
+       INSERT INTO T_MNU 
+       ( 
+           SYS_CD,
+           MNU_CD,
+           PROG_CD,
+           GRP_AUTH_CD,
+           ICON,
+           MNU_IX,
+           MNU_LV,
+           MNU_NM,
+           MNUUP_CD,
+           REMARK,
+           USE_YN,
+           INS_DT,
+           INS_ID 
+       ) 
+       VALUES
+       ( 
+          #{sysCd     , jdbcType=VARCHAR},
+          #{mnuCd     , jdbcType=VARCHAR},
+          #{progCd     , jdbcType=VARCHAR},
+          #{grpAuthCd     , jdbcType=VARCHAR},
+          #{icon     , jdbcType=VARCHAR},
+          #{mnuIx     , jdbcType=NUMERIC},
+          #{mnuLv     , jdbcType=NUMERIC},
+          #{mnuNm     , jdbcType=VARCHAR},
+          #{mnuUpCd     , jdbcType=VARCHAR},
+          #{remark     , jdbcType=VARCHAR},
+          #{useYn     , jdbcType=VARCHAR},
+          SYSDATE,
+          #{userId     , jdbcType=VARCHAR} 
+       )   
+         
+         
+     </insert>  
+     <update id="updateAdminMenu" parameterType="java.util.HashMap"  >
+        UPDATE T_MNU  SET PROG_CD =  #{progCd     , jdbcType=VARCHAR}, 
+	       ICON = #{icon     , jdbcType=VARCHAR}, 
+	       MNU_IX =  #{mnuIx     , jdbcType=NUMERIC},
+	       MNU_LV =  #{mnuLv     , jdbcType=NUMERIC},
+	       MNU_NM = #{mnuNm     , jdbcType=VARCHAR},
+	       MNUUP_CD = #{mnuUpCd     , jdbcType=VARCHAR},
+	       REMARK = #{remark     , jdbcType=VARCHAR},
+	       USE_YN =  #{useYn     , jdbcType=VARCHAR},
+	       UPT_DT = SYSDATE, 
+	       UPT_ID = #{userId     , jdbcType=VARCHAR}  
+		WHERE SYS_CD = #{sysCd     , jdbcType=VARCHAR}
+		AND MNU_CD =  #{mnuCd     , jdbcType=VARCHAR} 
+		AND  GRP_AUTH_CD = #{grpAuthCd     , jdbcType=VARCHAR}
+      </update>
+      
+       <select id="findAdminMenuOne" resultMap="menuResultMap"  parameterType="java.util.HashMap"  statementType="PREPARED">
+	       SELECT A.SYS_CD,
+		       A.MNU_CD,
+		       A.PROG_CD,
+		       A.GRP_AUTH_CD,
+		       A.ICON,
+		       A.MNU_IX,
+		       A.MNU_LV,
+		       A.MNU_NM,
+		       A.MNUUP_CD,
+		       A.REMARK,
+		       A.USE_YN,
+		       A.INS_DT,
+		       A.INS_ID,
+		       A.UPT_DT,
+		       A.UPT_ID
+		  FROM T_MNU A
+		  WHERE A.SYS_CD = #{sysCd     , jdbcType=VARCHAR}
+		  AND A.MNU_CD = #{mnuCd     , jdbcType=VARCHAR}
+		  AND  GRP_AUTH_CD = #{grpAuthCd     , jdbcType=VARCHAR}
+		  
+       </select>
+        <update id="getAdminMargeMenu"  parameterType="java.util.HashMap" >
+          <![CDATA[
+          			MERGE INTO T_MNU a
+       			USING DUAL
+       			ON (
+       			      a.SYS_CD = #{sysCd     , jdbcType=VARCHAR}
+       				 AND a.MNU_CD = #{mnuCd     , jdbcType=VARCHAR} 
+       				 AND  a.GRP_AUTH_CD = #{grpAuthCd     , jdbcType=VARCHAR}
+       				)
+       			WHEN MATCHED THEN
+       				UPDATE SET
+       				 UPT_DT = sysdate, 
+					 UPT_ID = #{userId     , jdbcType=VARCHAR}, 
+					 ICON =  #{icon     , jdbcType=VARCHAR},
+					 MNU_IX = #{mnuIx     , jdbcType=NUMERIC}, 
+					 MNU_LV = #{mnuLv     , jdbcType=NUMERIC}, 
+					 MNU_NM = #{mnuNm     , jdbcType=VARCHAR},
+					 MNUUP_CD =  #{mnuUpCd     , jdbcType=VARCHAR},
+					 PROG_CD =  #{progCd     , jdbcType=VARCHAR},
+					 USE_YN = #{useYn     , jdbcType=VARCHAR}, 
+					 REMARK =  #{remark     , jdbcType=VARCHAR} 
+					        				
+       			WHEN NOT MATCHED THEN
+       			 INSERT
+		       ( 
+		       		SYS_CD,
+		           MNU_CD,
+		            GRP_AUTH_CD,
+		           INS_DT,
+		           INS_ID,
+		           ICON,
+		           MNU_IX,
+		           MNU_LV,
+		           MNU_NM,
+		           MNUUP_CD,
+		           PROG_CD,
+		           USE_YN,
+		           REMARK 
+		       ) 
+		       VALUES 
+		       ( 
+		           #{sysCd     , jdbcType=VARCHAR},
+		           #{mnuCd     , jdbcType=VARCHAR},
+		           #{grpAuthCd     , jdbcType=VARCHAR},
+		           sysdate,
+		           #{userId     , jdbcType=VARCHAR},
+		           #{icon     , jdbcType=VARCHAR},
+		           #{mnuIx     , jdbcType=NUMERIC},
+		           #{mnuLv     , jdbcType=NUMERIC},
+		           #{mnuNm     , jdbcType=VARCHAR},
+		           #{mnuUpCd     , jdbcType=VARCHAR},
+		           #{progCd     , jdbcType=VARCHAR},
+		           #{useYn     , jdbcType=VARCHAR},
+		           #{remark     , jdbcType=VARCHAR} 
+		       ) 
+          	
+           	]]>
+       </update>
+        <select id="activeAdminMenus" resultMap="menuResultMap"  statementType="PREPARED" parameterType="java.util.HashMap" >
+         SELECT * FROM (
+            SELECT
+                A.SYS_CD, 
+                A.MNU_CD,
+                A.MNU_NM,
+                A.GRP_AUTH_CD,
+                A.ICON,
+                A.MNU_LV,
+                A.MNU_IX,
+                A.MNUUP_CD,
+                A.REMARK,
+                A.USE_YN,
+                B.PROG_CD,
+                B.PROG_NM,
+                A.INS_DT,
+                A.INS_ID,
+                A.UPT_DT,
+                A.UPT_ID
+            FROM T_MNU A
+            LEFT OUTER JOIN T_PROG B
+            ON A.PROG_CD = B.PROG_CD
+            AND A.SYS_CD = B.SYS_CD
+            WHERE  A.USE_YN = 'Y' 
+            AND A.MNU_LV = '1'
+            AND A.SYS_CD = #{sysCd     , jdbcType=VARCHAR}
+            AND  A.GRP_AUTH_CD =#{grpAuthCd     , jdbcType=VARCHAR}
+            UNION ALL
+            SELECT
+                A.SYS_CD,
+                A.MNU_CD,
+                A.MNU_NM,
+                A.GRP_AUTH_CD,
+                A.ICON,
+                A.MNU_LV,
+                A.MNU_IX,
+                A.MNUUP_CD,
+                A.REMARK,
+                A.USE_YN,
+                B.PROG_CD,
+                B.PROG_NM,
+                A.INS_DT,
+                A.INS_ID,
+                A.UPT_DT,
+                A.UPT_ID
+            FROM T_MNU A
+            LEFT OUTER JOIN T_PROG B
+            ON A.PROG_CD = B.PROG_CD
+            AND A.SYS_CD = B.SYS_CD
+            WHERE A.MNU_LV = '2' 
+            AND A.USE_YN = 'Y' 
+            AND A.MNUUP_CD IN (SELECT MNU_CD FROM T_MNU WHERE USE_YN = 'Y' AND MNU_LV = '1' AND  SYS_CD = #{sysCd     , jdbcType=VARCHAR} AND  GRP_AUTH_CD= #{grpAuthCd     , jdbcType=VARCHAR} )
+            UNION ALL
+            SELECT
+                A.SYS_CD,
+                A.MNU_CD,
+                A.MNU_NM,
+                A.GRP_AUTH_CD,
+                A.ICON,
+                A.MNU_LV,
+                A.MNU_IX,
+                A.MNUUP_CD,
+                A.REMARK,
+                A.USE_YN,
+                B.PROG_CD,
+                B.PROG_NM,
+                A.INS_DT,
+                A.INS_ID,
+                A.UPT_DT,
+                A.UPT_ID
+            FROM T_MNU A
+            LEFT OUTER JOIN T_PROG B
+            ON A.PROG_CD = B.PROG_CD
+            AND A.SYS_CD = B.SYS_CD
+            WHERE A.MNU_LV = '3' 
+            AND A.USE_YN = 'Y' 
+            AND A.MNUUP_CD IN (SELECT MNU_CD FROM T_MNU WHERE USE_YN = 'Y' AND MNU_LV = '2' AND  SYS_CD = #{sysCd     , jdbcType=VARCHAR} AND  GRP_AUTH_CD= #{grpAuthCd     , jdbcType=VARCHAR} )
+        ) X
+        ORDER BY X.MNU_LV, X.MNU_CD    
+        </select>
+        
+          <update id="deleteAdminMenuProc" parameterType="java.util.HashMap"  >
+         UPDATE T_MNU set USE_YN='N' WHERE SYS_CD=#{sysCd} AND PROG_CD=#{progCd} AND MNU_CD=#{mnuCd} AND GRP_AUTH_CD=#{grpAuthCd}
+      </update>
+        
+</mapper>

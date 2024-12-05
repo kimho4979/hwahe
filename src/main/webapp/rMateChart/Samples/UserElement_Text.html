@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>rMate Chart for HTML5 - AreaChart</title>
+
+<!-- rMateChartH5 에서 사용하는 스타일 -->
+<link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/>
+
+<!-- IE7, 8 에서 차트 생성하고자 하는 경우 -->
+<!--[if IE]><script language="javascript" type="text/javascript" src="../rMateChartH5/JS/excanvas.js"></script><![endif]-->
+
+<!-- rMateChartH5 라이센스 -->
+<script language="javascript" type="text/javascript" src="../LicenseKey/rMateChartH5License.js"></script>
+
+<!-- 실제적인 rMateChartH5 라이브러리 -->
+<script language="javascript" type="text/javascript" src="../rMateChartH5/JS/rMateCandleChartH5.js"></script>
+
+<!-- rMateChartH5 테마 js -->
+<script type="text/javascript" src="../rMateChartH5/Assets/Theme/theme.js"></script>
+
+<!-- 해당 샘플을 위한 css 설정 -->
+<style type="text/css">
+
+.wrapDiv{
+	color:#03a9f5;
+	width:85px;
+	height:24px;
+	overflow:hidden;
+	position:relative;
+	padding-top:2px;
+	background-color:#fff;
+	border:solid 3px #03a9f5;
+	font-family:"malgun gothic";
+	font-size:12px;
+	font-weight:bold;
+}
+
+.wrapDiv > div{
+	opacity:0;
+	position:absolute;
+	white-space:nowrap;
+	text-align:center;
+}
+
+.dateDiv{
+	animation:move-left 6s infinite ease-out;
+}
+
+.contentDiv1{
+	animation:move-left 6s infinite ease-out;
+	animation-delay:2s;
+}
+
+.contentDiv2{
+	animation:move-left 6s infinite ease-out;
+	animation-delay:4s;
+}
+
+@keyframes move-left{
+	from{
+		opacity:1;
+		transform:translateX(100px) rotateY(90deg);
+	}
+	to{
+		opacity:1;
+		transform:translateX(-100%) rotateY(-90deg);
+	}
+}
+
+</style>
+
+<script type="text/javascript">
+
+// -----------------------차트 설정 시작-----------------------
+
+// rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.
+var chartVars = "rMateOnLoadCallFunction=chartReadyHandler";
+
+// rMateChart 를 생성합니다.
+// 파라메터 (순서대로) 
+//  1. 차트의 id ( 임의로 지정하십시오. ) 
+//  2. 차트가 위치할 div 의 id (즉, 차트의 부모 div 의 id 입니다.)
+//  3. 차트 생성 시 필요한 환경 변수들의 묶음인 chartVars
+//  4. 차트의 가로 사이즈 (생략 가능, 생략 시 100%)
+//  5. 차트의 세로 사이즈 (생략 가능, 생략 시 100%)
+rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+
+// 차트의 속성인 rMateOnLoadCallFunction 으로 설정된 함수.
+// rMate 차트 준비가 완료된 경우 이 함수가 호출됩니다.
+// 이 함수를 통해 차트에 레이아웃과 데이터를 삽입합니다.
+// 파라메터 : id - rMateChartH5.create() 사용 시 사용자가 지정한 id 입니다.
+function chartReadyHandler(id) {
+	document.getElementById(id).setLayout(layoutStr);
+	document.getElementById(id).setData(chartData);
+}
+
+// 차트에 출력할 아이템 갯수
+var visibleItemSize = 50;
+
+// 기준 값
+var baseValue = 1280000;
+
+// 스트링 형식으로 레이아웃 정의.
+var layoutStr = 
+	'<rMateChart backgroundColor="#FFFFFF"  borderStyle="none">'
+		+'<Options>'
+			+'<Caption text="해당 샘플은 &lt;b&gt;&lt;font color=\'#ed3334\'&gt;CSS3 animation&lt;/font&gt;&lt;/b&gt; 지원하여야 올바르게 출력됩니다." color="#555555" fontSize="14"  fontFamily="맑은 고딕"/>'
+		+'</Options>'
+		+'<NumberFormatter id="nft" precision="0"/>'
+		+'<DateFormatter id="dft" formatString="MM/DD"/>'
+		/*	
+			mainChart와 subChart로 나뉘어져 캔들, 막대차를 사용할 수 있는 DualChart를 설정합니다.
+			mainChart - DualChart에서 주 차트를 설정합니다.
+			subChart - DualChart에서 보조 차트를 설정합니다.
+			dataSelector - 캔들차트 데이터가 많을 경우 데이터를 쪼개어 볼 수 있도록 설정합니다.
+			leftGutterSyncEnalbe - mainChart와 subChart의 왼쪽 여백을 동기화 시킵니다.
+			rightGuttersSyncEnable - mainChart와 subChart의 오른쪽 여백을 동기화 시킵니다.
+		*/
+		+'<DualChart leftGutterSyncEnable="true" rightGutterSyncEnable="true">'
+			/* mainChart시작 */
+			+'<mainChart>'
+				/* 캔들라인을 사용하시려면 CandleLine2DChart를 정의하여 주십시오. */
+				+'<CandleLine2DChart showDataTips="true" paddingBottom="0">'
+					+'<horizontalAxis>'
+						+'<CategoryAxis id="hAxis" categoryField="date" formatter="{dft}" padding="1.5"/>'
+					+'</horizontalAxis>'
+					+'<verticalAxis>'
+						+'<LinearAxis id="vAxis" baseAtZero="false" formatter="{nft}"/>'
+					+'</verticalAxis>'
+					+'<series>'
+						/*	
+							CandleLine2DChart의 series속성으로 CandleLine2DSeries를 정의하여 주십시오.
+							yField - 표현하고자하는 데이터의 필드명을 설정합니다.
+							baseLineMode - 기준 값이 있다면 기준 값을 기준으로 기준 값보다 큰 선과 기준 값보다 작은 선의 색을 다르게 출력하도록 합니다.
+							baseValue - 기준 값을 설정합니다.
+						*/
+						+'<CandleLine2DSeries yField="open" baseValue="'+baseValue+'" htmlJsFunction="userFunction">'
+							// 기준 값 보다 큰 선의 색상을 설정합니다.
+							+'<lineStroke>'
+								+'<Stroke color="#f14b4b" weight="3"/>'
+							+'</lineStroke>'
+							// 기준 값 보다 작은 선의 색상을 설정합니다.
+							+'<lineDeclineStroke>'
+								+'<Stroke color="#4452aa" weight="3"/>'
+							+'</lineDeclineStroke>'
+							// 기준 값 보다 작은 역역의 itemRenderer 채우기 색상입니다.
+							+'<declineStroke>'
+								+'<SolidColor color="#4452aa"/>'
+							+'</declineStroke>'
+						+'</CandleLine2DSeries>'
+					+'</series>'
+					+'<horizontalAxisRenderers>'
+						+'<Axis2DRenderer placement="bottom" axis="{hAxis}" showLine="true" tickLength="0"/>'
+					+'</horizontalAxisRenderers>'
+					+'<annotationElements>'
+						/*	
+							십자선을 정의합니다.
+							syncCrossRangeZoomer - subChart의 CrossRangeZoomer의 id를 참조하여 mainChart의 십자선 데이터를 기준으로 subChart에 십자선을 그리도록 합니다.
+						*/
+						+'<CrossRangeZoomer id="candleCRZ" enableZooming="false" syncCrossRangeZoomer="{columnCRZ}" zoomType="both" horizontalLabelFormatter="{nft}"/>'
+					+'</annotationElements>'
+				+'</CandleLine2DChart>'
+			+'</mainChart>'
+			/* mainChart 끝 */
+			/* subChart 시작 */
+			+'<subChart>'
+				// subChart의 column2DChart의 height크기를 전체 height크기 중 20%를 설정하도록 합니다.
+				+'<Column2DChart showDataTips="true" height="20%" paddingTop="0" paddingBottom="0" gutterTop="6" gutterBottom="6">'	
+					+'<horizontalAxis>'
+						+'<CategoryAxis id="hAxis2" categoryField="date" formatter="{dft}" padding="1.5"/>'
+					+'</horizontalAxis>'
+					+'<verticalAxis>'
+						+'<LinearAxis id="vAxis2" formatter="{nft}"/>'
+					+'</verticalAxis>'
+					+'<series>'
+						+'<Column2DSeries yField="admnt" itemRenderer="BoxItemRenderer">'
+							+'<fill>'
+								+'<SolidColor color="#5487a2"/>'
+							+'</fill>'
+						+'</Column2DSeries>'
+					+'</series>'
+					+'<horizontalAxisRenderers>'
+						+'<Axis2DRenderer axis="{hAxis2}" showLabels="false" showLine="true" tickLength="0"/>'
+					+'</horizontalAxisRenderers>'
+					+'<annotationElements>'
+						/*	
+							십자선을 정의합니다.
+							syncCrossRangeZoomer - mainChart의 CrossRangeZoomer의 id를 참조하여 subChart의 십자선 데이터를 기준으로 mainChart에 십자선을 그리도록 합니다.
+						*/
+						+'<CrossRangeZoomer id="columnCRZ" syncCrossRangeZoomer="{candleCRZ}" zoomType="both" verticalLabelPlacement="top" horizontalLabelFormatter="{nft}" enableZooming="false"/>'
+					+'</annotationElements>'
+				+'</Column2DChart>'
+			+'</subChart>'
+		+'</DualChart>'
+	+'</rMateChart>';
+
+// 차트 데이터
+var chartData =  [{"date":"2013/05/15", "open":1485000, "high":1500000, "low":1484000, "close":1500000, "admnt":211896},
+{"date":"2013/05/16", "open":1501000, "high":1514000, "low":1500000, "close":1508000, "admnt":293151},
+{"date":"2013/05/20", "open":1502000, "high":1512000, "low":1496000, "close":1497000, "admnt":245777},
+{"date":"2013/05/21", "open":1510000, "high":1510000, "low":1485000, "close":1492000, "admnt":232008},
+{"date":"2013/05/22", "open":1504000, "high":1510000, "low":1491000, "close":1509000, "admnt":198462},
+{"date":"2013/05/23", "open":1492000, "high":1502000, "low":1484000, "close":1484000, "admnt":239883},
+{"date":"2013/05/24", "open":1487000, "high":1494000, "low":1472000, "close":1486000, "admnt":203812},
+{"date":"2013/05/27", "open":1490000, "high":1499000, "low":1487000, "close":1489000, "admnt":122928},
+{"date":"2013/05/28", "open":1481000, "high":1496000, "low":1481000, "close":1484000, "admnt":231761},
+{"date":"2013/05/29", "open":1484000, "high":1523000, "low":1483000, "close":1512000, "admnt":295211},
+{"date":"2013/05/30", "open":1518000, "high":1549000, "low":1512000, "close":1544000, "admnt":455560},
+{"date":"2013/05/31", "open":1546000, "high":1559000, "low":1537000, "close":1538000, "admnt":360501},
+{"date":"2013/06/03", "open":1536000, "high":1559000, "low":1528000, "close":1532000, "admnt":206189},
+{"date":"2013/06/04", "open":1533000, "high":1542000, "low":1521000, "close":1540000, "admnt":169932},
+{"date":"2013/06/05", "open":1549000, "high":1553000, "low":1521000, "close":1521000, "admnt":271813},
+{"date":"2013/06/07", "open":1475000, "high":1485000, "low":1424000, "close":1427000, "admnt":1085816},
+{"date":"2013/06/10", "open":1420000, "high":1443000, "low":1414000, "close":1425000, "admnt":533554},
+{"date":"2013/06/11", "open":1411000, "high":1419000, "low":1378000, "close":1389000, "admnt":692260},
+{"date":"2013/06/12", "open":1378000, "high":1403000, "low":1362000, "close":1385000, "admnt":457753},
+{"date":"2013/06/13", "open":1380000, "high":1397000, "low":1357000, "close":1357000, "admnt":670197},
+{"date":"2013/06/14", "open":1365000, "high":1377000, "low":1357000, "close":1369000, "admnt":351167},
+{"date":"2013/06/17", "open":1370000, "high":1378000, "low":1365000, "close":1366000, "admnt":235169},
+{"date":"2013/06/18", "open":1368000, "high":1387000, "low":1360000, "close":1387000, "admnt":220861},
+{"date":"2013/06/19", "open":1382000, "high":1385000, "low":1364000, "close":1369000, "admnt":205405},
+{"date":"2013/06/20", "open":1343000, "high":1348000, "low":1326000, "close":1329000, "admnt":356359},
+{"date":"2013/06/21", "open":1294000, "high":1333000, "low":1290000, "close":1325000, "admnt":553556},
+{"date":"2013/06/24", "open":1350000, "high":1350000, "low":1313000, "close":1313000, "admnt":316958},
+{"date":"2013/06/25", "open":1301000, "high":1318000, "low":1288000, "close":1297000, "admnt":415499},
+{"date":"2013/06/26", "open":1301000, "high":1305000, "low":1245000, "close":1261000, "admnt":635024},
+{"date":"2013/06/27", "open":1295000, "high":1344000, "low":1286000, "close":1339000, "admnt":515123},
+{"date":"2013/06/28", "open":1350000, "high":1350000, "low":1329000, "close":1342000, "admnt":419225},
+{"date":"2013/07/01", "open":1334000, "high":1346000, "low":1322000, "close":1326000, "admnt":256519},
+{"date":"2013/07/02", "open":1340000, "high":1352000, "low":1330000, "close":1335000, "admnt":204289},
+{"date":"2013/07/03", "open":1334000, "high":1339000, "low":1295000, "close":1301000, "admnt":256441},
+{"date":"2013/07/04", "open":1302000, "high":1317000, "low":1296000, "close":1317000, "admnt":180853},
+{"date":"2013/07/05", "open":1286000, "high":1315000, "low":1260000, "close":1267000, "admnt":607656},
+{"date":"2013/07/08", "open":1250000, "high":1258000, "low":1209000, "close":1226000, "admnt":529603},
+{"date":"2013/07/09", "open":1230000, "high":1250000, "low":1229000, "close":1237000, "admnt":393899},
+{"date":"2013/07/10", "open":1245000, "high":1252000, "low":1237000, "close":1248000, "admnt":346113},
+{"date":"2013/07/11", "open":1251000, "high":1312000, "low":1251000, "close":1312000, "admnt":415767},
+{"date":"2013/07/12", "open":1320000, "high":1324000, "low":1301000, "close":1312000, "admnt":227826},
+{"date":"2013/07/15", "open":1315000, "high":1319000, "low":1285000, "close":1313000, "admnt":192592},
+{"date":"2013/07/16", "open":1318000, "high":1321000, "low":1290000, "close":1298000, "admnt":186019},
+{"date":"2013/07/17", "open":1301000, "high":1330000, "low":1286000, "close":1320000, "admnt":246046},
+{"date":"2013/07/18", "open":1325000, "high":1325000, "low":1292000, "close":1292000, "admnt":314084},
+{"date":"2013/07/19", "open":1288000, "high":1295000, "low":1264000, "close":1273000, "admnt":325426},
+{"date":"2013/07/22", "open":1280000, "high":1289000, "low":1265000, "close":1273000, "admnt":207023},
+{"date":"2013/07/23", "open":1273000, "high":1307000, "low":1272000, "close":1307000, "admnt":238978},
+{"date":"2013/07/24", "open":1307000, "high":1317000, "low":1295000, "close":1315000, "admnt":175453},
+{"date":"2013/07/25", "open":1317000, "high":1322000, "low":1308000, "close":1315000, "admnt":169913},
+{"date":"2013/07/26", "open":1314000, "high":1319000, "low":1299000, "close":1303000, "admnt":272391},
+{"date":"2013/07/29", "open":1291000, "high":1300000, "low":1279000, "close":1283000, "admnt":236437},
+{"date":"2013/07/30", "open":1277000, "high":1295000, "low":1277000, "close":1290000, "admnt":188507},
+{"date":"2013/07/31", "open":1280000, "high":1290000, "low":1279000, "close":1280000, "admnt":254710},
+{"date":"2013/08/01", "open":1285000, "high":1288000, "low":1274000, "close":1280000, "admnt":181178},
+{"date":"2013/08/02", "open":1293000, "high":1300000, "low":1282000, "close":1286000, "admnt":224827},
+{"date":"2013/08/05", "open":1283000, "high":1283000, "low":1274000, "close":1274000, "admnt":161597},
+{"date":"2013/08/06", "open":1245000, "high":1272000, "low":1245000, "close":1254000, "admnt":289874},
+{"date":"2013/08/07", "open":1237000, "high":1240000, "low":1222000, "close":1222000, "admnt":315562},
+{"date":"2013/08/08", "open":1213000, "high":1235000, "low":1213000, "close":1217000, "admnt":358216},
+{"date":"2013/08/09", "open":1229000, "high":1241000, "low":1220000, "close":1230000, "admnt":241604},
+{"date":"2013/08/12", "open":1230000, "high":1248000, "low":1225000, "close":1232000, "admnt":202812},
+{"date":"2013/08/13", "open":1244000, "high":1290000, "low":1242000, "close":1290000, "admnt":418589},
+{"date":"2013/08/14", "open":1289000, "high":1300000, "low":1285000, "close":1300000, "admnt":259944}];
+
+/*
+	id : 시리즈 아이디
+	index : 차트 아이템 인덱스
+	data : 차트 아이템 데이터 객체
+	values : 해당 아이템이 출력하는 데이터 값
+*/
+function userFunction(id, index, data, values){
+	var rollDiv,
+		yValue = values[1], // y축 값
+		xValue = values[0]; //"2013/0705";
+	
+	if(xValue == "2013/06/19")
+		rollDiv = getRollDiv(xValue, "금리인상", "주식폭락");
+	else if(xValue == "2013/07/09")
+		rollDiv = getRollDiv(xValue, "주식부양책발표", "10% 폭등");
+	else if(xValue == "2013/08/05")
+		rollDiv = getRollDiv(xValue, "2차 금리인상", "주식폭락");
+
+	if(rollDiv)
+		return {
+			content : rollDiv,
+			className : "roll_wrapper"
+		};
+}
+
+function getRollDiv(date, str1, str2){
+	var wrapDiv = document.createElement("div"),
+		dateDiv = document.createElement("div"),
+		contentDiv1 = document.createElement("div"),
+		contentDiv2 = document.createElement("div");
+	
+	wrapDiv.className = "wrapDiv";
+	
+	dateDiv.innerHTML = date;
+	dateDiv.className = "dateDiv";
+
+	contentDiv1.innerHTML = str1;
+	contentDiv1.className = "contentDiv1";
+
+	contentDiv2.innerHTML = str2;
+	contentDiv2.className = "contentDiv2";
+
+	wrapDiv.appendChild(dateDiv);
+	wrapDiv.appendChild(contentDiv1);
+	wrapDiv.appendChild(contentDiv2);
+	
+	return wrapDiv;
+}
+
+/**
+ * rMateChartH5 3.0이후 버전에서 제공하고 있는 테마기능을 사용하시려면 아래 내용을 설정하여 주십시오.
+ * 테마 기능을 사용하지 않으시려면 아래 내용은 삭제 혹은 주석처리 하셔도 됩니다.
+ *
+ * -- _rMateChartH5Theme에 등록되어있는 테마 목록 --
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * -------------------------------------------------
+ *
+ * _rMateChartH5Theme 변수는 theme.js에서 정의하고 있습니다.
+ */
+rMateChartH5.registerTheme(rMateChartH5.themes);
+
+/**
+ * 샘플 내의 테마 버튼 클릭 시 호출되는 함수입니다.
+ * 접근하는 차트 객체의 테마를 변경합니다.
+ * 파라메터로 넘어오는 값
+ * - simple
+ * - cyber
+ * - modern
+ * - lovely
+ * - pastel
+ * - default
+ *
+ * default : 테마를 적용하기 전 기본 형태를 출력합니다.
+ */
+function rMateChartH5ChangeTheme(theme){
+	document.getElementById("chart1").setTheme(theme);
+}
+
+// -----------------------차트 설정 끝 -----------------------
+
+</script>
+<!-- 샘플 작동을 위한 css와 js -->
+<script type="text/javascript" src="./Web/JS/common.js"></script>
+<script type="text/javascript" src="./Web/JS/sample_util.js"></script>
+<link rel="stylesheet" type="text/css" href="./Web/sample.css"/>
+
+<!-- SyntaxHighlighter -->
+<script type="text/javascript" src="./Web/syntax/shCore.js"></script>
+<script type="text/javascript" src="./Web/syntax/shBrushJScript.js"></script>
+<link type="text/css" rel="stylesheet" href="./Web/syntax/shCoreDefault.css"/>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">
+			<div class="headerTitle">특정 데이터에 텍스트 출력하기</div>
+		</div>
+		<div id="content">
+			<!-- 차트가 삽입될 DIV -->
+			<div id="chartHolder"></div>
+		</div>
+		<div class="description">
+			특정 데이터에 사용자가 설정한 문자열을 출력합니다.
+			<div class="warning">IE 7, 8에서 지원되지 않습니다.</div>
+		</div>
+		<div id="updater">
+			<div>Layout과 Data를 수정 후 적용 할 수 있습니다.</div>
+			<div id="updaterTab">
+				<ul id="updaterTabUl">
+					<li id="updaterTabUlSource" class="active_tab">Source</li>
+					<li id="updaterTabUlLayout" class="non_active_li">Layout</li>
+					<li id="updaterTabUlData" class="non_active_li">Data</li>
+					<li id="updaterTabUlBlank">
+						<span id="btn_update">수정적용</span>
+					</li>
+				</ul>
+			</div>
+			<div id="updaterTarea">
+				<pre id="updaterTareaSource" class="brush:js toolbar:false" name="updaterTareaSource"></pre>
+				<textarea id="updaterTareaLayout" class="updaterTextarea" spellcheck="false"></textarea>
+				<textarea id="updaterTareaData" class="updaterTextarea" spellcheck="false"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

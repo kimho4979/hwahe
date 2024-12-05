@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpdisys.admin.user.mapper.AdminUserMapper">
+<resultMap id="userResultMap" type="com.fpdisys.admin.user.domain.AdminUserVO">
+		<result property="userId" column="USER_ID"/>
+        <result property="compCode" column="COMP_CODE"/>
+        <result property="compCodeNm" column="COMP_CODE_NM"/>
+        <result property="userType" column="USER_TYPE"/>
+        <result property="userTypeNm" column="USER_TYPE_NM"/>
+        <result property="lastLoginDate" column="LAST_LOGIN_DATE"/>
+    	<result property="passErrNum" column="PASS_ERR_NUM"/>
+    	<result property="grpAuthCode" column="GRP_AUTH_CODE"/>
+    	<result property="grpAuthCodeNm" column="GRP_AUTH_CODE_NM"/>    	
+    	<result property="remark" column="REMARK"/>
+    	<result property="sanNm" column="SAN_NM"/>
+		<result property="useYn" column="USE_YN"/>
+	    <result property="regDt" column="INS_DT"/>
+        <result property="insId" column="INS_ID"/>
+        <result property="sUptDt" column="UPT_DT"/>
+        <result property="uptId" column="UPT_ID"/>    
+        <result property="SAN_BIGO" column="SAN_BIGO"/>
+        <result property="TOTAL_COUNT" column="TOTAL_COUNT"/>        
+</resultMap>
+ <select id="selectAdminUserAll" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="userResultMap">
+     SELECT A.USER_ID,
+       A.COMP_CODE,
+       A.USER_TYPE,
+       CASE 
+         WHEN A.USER_TYPE ='A' THEN '관리자'
+         WHEN A.USER_TYPE ='M' THEN '모니터요원'
+         WHEN A.USER_TYPE ='F' THEN '자료전송담당자'
+         WHEN A.USER_TYPE ='S' THEN '슈퍼관리자'
+         WHEN A.USER_TYPE ='D' THEN '개발자'
+         ELSE  '기타'         
+         END  AS USER_TYPE_NM,
+       A.LAST_LOGIN_DATE,
+       A.REMARK,
+       A.USE_YN,
+       A.PASS_ERR_NUM,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_USER A
+  WHERE 1=1
+ </select>   
+ 
+ <select id="selectAdminUserSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="userResultMap">
+   
+   SELECT * FROM (
+    SELECT A.USER_ID,
+       COUNT(*) OVER() AS TOTAL_COUNT,
+         ROWNUM AS RNUM,
+	       A.COMP_CODE,
+	        CASE 
+                 WHEN A.USER_TYPE ='M' THEN A.COMP_CODE
+                 ELSE  F_GET_MARKET_NAME(A.COMP_CODE)
+                 END  COMP_CODE_NM ,
+	       A.USER_TYPE,
+	       CASE 
+	         WHEN A.USER_TYPE ='A' THEN '관리자'
+	         WHEN A.USER_TYPE ='M' THEN '모니터요원'
+	         WHEN A.USER_TYPE ='F' THEN '자료전송담당자'
+	         WHEN A.USER_TYPE ='S' THEN '슈퍼관리자'
+	         WHEN A.USER_TYPE ='D' THEN '개발자'
+	         ELSE  '기타'         
+	         END  AS USER_TYPE_NM,
+	       A.LAST_LOGIN_DATE,
+	       A.REMARK,
+	       A.USE_YN,
+	       A.PASS_ERR_NUM,
+	       A.INS_DT,
+	       A.INS_ID,
+	       A.UPT_DT,
+	       A.UPT_ID,
+	       B.SAN_BIGO
+	 	  FROM T_USER A , T_LOCAL B
+	 		 WHERE 1=1
+ 		   AND B.SAN_CD(+)=A.REMARK
+	  <if test="searchUserType!=null and searchUserType!='' ">
+	    AND A.USER_TYPE = #{searchUserType , jdbcType=VARCHAR }  
+	  </if> 
+	  <if test="searchParams!=null and searchParams!='' ">
+  		 AND   A.USER_ID LIKE '%'||#{searchParams}||'%' 
+  	  </if>
+  	   ORDER BY A.INS_DT DESC
+  	   )
+  	  WHERE RNUM BETWEEN #{startCount} AND #{endCount} 	
+	  
+     
+ </select>   
+ 
+  <select id="selectAdminUserSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="userResultMap">
+    SELECT data.* 
+	  FROM 
+	       (
+	       SELECT '' || count(1) OVER() TOTAL_COUNT, 
+	              ROWNUM ROW_NUM, 
+	              ROWNUM LINENUM, 
+	              data.* 
+	         FROM 
+	              ( 
+	             SELECT A.USER_ID,
+				       A.COMP_CODE,
+               CASE 
+                 WHEN A.USER_TYPE ='M' THEN A.COMP_CODE
+                 ELSE  F_GET_MARKET_NAME(A.COMP_CODE)
+                 END  COMP_CODE_NM ,
+				       A.USER_TYPE,
+				       CASE 
+				         WHEN A.USER_TYPE ='A' THEN '관리자'
+				         WHEN A.USER_TYPE ='M' THEN '모니터요원'
+				         WHEN A.USER_TYPE ='F' THEN '자료전송담당자'
+				         WHEN A.USER_TYPE ='S' THEN '슈퍼관리자'
+				         WHEN A.USER_TYPE ='D' THEN '개발자'
+				         ELSE  '기타'         
+				         END  AS USER_TYPE_NM,
+				       A.LAST_LOGIN_DATE,
+				       A.REMARK,
+               CASE
+                 WHEN A.USER_TYPE ='M' THEN   (SELECT SAN_NAME FROM T_LOCAL WHERE SAN_CD = A.REMARK) 
+                 ELSE ''
+                 END AS SAN_NM, 
+				       A.USE_YN,
+				       A.PASS_ERR_NUM,
+				       A.INS_DT,
+				       A.INS_ID,
+				       A.UPT_DT,
+				       A.UPT_ID
+				  FROM T_USER A 
+				  WHERE 1=1
+				  <if test="searchUserType!=null and searchUserType!='' ">
+				    AND A.USER_TYPE = #{searchUserType , jdbcType=VARCHAR }  
+				  </if> 
+				  <if test="searchParams!=null and searchParams!='' ">
+			  		 AND   A.USER_ID LIKE '%'||#{searchParams}||'%' 
+			  	</if>     
+	              
+	             ORDER BY A.INS_DT DESC
+		  	) data 
+       	) data 
+ 		<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+  </select>    
+     <select id="selectAdminUserSearchOne" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="userResultMap">
+        SELECT A.USER_ID,
+       A.COMP_CODE,
+       CASE 
+            WHEN A.USER_TYPE ='M' THEN A.COMP_CODE
+            ELSE  F_GET_MARKET_NAME(A.COMP_CODE)
+       END  COMP_CODE_NM ,
+       A.USER_TYPE,
+       CASE 
+         WHEN A.USER_TYPE ='A' THEN '관리자'
+         WHEN A.USER_TYPE ='M' THEN '모니터요원'
+         WHEN A.USER_TYPE ='F' THEN '자료전송담당자'
+         WHEN A.USER_TYPE ='S' THEN '슈퍼관리자'
+         WHEN A.USER_TYPE ='D' THEN '개발자'
+         ELSE  '기타'         
+         END  AS USER_TYPE_NM,
+       A.LAST_LOGIN_DATE,
+       A.REMARK,
+       A.USE_YN,
+       A.PASS_ERR_NUM,
+       A.INS_DT,
+       A.INS_ID,
+       A.UPT_DT,
+       A.UPT_ID
+  FROM T_USER A
+  WHERE 1=1
+  AND A.USER_ID=#{userId , jdbcType=VARCHAR }  
+         
+         
+ </select>
+ 
+     <insert id="insertAdminUser" parameterType="java.util.HashMap"  >
+        INSERT INTO T_USER 
+       ( 
+           USER_ID,
+           COMP_CODE,
+           USER_TYPE,
+           REMARK,
+           USE_YN,
+           INS_DT,
+           INS_ID
+       ) 
+       VALUES 
+       ( 
+           #{userId , jdbcType=VARCHAR } ,
+           #{compCode , jdbcType=VARCHAR } ,
+           #{userType , jdbcType=VARCHAR } ,
+           #{remark , jdbcType=VARCHAR } ,
+           #{useYn , jdbcType=VARCHAR } ,
+           SYSDATE,
+           #{userId , jdbcType=VARCHAR } 
+       )        
+         
+     </insert>    
+     <update id="updateAdminUser" parameterType="java.util.HashMap"  >
+       UPDATE T_USER 
+	       SET USER_TYPE =  #{userType , jdbcType=VARCHAR }, 
+	       COMP_CODE = #{compCode , jdbcType=VARCHAR } ,
+	       REMARK = #{remark , jdbcType=VARCHAR }, 
+	       USE_YN =  #{useYn , jdbcType=VARCHAR }, 
+	       UPT_DT = SYSDATE, 
+	       UPT_ID = #{userId , jdbcType=VARCHAR }
+	 WHERE USER_ID = #{userId , jdbcType=VARCHAR }
+	 AND COMP_CODE = #{oldCompCode , jdbcType=VARCHAR } 
+        
+    </update>
+     <update id="getMargeAdminUser"  parameterType="java.util.HashMap" >
+          <![CDATA[ 
+          MERGE INTO T_USER a
+       			USING DUAL
+       			ON (
+       			      a.USER_ID = #{userId     , jdbcType=VARCHAR}
+       				)
+       			WHEN MATCHED THEN
+       				UPDATE SET 
+                 USER_TYPE =  #{userType , jdbcType=VARCHAR }, 
+                  COMP_CODE = #{compCode , jdbcType=VARCHAR } ,
+                 REMARK = #{remark , jdbcType=VARCHAR }, 
+                 USE_YN = #{useYn , jdbcType=VARCHAR },
+                 UPT_DT = SYSDATE, 
+                 UPT_ID = #{userId , jdbcType=VARCHAR }
+                 
+            WHEN NOT MATCHED THEN
+                INSERT 
+           ( 
+           USER_ID,
+           COMP_CODE,
+           USER_TYPE,
+           REMARK,
+           USE_YN,
+           INS_DT,
+           INS_ID
+       ) 
+       VALUES 
+       ( 
+           #{userId , jdbcType=VARCHAR } ,
+           #{compCode , jdbcType=VARCHAR } ,
+           #{userType , jdbcType=VARCHAR } ,
+           #{remark , jdbcType=VARCHAR } ,
+           #{useYn , jdbcType=VARCHAR } ,
+           SYSDATE,
+           #{userId , jdbcType=VARCHAR } 
+       )        
+          
+               
+             	]]>
+       </update>  
+       
+     <select id="selectAdminGrpAuth" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="userResultMap">
+	  SELECT A.USER_ID,
+	       A.GRP_AUTH_CODE,
+	       B.GRP_AUTH_NM,
+	       A.REMARK,
+	       A.USE_YN,
+	       A.INS_DT,
+	       A.INS_ID,
+	       A.UPT_DT,
+	       A.UPT_ID,
+	       A.USER_PASSWD,
+	       A.EMAIL
+	  FROM T_USER_AUTH A, T_AUTH_GRP B
+	  WHERE 1=1
+	  AND A.GRP_AUTH_CODE = B.GRP_AUTH_CD
+     </select>
+     
+      <insert id="insertAdminUserAuth" parameterType="java.util.HashMap"  >
+          INSERT INTO T_USER_AUTH 
+       ( 
+           USER_ID,
+           GRP_AUTH_CODE,
+           USE_YN,
+           INS_DT,
+           INS_ID         
+       ) 
+       VALUES 
+       ( 
+           #{userId , jdbcType=VARCHAR } ,
+           #{grpAuthCode , jdbcType=VARCHAR } ,
+           #{useYn , jdbcType=VARCHAR },
+           SYSDATE,
+           #{userId , jdbcType=VARCHAR } 
+       )           
+     </insert> 
+      <update id="updateAdminUserAuth" parameterType="java.util.HashMap"  >
+         UPDATE T_USER_AUTH 
+		       SET GRP_AUTH_CODE = #{grpAuthCode , jdbcType=VARCHAR }, 
+		       REMARK = #{remark , jdbcType=VARCHAR }, 
+		       USE_YN = #{useYn , jdbcType=VARCHAR }, 
+		       UPT_DT = SYSDATE, 
+		       UPT_ID = #{userId , jdbcType=VARCHAR } 
+		 WHERE USER_ID = #{userId , jdbcType=VARCHAR } 
+		 AND GRP_AUTH_CODE =#{oldGrpAuthCode , jdbcType=VARCHAR }
+          
+     </update>   
+      <update id="getMargeAdminUserAuth"  parameterType="java.util.HashMap" >
+          <![CDATA[
+           MERGE INTO T_USER_AUTH a
+       			USING DUAL
+       			ON (
+       			      a.USER_ID = #{userId     , jdbcType=VARCHAR}
+       				)
+       			WHEN MATCHED THEN
+              UPDATE SET GRP_AUTH_CODE = #{grpAuthCode , jdbcType=VARCHAR }, 
+             REMARK = #{remark , jdbcType=VARCHAR }, 
+             USE_YN = #{useYn , jdbcType=VARCHAR }, 
+             UPT_DT = SYSDATE, 
+             UPT_ID = #{userId , jdbcType=VARCHAR } 
+            WHEN NOT MATCHED THEN
+             INSERT 
+             ( 
+                 USER_ID,
+                 GRP_AUTH_CODE,
+                 REMARK,
+                 USE_YN,
+                 INS_DT,
+                 INS_ID         
+             ) 
+             VALUES 
+             ( 
+                 #{userId , jdbcType=VARCHAR } ,
+                 #{grpAuthCode , jdbcType=VARCHAR } ,
+                 #{remark , jdbcType=VARCHAR } ,
+                 #{useYn , jdbcType=VARCHAR },
+                 SYSDATE,
+                 #{userId , jdbcType=VARCHAR } 
+             )           
+             
+         	]]>
+       </update>  
+       <select id="selectAdminUserDuplicated" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.lang.Integer">
+           SELECT COUNT(A.USER_ID) CNT
+			  FROM T_USER A
+			  WHERE A.USER_ID =#{userId , jdbcType=VARCHAR }
+       </select>
+       
+        <select id="selectCntAdminSanCd" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.lang.Integer">
+           SELECT COUNT(A.SAN_CD) CNT
+		FROM T_LOCAL A
+		WHERE 1=1
+		AND A.GUBN ='Y' 
+		 <if test="searchParams!=null and searchParams!='' ">
+		 AND A.SAN_CD LIKE '%'||#{searchParams , jdbcType=VARCHAR }||'%' OR A.SAN_NAME LIKE '%'||#{searchParams , jdbcType=VARCHAR }||'%'  OR A.SAN_BIGO LIKE '%'||#{searchParams , jdbcType=VARCHAR }||'%' 
+		 </if>
+       </select>
+       
+       <select id="selectAdminUserSanCd" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+          SELECT A.SAN_CD,
+		       A.SAN_NAME,
+		       A.SAN_BIGO,
+		       A.GUBN
+		FROM T_LOCAL A
+		WHERE 1=1
+		AND A.GUBN ='Y' 
+		 <if test="searchParams!=null and searchParams!='' ">
+		 AND A.SAN_CD LIKE '%'||#{searchParams , jdbcType=VARCHAR }||'%' OR A.SAN_NAME LIKE '%'||#{searchParams , jdbcType=VARCHAR }||'%'  OR A.SAN_BIGO LIKE '%'||#{searchParams , jdbcType=VARCHAR }||'%' 
+		 </if>
+ 
+       </select> 
+       
+        <select id="selectAdminSanCdPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+         SELECT data.* 
+	  FROM 
+	       (
+	       SELECT '' || count(1) OVER() TOTAL_COUNT, 
+	              ROWNUM ROW_NUM, 
+	              ROWNUM LINENUM, 
+	              data.* 
+	         FROM 
+	              (  
+            
+			        SELECT A.SAN_CD,
+					   A.SAN_NAME,
+					   A.SAN_BIGO,
+					   A.GUBN
+					FROM T_LOCAL A
+					WHERE 1=1
+					AND A.GUBN ='Y' 
+					 <if test="searchParams!=null and searchParams!='' ">
+					 AND A.SAN_CD LIKE '%'||#{searchParams , jdbcType=VARCHAR }||'%' OR A.SAN_NAME LIKE '%'||#{searchParams , jdbcType=VARCHAR }||'%'  OR A.SAN_BIGO LIKE '%'||#{searchParams , jdbcType=VARCHAR }||'%' 
+					 </if>
+				) data 
+       	) data 
+ 		<![CDATA[	where data.row_num > ( nvl(#{pageNumber , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+ 
+       </select>    
+       
+</mapper>

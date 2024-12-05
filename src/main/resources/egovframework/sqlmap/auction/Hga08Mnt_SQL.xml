@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.data.mapper.Hga08MntMapper">
+	<update id="updateList" parameterType="java.util.HashMap">
+		UPDATE TB_CULTIVATION_STATUS
+		SET
+		VAL1 = #{VAL1}
+		,VAL2 = #{VAL2}
+		WHERE
+		YYYY = #{YYYY, jdbcType=VARCHAR}
+		AND LOCATION = #{LOCATION, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="insertList" parameterType="java.util.HashMap">
+ 		INSERT INTO TB_CULTIVATION_STATUS
+		(
+			YYYY
+       	    , LOCATION
+			, VAL1
+			, VAL2
+		) 
+		VALUES 
+		(    
+			 #{YYYY, jdbcType=VARCHAR}
+            , #{LOCATION, jdbcType=VARCHAR}
+            , #{VAL1}
+            , #{VAL2}
+		)     
+ 	</insert>
+ 	
+ 	<delete id="deleteList" parameterType="java.util.HashMap">
+		DELETE FROM TB_CULTIVATION_STATUS
+		WHERE
+		YYYY = #{YYYY, jdbcType=VARCHAR}
+		AND LOCATION = #{LOCATION, jdbcType=VARCHAR}
+	</delete>
+	
+ 	<delete id="deleteAll" parameterType="java.util.HashMap">
+		DELETE FROM TB_CULTIVATION_STATUS
+		WHERE
+		1=1
+	</delete>
+	
+	<select id="selectCultivationStatus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT *
+		FROM TB_CULTIVATION_STATUS
+	</select>
+
+</mapper>

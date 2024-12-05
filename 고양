@@ -1,0 +1,2011 @@
+[33mcommit c4ada109bae7081d87912a98c1eaf39f0904541e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 7817aa1 796c571
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Apr 3 14:04:58 2024 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit 7817aa1b8c484f7d76890ae61466a284e6f6c352[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Apr 3 14:04:48 2024 +0900
+
+    월별전년도통계수정 및 파일업로드수정
+
+[33mcommit 796c57138fb5fb990cc7989d16f3e5f1953e7d4b[m
+Author: chaedongho <cdh@finevt.com>
+Date:   Wed Mar 27 14:34:50 2024 +0900
+
+    위대한주임님 요청사항
+
+[33mcommit 2ff5564e4a14770aacab4682649719af0e2abcab[m
+Author: tora chae <machop8557@gmail.com>
+Date:   Mon Mar 18 00:08:01 2024 +0900
+
+    UI수정
+
+[33mcommit b2dfc34335cedec47881f70d12875067d4f2e993[m
+Author: chaedongho <cdh@finevt.com>
+Date:   Thu Mar 7 14:09:40 2024 +0900
+
+    미사용URL차단, Hab01 -> real2 로 리다이렉트
+
+[33mcommit b2d3280d61f527df69e54848ddc24befd5450f37[m
+Author: chaedongho <cdh@finevt.com>
+Date:   Mon Mar 4 16:58:34 2024 +0900
+
+    공지사항(업로드) 에러 및 구상황판접근제한
+
+[33mcommit 19fbafdb01153c8ad4c0682c86c44b6202d706a8[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Feb 29 14:56:17 2024 +0900
+
+    관리자페이지 아이피제어 자동채번 문제
+
+[33mcommit 3d12a446dccc23732e5787aad25cfeae047ae843[m
+Author: chaedongho <cdh@finevt.com>
+Date:   Mon Feb 26 16:59:09 2024 +0900
+
+    엑셀브라우저별처리추가
+
+[33mcommit e2fa3b6bbbe3a6aae6ff497daab3032401a0889c[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Feb 26 14:09:02 2024 +0900
+
+    모바일 피씨 화면 분할  조건 추가
+
+[33mcommit 9739d7df98fdc38ed6eaab755ce03803fe79ae1c[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Fri Feb 23 15:28:08 2024 +0900
+
+    20240223 모바일 화면 수정
+
+[33mcommit f017ede1f1f2798594d58bf10eb3841f6a82b32d[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Feb 23 11:41:01 2024 +0900
+
+    모바일 메뉴 최신화
+
+[33mcommit 8a1a3acd9e598fc01bb880669e25f30856907027[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Feb 20 09:58:03 2024 +0900
+
+    최신화
+
+[33mcommit 77d77dab7a8c9f45fc3b0f60a65c6f86b0571dfb[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Jan 31 17:39:57 2024 +0900
+
+    디비동기화진행중
+
+[33mcommit fbd99ec3b2a2a68562996c9e1560cdab60e82cd4[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Wed Jan 31 16:01:35 2024 +0900
+
+    20240131 주간거래동향수정
+
+[33mcommit f2ea38e671ee20fe672b9ea88ea9f8764999aa41[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Wed Jan 31 14:16:03 2024 +0900
+
+    20240131
+
+[33mcommit 7a1500e721efad8028751039e179c2827d76e202[m
+Merge: 060f8ed a43c9d1
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Wed Jan 31 14:10:31 2024 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit 060f8edb6973e87d27f3954807beb69bcd3df28a[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Wed Jan 31 14:10:05 2024 +0900
+
+    20240131 수정사항
+
+[33mcommit a43c9d1403db531bca93a81acdb37d8e276cb209[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Jan 30 17:24:58 2024 +0900
+
+    동기화 작업 - 진행중
+
+[33mcommit c691492f309bd5ad2354725449eea8f0d2f1dcdf[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Tue Jan 30 10:51:32 2024 +0900
+
+    rgb
+
+[33mcommit 98a5641e75875207b4a0f34a4003007d1eb6bb20[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Tue Jan 30 10:32:19 2024 +0900
+
+    rgb
+
+[33mcommit 8be14c2af2303cb44dddb64cf4a66d50774cc659[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Tue Jan 30 10:14:29 2024 +0900
+
+    remove
+
+[33mcommit fe9721c87d659a7e0cfa16462bfe54b511bc2d83[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Tue Jan 30 10:11:42 2024 +0900
+
+    patternremove
+
+[33mcommit a1a43778a07ea6811ac88a1fb71fa1524703761a[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Fri Jan 26 15:04:17 2024 +0900
+
+    20240126 재배현황 ui수정
+
+[33mcommit c0c11752711aa0bcdd5f8d3e79b93ca14d32dfdd[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Fri Jan 26 14:39:21 2024 +0900
+
+    20240126 주간거래동향 ui rgb검증
+
+[33mcommit 7fe8ec7b2a2e9c15744696d77a965ea8b57d30d5[m
+Merge: c3c75a5 c705972
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Thu Jan 25 09:35:43 2024 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit c3c75a5832e2e2f114e32297481d5bb76eba3dd6[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Thu Jan 25 09:33:00 2024 +0900
+
+    20240125 authkey조회
+
+[33mcommit c7059722875976d36429189fa959f1e7c5938d98[m
+Merge: e593ae1 a15f4c1
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Jan 23 16:17:06 2024 +0900
+
+    Merge branch 'jdev4294'
+    
+    # Conflicts:
+    #       src/main/webapp/rMateChart/LicenseKey/rMateChartH5License.js
+
+[33mcommit e593ae13b226f72e12fc1d39c68a6dce425a351e[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Jan 23 15:52:42 2024 +0900
+
+    시츄에이션에서 아미스 테스트
+
+[33mcommit a15f4c1543b34441b894fd361b950fca40a0ec29[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Jan 23 14:32:04 2024 +0900
+
+    소프트코딩 품목,품종 추가 기능 정상적으로작동안하는 이슈 수정 및 편집창 크기 키움
+
+[33mcommit 85c3b887f1d7a2dbb6b7741ffea87df186a0e7db[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Jan 22 10:40:12 2024 +0900
+
+    변경사항
+    
+    엑셀업로드 방식 하나씩 올리는거 추가
+    지역별 업로드 UI 변경
+    flower gallery 버튼 UI 변경
+    지역별 업로드 오류 수정
+
+[33mcommit 32da5cdefda1fd77a7b796d5d7b3930114b678da[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Jan 19 15:38:28 2024 +0900
+
+    지역별 완료
+
+[33mcommit a325201b87febb69fa09100a5a8df429d9d876ad[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Jan 17 18:06:38 2024 +0900
+
+    지역별화훼 디버깅중 && 품종 이미지 동기화 문제 고민......
+
+[33mcommit 8444d7f3eaa4f773f5830d0f74efddf669761b07[m
+Merge: 31f8004 1941ffe
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Jan 17 11:39:58 2024 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe into jdev4294
+
+[33mcommit 31f8004e8f6740951a73ca5326c37b432d40e956[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Jan 17 11:10:43 2024 +0900
+
+    XUVI-100 XUVI-107
+
+[33mcommit 0dca7ae213e689e89c1beb91ded549dab78ba5ef[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Jan 17 10:02:57 2024 +0900
+
+    XUVI-105 XUVI-106
+
+[33mcommit a9f4d98c2d85191ab0389876ba9aeaa23de557e9[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Jan 17 09:52:35 2024 +0900
+
+    XUVI-184
+
+[33mcommit 1941ffe9eb3ee65eef8af815a47d5837e16b9362[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Jan 15 14:02:56 2024 +0900
+
+    메이븐 주소 수정 및 버전
+
+[33mcommit cc6446a4171761ae17d21501b9b4b68933cfd390[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Jan 12 17:36:26 2024 +0900
+
+    취약점 조치 및 이미지 부류 수정
+
+[33mcommit c1ffbe90a16269c2fb42eb9052b9e763c58847b0[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Jan 10 17:34:04 2024 +0900
+
+    소스 최신화 - 배포시 확인해보고 배포필요
+
+[33mcommit 5e9b443919e55788eedfdd5d6cd90ee012af1eb2[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Jan 8 13:57:19 2024 +0900
+
+    기간별 통계조회 그리드 이미지표시건 완료
+
+[33mcommit 0cb56a9fbfdd3f1eda21ea1f76cd6df6423259fb[m
+Author: dlgkfn4 <149994467+dlgkfn4@users.noreply.github.com>
+Date:   Mon Jan 8 12:52:06 2024 +0900
+
+    Update flrgry.jsp
+    
+    20240108 gallery button
+
+[33mcommit 973cbc652839b376a4100864c4edc1d4970dbfb1[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Jan 5 19:52:07 2024 +0900
+
+    기간별 통계 그리드에 이미지 표시
+
+[33mcommit 84b2403d969a531288ffb5c4d10d2fed9917c687[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Jan 5 19:12:44 2024 +0900
+
+    임시저장
+
+[33mcommit cfa19488e0e04de054a76cbbdadefb5ae5127680[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Jan 5 16:05:59 2024 +0900
+
+    주간거래동향 수정
+
+[33mcommit 23f42738ec0c89e2246e43aa123006fb4c550091[m
+Merge: 3560e6b c581534
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Jan 4 10:35:04 2024 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe into jdev4294
+
+[33mcommit 3560e6b05228c52bcaee3a9b0c824f071ea9dfcc[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Jan 4 10:23:47 2024 +0900
+
+    일일보고자료 주요절화 1월 상순일 때 전월, 전순 연도 표시가 부정확한 이슈 수정
+
+[33mcommit c581534314385f1bb3609a270b3debf15382e6c0[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Jan 3 17:30:16 2024 +0900
+
+    에러수정
+
+[33mcommit 8bc6558306889409c6138e535ca37f6bc8ec8163[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Jan 3 11:52:20 2024 +0900
+
+    인터셉터 복구
+
+[33mcommit a6ab6cd3e7a30280ae66f7f3ae3f120db0802c71[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Jan 3 11:49:14 2024 +0900
+
+    상황,관리 제어 및 취약점 수정 , 로고이미지 교체 등등
+
+[33mcommit 6868f00df2e2704057d4aa03f3438ec7f6a94dac[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Tue Jan 2 15:37:57 2024 +0900
+
+    20240102
+
+[33mcommit f7c8fbb28cb781de8597c957905bb1a698d74f26[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Dec 28 09:41:23 2023 +0900
+
+    XUVI-102
+
+[33mcommit df4a395097b7b63c51025347c17d410988aba29e[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Dec 27 17:51:41 2023 +0900
+
+    관리자 접근제어 어드민 완료
+
+[33mcommit a09e8ee61b3cd3dc1e5adf7c73b9b555e815c912[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Dec 27 17:28:15 2023 +0900
+
+    작업중
+
+[33mcommit 01f9768a596eb80f424cfbd34da75b4b708d19b8[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 27 17:10:37 2023 +0900
+
+    XUVI-179 XUVI-100 XUVI-177
+
+[33mcommit 8484f5f50c3837ee90012d0db3fec53e348c260f[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 27 16:36:02 2023 +0900
+
+    XUVI-174
+
+[33mcommit 29ac242df975b76e60fabe5bd05144d352e10a69[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 27 16:29:26 2023 +0900
+
+    XUVI-172 XUVI-173 XUVI-175 XUVI-176
+
+[33mcommit 4e87959ed9140700a70af8e50b1671c5c9b40e46[m
+Merge: 348d94d b1421ef
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 27 15:49:51 2023 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe into jdev4294
+
+[33mcommit 348d94d7e8a33cd8af4bc55cfc5123171871e7ad[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 26 13:54:41 2023 +0900
+
+    주간 거래동향 품종 트리맵 컬러 매칭 안되는 이슈 수정
+
+[33mcommit b1421eff84bc72fa5b2a7a93ecdeb3581c99e145[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Dec 21 16:10:11 2023 +0900
+
+    ....
+
+[33mcommit d8aa614777e91852570efa75caaec54158b22e2d[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Dec 21 10:55:20 2023 +0900
+
+    전광판 금년목표, 전년실적 표시안되는 이슈 수정
+
+[33mcommit b47b0d4552f6ac76924193a2f259e092a6c76445[m
+Author: dlgkfn4 <149994467+dlgkfn4@users.noreply.github.com>
+Date:   Thu Dec 21 10:18:48 2023 +0900
+
+    파일누락
+
+[33mcommit e65979f1b1ce5b02c251e011862c1616078ebf55[m
+Merge: f532f27 6c9998e
+Author: dlgkfn4 <149994467+dlgkfn4@users.noreply.github.com>
+Date:   Wed Dec 20 16:59:34 2023 +0900
+
+    Merge pull request #1 from machopsgit/ch
+    
+    권한관련수정
+
+[33mcommit 6c9998e10a1d0e02148eae28cee9b24ce8b6eddd[m[33m ([m[1;31morigin/ch[m[33m)[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Wed Dec 20 16:44:48 2023 +0900
+
+    권한관련수정
+
+[33mcommit f3d676b3ccfe78676580d47e290e464e7f31bff6[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 20 16:32:55 2023 +0900
+
+    23-12-20 요구사항 반영
+    맵 차트 마우스 오버 시 (In %) > (%)로 변경
+    최초출하 차트 여러 번 검색 시 평균단가 차트에 판매물량이 들어가는 이슈 수정
+
+[33mcommit b7126c08228c93e20304b5ae2327865a9592f4c5[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 20 14:28:51 2023 +0900
+
+    요구사항 반영
+    최초출하시기 그라데이션 대비 크게
+    트리맵 품종(품목) > 품목(품종)으로 표기 변경
+    주간 거래동향 pdf 파일 이름이 최초출하시기로 표시되던 이슈 수정
+
+[33mcommit 53897326279d37df0118a608604657f11632bf76[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 20 13:38:22 2023 +0900
+
+    최초출하시기 차트, 그리드 데이터 불일치 이슈
+
+[33mcommit dc1427e2539d4c7e28221dfdd4b8e60888b1faeb[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 20 11:24:02 2023 +0900
+
+    XUVI-81
+
+[33mcommit 293b311af5d507af3f98cc306fc381c65b74edc5[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 20 10:25:01 2023 +0900
+
+    23-12-19 요구사항 반영
+
+[33mcommit f532f27f4fcca9872ac9c3be1fd9aedede110b71[m
+Author: dlgkfn4 <149994467+dlgkfn4@users.noreply.github.com>
+Date:   Tue Dec 19 17:22:03 2023 +0900
+
+    Update IncHeader_main.jsp
+    
+    농식품메뉴권한처리
+
+[33mcommit 7c441a45415fb854d24145bcca0bbf51f6b72a8e[m
+Author: dlgkfn4 <149994467+dlgkfn4@users.noreply.github.com>
+Date:   Tue Dec 19 17:20:21 2023 +0900
+
+    Update IncHeader.jsp
+    
+    농식품메뉴권한처리
+
+[33mcommit db664ca29f5266fe735b85c821302122d91366e7[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Dec 19 16:31:47 2023 +0900
+
+    어드민 직접 접근 막기
+
+[33mcommit 3d715a3c1d4c4fd71f64d0fcaafefa2e38c4b67d[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Dec 19 15:43:14 2023 +0900
+
+    RGB 처리
+
+[33mcommit 546f17ff9a35f21eef6091879f38b33d1d75c520[m
+Merge: b869101 4770c3b
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 19 15:23:06 2023 +0900
+
+    Merge branch 'jdev4294'
+
+[33mcommit b86910117905646f7f8be03b8c5a4846c4a1c890[m
+Merge: 22aa4b5 81bd3b7
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 19 15:23:00 2023 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit 4770c3b59aa4eb92e78fdfe99e5fd9c9fff474a0[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 19 15:22:31 2023 +0900
+
+    지역별 사업체 정보 엑셀 다운로드
+
+[33mcommit e4b11f13e5d347debd39cdd559b52f459e9fb972[m
+Merge: 6a17c57 0774e55
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 19 14:14:04 2023 +0900
+
+    Merge branch 'XUVI-141' into jdev4294
+
+[33mcommit 0774e5521fda9494a7f0912388470db7ae4e919e[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 19 14:08:56 2023 +0900
+
+    영업종료 표시
+
+[33mcommit 81bd3b7a73d2e32f43bfe3dcb21ad29f03215879[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Dec 19 13:46:22 2023 +0900
+
+    농수산물 접근제한
+
+[33mcommit 22aa4b55b372f0f47cb588d7622cb9652f5f5d69[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 19 13:28:15 2023 +0900
+
+    과천 영업종료
+
+[33mcommit 72a78155070ce1b1cc9b74efc780b837f7676708[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Tue Dec 19 10:35:21 2023 +0900
+
+    20231219 config & menu acsYn chk
+
+[33mcommit a9f33102cda3b8b2879bff9614b56d617e8f6a77[m
+Merge: 2734113 d211812
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Mon Dec 18 15:59:54 2023 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit 27341136c457fa590a45719a567900259d14372c[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Mon Dec 18 15:57:01 2023 +0900
+
+    neis key --> update&select
+
+[33mcommit d211812a84b55c34cc0bf908e55050da72e10955[m
+Merge: 53a1453 6a17c57
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Dec 18 15:51:44 2023 +0900
+
+    Merge branch 'jdev4294'
+
+[33mcommit 53a145352bf5015acc116e37d212dc9565d71ee6[m
+Merge: e9be8fb 0f2cf54
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Dec 18 15:51:39 2023 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit 6a17c57a834b636a38634e1bfe75e23412cfe9b3[m
+Merge: 158990f e9be8fb
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Dec 18 15:50:32 2023 +0900
+
+    Merge branch 'main' into jdev4294
+
+[33mcommit 158990f2ae84c6f74fe20b97d74f36c4a0e421af[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Dec 18 15:50:25 2023 +0900
+
+    초기화 옵션 설정
+
+[33mcommit 0f2cf546dac30f178351a160282a05c7b1bb18f2[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Dec 18 08:46:27 2023 +0900
+
+    Update menuAcl.jsp
+
+[33mcommit 81d8d09941d456f151b0771480392c47b9edb3ae[m
+Merge: 5145a76 6f6bea7
+Author: machop8557 <machop8557@gmail.com>
+Date:   Sun Dec 17 20:27:27 2023 +0900
+
+    Merge branch 'DONG-DEV1'
+    
+    # Conflicts:
+    #       src/main/resources/egovframework/sqlmap/dist/real/Real_SQL.xml
+
+[33mcommit 5145a76789d72a8d33e0d97ee6088b7f4e993be6[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Dec 15 17:29:47 2023 +0900
+
+    작업중......
+
+[33mcommit 2c488cbbc5b63295373c3dd9caf063b33b4b00ba[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 15 16:38:30 2023 +0900
+
+    XUVI-146
+
+[33mcommit e9be8fbcbbb8bdb4b74d4b77058ea7309471b477[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 15 14:03:08 2023 +0900
+
+    XUVI-154
+
+[33mcommit 2a71198425a65492e579d1b51613621a704fb40c[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 15 11:55:47 2023 +0900
+
+    XUVI-155
+
+[33mcommit d4938581181f51d43ccdba27da08a7e8855bfe09[m
+Merge: 36438e0 eeaf384
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 15 09:19:08 2023 +0900
+
+    Merge branch 'jdev4294'
+
+[33mcommit eeaf384fedb4ea5d016d46773575214537a1d414[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 15 09:18:33 2023 +0900
+
+    데일리리포트 날짜 23-12-23에 픽스되어있던 오류 수정
+
+[33mcommit 36438e040cfc12436255c89bf4a14d42145fa749[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 13 17:22:53 2023 +0900
+
+    XUVI-140 XUVI-149
+
+[33mcommit 9e396687e9f8a58530f8adaa80001022a1b02eb3[m[33m ([m[1;31morigin/MS[m[33m)[m
+Merge: b2fefe4 7682e66
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 13 16:38:24 2023 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit b2fefe4d0800e46fcdeb5d7ec17dbfefbb9370e8[m
+Merge: 20dd7f4 bf1e4c3
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 13 16:38:05 2023 +0900
+
+    Merge branch 'jdev4294'
+
+[33mcommit bf1e4c3aef289444087ca928792821850b0a407f[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 13 16:37:47 2023 +0900
+
+    일일보고 소프트코딩
+
+[33mcommit 7682e666975cc1a4dafc202c9021b8fc8dd420b0[m
+Author: dlgkfn4 <149994467+dlgkfn4@users.noreply.github.com>
+Date:   Wed Dec 13 16:32:10 2023 +0900
+
+    Update Main_SQL.xml
+    
+    신규공판장추가로인한 sql수정
+
+[33mcommit bc04b6658c3d0e260aaed9e7c517c540e0d74252[m
+Author: dlgkfn4 <149994467+dlgkfn4@users.noreply.github.com>
+Date:   Wed Dec 13 16:30:28 2023 +0900
+
+    Update Real_SQL.xml
+    
+    오타수정
+
+[33mcommit 756277bc6dc7d76c1235d4f5c72b248dc8c0e155[m
+Author: dlgkfn4 <149994467+dlgkfn4@users.noreply.github.com>
+Date:   Wed Dec 13 16:29:30 2023 +0900
+
+    Update Real_SQL.xml
+    
+    신규공판장 추가로 인한 sql 수정
+
+[33mcommit 6f6bea7778311ffc8747935e399653819add5363[m[33m ([m[1;31morigin/DONG-DEV1[m[33m, [m[1;32mDONG-DEV1[m[33m)[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Dec 13 15:27:47 2023 +0900
+
+    실시간 경매실적에 고양시 데이터
+
+[33mcommit 20dd7f4f00509d0746d3e1935fc7f7646183cd2c[m
+Author: dlgkfn4 <149994467+dlgkfn4@users.noreply.github.com>
+Date:   Wed Dec 13 14:50:55 2023 +0900
+
+    Update NeisController.java
+    
+    학사일정 insert&delete error fix
+
+[33mcommit 438659e09cc154c8da7f54fdfb3a5be477c647c4[m
+Merge: 834794f ebc394f
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Dec 13 10:34:23 2023 +0900
+
+    Merge branch 'DONG-DEV1'
+
+[33mcommit ebc394f80393c7b50d54769db61bf53a94f1c90c[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Dec 12 20:03:18 2023 +0900
+
+    배포
+
+[33mcommit 766bcba982f60ab90a957671bd0696e4745225ea[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Dec 12 10:08:03 2023 +0900
+
+    어드민메뉴 직접접근막기
+
+[33mcommit 079a673fd0fe664c9a7ffbd539de8c2616759618[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Dec 11 19:27:57 2023 +0900
+
+    지역별 마무리
+
+[33mcommit 99e644cbe54f3fd57bee60538cbd20d692d3715b[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Dec 11 19:23:18 2023 +0900
+
+    그리드 업데이트
+
+[33mcommit 834794f06d3b1334db92aaa420a6dd961ff9132f[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Dec 11 17:33:47 2023 +0900
+
+    XUVI-139 일일보고자료 소프트코딩
+
+[33mcommit 13cec6ded59b611bc156663dbd40862ec2d739d6[m
+Merge: 9ed2397 a84233e
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Dec 11 09:26:35 2023 +0900
+
+    haa06 conflict
+
+[33mcommit 6f898a9265ad5f59a12a1c17e74302e85eb306a7[m
+Merge: f302ff4 a84233e
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Dec 11 09:26:18 2023 +0900
+
+    Merge branch 'main' into DONG-DEV1
+
+[33mcommit a84233e2b057fa485e4306d5ae03e36d4dc5117e[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Dec 11 09:25:14 2023 +0900
+
+    jqgrid new version
+
+[33mcommit f302ff4c513eb85f6cdc838b574d6d50b74593e7[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Dec 8 17:35:25 2023 +0900
+
+    지역별
+
+[33mcommit 9ed2397be6ab642776d5fc913a7eb8f615d74b87[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 8 17:23:42 2023 +0900
+
+    XUVI-143, XUVI-152
+
+[33mcommit 3fcb166ca1b1de4ba2f01a437dd206061eb8e7dd[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Dec 8 15:16:51 2023 +0900
+
+    웹접근성 수정
+
+[33mcommit fde1d1529eaead508f619c964648f9c6c40f05a2[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 8 09:46:49 2023 +0900
+
+    XUVI-142
+
+[33mcommit f28775971d42c7cb9671f405f90537ce39156006[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Dec 7 15:33:16 2023 +0900
+
+    웹접근성 수정
+
+[33mcommit 0b70739254d42b38d2c96ea45cbf29b76c3d49fb[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Dec 7 14:46:05 2023 +0900
+
+    정렬 람다식 삭제
+
+[33mcommit 72ba0b546d87106cab99a447d99e0d373659558a[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Dec 6 17:37:05 2023 +0900
+
+    지역별
+
+[33mcommit d9f1ad3af788be986cbb6d511774cf8c1ed2b66a[m
+Merge: 538768c 4e5d2dd
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 6 15:55:34 2023 +0900
+
+    Merge branch 'jdev4294'
+
+[33mcommit 538768c7267274b11a2f0fedce317fd5327468ae[m[33m ([m[1;31morigin/XUVI-141[m[33m)[m
+Merge: 2b3ebaa 7309e3e
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Wed Dec 6 15:40:44 2023 +0900
+
+    Merge branch 'XUVI-141' of https://github.com/machopsgit/hwahe into XUVI-141
+
+[33mcommit 4e5d2dd8abe4ba27103aee33c99822169c20881a[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Dec 6 15:38:46 2023 +0900
+
+    XUVI-142
+
+[33mcommit 2b3ebaa2bc8e1ea1f59ba4ab2d7ad8b413e1388e[m
+Author: DESKTOP-BKSEVBH\admin <dlgkfn4@naver.com>
+Date:   Wed Dec 6 15:38:00 2023 +0900
+
+    XUVI-141 JSP수정(고양시추가)
+
+[33mcommit adfa97c3b79121de2841d556702acf8ff3795085[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Dec 5 19:07:43 2023 +0900
+
+    지역별
+
+[33mcommit 933fa608d9c0baccf585c6c8173fabf795a9df96[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 5 15:47:06 2023 +0900
+
+    XUVI-127
+
+[33mcommit 3d4743d9419f07f40afb9fff2c6e6194215f41af[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 5 14:00:57 2023 +0900
+
+    맵, 그리드 스크롤 없앰
+
+[33mcommit fbc6a868cc109000e561c63731c0740efdcfd735[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 5 13:49:48 2023 +0900
+
+    XUVI-122
+
+[33mcommit e38e763116f8df2ccc3d29e5115025d088208fad[m
+Merge: 5bff22e 3f6c1f1
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 5 11:52:35 2023 +0900
+
+    Merge branch 'jdev4294' of https://github.com/machopsgit/hwahe into jdev4294
+
+[33mcommit 5bff22e8a80796b6dde2925dfc4bf3a39d019a09[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Dec 5 11:52:08 2023 +0900
+
+    XUVI-32 엑셀 저장
+
+[33mcommit 3f6c1f1ea7ea1d4feab39dcefbad4576119c14de[m
+Merge: 805f5ba 87f8e6e
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Tue Dec 5 11:37:09 2023 +0900
+
+    Merge branch 'jdev4294' of https://github.com/machopsgit/hwahe into jdev4294
+
+[33mcommit 805f5ba602231e055ecd1942eef25d590a55e88d[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Tue Dec 5 11:36:44 2023 +0900
+
+    ignore
+
+[33mcommit 7309e3ecce6b12bf893d7d70a1fb918f557de431[m
+Merge: 6775e34 d690668
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Dec 5 11:31:18 2023 +0900
+
+    Merge branch 'DONG-DEV1'
+
+[33mcommit 6775e34a12d67adc368e189ee3863be901dd26bd[m
+Merge: 7497f2b 87f8e6e
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Dec 5 11:31:04 2023 +0900
+
+    Merge branch 'jdev4294'
+
+[33mcommit d6906683ff7213698df9911cf4ec2cfe081add52[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Dec 5 11:24:03 2023 +0900
+
+    중간점검 커밋
+
+[33mcommit 64cb0169bed8b62d753341172ad2f954cea9a637[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Dec 4 17:23:26 2023 +0900
+
+    ....
+
+[33mcommit 87f8e6e7a1c39267f69bd4d42638e836b444a82d[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Dec 4 14:15:12 2023 +0900
+
+    XUVI-100
+
+[33mcommit dd84ab874519679daf35072092ef2abeefbbc90b[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Dec 4 13:52:35 2023 +0900
+
+    XUVI-128, XUVI-106
+
+[33mcommit 688699f1e2eb65ccfff3e1f6b062d4c740f18e3d[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Dec 4 08:47:08 2023 +0900
+
+    지역별 진행중
+
+[33mcommit ed9eb2235dd75a26e241821506a97821ea799b78[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Dec 1 17:29:48 2023 +0900
+
+    지역별 - 하위지도
+
+[33mcommit 644a73cbeda77dc23bf992d2b0fe7dc8de51031b[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 16:55:15 2023 +0900
+
+    XUVI-109
+
+[33mcommit 03716c380481989e80fa765d2ebd2e02b78daee6[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 16:27:42 2023 +0900
+
+    XUVI-130
+
+[33mcommit f640e7894122c59dfa26f8664f076f25177e9515[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 15:42:15 2023 +0900
+
+    XUVI-85
+
+[33mcommit 7aa4fe4b5a27b97277ab01d006ceefabb4b3a275[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 15:39:33 2023 +0900
+
+    XUVI-112
+
+[33mcommit 672124d4c3525d5d4f3b67749b25f9b252f0930e[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 15:22:04 2023 +0900
+
+    XUVI-114
+
+[33mcommit 74acae4874d4de54141dca4222ff1f175e071197[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 14:58:09 2023 +0900
+
+    XUVI-110, XUVI-115
+
+[33mcommit a95222fc8f253385fac2fb6dc6e6f79903110ae9[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 11:38:00 2023 +0900
+
+    XUVI-123
+
+[33mcommit 294bbdac92a5853c2108d6c5a6881520864817c9[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 11:23:35 2023 +0900
+
+    XUVI-126
+
+[33mcommit 9cc10d5e511165440550c453e3b2c95a4132f32a[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 11:22:16 2023 +0900
+
+    XUVI-92, XUVI-124
+
+[33mcommit cbd37edeadb8e03edb7ebd328827e1c83050bc6c[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 11:19:14 2023 +0900
+
+    XUVI-110, XUVI-111
+
+[33mcommit 4e129deacb5806c17899f5fe6bf4c5fc4b0e3375[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Dec 1 11:07:02 2023 +0900
+
+    날짜 default 값 +1달 되는 이슈 수정
+
+[33mcommit e91f0535c04d9cc5ee26cebe0acf21d15e249988[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 30 17:38:29 2023 +0900
+
+    일단 이미지 색깔 24개 추출
+
+[33mcommit 846e740eef15d9d626606982f72f29f338b34a52[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 30 17:23:52 2023 +0900
+
+    XUVI-116
+
+[33mcommit 94ec05d1c6409464c2b3eeebb8da367c85b5625f[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 30 17:21:50 2023 +0900
+
+    XUVI-120, XUVI-119 텍스트 변경
+
+[33mcommit 8070362a6d3a6107b2e068694af2a0ce85ea2645[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 30 17:20:24 2023 +0900
+
+    XUVI-125, XUVI-117 타이틀 추가
+
+[33mcommit 1e72037cc3f5057ebdf1b2f0d4bb32b474655305[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 30 11:16:19 2023 +0900
+
+    금일배포본
+
+[33mcommit 8e9d9e909a53150fed4b6fbfcacd013bba478ce2[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 30 11:01:47 2023 +0900
+
+    바 차트 글씨 안겹치게 크기 조절
+
+[33mcommit a9577a9035eecd64fc07204b32f0894c38885784[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 30 10:09:09 2023 +0900
+
+    XUVI-88 다운로드 시 pdf로 다운로드
+
+[33mcommit 3b7f1102be18971fc11f4d14c1b72686bc1600e9[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Nov 29 17:40:28 2023 +0900
+
+    이미지 끝 , 지역별 수정중
+
+[33mcommit 5946976fd74bdee3326a9ad6e30b4d1ab36c2982[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 29 16:30:47 2023 +0900
+
+    XUVI-92 그리드 컬럼 사이즈 맞춤
+
+[33mcommit 3dd3f96274ad60af2cfa80e86ece473892f3ca1c[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 29 15:47:32 2023 +0900
+
+    XUVI-90 전국이 맨 위에 오도록 정렬
+
+[33mcommit d45097c8b421305c1e2b363d3e5d75f216145a07[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 29 15:26:41 2023 +0900
+
+    XUVI-96 컬럼 명칭 변경
+
+[33mcommit e448540cb1e872888c685220dfb3c4a87722803e[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 29 15:16:52 2023 +0900
+
+    XUVI-94 연도 검색 적용안되는 이슈 수정
+
+[33mcommit 96a4159eb803523587d8ec58271211ebf7c6d1b7[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 29 15:05:01 2023 +0900
+
+    XUVI-107 바 차트, 트리 차트에 조회 기간 표기
+
+[33mcommit f57f951a08ac35c36497e89185e7e69f3c01dea2[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 29 14:27:56 2023 +0900
+
+    XUVI-91 막대차트 끝에 수치 명치
+
+[33mcommit 6f9e8e9cd24e0ce43c03def45f7bf13cbb150871[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 29 14:02:22 2023 +0900
+
+    XUVI-09 바 차트, 트리 차트 주간 검색으로 변경
+
+[33mcommit 79b687d44e29da12c8f96dc8d2defb36e5b759c4[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Nov 28 17:43:53 2023 +0900
+
+    이미지 작업중2
+
+[33mcommit a28d916388b4000f30acc5c98838ac70920c0d12[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Nov 28 17:26:27 2023 +0900
+
+    이미지 작업중
+
+[33mcommit fa37de90063fcac22ad2ebd451de85be0d08644e[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Nov 28 12:52:27 2023 +0900
+
+    XUVI-103 품목 개수 변경, 기타 추가
+
+[33mcommit d992d4323f4e46312d65c6b8d1361a9a8c9b773a[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Nov 28 10:05:51 2023 +0900
+
+    기간 검색조건 추가
+
+[33mcommit c797a20f7ff589dc13058f8df318ad80292b51d7[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Nov 24 13:55:26 2023 +0900
+
+    XUVI-101 그리드 판매금액 삭제
+
+[33mcommit 1d71d62bbb9a37a59e466e63a93570084259e587[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Nov 24 13:42:50 2023 +0900
+
+    XUVI-102 그리드, 폰트 색상 변경
+
+[33mcommit 7497f2b0f183d14447b3a796ec493013c73d246b[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 23 16:17:28 2023 +0900
+
+    압축전송 적용
+
+[33mcommit 36fcb82d96a76fd0bcafa937937edf32e20e0bce[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 23 11:14:34 2023 +0900
+
+    XUVI-90 막대차트 내림차순 정렬
+
+[33mcommit 57d43bfe65c7098291e5538a682428e9e6c505a7[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 23 10:56:27 2023 +0900
+
+    XUVI-06 전년도 트리 차트 추가
+
+[33mcommit 0621fb324ec5901e82355f5d16038f2b6c3e6a28[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 23 05:53:37 2023 +0900
+
+    Update Hga07.jsp
+
+[33mcommit 145c317ec6e4239072f8375d462a38ddc083e1bb[m
+Merge: fb03482 e0101f3
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Nov 22 17:32:47 2023 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit fb03482ca7917f9de481c7cb05d0b268447675b7[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Nov 22 17:32:43 2023 +0900
+
+    지역별 수정중...........
+
+[33mcommit 55835a0f204eebb3865fb8f3a9ad3a6a1feda522[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 17:15:26 2023 +0900
+
+    XIVI-73 그리드 배경색에 관한 주석 추가
+
+[33mcommit 79aa5415106a9cf88290d02a8843decb15675b65[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 17:00:37 2023 +0900
+
+    XUVI-79 상세조건 박스 삭제 품목/품종 칸 옆에 선택 내역 표기
+
+[33mcommit c34e649e099701b2026c65cc99365aaf5e3e9b36[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 15:59:39 2023 +0900
+
+    XUVI-02 차트의 라인 색상 변경
+
+[33mcommit 84c2d9cc818e803d34b93815dba0faf882e4afde[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 15:35:58 2023 +0900
+
+    XUVI-03 단위 표시
+
+[33mcommit 3ef2ba17b59c8067b854583565150c46b3c0c0f8[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 15:19:33 2023 +0900
+
+    XUVI-76 검색조건에 춘란, 기타 삭제
+
+[33mcommit 2090f6443046ad447ffaef9a7227ff5adc81f631[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 15:11:24 2023 +0900
+
+    XUVI-80 양재동 화훼공판장 데이터 제공 주석 표시
+
+[33mcommit 717db817634ee2aa08cc633e7f76d854e770fc83[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 15:06:32 2023 +0900
+
+    XUVI-77 기준년월 명칭 변경 및 주석 추가
+
+[33mcommit 00a26543e400235d57cc88efdb602f3dbeda61d5[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 15:03:27 2023 +0900
+
+    XUVI-74 그리드 연도 컬럼에 최초출하시기 일자를 텍스트로 표시
+    XUVI-67 2023년 이외 날자 선택 후 검색 시 No Data 팝업 뜨는 이슈
+
+[33mcommit eafea6595b5666e381a8dba01bbc59fc824c6d05[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 11:23:25 2023 +0900
+
+    XUVI-04 판매금액 차트 삭제
+
+[33mcommit 5f5cc6ba3f99eacb2e8b525d55034b8af4291cfc[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 11:15:16 2023 +0900
+
+    XIVI-99 그리드 데이터가 안나오는 이슈 수정
+
+[33mcommit 7d5bef6074acdf41241d7dbe827324261c6b63d5[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 10:57:16 2023 +0900
+
+    XUVI-72 품목만 선택하였을 경우 모든 품종에 대하여 계산
+
+[33mcommit e0101f33be753cc0767e4bbbfd0fca601e9ea99e[m
+Merge: adc4b9b d3f426d
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 10:23:41 2023 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit adc4b9b6ac6031b62c5ca9ed75ddafa44699784e[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 22 10:23:09 2023 +0900
+
+    23-11-21 배포 시 에러 뜬 부분 수정 및 에러 로그 추가
+
+[33mcommit d3f426d4d866b37de2fee620c49db0a8bf6f214d[m
+Merge: 12ae626 96d1c92
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Nov 21 09:46:01 2023 +0900
+
+    Merge branch 'DONG-DEV1'
+
+[33mcommit 96d1c929795d7943668c30d810b27fc82f73825a[m
+Merge: bc8687e 1c58046
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Tue Nov 21 09:44:14 2023 +0900
+
+    Merge branch 'DONG-DEV1' of https://github.com/machopsgit/hwahe into DONG-DEV1
+
+[33mcommit bc8687ede978dda5b30b46ef16fb2e8f80819a5b[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Tue Nov 21 09:43:42 2023 +0900
+
+    플갤디자인
+
+[33mcommit 12ae626c3b19fec5466964c5f97e0ca7f9aac644[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Nov 21 09:38:34 2023 +0900
+
+    배포후 수정본1
+
+[33mcommit 846386030c50c5dcc0540dc9466b85ac986b09d2[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Nov 17 14:34:50 2023 +0900
+
+    쿼리수정 - 이미지조회에서 품종검색
+
+[33mcommit ca808652dd8cead818df84438e7afc167431e6c1[m
+Merge: bf86d8a 1c58046
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Nov 17 10:37:58 2023 +0900
+
+    Merge branch 'DONG-DEV1'
+
+[33mcommit 1c58046bf408e48385c6e3f04cce6cee42a1eb95[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Nov 17 08:14:26 2023 +0900
+
+    Update IncMenu.jsp
+
+[33mcommit bf86d8a7e57af9efa9f39ca3e37aa5e34273ef7e[m
+Merge: 8248b29 16beec6
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 16 13:25:20 2023 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe
+
+[33mcommit 8248b296cb3dc2831cb2c1ce73f69e59b46efa2c[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 16 13:25:12 2023 +0900
+
+    최초출하시기
+
+[33mcommit 16beec63ef9b552f96acacb0d231e5beaecc4e4e[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 16 12:15:24 2023 +0900
+
+    Update Hga07.jsp
+
+[33mcommit 8dffd812335d3b3598bc3235aab0a7bcc0187b2e[m
+Merge: 71c9db8 d0b5195
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 16 12:01:46 2023 +0900
+
+    Merge branch 'DONG-DEV1'
+    
+    # Conflicts:
+    #       src/main/webapp/WEB-INF/jsp/auction/Hga07.jsp
+
+[33mcommit d0b5195d824f175ed5c9aa4b5038d72a6906cd5a[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 16 09:52:11 2023 +0900
+
+    최종
+
+[33mcommit c7d4f82968f2873c2aeee41c3ee3e3f6527a1ce8[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Nov 15 17:26:30 2023 +0900
+
+    ..
+
+[33mcommit e8b152d636134168b650e600392fb916a62a3233[m
+Merge: 74d3378 4857756
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Nov 15 17:13:13 2023 +0900
+
+    Merge branch 'DONG-DEV1' of https://github.com/machopsgit/hwahe into DONG-DEV1
+
+[33mcommit 74d337805f710733e56674a6486cd4a406162b37[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Nov 15 17:12:53 2023 +0900
+
+    작업중
+
+[33mcommit 48577569234f221d9f1090d55711288ddde50210[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Wed Nov 15 17:12:17 2023 +0900
+
+    design
+
+[33mcommit 71c9db8d8c1889e2ec6d945c855fa63770c4ebe6[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 15 13:48:59 2023 +0900
+
+    XUVI-30 XUVI-30 차트 이미지 다운로드 기능 개발
+
+[33mcommit b385f1f453c598fc6f6f369fbe311f2dbaabbcc1[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Nov 14 17:52:43 2023 +0900
+
+    지역별 어드민
+
+[33mcommit 71e52b36053bbf7a61211a4468486af3bf0da513[m
+Merge: 384a8d8 8f81d82
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Tue Nov 14 10:01:44 2023 +0900
+
+    Merge branch 'DONG-DEV1' of https://github.com/machopsgit/hwahe into DONG-DEV1
+
+[33mcommit 384a8d80e3aee5c31eff2bbf7adeeb1d19b6e1f7[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Tue Nov 14 10:01:13 2023 +0900
+
+    디자인
+
+[33mcommit 8f81d829c733b47e3ff4f588eb96111028ea00b7[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Nov 13 17:16:18 2023 +0900
+
+    ....
+
+[33mcommit 41fd05d3eada39dde1dee8763a0ff8f78c03957a[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 9 18:26:00 2023 +0900
+
+    ....
+
+[33mcommit 3df5561953590dbf1f6bfa5f087778fac25e9720[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 9 15:10:30 2023 +0900
+
+    ....
+
+[33mcommit 2ea9ce64e8602f2ce88f031632c2946c4b21fa10[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Nov 8 18:41:06 2023 +0900
+
+    ...
+
+[33mcommit 0d08e5a003e5ff6af76c7a80d6d011ab5c8d482b[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 8 17:18:32 2023 +0900
+
+    졸업식 없는 일정 삭제
+
+[33mcommit 68e715801aa1d51d2d30a914024f76bfc681a106[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Tue Nov 7 18:45:07 2023 +0900
+
+    css
+
+[33mcommit aa0ee6ca69cdfd9efbc1708d23e17c9f22e37d9a[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Nov 7 18:41:32 2023 +0900
+
+    어드민
+
+[33mcommit ca2c30c8a71aac7f80fd107ac3926f8e472dbee5[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Nov 7 17:51:19 2023 +0900
+
+    ....
+
+[33mcommit 1dedfd5f8f3938d4a0523a1fecb754cb02cf08d1[m
+Merge: 42bfd6c dba6649
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Tue Nov 7 09:56:08 2023 +0900
+
+    Merge branch 'DONG-DEV1' of https://github.com/machopsgit/hwahe into DONG-DEV1
+
+[33mcommit 42bfd6c05df26018385f11bb9ffcd68752d5ac0d[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Tue Nov 7 09:55:45 2023 +0900
+
+    css 작업중
+
+[33mcommit dba66497ea7124d134148c8d2d27055b2c31a131[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Nov 6 18:29:35 2023 +0900
+
+    ,,,
+
+[33mcommit 6ab542066d7494312fe2c65edf643998ff749336[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Nov 6 15:29:29 2023 +0900
+
+    ....
+
+[33mcommit d9374caa80bb1abd4486ec1d11ed4b43f1a01aa2[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Mon Nov 6 15:16:25 2023 +0900
+
+    사용자 페이지 그리드 추가 및 맵차트 클릭 이벤트와 그리드 연동
+
+[33mcommit 65811867758513bdd1fc8b6f4a7a91eb2e8222b5[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Nov 6 09:00:43 2023 +0900
+
+    ..
+
+[33mcommit db00287fc781f42db20d2e8f1ab05eecd35bd40f[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Nov 3 16:50:08 2023 +0900
+
+    ......
+
+[33mcommit 842d91c26167004fc398db43c9d4ce4db25cf667[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Nov 3 07:08:12 2023 +0900
+
+    프린트 예쁘게
+
+[33mcommit 4c5d60e7c7db0b7840710e43936d3571f3911e4d[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Nov 3 06:49:22 2023 +0900
+
+    프로시저 예제
+
+[33mcommit 6fafab0cc10a70ca0ea38d61a37b94616d3d99ab[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Nov 2 17:31:14 2023 +0900
+
+    ......
+
+[33mcommit cde7f450baca80e89a3f44f00284a6415fe07b59[m
+Merge: a231256 90cb018
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 2 12:12:54 2023 +0900
+
+    Merge branch 'jdev4294' of https://github.com/machopsgit/hwahe into jdev4294
+
+[33mcommit a231256509383074affa8eb35d932f3af90c540d[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Nov 2 12:12:32 2023 +0900
+
+    XUVI-47 그리드 수정 기능 오류 수정
+
+[33mcommit 90cb0186b69765d37eb677c2a9c94fb073403f2a[m
+Merge: b64f69b 3f3e008
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Wed Nov 1 18:55:14 2023 +0900
+
+    머지
+
+[33mcommit 3f3e008fddfe6ae638e8d8087f166811a36d0b9b[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 1 16:25:18 2023 +0900
+
+    XUVI-47 그리드 출력 및 편집/저장 기능 개발
+
+[33mcommit 380e3b7959f40b05c19efa4559a6ecbfcbc262f6[m[33m ([m[1;31morigin/XUVI-21[m[33m)[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Nov 1 15:37:35 2023 +0900
+
+    XUVI-49 엑셀 업로드 및 편집 기능 추가
+
+[33mcommit 56732c2f0a315505269936e0c2b283324688f458[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Nov 1 09:20:12 2023 +0900
+
+    로그시간추가 및 엑셀 신버전 적용
+
+[33mcommit 4e5b09776fce0fe543a3f7e7c684639b56f69053[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Oct 31 13:17:30 2023 +0900
+
+    .....
+
+[33mcommit c7e52571cf6a68fa3569f27197e8acaee9eb47e4[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Oct 27 18:40:11 2023 +0900
+
+    일단 중요한거
+
+[33mcommit b6180673321542047fd9aa517972dab3bfebb3ad[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Oct 26 17:08:47 2023 +0900
+
+    ...........
+
+[33mcommit 0c93ed11ac66ed47c19765eca5bc41229feb31d5[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Oct 25 17:39:42 2023 +0900
+
+    .....
+
+[33mcommit 99eb70b8f73286afdf793363fb2c12c437665915[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Oct 25 17:30:34 2023 +0900
+
+    .............
+
+[33mcommit 2ad9550b83cbb0f9f5e4927cc92c3e51dae7bd9a[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 25 15:43:19 2023 +0900
+
+    XUVI-44
+
+[33mcommit 7508061c19fb099b4548bb2c59f7413464f38a09[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 25 11:24:54 2023 +0900
+
+    라이센스 갱신:
+
+[33mcommit d518b58a1f4bd52f243ac122a3aef1976b647680[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 25 11:18:59 2023 +0900
+
+    XUVI-41 화훼재배현황 관리자 페이지 생성
+
+[33mcommit 689abf8f501bfa0f38270967aff4f5f8e5282b77[m
+Merge: 935a2d7 8cfa3aa
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 25 10:49:40 2023 +0900
+
+    commonJS merge
+
+[33mcommit 935a2d7667907fb5d426baa41fde2676c0cb0e22[m
+Merge: 48d804b d02065e
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 25 10:22:18 2023 +0900
+
+    Merge branch 'main' of https://github.com/machopsgit/hwahe into XUVI-21
+
+[33mcommit 48d804bff44141e7c279234d773a126e9cf74cdf[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 25 10:21:55 2023 +0900
+
+    충돌로 인한 파일이름 변경
+
+[33mcommit 8b4fa71ab2089493714c6e605dbe987d706aa2f0[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 25 10:09:10 2023 +0900
+
+    XUVI-22 화훼재배현호아 페이지 신설
+
+[33mcommit 8cfa3aa314eb3363e514e28f07a3fe6c0f64d297[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Oct 24 17:42:36 2023 +0900
+
+    ............
+
+[33mcommit 4e23e04601b61b085c38fec5ffb223e2e28b2d45[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Oct 24 15:44:52 2023 +0900
+
+    .....
+
+[33mcommit cd8523f3f5a3df823710cd08af053734ac732fa9[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Oct 24 11:47:46 2023 +0900
+
+    .........
+
+[33mcommit 288e44d7865db6f20b7ed3b27602d17730b0dac5[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Oct 23 17:53:24 2023 +0900
+
+    ............
+
+[33mcommit e1fe4499f396c13080f59413337573460a7ea244[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Mon Oct 23 14:27:57 2023 +0900
+
+    알메이트 차트 테스트 위해 업로드
+
+[33mcommit 0de60fa65584b2a7d9a2010d24cc6f18c07bf584[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Oct 20 17:34:02 2023 +0900
+
+    지역별 화훼관련 사업체 정보
+    
+    지역별 화훼관련 사업체 정보
+
+[33mcommit 8d4be3da9b7dcdf4cedac65c70e2b0271ffcb286[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Oct 20 03:51:17 2023 +0900
+
+    지역별 화훼관련 사업체 정보
+
+[33mcommit bf69188ee62b22d1e66c49441b30fd95a554879a[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Thu Oct 19 17:31:34 2023 +0900
+
+    지역별 화훼관련 사업체 정보
+
+[33mcommit ef69b16335cdc10c259e4cb0d052ec9303e95477[m[33m ([m[1;31morigin/XUVI-2[m[33m)[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 19 16:47:23 2023 +0900
+
+    XUVI-17 맵차트 품목 별 컬러맵핑해서 ㅠㅛ시
+
+[33mcommit dd34a804522a1a1854eccf64451eb40ef9fc71a1[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 19 10:36:52 2023 +0900
+
+    XUVI-19 맵차트 툴팁 데이터 틀린거 수정
+
+[33mcommit 3974ebbae28d3984eb4d8f330952f3486a6f9131[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 19 10:22:42 2023 +0900
+
+    XUVI-14 모든 차트 타이틀 수정
+
+[33mcommit 1baf6b4aece8ab29ea0860723e7eff3a8fe3137e[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 19 10:21:19 2023 +0900
+
+    XUVI-3 바차트 잘리지않도록 사이즈 조절
+
+[33mcommit b769600c8b230e411432a6ae8aecfcfa73028cb9[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 19 10:00:31 2023 +0900
+
+    XUVI-10 맵차트의 각 섹션이 동일한 사이즈를 가지도록 수정
+
+[33mcommit d02065e91415f46148fb8a962c646f48da11baae[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Oct 18 17:37:19 2023 +0900
+
+    지역별 화훼관련 사업체정보1
+
+[33mcommit 0f86d5ffb7c639188b55886b15431009cc861e24[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 18 17:03:30 2023 +0900
+
+    XUVI-11 맵차트 개발
+
+[33mcommit 83d0485e1c191185ee01a446da96694bd11b1ba8[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 18 15:40:48 2023 +0900
+
+    XUVI-10 바 차트 개발
+
+[33mcommit 0b6162913863bedb91d584de068a5ea5a2976740[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 18 14:33:35 2023 +0900
+
+    XUVI-9 라인차트 완성
+
+[33mcommit dd8486c0454f94b912d48b6df1b270316804a3c5[m[33m ([m[1;31morigin/XUVI-1[m[33m)[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 18 10:40:26 2023 +0900
+
+    XUVI-5 차트타이틀툴팁수정
+
+[33mcommit bf5a00e1d7622c4bfb1fa439cecd4a7db9090185[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 18 10:21:51 2023 +0900
+
+    XUVI-3
+    기준년월 yyyy-mm-dd > yyyy로 변경
+
+[33mcommit 8d7e163fbd47723fd273f754193e6c5e06797f36[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Wed Oct 18 06:01:57 2023 +0900
+
+    이미지  4
+
+[33mcommit fee7b6a3581f4723e9ea060d0baa642213bc1693[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Oct 17 17:08:01 2023 +0900
+
+    그리드 값 소수점 버림
+
+[33mcommit 255dfa77988323406bd4c6579e8e37b7fabd3979[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Oct 17 16:12:16 2023 +0900
+
+    그리드 x축 연도,물량,금액,단가 y축 월,순으로 변경(이현우 과장님 요청)
+
+[33mcommit 673737457106680351f4e8177b42586f9c7fce2c[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Oct 17 15:40:16 2023 +0900
+
+    이미지 관련 처리 3
+
+[33mcommit 5ba83a77a8c9c2314306b1f9634d47cb826f71fe[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Mon Oct 16 17:02:30 2023 +0900
+
+    품종 Top5 기능 삭제
+
+[33mcommit 8b3ecb2b7c67eb74040a8a60c898e4f13d468dd0[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Oct 17 09:48:33 2023 +0900
+
+    라이센스 갱신
+
+[33mcommit 70c6416791f821667c95a395c79765704b210033[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Mon Oct 16 15:55:10 2023 +0900
+
+    품종 최대 한개까지 선택 가능하도록 변경. 양재공판장 데이터만 조회하도록 변경
+
+[33mcommit 579cef89156d194546e624f2af17088673e62a2f[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 12 17:27:39 2023 +0900
+
+    주간 거래동향 jsp, controller, service 추가
+
+[33mcommit 041c3a3f171c49dc0fa7f6e25848906f1a9a95ed[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 11 10:25:44 2023 +0900
+
+    1331 > 1114 날짜 yyyy-mm-dd이외의 포맷을 가진 날짜와 관련된 기능 제거
+
+[33mcommit 4cd4cbb8de148987b3fc08359f6700d359b897fa[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 11 10:08:49 2023 +0900
+
+    그리드 표시
+
+[33mcommit c0eee0e284f9476036d51d632ab7ad51d5ff3628[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Oct 10 17:00:07 2023 +0900
+
+    그리드 계산 기능 추가
+
+[33mcommit 184613e6b6a675581d5bd15b752985576a7dcf47[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Oct 10 13:25:33 2023 +0900
+
+    품목선택 모달
+     * 품목만 선택하였을 경우 판매물량 Top5 품종 자동 셋팅
+     * 품종은 최대 10개까지만 선택 가능하도록 수정
+     * 기간 > 기준년월로 수정 및 endDate설정 시 strtDate는 endDate-3년으로 자동 설정
+
+[33mcommit 15b6b3366c979f959e456b45469f4b9f0f3b6e78[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Oct 10 10:22:19 2023 +0900
+
+    모달 수정, 검색조건 대부분 삭제
+
+[33mcommit 0fb220de6ad2cd046c60a2cd5b3b4f727a3e7361[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 17:21:45 2023 +0900
+
+    사용안하는 함수 삭제 1488 > 1146
+
+[33mcommit 7a1102f33a1032ed743c79386834717cf351783e[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 17:15:10 2023 +0900
+
+    1488 > 1307 엑셀 저장 기능 삭제
+
+[33mcommit 21deaacbf86cae697423d0ec8dfa2909754c1c7c[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 17:10:33 2023 +0900
+
+    경매정보 조회 기능 삭제 2004 > 1488
+
+[33mcommit 54d40a66205f6e8355d426312a2ba4baea29d62f[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 15:51:35 2023 +0900
+
+    판매금액, 평균단가 차트 추가
+
+[33mcommit 92503e92f1fdd7938e97ee153d4d0c2abd418eb2[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 15:09:25 2023 +0900
+
+    쓸데없는 로직 삭제 2209 > 2070
+
+[33mcommit 16087339ef57dfcf20ae3a328f0297849ddf394d[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 15:05:35 2023 +0900
+
+    코드 수 줄이기용 주석 삭제
+
+[33mcommit 496adf60dcde274cd49288ec12df34f03240ec3f[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 15:02:44 2023 +0900
+
+    판매물량 차트 옆으로 키우고 판매금액, 평균단가 깡통 엘리멘트 추가
+
+[33mcommit c290a1a66d96c8d04d0ac8a9ead5ac9d4398d7f0[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 14:50:54 2023 +0900
+
+    거래물량 차트 기능 초안 개발
+
+[33mcommit ed08857b4a471b5ad1add4fee8c97664ee554d25[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 16:39:52 2023 +0900
+
+    sql 반영 전 백업
+
+[33mcommit 5f34442168d8de48a026a5676ab4ace32c0d30a6[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 14:14:37 2023 +0900
+
+    fnObj 함수 두개 삭제
+
+[33mcommit d9b62604aa467613280c3396c443ca431a1cf789[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 14:10:15 2023 +0900
+
+    change 이벤트 삭제
+
+[33mcommit cea9259b2c638bcf23267b8c17caf4b6ff39c897[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 14:04:05 2023 +0900
+
+    주석제거
+
+[33mcommit f9a64adb2b8e2734182f16ced2915b06235c2939[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 13:55:03 2023 +0900
+
+    품목, 품종별 출하시기 초기
+
+[33mcommit 4f6f5da7db0c303bc651aa00a1fb6f3152b8f169[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Oct 17 00:10:09 2023 +0900
+
+    이미지 관련 처리 2
+
+[33mcommit b64f69be44ee97671d4da3bfa1851100bc6ad10f[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Mon Oct 16 17:02:30 2023 +0900
+
+    품종 Top5 기능 삭제
+
+[33mcommit 4bd53e54e297a27fad0e0ec8d647e753c9a88a03[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Mon Oct 16 16:55:06 2023 +0900
+
+    차트 표시 요소 연도별로 변경 (이현우 과장님 요청)
+
+[33mcommit b4bd39b23db17000cf16cfe44a7bbf700b3bfef4[m
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Mon Oct 16 15:55:10 2023 +0900
+
+    품종 최대 한개까지 선택 가능하도록 변경. 양재공판장 데이터만 조회하도록 변경
+
+[33mcommit 5e76c5e1f07d007ef6e51028fc9279947795daff[m
+Merge: 9bdff20 433bcbc
+Author: jdev4294 <jdev4294@gmail.com>
+Date:   Mon Oct 16 13:31:20 2023 +0900
+
+    Merge branch 'jdev4294' of https://github.com/machopsgit/hwahe into jdev4294
+
+[33mcommit 9bdff2024bed3d3f61908da8fbfecdd795560e69[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Fri Oct 13 14:49:43 2023 +0900
+
+    이미지 관련 처리
+    
+    이미지 관련 처리
+
+[33mcommit 433bcbcdcfafc5870fa7b904f30dcb5bfcdac2c3[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 12 17:27:39 2023 +0900
+
+    주간 거래동향 jsp, controller, service 추가
+
+[33mcommit 5e5a57bfbdc6d394943be8776977ca1343657127[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 11 10:25:44 2023 +0900
+
+    1331 > 1114 날짜 yyyy-mm-dd이외의 포맷을 가진 날짜와 관련된 기능 제거
+
+[33mcommit 750a90bcbd5c1ac8d9bcf9da1343914a47476b75[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Wed Oct 11 10:08:49 2023 +0900
+
+    그리드 표시
+
+[33mcommit 6041a27c36883b78dbf42eef124785e4394da96c[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Oct 10 17:00:07 2023 +0900
+
+    그리드 계산 기능 추가
+
+[33mcommit 4d7629beca05a36c41c36e471667de9cf6bcb2d9[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Oct 10 13:25:33 2023 +0900
+
+    품목선택 모달
+     * 품목만 선택하였을 경우 판매물량 Top5 품종 자동 셋팅
+     * 품종은 최대 10개까지만 선택 가능하도록 수정
+     * 기간 > 기준년월로 수정 및 endDate설정 시 strtDate는 endDate-3년으로 자동 설정
+
+[33mcommit f417391ed2d1881685953935214d9722eedb4d33[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Tue Oct 10 10:22:19 2023 +0900
+
+    모달 수정, 검색조건 대부분 삭제
+
+[33mcommit f5c01567b259058c22ec258bf520804f81584e7b[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 17:21:45 2023 +0900
+
+    사용안하는 함수 삭제 1488 > 1146
+
+[33mcommit b95b4a585bd8b5390bc3248439b3bb6359e560bf[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 17:15:10 2023 +0900
+
+    1488 > 1307 엑셀 저장 기능 삭제
+
+[33mcommit 1b5347ecd1cb6813d92d35c3f9911bc8190ade4e[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 17:10:33 2023 +0900
+
+    경매정보 조회 기능 삭제 2004 > 1488
+
+[33mcommit d56255216edbe94000f0aacbf2822080c03e3e39[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 15:51:35 2023 +0900
+
+    판매금액, 평균단가 차트 추가
+
+[33mcommit 4cfaf4b43c6f7d27aabb8890d525afbc8b0d2a7f[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 15:09:25 2023 +0900
+
+    쓸데없는 로직 삭제 2209 > 2070
+
+[33mcommit 92a85693eb1dd16fe695ac6dc7604edcf9007f9b[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 15:05:35 2023 +0900
+
+    코드 수 줄이기용 주석 삭제
+
+[33mcommit 39f47a7aacdba67d727e9bf58633e490cb89d615[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 15:02:44 2023 +0900
+
+    판매물량 차트 옆으로 키우고 판매금액, 평균단가 깡통 엘리멘트 추가
+
+[33mcommit 446c7beda4db71b5e72959e80ad5add0bf6008a5[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Fri Oct 6 14:50:54 2023 +0900
+
+    거래물량 차트 기능 초안 개발
+
+[33mcommit ab21be85c7716ce63e4ca1a33be8e2a11baac228[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 16:39:52 2023 +0900
+
+    sql 반영 전 백업
+
+[33mcommit 94857abddbbf64705994824c2356b095ef51a1ce[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 14:14:37 2023 +0900
+
+    fnObj 함수 두개 삭제
+
+[33mcommit 66109a77963fa095ded9ba2a16937107adeb76cd[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 14:10:15 2023 +0900
+
+    change 이벤트 삭제
+
+[33mcommit b98dde0f55bd14b4e575b1c1986814742e8d8c7f[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 14:04:05 2023 +0900
+
+    주석제거
+
+[33mcommit f3728801c002abfb84f9dfad916f39d5df689261[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 13:55:03 2023 +0900
+
+    품목, 품종별 출하시기 초기
+
+[33mcommit 190301b2ac1ad785deaee3ba55dd3219853e13e3[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 11:29:01 2023 +0900
+
+    알메이트 차트 라이센스 갱신
+
+[33mcommit 0b2d759b615ea9b49815995782258352d2b12fa8[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 11:27:09 2023 +0900
+
+    .project 파일을 추적하지않도록 변경
+
+[33mcommit 11d51df7cbfbbe8addcdf6cc4894040fb56e977e[m
+Author: jdev4294 <110959855+jdev4294@users.noreply.github.com>
+Date:   Thu Oct 5 09:41:49 2023 +0900
+
+    gitignore 설정 추가
+
+[33mcommit 32ed5e0db570befc3e82c6311e53649f3bec55dd[m
+Author: machop8557 <machop8557@gmail.com>
+Date:   Tue Sep 26 11:13:10 2023 +0900
+
+    첫번째 화훼소스 커밋
+    
+    소스, pom.xml 만 관리함

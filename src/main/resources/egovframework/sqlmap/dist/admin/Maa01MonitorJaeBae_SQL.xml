@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.admin.monitor.mapper.Maa01MonitorJaeBaeMapper">
+
+
+	<select id="maa01MonitorJaeBae" parameterType="java.util.HashMap"
+		statementType="PREPARED" resultType="HashMap">
+
+		select * from (
+		SELECT
+		T1.COMP_CODE AS COMP_CODE
+		,ROWNUM AS RNUM
+		,USER_ID AS USER_ID
+		,COUNT(*) OVER() AS TOTAL_COUNT
+		,(SELECT COUNT(*) FROM T_CULTIVATION_TREND T WHERE T.CHUL_NO=T1.COMP_CODE AND
+		SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND USE_YN='Y') AS	JAKWANG
+		,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+		,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+		FROM
+
+		T_USER T1
+
+		WHERE
+		T1.USER_TYPE='M'
+		AND T1.USE_YN='Y'
+		AND USER_ID NOT IN('at99999999')
+		)
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+	</select>
+
+
+
+	<select id="maa01MonitorJaeBaeList" parameterType="java.util.HashMap"
+		statementType="PREPARED" resultType="HashMap">
+
+		select * from (
+		SELECT
+		T1.COMP_CODE AS COMP_CODE
+		,ROWNUM AS RNUM
+		,USER_ID AS USER_ID
+		,COUNT(*) OVER() AS TOTAL_COUNT
+		,(SELECT COUNT(*) FROM T_CULTIVATION_TREND T WHERE T1.COMP_CODE=T.CHUL_NO AND
+		SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND USE_YN='Y') AS JAKWANG
+		,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+		,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+
+		FROM
+
+		T_USER T1
+
+		WHERE
+		T1.USER_TYPE='M'
+		AND T1.USE_YN='Y'
+		AND USER_ID NOT IN('at99999999')
+				)
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+	</select>
+
+
+	<select id="maa01MonitorJaeBaeDetail" parameterType="java.util.HashMap"
+		statementType="PREPARED" resultType="HashMap">
+		SELECT 
+			SUBSTR(REG_DATE ,'1','7') AS REG_DATE1 
+		,REG_DATE
+		,SEQ_NO
+		,PUM_NAME
+		,GOOD_NAME
+		,CMP_CD
+		,CHUL_NO
+		,AREA
+		,STATUS
+		,CASE WHEN STATUS =1 THEN '증가'
+		WHEN STATUS =2 THEN '비슷'
+		ELSE '감소' END AS STATUS_NAME
+		,BIGO
+		FROM T_CULTIVATION_TREND T
+		, T_USER T1
+
+		WHERE
+		T.CHUL_NO=T1.COMP_CODE
+
+		AND T.USE_YN='Y'
+		AND T1.USER_TYPE='M'
+		AND T1.USER_ID NOT IN ('at99999999')
+		AND SUBSTR(REPLACE(T.REG_DT,'-',''),'1','6')  =#{F_DATE}
+	    AND T1.COMP_CODE = #{COMP_CODE}
+		ORDER BY REG_DATE DESC, GOOD_NAME
+	</select>
+
+
+
+	<update id="updateMaa01MonitorJaeBaePopup" parameterType="java.util.HashMap">
+		UPDATE T_CULTIVATION_TREND SET
+		AREA = #{AREA, jdbcType=VARCHAR}
+		,BIGO =#{BIGO, jdbcType=VARCHAR}
+		,STATUS = #{STATUS, jdbcType=VARCHAR}
+		WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+		AND PUM_NAME=#{PUM_NAME, jdbcType=VARCHAR}
+		AND GOOD_NAME=#{GOOD_NAME, jdbcType=VARCHAR}
+		AND CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}
+		AND SEQ_NO =#{SEQ_NO, jdbcType=VARCHAR}
+	</update>
+
+	<select id="maa01MonitorJaeBaegDate" parameterType="java.util.HashMap"
+		statementType="PREPARED" resultType="HashMap">
+
+	select * from (
+		SELECT
+		T1.COMP_CODE AS COMP_CODE
+		,ROWNUM AS RNUM
+		,USER_ID AS USER_ID
+		,COUNT(*) OVER() AS TOTAL_COUNT
+		,(SELECT COUNT(*) FROM T_CULTIVATION_TREND T WHERE T1.COMP_CODE=T.CHUL_NO AND
+		SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND USE_YN='Y') AS JAKWANG
+		,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+		,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+
+		FROM
+
+		T_USER T1
+
+		WHERE
+		T1.USER_TYPE='M'
+		AND T1.USE_YN='Y'
+		AND USER_ID NOT IN('at99999999')
+				)
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+	</select>
+
+	<update id="deleteMonitorJaeBaetDetail" parameterType="java.util.HashMap">
+		UPDATE T_CULTIVATION_TREND SET
+		USE_YN= 'N'
+		WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+		AND PUM_NAME=#{PUM_NAME, jdbcType=VARCHAR}
+		AND GOOD_NAME=#{GOOD_NAME, jdbcType=VARCHAR}
+		AND CHUL_NO =#{CHUL_NO, jdbcType=VARCHAR}
+		AND SEQ_NO =#{SEQ_NO, jdbcType=VARCHAR}
+	</update>
+
+
+	<select id="maa01MonitorJaeBae_Date" parameterType="java.util.HashMap"
+		statementType="PREPARED" resultType="HashMap">
+
+		select * from (
+		SELECT
+		T1.COMP_CODE AS COMP_CODE
+		,ROWNUM AS RNUM
+		,USER_ID AS USER_ID
+		,COUNT(*) OVER() AS TOTAL_COUNT
+		,(SELECT COUNT(*) FROM T_CULTIVATION_TREND T WHERE T1.COMP_CODE=T.CHUL_NO AND
+		SUBSTR(REPLACE(REG_DT,'-',''),'1','6')=#{F_DATE} AND USE_YN='Y') AS JAKWANG
+,(SELECT SAN_BIGO FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_BIGO
+,(SELECT SAN_CD FROM T_LOCAL T3 WHERE T3.SAN_CD=t1.REMARK) AS SAN_CD
+		FROM
+
+		T_USER T1
+
+		WHERE
+		T1.USER_TYPE='M'
+		AND T1.USE_YN='Y'
+		AND USER_ID NOT IN('at99999999')
+				)
+		WHERE RNUM BETWEEN #{startCount} AND #{endCount}
+	</select>
+
+<insert id="Maa01MonitorJaeBaePopupInsert"  parameterType="java.util.HashMap" >
+ 	   INSERT INTO T_CULTIVATION_TREND
+       ( 
+             SEQ_NO                    
+            ,REG_DATE            
+            ,PUM_NAME            
+            ,GOOD_NAME            
+            ,CMP_CD                        
+            ,CHUL_NO
+            ,AREA        
+            ,STATUS
+            ,BIGO 
+            ,SAN_CD     
+            ,REG_DT              
+       ) 
+       VALUES 
+       (    CULT_SEQ.NEXTVAL
+            ,#{REG_DATE, jdbcType=VARCHAR}
+            ,#{PUM_NAME, jdbcType=VARCHAR}
+            ,#{GOOD_NAME, jdbcType=VARCHAR}           
+            ,#{CMP_CD, jdbcType=VARCHAR}                             
+            ,#{COMP_CODE, jdbcType=VARCHAR}
+            ,#{AREA, jdbcType=VARCHAR}            
+            ,#{STATUS, jdbcType=VARCHAR}
+            ,#{BIGO, jdbcType=VARCHAR}   
+            ,#{SAN_CD, jdbcType=VARCHAR}    
+            ,(select to_char(sysdate,'yyyy-mm-dd') from dual)           
+       ) 
+ </insert>
+ 
+ 
+
+</mapper>

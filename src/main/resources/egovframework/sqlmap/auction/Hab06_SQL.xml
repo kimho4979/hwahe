@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hab06.mapper.Hab06Mapper">
+    <resultMap id="resultHab06Map" type="com.fpdisys.dist.hab06.domain.Hab06VO">
+	<result property="cmpCd" column="CMP_CD"/>
+	<result property="cmpCdNm" column="CMP_CD_NM"/>
+	<result property="saleMonth" column="SALE_MONTH"/>
+	<result property="saleYear" column="SALE_YEAR"/>
+	<result property="flowerGubn" column="FLOWER_GUBN"/>
+	<result property="flowerGubnNm" column="FLOWER_GUBN_NM"/>	
+	<result property="pumName" column="PUM_NAME"/>
+	<result property="goodName" column="GOOD_NAME"/>
+	<result property="mmCd" column="MM_CD"/>
+	<result property="mmCdNm" column="MM_CD_NM"/>
+	<result property="danCd" column="DAN_CD"/>
+	<result property="danCdNm" column="DAN_CD_NM"/>
+	<result property="pojCd" column="POJ_CD"/>
+	<result property="pojCdNm" column="POJ_CD_NM"/>
+	<result property="lvCd" column="LV_CD"/>
+	<result property="lvCdNm" column="LV_CD_NM"/>
+    <result property="danQ" column="DANQ"/> 
+    <result property="sizeCd" column="SIZE_CD"/>
+	<result property="sizeCdNm" column="SIZE_CD_NM"/>
+	<result property="sanCd" column="SAN_CD"/>
+	<result property="sanCdNm" column="SAN_CD_NM"/>	
+	<result property="maxAmt" column="MAX_AMT"/> 
+	<result property="minAmt" column="MIN_AMT"/>
+	<result property="avgAmt" column="AVG_AMT"/>  
+	<result property="totAmt" column="TOT_AMT"/>  
+	<result property="totQty" column="TOT_QTY"/>	
+	<result property="oldMaxAmt" column="OLD_MAX_AMT"/> 
+	<result property="oldMinAmt" column="OLD_MIN_AMT"/>
+	<result property="oldAvgAmt" column="OLD_AVG_AMT"/>  
+	<result property="oldTotAmt" column="OLD_TOT_AMT"/>  
+	<result property="oldTotQty" column="OLD_TOT_QTY"/>  
+	<result property="perTotAmt" column="PER_TOT_AMT"/> 
+	<result property="perAmtCol" column="PER_AMT_COL"/>
+	<result property="perTotQty" column="PER_TOT_QTY"/>  
+	<result property="perQtyCol" column="PER_QTY_COL"/>
+	</resultMap>
+	
+	<!-- select id="selectHab06" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="resultHab06Map" -->
+	<select id="selectHab06" parameterType="com.fpdisys.dist.hab06.domain.Hab06VO" resultMap="resultHab06Map">
+			SELECT
+			D.CMP_CD
+			,D.SALE_MONTH
+			,D.FLOWER_GUBN 
+			, F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ) AS FLOWER_GUBN_NM
+			,NVL(C.MAX_AMT,0) AS MAX_AMT
+			,NVL(C.MIN_AMT,0) AS MIN_AMT
+			,NVL(C.AVG_AMT,0) AS AVG_AMT
+			,NVL(TRUNC(C.TOT_AMT/1000000),0) AS TOT_AMT
+			,NVL(TRUNC(C.TOT_QTY/10000),0) AS TOT_QTY
+			,NVL(D.OLD_MAX_AMT,0) AS OLD_MAX_AMT
+			,NVL(D.OLD_MIN_AMT,0) AS OLD_MIN_AMT
+			,NVL(D.OLD_AVG_AMT,0) AS OLD_AVG_AMT
+			,NVL(TRUNC(D.OLD_TOT_AMT/1000000),0) AS OLD_TOT_AMT
+			,NVL(TRUNC(D.OLD_TOT_QTY/10000),0) AS OLD_TOT_QTY
+			,NVL(ABS(ROUND((C.TOT_AMT-D.OLD_TOT_AMT)/D.OLD_TOT_AMT*100,2)),0) AS PER_TOT_AMT
+			,(CASE
+				WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'blue'
+				WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'red'
+				ELSE 'green' 
+			END ) AS  PER_AMT_COL  
+			,NVL(ABS(ROUND((C.TOT_QTY-D.OLD_TOT_QTY)/D.OLD_TOT_QTY*100,2)),0) AS PER_TOT_QTY
+			,(CASE
+				WHEN  C.TOT_QTY  &lt; D.OLD_TOT_QTY THEN 'blue'
+				WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'red'
+				ELSE 'green' 
+			END ) AS  PER_QTY_COL
+			, 0 AS SALE_YEAR 
+		FROM 
+		(
+			SELECT A.CMP_CD
+				, A.SALE_MONTH
+				, A.FLOWER_GUBN      
+				, MAX(A.MAX_AMT) AS MAX_AMT
+				, MIN(A.MIN_AMT) AS MIN_AMT
+				, ROUND(AVG(A.AVG_AMT),3) AS AVG_AMT
+				, SUM(A.TOT_AMT) AS  TOT_AMT
+				, SUM(A.TOT_QTY) AS  TOT_QTY
+			FROM T_SALE_MONTH A
+			WHERE 1=1
+			AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+			AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+			AND  A.TOT_AMT &lt;&gt; 0
+			GROUP BY A.CMP_CD, A.SALE_MONTH, A.FLOWER_GUBN 
+			ORDER BY A.SALE_MONTH ASC) C,
+		(
+			SELECT 
+		        #{searchCmpCd, jdbcType=VARCHAR}  AS CMP_CD
+		        , V_DATE AS SALE_MONTH
+		        ,#{searchProductGubun, jdbcType=VARCHAR} AS FLOWER_GUBN
+		        ,OLD_MAX_AMT
+		        , OLD_MIN_AMT
+		        , OLD_AVG_AMT
+		        , OLD_TOT_AMT
+		        , OLD_TOT_QTY
+		    FROM
+		    (
+		    SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'01','YYYYMM'), LEVEL-1),'YYYY-MM') AS V_DATE
+		    FROM DUAL 
+		    CONNECT BY LEVEL &lt;= MONTHS_BETWEEN(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'12','YYYYMM'),TO_DATE(#{searchYear, jdbcType=VARCHAR}||'01','YYYYMM'))+1
+		    ) A,
+		    (
+		        SELECT B.CMP_CD
+		            , REPLACE(B.SALE_MONTH,SUBSTR(B.SALE_MONTH,0,4),#{searchYear, jdbcType=VARCHAR}) AS SALE_MONTH
+		            , B.FLOWER_GUBN      
+		            , MAX(B.MAX_AMT) AS OLD_MAX_AMT
+		            , MIN(B.MIN_AMT) AS OLD_MIN_AMT
+		            , ROUND(AVG(B.AVG_AMT),3) AS OLD_AVG_AMT
+		            , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+		            , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+		        FROM T_SALE_MONTH B
+		        WHERE 1=1
+		        AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		        AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+		        AND SUBSTR(B.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+		        AND  B.TOT_AMT &lt;&gt; 0
+		        GROUP BY B.CMP_CD, B.SALE_MONTH, B.FLOWER_GUBN 
+		        ORDER BY B.SALE_MONTH ASC
+		        )B
+		        WHERE A.V_DATE=B.SALE_MONTH(+)
+	        ) D
+		WHERE 1=1
+		AND C.CMP_CD(+) = D.CMP_CD
+		AND C.FLOWER_GUBN(+) =D.FLOWER_GUBN
+		AND C.SALE_MONTH(+) = D.SALE_MONTH  
+		ORDER BY D.SALE_MONTH ASC
+		
+	</select>
+	
+	<select id="selectHab06bak" parameterType="com.fpdisys.dist.hab06.domain.Hab06VO" resultMap="resultHab06Map">
+		SELECT
+		  NVL(NVL(D.CMP_CD,C.CMP_CD),E.CMP_CD) AS CMP_CD
+		  ,NVL(NVL(D.SALE_MONTH,C.SALE_MONTH),E.SALE_MONTH) AS SALE_MONTH
+		  ,NVL(NVL(D.FLOWER_GUBN,C.FLOWER_GUBN),E.FLOWER_GUBN) AS FLOWER_GUBN 
+		  ,NVL(NVL(F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ),F_GET_FLOWER_GUBN_NAME( C.FLOWER_GUBN )),F_GET_FLOWER_GUBN_NAME(E.FLOWER_GUBN)) AS FLOWER_GUBN_NM
+		  ,NVL(C.MAX_AMT,0) AS MAX_AMT
+		  ,NVL(C.MIN_AMT,0) AS MIN_AMT
+		  ,NVL(C.AVG_AMT,0) AS AVG_AMT
+		  ,NVL(TRUNC(C.TOT_AMT/1000000),0) AS TOT_AMT
+		  ,NVL(TRUNC(C.TOT_QTY/10000),0) AS TOT_QTY
+		  ,NVL(D.OLD_MAX_AMT,0) AS OLD_MAX_AMT
+		  ,NVL(D.OLD_MIN_AMT,0) AS OLD_MIN_AMT
+		  ,NVL(D.OLD_AVG_AMT,0) AS OLD_AVG_AMT
+		  ,NVL(TRUNC(D.OLD_TOT_AMT/1000000),0) AS OLD_TOT_AMT
+		  ,NVL(TRUNC(D.OLD_TOT_QTY/10000),0) AS OLD_TOT_QTY
+		  ,NVL(ABS(ROUND((C.TOT_AMT-D.OLD_TOT_AMT)/D.OLD_TOT_AMT*100,2)),0) AS PER_TOT_AMT
+		  ,(CASE
+		     WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'red'
+		     WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'blue'
+		     ELSE 'green' 
+		  END ) AS  PER_AMT_COL  
+		  ,NVL(ABS(ROUND((C.TOT_QTY-D.OLD_TOT_QTY)/D.OLD_TOT_QTY*100,2)),0) AS PER_TOT_QTY
+		  ,(CASE
+		     WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'red'
+		     WHEN  C.TOT_QTY  &lt; D.OLD_TOT_QTY THEN 'blue'
+		     ELSE 'green' 
+		  END ) AS  PER_QTY_COL
+		  , TO_CHAR((SELECT ADD_MONTHS(TO_DATE(MAX(SALE_DATE),'YYYY-MM-DD'),-12) FROM T_SALE_DATE WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR} AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} AND SALE_DATE &gt; TO_CHAR(SYSDATE-30,'YYYY-MM-DD')),'MM.DD') AS SALE_YEAR 
+		FROM 
+		(SELECT A.CMP_CD
+		      , A.SALE_MONTH
+		      , A.FLOWER_GUBN      
+		      , MAX(A.MAX_AMT) AS MAX_AMT
+		      , MIN(A.MIN_AMT) AS MIN_AMT
+		      , ROUND(AVG(A.AVG_AMT),3) AS AVG_AMT
+		      , SUM(A.TOT_AMT) AS  TOT_AMT
+		      , SUM(A.TOT_QTY) AS  TOT_QTY
+		  FROM T_SALE_MONTH A
+		  WHERE 1=1
+		  AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		  AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+		  AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+		  AND  A.TOT_AMT &lt;&gt; 0
+		  GROUP BY A.CMP_CD, A.SALE_MONTH, A.FLOWER_GUBN 
+		  ORDER BY A.SALE_MONTH ASC) C
+		    FULL OUTER JOIN
+		(SELECT B.CMP_CD
+		      , REPLACE(SUBSTR(B.SALE_DATE,0,7),SUBSTR(SUBSTR(B.SALE_DATE,0,7),0,4),#{searchYear, jdbcType=VARCHAR}) AS SALE_MONTH
+		      , B.FLOWER_GUBN      
+		      , MAX(B.MAX_AMT) AS OLD_MAX_AMT
+		      , MIN(B.MIN_AMT) AS OLD_MIN_AMT
+		      , ROUND(AVG(B.AVG_AMT),3) AS OLD_AVG_AMT
+		      , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+		      , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+		  FROM T_SALE_DATE B
+		  WHERE 1=1
+		  AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		  AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+		  AND SUBSTR(B.SALE_DATE,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+		  AND B.SALE_DATE &lt;= TO_CHAR((SELECT ADD_MONTHS(TO_DATE(MAX(SALE_DATE),'YYYY-MM-DD'),-12) FROM T_SALE_DATE WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR} AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} AND SALE_DATE &gt; TO_CHAR(SYSDATE-30,'YYYY-MM-DD')),'YYYY-MM-DD')
+		  AND B.TOT_AMT &lt;&gt; 0
+		  GROUP BY B.CMP_CD, SUBSTR(B.SALE_DATE,0,7), B.FLOWER_GUBN 
+		  ORDER BY SUBSTR(B.SALE_DATE,0,7) ASC) D
+		  ON C.CMP_CD = D.CMP_CD
+		  AND C.FLOWER_GUBN =D.FLOWER_GUBN
+		  AND C.SALE_MONTH = D.SALE_MONTH  
+		  FULL OUTER JOIN 
+		  (SELECT 
+		  #{searchCmpCd, jdbcType=VARCHAR}  AS  CMP_CD
+		  ,TO_CHAR( ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'-01','YYYY-MM'),(LEVEL-1)),'YYYY-MM') AS SALE_MONTH
+		  ,#{searchProductGubun, jdbcType=VARCHAR} AS FLOWER_GUBN
+		  FROM DUAL CONNECT BY ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'-01','YYYY-MM'),(LEVEL-1)) &lt;= TO_DATE(#{searchYear, jdbcType=VARCHAR} || '-12','YYYY-MM')) E
+		  ON C.SALE_MONTH = E.SALE_MONTH
+		  -- AND D.SALE_MONTH = E.SALE_MONTH
+		  ORDER BY E.SALE_MONTH ASC	</select>
+	
+	<!-- select id="selectHab06HapBak" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="resultHab06Map" -->
+	   <select id="selectHab06Hap" parameterType="com.fpdisys.dist.hab06.domain.Hab06VO" resultMap="resultHab06Map">
+			  SELECT
+			  D.CMP_CD
+			  ,D.SALE_MONTH
+			  ,D.FLOWER_GUBN
+			  ,F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ) AS FLOWER_GUBN_NM 
+			  ,TRUNC(C.TOT_AMT/1000000) AS TOT_AMT
+			  ,TRUNC(C.TOT_QTY/10000) AS TOT_QTY
+			  ,TRUNC(D.OLD_TOT_AMT/1000000 ) AS OLD_TOT_AMT
+			  ,TRUNC(D.OLD_TOT_QTY/10000 ) AS OLD_TOT_QTY
+			  ,NVL(ABS(ROUND((C.TOT_AMT-D.OLD_TOT_AMT)/D.OLD_TOT_AMT*100,2)),0) AS PER_TOT_AMT
+			  ,(CASE
+			     WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'red'
+			     WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'blue'
+			     ELSE 'green' 
+			  END ) AS  PER_AMT_COL  
+			  <!--  ,NVL(ABS(ROUND(100 -(C.TOT_QTY /D.OLD_TOT_QTY *100),2)),0) AS PER_TOT_QTY-->
+			  ,NVL(ABS(ROUND((C.TOT_QTY-D.OLD_TOT_QTY)/D.OLD_TOT_QTY*100,2)),0) AS PER_TOT_QTY
+			  ,(CASE
+			     WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'red'
+			     WHEN  C.TOT_QTY  &lt; D.OLD_TOT_QTY THEN 'blue'
+			     ELSE 'green' 
+			  END ) AS  PER_QTY_COL  
+			FROM 
+			(SELECT A.CMP_CD
+			      , #{searchYear, jdbcType=VARCHAR}  AS SALE_MONTH
+			      , A.FLOWER_GUBN      
+			      , SUM(A.TOT_AMT) AS  TOT_AMT
+			      , SUM(A.TOT_QTY) AS  TOT_QTY
+			  FROM T_SALE_MONTH A
+			  WHERE 1=1
+			  AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			  AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+			  AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+			  AND  A.TOT_AMT &lt;&gt; 0
+			  GROUP BY A.CMP_CD, A.FLOWER_GUBN 
+			) C,
+			(SELECT B.CMP_CD
+			      , #{searchYear, jdbcType=VARCHAR}  AS SALE_MONTH
+			      , B.FLOWER_GUBN      
+			      , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+			      , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+			  FROM T_SALE_MONTH B
+			  WHERE 1=1
+			  AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			  AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+			  AND SUBSTR(B.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+			  AND  B.TOT_AMT &lt;&gt; 0
+			  GROUP BY B.CMP_CD, B.FLOWER_GUBN 
+			  ) D
+			  WHERE 1=1
+			  AND C.CMP_CD(+) = D.CMP_CD
+			  AND C.FLOWER_GUBN(+) =D.FLOWER_GUBN
+			  AND C.SALE_MONTH(+) = D.SALE_MONTH  
+			  ORDER BY D.SALE_MONTH ASC
+	</select>
+	
+	<select id="selectHab06Hapbak" parameterType="com.fpdisys.dist.hab06.domain.Hab06VO" resultMap="resultHab06Map">
+	   
+			  SELECT
+			  D.CMP_CD
+			  ,D.SALE_MONTH
+			  ,D.FLOWER_GUBN
+			  ,F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ) AS FLOWER_GUBN_NM 
+			  ,TRUNC(C.TOT_AMT/1000000) AS TOT_AMT
+			  ,TRUNC(C.TOT_QTY/10000) AS TOT_QTY
+			  ,TRUNC(D.OLD_TOT_AMT/1000000 ) AS OLD_TOT_AMT
+			  ,TRUNC(D.OLD_TOT_QTY/10000 ) AS OLD_TOT_QTY
+			  ,NVL(ABS(ROUND((C.TOT_AMT-D.OLD_TOT_AMT)/D.OLD_TOT_AMT*100,2)),0) AS PER_TOT_AMT
+			  ,(CASE
+			     WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'blue'
+				WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'red'
+			     ELSE 'green' 
+			  END ) AS  PER_AMT_COL  
+			  <!--  ,NVL(ABS(ROUND(100 -(C.TOT_QTY /D.OLD_TOT_QTY *100),2)),0) AS PER_TOT_QTY-->
+			  ,NVL(ABS(ROUND((C.TOT_QTY-D.OLD_TOT_QTY)/D.OLD_TOT_QTY*100,2)),0) AS PER_TOT_QTY
+			  ,(CASE
+			     WHEN  C.TOT_QTY   &lt; D.OLD_TOT_QTY THEN 'blue'
+			     WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'red'
+			     ELSE 'green' 
+			  END ) AS  PER_QTY_COL  
+			FROM 
+			(SELECT A.CMP_CD
+			      , #{searchYear, jdbcType=VARCHAR}  AS SALE_MONTH
+			      , A.FLOWER_GUBN      
+			      , SUM(A.TOT_AMT) AS  TOT_AMT
+			      , SUM(A.TOT_QTY) AS  TOT_QTY
+			  FROM T_SALE_MONTH A
+			  WHERE 1=1
+			  AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			  AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+			  AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+			  AND  A.TOT_AMT &lt;&gt; 0
+			  GROUP BY A.CMP_CD, A.FLOWER_GUBN 
+			) C,
+			(SELECT B.CMP_CD
+			      , #{searchYear, jdbcType=VARCHAR}  AS SALE_MONTH
+			      , B.FLOWER_GUBN      
+			      , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+			      , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+			  FROM T_SALE_DATE B
+			  WHERE 1=1
+			  AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			  AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+			  AND SUBSTR(B.SALE_DATE,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+			  AND B.SALE_DATE &lt;= TO_CHAR((SELECT ADD_MONTHS(TO_DATE(MAX(SALE_DATE),'YYYY-MM-DD'),-12) FROM T_SALE_DATE WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR} AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} AND SALE_DATE &gt; TO_CHAR(SYSDATE-30,'YYYY-MM-DD')),'YYYY-MM-DD')
+			  AND  B.TOT_AMT &lt;&gt; 0
+			  GROUP BY B.CMP_CD, B.FLOWER_GUBN 
+			  ) D
+			  WHERE 1=1
+			  AND C.CMP_CD = D.CMP_CD
+			  AND C.FLOWER_GUBN =D.FLOWER_GUBN
+			  AND C.SALE_MONTH = D.SALE_MONTH  
+			  ORDER BY D.SALE_MONTH ASC
+	</select>
+	
+	<!-- select id="selectHab06ChartBak" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="resultHab06Map" -->
+	<select id="selectHab06Chart" parameterType="com.fpdisys.dist.hab06.domain.Hab06VO" resultMap="resultHab06Map">
+			SELECT
+			D.CMP_CD
+			, SUBSTR(D.SALE_MONTH,6,2) AS SALE_MONTH
+			, D.FLOWER_GUBN 
+			, F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ) AS FLOWER_GUBN_NM
+			, C.MAX_AMT
+			, C.MIN_AMT
+			, C.AVG_AMT
+			, (C.TOT_AMT/1000000) AS TOT_AMT
+			, (C.TOT_QTY/10000) AS TOT_QTY
+			, D.OLD_MAX_AMT
+			, D.OLD_MIN_AMT
+			, D.OLD_AVG_AMT
+			, (D.OLD_TOT_AMT/1000000) As OLD_TOT_AMT
+			, (D.OLD_TOT_QTY/10000) AS OLD_TOT_QTY
+			, NVL(ABS(ROUND(100 -(C.TOT_AMT /D.OLD_TOT_AMT *100),2)),0) AS PER_TOT_AMT
+			, (CASE
+			    WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'blue'
+			    WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'red'
+			    ELSE 'green' 
+			END ) AS  PER_AMT_COL  
+			,NVL(ABS(ROUND(100 -(C.TOT_QTY /D.OLD_TOT_QTY *100),2)),0) AS PER_TOT_QTY
+			,(CASE
+				WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'blue'
+				WHEN  C.TOT_QTY  &lt; D.OLD_TOT_QTY THEN 'red'
+				ELSE 'green' 
+			END ) AS  PER_AMT_COL
+			, 0 AS SALE_YEAR  
+		FROM 
+		(
+			SELECT 
+				A.CMP_CD
+				, A.SALE_MONTH
+				, A.FLOWER_GUBN      
+				, MAX(A.MAX_AMT) AS MAX_AMT
+				, MIN(A.MIN_AMT) AS MIN_AMT
+				, ROUND(AVG(A.AVG_AMT),3) AS AVG_AMT
+				, SUM(A.TOT_AMT) AS  TOT_AMT
+				, SUM(A.TOT_QTY) AS  TOT_QTY
+			FROM T_SALE_MONTH A
+			WHERE 1=1
+			AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+			AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+			<if test="searchItem!=null">
+			AND A.PUM_NAME = #{searchItem, jdbcType=VARCHAR}
+			</if>
+			AND  A.TOT_AMT &lt;&gt; 0
+			GROUP BY A.CMP_CD, A.SALE_MONTH, A.FLOWER_GUBN 
+			ORDER BY A.SALE_MONTH ASC) C,
+		(	SELECT #{searchCmpCd, jdbcType=VARCHAR} AS CMP_CD
+                 , T2.YYMM AS SALE_MONTH
+                 , #{searchProductGubun, jdbcType=VARCHAR} AS FLOWER_GUBN
+                 , T1.OLD_MAX_AMT
+                 , T1.OLD_MIN_AMT
+                 , T1.OLD_AVG_AMT
+                 , T1.OLD_TOT_AMT
+                 , T1.OLD_TOT_QTY 
+           FROM(
+			SELECT 
+				B.CMP_CD
+				, REPLACE(B.SALE_MONTH,SUBSTR(B.SALE_MONTH,0,4),#{searchYear, jdbcType=VARCHAR}) AS SALE_MONTH
+				, B.FLOWER_GUBN      
+				, MAX(B.MAX_AMT) AS OLD_MAX_AMT
+				, MIN(B.MIN_AMT) AS OLD_MIN_AMT
+				, ROUND(AVG(B.AVG_AMT),3) AS OLD_AVG_AMT
+				, SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+				, SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+			FROM T_SALE_MONTH B
+			WHERE 1=1
+			AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+			AND SUBSTR(B.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+			<if test="searchItem!=null">
+			AND B.PUM_NAME = #{searchItem, jdbcType=VARCHAR}
+			</if>
+			AND  B.TOT_AMT &lt;&gt; 0
+			GROUP BY B.CMP_CD, B.SALE_MONTH, B.FLOWER_GUBN 
+			ORDER BY B.SALE_MONTH ASC) T1,
+			(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'01','YYYYMM'), LEVEL-1), 'YYYY-MM') AS YYMM
+	          FROM DUAL
+	          CONNECT BY LEVEL &lt; 13) T2
+	        WHERE 1=1
+	        AND T1.SALE_MONTH(+) = T2.YYMM
+			) D
+		WHERE 1=1
+		AND C.CMP_CD(+) = D.CMP_CD
+		AND C.FLOWER_GUBN(+) =D.FLOWER_GUBN
+		AND C.SALE_MONTH(+) = D.SALE_MONTH  
+		ORDER BY D.SALE_MONTH ASC
+	</select>
+	
+	<select id="selectHab06Chartbak" parameterType="com.fpdisys.dist.hab06.domain.Hab06VO" resultMap="resultHab06Map">
+		SELECT
+		  NVL(NVL(D.CMP_CD,C.CMP_CD),E.CMP_CD) AS CMP_CD
+		  ,NVL(NVL(D.SALE_MONTH,C.SALE_MONTH),E.SALE_MONTH) AS SALE_MONTH
+		  ,NVL(NVL(D.FLOWER_GUBN,C.FLOWER_GUBN),E.FLOWER_GUBN) AS FLOWER_GUBN 
+		  ,NVL(NVL(F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ),F_GET_FLOWER_GUBN_NAME( C.FLOWER_GUBN )),F_GET_FLOWER_GUBN_NAME(E.FLOWER_GUBN)) AS FLOWER_GUBN_NM
+		  ,NVL(C.MAX_AMT,0) AS MAX_AMT
+		  ,NVL(C.MIN_AMT,0) AS MIN_AMT
+		  ,NVL(C.AVG_AMT,0) AS AVG_AMT
+		  ,NVL(TRUNC(C.TOT_AMT/1000000),0) AS TOT_AMT
+		  ,NVL(TRUNC(C.TOT_QTY/10000),0) AS TOT_QTY
+		  ,NVL(D.OLD_MAX_AMT,0) AS OLD_MAX_AMT
+		  ,NVL(D.OLD_MIN_AMT,0) AS OLD_MIN_AMT
+		  ,NVL(D.OLD_AVG_AMT,0) AS OLD_AVG_AMT
+		  ,NVL(TRUNC(D.OLD_TOT_AMT/1000000),0) AS OLD_TOT_AMT
+		  ,NVL(TRUNC(D.OLD_TOT_QTY/10000),0) AS OLD_TOT_QTY
+		  ,NVL(ABS(ROUND((C.TOT_AMT-D.OLD_TOT_AMT)/D.OLD_TOT_AMT*100,2)),0) AS PER_TOT_AMT
+		  ,(CASE
+		     WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'red'
+		     WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'blue'
+		     ELSE 'green' 
+		  END ) AS  PER_AMT_COL  
+		  ,NVL(ABS(ROUND((C.TOT_QTY-D.OLD_TOT_QTY)/D.OLD_TOT_QTY*100,2)),0) AS PER_TOT_QTY
+		  ,(CASE
+		     WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'red'
+		     WHEN  C.TOT_QTY  &lt; D.OLD_TOT_QTY THEN 'blue'
+		     ELSE 'green' 
+		  END ) AS  PER_QTY_COL
+		  , TO_CHAR((SELECT ADD_MONTHS(TO_DATE(MAX(SALE_DATE),'YYYY-MM-DD'),-12) FROM T_SALE_DATE WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR} AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} AND SALE_DATE &gt; TO_CHAR(SYSDATE-30,'YYYY-MM-DD')),'MM.DD') AS SALE_YEAR 
+		FROM 
+		(SELECT A.CMP_CD
+		      , A.SALE_MONTH
+		      , A.FLOWER_GUBN      
+		      , MAX(A.MAX_AMT) AS MAX_AMT
+		      , MIN(A.MIN_AMT) AS MIN_AMT
+		      , ROUND(AVG(A.AVG_AMT),3) AS AVG_AMT
+		      , SUM(A.TOT_AMT) AS  TOT_AMT
+		      , SUM(A.TOT_QTY) AS  TOT_QTY
+		  FROM T_SALE_MONTH A
+		  WHERE 1=1
+		  AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		  AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+		  AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+		  AND  A.TOT_AMT &lt;&gt; 0
+		  GROUP BY A.CMP_CD, A.SALE_MONTH, A.FLOWER_GUBN 
+		  ORDER BY A.SALE_MONTH ASC) C
+		    FULL OUTER JOIN
+		(SELECT B.CMP_CD
+		      , REPLACE(SUBSTR(B.SALE_DATE,0,7),SUBSTR(SUBSTR(B.SALE_DATE,0,7),0,4),#{searchYear, jdbcType=VARCHAR}) AS SALE_MONTH
+		      , B.FLOWER_GUBN      
+		      , MAX(B.MAX_AMT) AS OLD_MAX_AMT
+		      , MIN(B.MIN_AMT) AS OLD_MIN_AMT
+		      , ROUND(AVG(B.AVG_AMT),3) AS OLD_AVG_AMT
+		      , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+		      , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+		  FROM T_SALE_DATE B
+		  WHERE 1=1
+		  AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		  AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+		  AND SUBSTR(B.SALE_DATE,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+		  AND B.SALE_DATE &lt;= TO_CHAR((SELECT ADD_MONTHS(TO_DATE(MAX(SALE_DATE),'YYYY-MM-DD'),-12) FROM T_SALE_DATE WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR} AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} AND SALE_DATE &gt; TO_CHAR(SYSDATE-30,'YYYY-MM-DD')),'YYYY-MM-DD')
+		  AND B.TOT_AMT &lt;&gt; 0
+		  GROUP BY B.CMP_CD, SUBSTR(B.SALE_DATE,0,7), B.FLOWER_GUBN 
+		  ORDER BY SUBSTR(B.SALE_DATE,0,7) ASC) D
+		  ON C.CMP_CD = D.CMP_CD
+		  AND C.FLOWER_GUBN =D.FLOWER_GUBN
+		  AND C.SALE_MONTH = D.SALE_MONTH  
+		  FULL OUTER JOIN 
+		  (SELECT 
+		  #{searchCmpCd, jdbcType=VARCHAR}  AS  CMP_CD
+		  ,TO_CHAR( ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'-01','YYYY-MM'),(LEVEL-1)),'YYYY-MM') AS SALE_MONTH
+		  ,#{searchProductGubun, jdbcType=VARCHAR} AS FLOWER_GUBN
+		  FROM DUAL CONNECT BY ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'-01','YYYY-MM'),(LEVEL-1)) &lt;= TO_DATE(#{searchYear, jdbcType=VARCHAR} || '-12','YYYY-MM')) E
+		  ON C.SALE_MONTH = E.SALE_MONTH
+		  -- AND D.SALE_MONTH = E.SALE_MONTH
+		  ORDER BY E.SALE_MONTH ASC
+		
+	</select>
+	
+	<select id="getSaleDate" parameterType="com.fpdisys.dist.hab06.domain.Hab06VO" resultMap="resultHab06Map">
+		SELECT SUBSTR(SALE_MONTH,0,4) AS SALE_MONTH FROM T_SALE_MONTH
+		WHERE 1=1
+		AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+		AND FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR}
+		GROUP BY SUBSTR(SALE_MONTH,0,4)
+		ORDER BY SALE_MONTH DESC
+	</select>
+	
+	<!-- 월별전년대비실적 :: Excel -->
+	<select id="selectHab06Excel" parameterType="com.fpdisys.dist.hab06.domain.Hab06VO" resultMap="resultHab06Map">
+	
+		SELECT
+			D.CMP_CD
+			,D.SALE_MONTH
+			,D.FLOWER_GUBN 
+			, F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ) AS FLOWER_GUBN_NM
+			,NVL(C.MAX_AMT,0) AS MAX_AMT
+			,NVL(C.MIN_AMT,0) AS MIN_AMT
+			,NVL(C.AVG_AMT,0) AS AVG_AMT
+			,NVL(TRUNC(C.TOT_AMT/1000000),0) AS TOT_AMT
+			,NVL(TRUNC(C.TOT_QTY/10000),0) AS TOT_QTY
+			,NVL(D.OLD_MAX_AMT,0) AS OLD_MAX_AMT
+			,NVL(D.OLD_MIN_AMT,0) AS OLD_MIN_AMT
+			,NVL(D.OLD_AVG_AMT,0) AS OLD_AVG_AMT
+			,NVL(TRUNC(D.OLD_TOT_AMT/1000000),0) AS OLD_TOT_AMT
+			,NVL(TRUNC(D.OLD_TOT_QTY/10000),0) AS OLD_TOT_QTY
+			,NVL(ABS(ROUND((C.TOT_AMT-D.OLD_TOT_AMT)/D.OLD_TOT_AMT*100,2)),0) AS PER_TOT_AMT
+			,(CASE
+				WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'blue'
+				WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'red'
+				ELSE 'green' 
+			END ) AS  PER_AMT_COL  
+			,NVL(ABS(ROUND((C.TOT_QTY-D.OLD_TOT_QTY)/D.OLD_TOT_QTY*100,2)),0) AS PER_TOT_QTY
+			,(CASE
+				WHEN  C.TOT_QTY  &lt; D.OLD_TOT_QTY THEN 'blue'
+				WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'red'
+				ELSE 'green' 
+			END ) AS  PER_QTY_COL
+			, 0 AS SALE_YEAR
+		FROM 
+		(
+			SELECT A.CMP_CD
+				, A.SALE_MONTH
+				, A.FLOWER_GUBN      
+				, MAX(A.MAX_AMT) AS MAX_AMT
+				, MIN(A.MIN_AMT) AS MIN_AMT
+				, ROUND(AVG(A.AVG_AMT),3) AS AVG_AMT
+				, SUM(A.TOT_AMT) AS  TOT_AMT
+				, SUM(A.TOT_QTY) AS  TOT_QTY
+			FROM T_SALE_MONTH A
+			WHERE 1=1
+			AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+			AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+			AND  A.TOT_AMT &lt;&gt; 0
+			GROUP BY A.CMP_CD, A.SALE_MONTH, A.FLOWER_GUBN 
+			ORDER BY A.SALE_MONTH ASC) C,
+		(
+			SELECT 
+		        #{searchCmpCd, jdbcType=VARCHAR}  AS CMP_CD
+		        , V_DATE AS SALE_MONTH
+		        ,#{searchProductGubun, jdbcType=VARCHAR} AS FLOWER_GUBN
+		        ,OLD_MAX_AMT
+		        , OLD_MIN_AMT
+		        , OLD_AVG_AMT
+		        , OLD_TOT_AMT
+		        , OLD_TOT_QTY
+		    FROM
+		    (
+		    SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'01','YYYYMM'), LEVEL-1),'YYYY-MM') AS V_DATE
+		    FROM DUAL 
+		    CONNECT BY LEVEL &lt;= MONTHS_BETWEEN(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'12','YYYYMM'),TO_DATE(#{searchYear, jdbcType=VARCHAR}||'01','YYYYMM'))+1
+		    ) A,
+		    (
+		        SELECT B.CMP_CD
+		            , REPLACE(B.SALE_MONTH,SUBSTR(B.SALE_MONTH,0,4),#{searchYear, jdbcType=VARCHAR}) AS SALE_MONTH
+		            , B.FLOWER_GUBN      
+		            , MAX(B.MAX_AMT) AS OLD_MAX_AMT
+		            , MIN(B.MIN_AMT) AS OLD_MIN_AMT
+		            , ROUND(AVG(B.AVG_AMT),3) AS OLD_AVG_AMT
+		            , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+		            , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+		        FROM T_SALE_MONTH B
+		        WHERE 1=1
+		        AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		        AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+		        AND SUBSTR(B.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+		        AND  B.TOT_AMT &lt;&gt; 0
+		        GROUP BY B.CMP_CD, B.SALE_MONTH, B.FLOWER_GUBN 
+		        ORDER BY B.SALE_MONTH ASC
+		        )B
+		        WHERE A.V_DATE=B.SALE_MONTH(+)
+	        ) D
+		WHERE 1=1
+		AND C.CMP_CD(+) = D.CMP_CD
+		AND C.FLOWER_GUBN(+) =D.FLOWER_GUBN
+		AND C.SALE_MONTH(+) = D.SALE_MONTH  
+		ORDER BY D.SALE_MONTH ASC
+		<!--
+		SELECT
+		  NVL(NVL(D.CMP_CD,C.CMP_CD),E.CMP_CD) AS CMP_CD
+		  ,NVL(NVL(D.SALE_MONTH,C.SALE_MONTH),E.SALE_MONTH) AS SALE_MONTH
+		  ,NVL(NVL(D.FLOWER_GUBN,C.FLOWER_GUBN),E.FLOWER_GUBN) AS FLOWER_GUBN 
+		  ,NVL(NVL(F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ),F_GET_FLOWER_GUBN_NAME( C.FLOWER_GUBN )),F_GET_FLOWER_GUBN_NAME(E.FLOWER_GUBN)) AS FLOWER_GUBN_NM
+		  ,NVL(C.MAX_AMT,0) AS MAX_AMT
+		  ,NVL(C.MIN_AMT,0) AS MIN_AMT
+		  ,NVL(C.AVG_AMT,0) AS AVG_AMT
+		  ,NVL(TRUNC(C.TOT_AMT/1000000),0) AS TOT_AMT
+		  ,NVL(TRUNC(C.TOT_QTY/10000),0) AS TOT_QTY
+		  ,NVL(D.OLD_MAX_AMT,0) AS OLD_MAX_AMT
+		  ,NVL(D.OLD_MIN_AMT,0) AS OLD_MIN_AMT
+		  ,NVL(D.OLD_AVG_AMT,0) AS OLD_AVG_AMT
+		  ,NVL(TRUNC(D.OLD_TOT_AMT/1000000),0) AS OLD_TOT_AMT
+		  ,NVL(TRUNC(D.OLD_TOT_QTY/10000),0) AS OLD_TOT_QTY
+		  ,NVL(ABS(ROUND((C.TOT_AMT-D.OLD_TOT_AMT)/D.OLD_TOT_AMT*100,2)),0) AS PER_TOT_AMT
+		  ,(CASE
+		     WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'red'
+		     WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'blue'
+		     ELSE 'green' 
+		  END ) AS  PER_AMT_COL  
+		  ,NVL(ABS(ROUND((C.TOT_QTY-D.OLD_TOT_QTY)/D.OLD_TOT_QTY*100,2)),0) AS PER_TOT_QTY
+		  ,(CASE
+		     WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'red'
+		     WHEN  C.TOT_QTY  &lt; D.OLD_TOT_QTY THEN 'blue'
+		     ELSE 'green' 
+		  END ) AS  PER_QTY_COL
+		  , TO_CHAR((SELECT ADD_MONTHS(TO_DATE(MAX(SALE_DATE),'YYYY-MM-DD'),-12) FROM T_SALE_DATE WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR} AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} AND SALE_DATE &gt; TO_CHAR(SYSDATE-30,'YYYY-MM-DD')),'MM.DD') AS SALE_YEAR 
+		FROM 
+		(SELECT A.CMP_CD
+		      , A.SALE_MONTH
+		      , A.FLOWER_GUBN      
+		      , MAX(A.MAX_AMT) AS MAX_AMT
+		      , MIN(A.MIN_AMT) AS MIN_AMT
+		      , ROUND(AVG(A.AVG_AMT),3) AS AVG_AMT
+		      , SUM(A.TOT_AMT) AS  TOT_AMT
+		      , SUM(A.TOT_QTY) AS  TOT_QTY
+		  FROM T_SALE_MONTH A
+		  WHERE 1=1
+		  AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		  AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR}
+		  AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+		  AND  A.TOT_AMT &lt;&gt; 0
+		  GROUP BY A.CMP_CD, A.SALE_MONTH, A.FLOWER_GUBN 
+		  ORDER BY A.SALE_MONTH ASC) C
+		    FULL OUTER JOIN
+		(SELECT B.CMP_CD
+		      , REPLACE(SUBSTR(B.SALE_DATE,0,7),SUBSTR(SUBSTR(B.SALE_DATE,0,7),0,4),#{searchYear, jdbcType=VARCHAR}) AS SALE_MONTH
+		      , B.FLOWER_GUBN      
+		      , MAX(B.MAX_AMT) AS OLD_MAX_AMT
+		      , MIN(B.MIN_AMT) AS OLD_MIN_AMT
+		      , ROUND(AVG(B.AVG_AMT),3) AS OLD_AVG_AMT
+		      , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+		      , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+		  FROM T_SALE_DATE B
+		  WHERE 1=1
+		  AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+		  AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+		  AND SUBSTR(B.SALE_DATE,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+		  AND B.SALE_DATE &lt;= TO_CHAR((SELECT ADD_MONTHS(TO_DATE(MAX(SALE_DATE),'YYYY-MM-DD'),-12) FROM T_SALE_DATE WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR} AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} AND SALE_DATE &gt; TO_CHAR(SYSDATE-30,'YYYY-MM-DD')),'YYYY-MM-DD')
+		  AND B.TOT_AMT &lt;&gt; 0
+		  GROUP BY B.CMP_CD, SUBSTR(B.SALE_DATE,0,7), B.FLOWER_GUBN 
+		  ORDER BY SUBSTR(B.SALE_DATE,0,7) ASC) D
+		  ON C.CMP_CD = D.CMP_CD
+		  AND C.FLOWER_GUBN =D.FLOWER_GUBN
+		  AND C.SALE_MONTH = D.SALE_MONTH  
+		  FULL OUTER JOIN 
+		  (SELECT 
+		  #{searchCmpCd, jdbcType=VARCHAR}  AS  CMP_CD
+		  ,TO_CHAR( ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'-01','YYYY-MM'),(LEVEL-1)),'YYYY-MM') AS SALE_MONTH
+		  ,#{searchProductGubun, jdbcType=VARCHAR} AS FLOWER_GUBN
+		  FROM DUAL CONNECT BY ADD_MONTHS(TO_DATE(#{searchYear, jdbcType=VARCHAR}||'-01','YYYY-MM'),(LEVEL-1)) &lt;= TO_DATE(#{searchYear, jdbcType=VARCHAR} || '-12','YYYY-MM')) E
+		  ON C.SALE_MONTH = E.SALE_MONTH
+		  
+		  ORDER BY E.SALE_MONTH ASC
+		-->
+	</select>
+	
+	<!-- 월별전년대비실적 합계 :: Excel -->
+	<select id="selectHab06HapExcel" parameterType="com.fpdisys.dist.hab06.domain.Hab06VO" resultMap="resultHab06Map">
+	   	
+			  SELECT
+			  D.CMP_CD
+			  ,D.SALE_MONTH
+			  ,D.FLOWER_GUBN
+			  ,F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ) AS FLOWER_GUBN_NM 
+			  ,TRUNC(C.TOT_AMT/1000000) AS TOT_AMT
+			  ,TRUNC(C.TOT_QTY/10000) AS TOT_QTY
+			  ,TRUNC(D.OLD_TOT_AMT/1000000 ) AS OLD_TOT_AMT
+			  ,TRUNC(D.OLD_TOT_QTY/10000 ) AS OLD_TOT_QTY
+			  ,NVL(ABS(ROUND((C.TOT_AMT-D.OLD_TOT_AMT)/D.OLD_TOT_AMT*100,2)),0) AS PER_TOT_AMT
+			  ,(CASE
+			     WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'blue'
+				WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'red'
+			     ELSE 'green' 
+			  END ) AS  PER_AMT_COL  
+			  ,NVL(ABS(ROUND((C.TOT_QTY-D.OLD_TOT_QTY)/D.OLD_TOT_QTY*100,2)),0) AS PER_TOT_QTY
+			  ,(CASE
+			     WHEN  C.TOT_QTY   &lt; D.OLD_TOT_QTY THEN 'blue'
+			     WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'red'
+			     ELSE 'green' 
+			  END ) AS  PER_QTY_COL  
+			FROM 
+			(SELECT A.CMP_CD
+			      , #{searchYear, jdbcType=VARCHAR}  AS SALE_MONTH
+			      , A.FLOWER_GUBN      
+			      , SUM(A.TOT_AMT) AS  TOT_AMT
+			      , SUM(A.TOT_QTY) AS  TOT_QTY
+			  FROM T_SALE_MONTH A
+			  WHERE 1=1
+			  AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			  AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+			  AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+			  AND  A.TOT_AMT &lt;&gt; 0
+			  GROUP BY A.CMP_CD, A.FLOWER_GUBN 
+			) C,
+			(SELECT B.CMP_CD
+			      , #{searchYear, jdbcType=VARCHAR}  AS SALE_MONTH
+			      , B.FLOWER_GUBN      
+			      , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+			      , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+			  FROM T_SALE_MONTH B
+			  WHERE 1=1
+			  AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			  AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+			  AND SUBSTR(B.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+			  AND  B.TOT_AMT &lt;&gt; 0
+			  GROUP BY B.CMP_CD, B.FLOWER_GUBN 
+			  ) D
+			  WHERE 1=1
+			  AND C.CMP_CD(+) = D.CMP_CD
+			  AND C.FLOWER_GUBN(+) =D.FLOWER_GUBN
+			  AND C.SALE_MONTH(+) = D.SALE_MONTH  
+			  ORDER BY D.SALE_MONTH ASC 
+		<!--  ,NVL(ABS(ROUND(100 -(C.TOT_QTY /D.OLD_TOT_QTY *100),2)),0) AS PER_TOT_QTY-->
+		<!--	  
+			  SELECT
+			  D.CMP_CD
+			  ,D.SALE_MONTH
+			  ,D.FLOWER_GUBN
+			  ,F_GET_FLOWER_GUBN_NAME( D.FLOWER_GUBN ) AS FLOWER_GUBN_NM 
+			  ,TRUNC(C.TOT_AMT/10000) AS TOT_AMT
+			  ,TRUNC(C.TOT_QTY/10000) AS TOT_QTY
+			  ,TRUNC(D.OLD_TOT_AMT/10000 ) AS OLD_TOT_AMT
+			  ,TRUNC(D.OLD_TOT_QTY/10000 ) AS OLD_TOT_QTY
+			  ,NVL(ABS(ROUND((C.TOT_AMT-D.OLD_TOT_AMT)/D.OLD_TOT_AMT*100,2)),0) AS PER_TOT_AMT
+			  ,(CASE
+			     WHEN  C.TOT_AMT  &lt; D.OLD_TOT_AMT THEN 'blue'
+				WHEN  C.TOT_AMT  &gt; D.OLD_TOT_AMT THEN 'red'
+			     ELSE 'green' 
+			  END ) AS  PER_AMT_COL  
+			  
+			  ,NVL(ABS(ROUND((C.TOT_QTY-D.OLD_TOT_QTY)/D.OLD_TOT_QTY*100,2)),0) AS PER_TOT_QTY
+			  ,(CASE
+			     WHEN  C.TOT_QTY   &lt; D.OLD_TOT_QTY THEN 'blue'
+			     WHEN  C.TOT_QTY  &gt; D.OLD_TOT_QTY THEN 'red'
+			     ELSE 'green' 
+			  END ) AS  PER_QTY_COL  
+			FROM 
+			(SELECT A.CMP_CD
+			      , #{searchYear, jdbcType=VARCHAR}  AS SALE_MONTH
+			      , A.FLOWER_GUBN      
+			      , SUM(A.TOT_AMT) AS  TOT_AMT
+			      , SUM(A.TOT_QTY) AS  TOT_QTY
+			  FROM T_SALE_MONTH A
+			  WHERE 1=1
+			  AND A.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			  AND A.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+			  AND SUBSTR(A.SALE_MONTH,0,4)=#{searchYear, jdbcType=VARCHAR}
+			  AND  A.TOT_AMT &lt;&gt; 0
+			  GROUP BY A.CMP_CD, A.FLOWER_GUBN 
+			) C,
+			(SELECT B.CMP_CD
+			      , #{searchYear, jdbcType=VARCHAR}  AS SALE_MONTH
+			      , B.FLOWER_GUBN      
+			      , SUM(B.TOT_AMT) AS  OLD_TOT_AMT
+			      , SUM(B.TOT_QTY) AS  OLD_TOT_QTY
+			  FROM T_SALE_DATE B
+			  WHERE 1=1
+			  AND B.FLOWER_GUBN =#{searchProductGubun, jdbcType=VARCHAR}
+			  AND B.CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} 
+			  AND SUBSTR(B.SALE_DATE,0,4)=#{searchYear, jdbcType=VARCHAR} -1
+			  AND B.SALE_DATE &lt;= TO_CHAR((SELECT ADD_MONTHS(TO_DATE(MAX(SALE_DATE),'YYYY-MM-DD'),-12) FROM T_SALE_DATE WHERE FLOWER_GUBN = #{searchProductGubun, jdbcType=VARCHAR} AND CMP_CD =#{searchCmpCd, jdbcType=VARCHAR} AND SALE_DATE &gt; TO_CHAR(SYSDATE-30,'YYYY-MM-DD')),'YYYY-MM-DD')
+			  AND  B.TOT_AMT &lt;&gt; 0
+			  GROUP BY B.CMP_CD, B.FLOWER_GUBN 
+			  ) D
+			  WHERE 1=1
+			  AND C.CMP_CD = D.CMP_CD
+			  AND C.FLOWER_GUBN =D.FLOWER_GUBN
+			  AND C.SALE_MONTH = D.SALE_MONTH  
+			  ORDER BY D.SALE_MONTH ASC
+		-->	  
+			  
+	</select>
+</mapper>

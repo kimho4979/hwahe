@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hca03.mapper.Hca03Mapper">
+
+<resultMap id="resultMapNew" type="com.fpdisys.dist.hca03.domain.Hca03VO">
+	<result property="seqNo" 				column="SEQ_NO"/>
+	<result property="regDate" 				column="REG_DATE"/>
+	<result property="pumName" 				column="PUM_NAME"/>
+	<result property="goodName" 			column="GOOD_NAME"/>
+	<result property="chulNo" 				column="CHUL_NO"/>
+	<result property="status1" 				column="STATUS"/>
+	<result property="bigo1" 				column="BIGO"/>
+	<result property="useYn" 				column="USE_YN"/>
+	<result property="sanCd" 				column="SAN_CD"/>
+	<result property="regDt" 				column="REG_DT"/>
+	<result property="uptDt" 				column="UPT_DT"/>
+	<result property="fileSeq" 				column="FILE_SEQ"/>
+	<result property="cropReportSeq" 		column="CROP_REPORT_SEQ"/>
+	<result property="originalFileName" 	column="ORIGINAL_FILE_NAME"/>
+	<result property="storedFileName" 		column="STORED_FILE_NAME"/>
+	<!-- <result property="fileSize" 			column="FILE_SIZE"/> -->
+</resultMap>
+
+<resultMap id="resultHca03ExcelMap" type="com.fpdisys.dist.hca03.domain.Hca03ExcelVO">
+		<result property="seqNo" 	column="SEQ_NO"/>
+		<result property="regDate" 	column="REG_DATE"/>
+		<result property="pumName" 	column="PUM_NAME"/>
+		<result property="goodName" column="GOOD_NAME"/>
+		<result property="chulNo" 	column="CHUL_NO"/>
+		<result property="uniqueColor" 	column="UNIQUE_COLOR"/>
+		<result property="status" 	column="STATUS"/>
+		<result property="statSun" 	column="STAT_SUN"/>
+		<result property="statSize" 	column="STAT_SIZE"/>
+		<result property="statClimate" 	column="STAT_CLIMATE"/>
+		<result property="statDefinition" 	column="STAT_DEFINITION"/>
+		<result property="statTemper" 	column="STAT_TEMPER"/>
+		<result property="statColor" 	column="STAT_COLOR"/>
+		<result property="statLength" 	column="STAT_LENGTH"/>
+		<result property="statThick" 	column="STAT_THICK"/>
+		<result property="statInsectYn" 	column="STAT_INSECT_YN"/>
+		<result property="statInsectKind" 	column="STAT_INSECT_KIND"/>
+		<result property="bigo" 	column="BIGO"/>
+		<result property="useYn" 	column="USE_YN"/>
+		<result property="sanCd" 	column="SAN_CD"/>
+		<result property="regDt" 	column="REG_DT"/>
+		<result property="uptDt" 	column="UPT_DT"/>
+	</resultMap>
+
+	<select id="selectHca03" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.hca03.domain.Hca03VO">
+
+		SELECT TOTAL_COUNT
+			,RNUM
+			,REG_DATE
+			,PUM_NAME
+			,GOOD_NAME
+			,CHUL_NO
+			,STATUS
+			,BIGO
+			,SIDO
+			,FILE_NAME
+			FROM(
+			SELECT COUNT(*) OVER() AS TOTAL_COUNT
+			,RNUM
+			,REG_DATE
+			,PUM_NAME
+			,GOOD_NAME
+			,CHUL_NO
+			,STATUS
+			,BIGO
+			,SIDO
+			,FILE_NAME
+		FROM (
+			SELECT 
+				ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, GOOD_NAME, STATUS) AS RNUM
+				,T1.REG_DATE
+				,T1.PUM_NAME
+				,T1.GOOD_NAME
+				,T1.CHUL_NO
+				,CASE WHEN T1.STATUS = 1 THEN '좋음'
+				WHEN T1.STATUS = 2 THEN '보통'
+				ELSE '나쁨' END AS STATUS
+				,T1.BIGO
+				,SUBSTR(T3.SAN_BIGO, 0, 2) AS SIDO
+				,T2.STORED_FILE_NAME AS FILE_NAME
+			FROM T_CROP_REPORT T1
+			LEFT OUTER JOIN T_CROP_FILE T2 ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+			LEFT OUTER JOIN T_LOCAL T3 ON T1.SAN_CD = T3.SAN_CD
+			WHERE 1=1
+			<if test='initFlag!="T"'>
+				AND SUBSTR(T3.SAN_BIGO, 0, 2) IN
+				<if test='san_list==null'>
+					('')
+				</if>
+				<if test='san_list!=null'>
+					<foreach collection="san_list" item="item" index="index" separator="," open="(" close=")">
+						#{item}
+					</foreach>
+				</if>
+				
+			</if>
+			AND USE_YN='Y'
+			ORDER BY REG_DATE DESC, GOOD_NAME ,STATUS
+			)
+		)
+		WHERE RNUM BETWEEN #{START} AND #{END}
+	</select>
+	
+	<select id="selectHca03Test" parameterType="java.util.HashMap" statementType="PREPARED" resultType="com.fpdisys.dist.hca03.domain.Hca03VO">
+		SELECT
+			TOTAL_COUNT
+			, RNUM
+			, REG_DATE
+			, SEQ_NO
+			, PUM_NAME
+			, GOOD_NAME
+			, CHUL_NO
+			, UNIQUE_COLOR
+			, STATUS
+			, STAT_SUN
+			, STAT_CLIMATE
+			, STAT_SIZE
+			, STAT_THICK
+			, STAT_DEFINITION
+			, STAT_LENGTH
+			, STAT_INSECT_YN
+			, STAT_INSECT_KIND
+			, BIGO
+			, FILE_SEQ
+			, ORIGINAL_FILE_NAME
+			, STORED_FILE_NAME
+			, FILE_SIZE
+			, REG_DT
+			, UPT_DT
+			, USE_YN
+			, SIDO
+		FROM
+		( 
+			SELECT
+  				COUNT(*) OVER() AS TOTAL_COUNT
+				, RNUM
+				, REG_DATE
+				, SEQ_NO
+				, PUM_NAME
+				, GOOD_NAME
+				, CHUL_NO
+				, UNIQUE_COLOR
+				, STATUS
+				, STAT_SUN
+				, STAT_CLIMATE
+				, STAT_SIZE
+				, STAT_THICK
+				, STAT_DEFINITION
+				, STAT_LENGTH
+				, STAT_INSECT_YN
+				, STAT_INSECT_KIND
+				, BIGO
+				, FILE_SEQ
+				, ORIGINAL_FILE_NAME
+				, STORED_FILE_NAME
+				, FILE_SIZE
+				, REG_DT
+				, UPT_DT
+				, USE_YN
+				, SIDO
+			FROM
+			(
+				SELECT
+					ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, GOOD_NAME, STATUS) AS RNUM
+      				, T1.REG_DATE
+					, T1.SEQ_NO
+					, T1.PUM_NAME
+					, T1.GOOD_NAME
+					, T1.CHUL_NO
+					, (CASE WHEN T1.UNIQUE_COLOR = 'red' THEN '빨강' 
+              				WHEN T1.UNIQUE_COLOR = 'blue' THEN '파랑' 
+              				WHEN T1.UNIQUE_COLOR = 'yellow' THEN '노랑' 
+              				WHEN T1.UNIQUE_COLOR = 'white' THEN '하얀' 
+              				WHEN T1.UNIQUE_COLOR = 'pink' THEN '분홍' 
+              				WHEN T1.UNIQUE_COLOR = 'orange' THEN '주황' 
+              				WHEN T1.UNIQUE_COLOR = 'puple' THEN '보라' 
+              				WHEN T1.UNIQUE_COLOR = 'black' THEN '검정' 
+              				WHEN T1.UNIQUE_COLOR = 'etc' THEN '그외' 
+          				END) AS UNIQUE_COLOR
+					, (CASE WHEN T1.STATUS = '4' THEN '매우좋음'
+					        WHEN T1.STATUS = '3' THEN '좋음' 
+					        WHEN T1.STATUS = '2' THEN '나쁨' 
+					        ELSE '매우나쁨' 
+					   END) AS STATUS
+					, (CASE WHEN T1.STAT_SUN = '3' THEN '매우좋음'
+					        WHEN T1.STAT_SUN = '2' THEN '좋음' 
+					        WHEN T1.STAT_SUN = '1' THEN '나쁨'
+					        ELSE '매우나쁨'
+					    END) STAT_SUN
+					, (CASE WHEN T1.STAT_SIZE = '3' THEN '특상' 
+					        WHEN T1.STAT_SIZE = '2' THEN '상'
+					        WHEN T1.STAT_SIZE = '1' THEN '중'
+					        ELSE '하'
+					    END) AS STAT_SIZE
+					, (CASE WHEN T1.STAT_CLIMATE = '3' THEN '매우좋음'
+					        WHEN T1.STAT_CLIMATE = '2' THEN '좋음' 
+					        WHEN T1.STAT_CLIMATE = '1' THEN '나쁨'
+					        ELSE '매우나쁨'
+					    END) AS STAT_CLIMATE
+					, (CASE WHEN T1.STAT_DEFINITION = '3' THEN '매우선명' 
+					        WHEN T1.STAT_DEFINITION = '2' THEN '선명'
+					        WHEN T1.STAT_DEFINITION = '1' THEN '탁함'
+					        ELSE '매우탁함'
+					    END) AS STAT_DEFINITION
+						  , NVL(STAT_LENGTH,0) AS STAT_LENGTH
+					, (CASE WHEN T1.STAT_THICK = '4' THEN '특상' 
+					        WHEN T1.STAT_THICK = '3' THEN '상'
+					        WHEN T1.STAT_THICK = '2' THEN '증'
+					        ELSE '하'
+					    END) AS STAT_THICK
+					, (CASE WHEN STAT_INSECT_YN = 'Y' THEN '유' 
+					        ELSE '무'
+					    END) AS STAT_INSECT_YN
+						  , NVL(T1.STAT_INSECT_KIND, '없음') AS STAT_INSECT_KIND
+					, T1.BIGO
+					, T2.FILE_SEQ
+					, T2.ORIGINAL_FILE_NAME AS ORIGINAL_FILE_NAME
+					, T2.STORED_FILE_NAME AS STORED_FILE_NAME
+					, T2.FILE_SIZE AS FILE_SIZE
+					, T1.REG_DT
+					, T1.UPT_DT
+					, T1.USE_YN
+					, SUBSTR(T3.SAN_BIGO, 0, 2) AS SIDO
+				FROM T_CROP_REPORT_DETAIL T1
+				LEFT OUTER JOIN T_CROP_DETAIL_FILE T2
+				ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+				LEFT OUTER JOIN T_LOCAL T3
+				ON T1.SAN_CD = T3.SAN_CD
+				WHERE 1=1
+				<if test='initFlag!="T"'>
+				AND SUBSTR(T3.SAN_BIGO, 0, 2) IN
+					<if test='san_list==null'>
+						('')
+					</if>
+					<if test='san_list!=null'>
+						<foreach collection="san_list" item="item" index="index" separator="," open="(" close=")">
+							#{item}
+						</foreach>
+					</if>
+				</if>
+				AND T1.USE_YN = 'Y'
+				ORDER BY T1.REG_DATE DESC, T1.GOOD_NAME
+			)
+		)
+		WHERE RNUM BETWEEN #{START} AND #{END}
+	</select>
+	
+	<select id="selectJakgwangList" parameterType="com.fpdisys.dist.hca03.domain.Hca03VO" resultMap="resultMapNew">
+		SELECT * FROM(
+			SELECT 
+	  			ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, GOOD_NAME, STATUS) AS RNUM,
+	  			T1.REG_DATE,
+	  			T1.PUM_NAME,
+	  			T1.GOOD_NAME,
+	  			CASE WHEN T1.STATUS = 1 THEN '좋음'
+					WHEN T1.STATUS = 2 THEN '보통'
+					ELSE '나쁨' END AS STATUS,
+	  			T1.BIGO,
+	  			SUBSTR(T3.SAN_BIGO, 0, 2) AS SIDO,
+	  			T2.STORED_FILE_NAME
+			FROM T_CROP_REPORT_DETAIL T1
+			LEFT OUTER JOIN T_CROP_FILE T2 ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+			LEFT OUTER JOIN T_LOCAL T3 ON T1.SAN_CD = T3.SAN_CD
+			WHERE 1=1
+			AND USE_YN = 'Y'
+		)
+		WHERE RNUM BETWEEN #{startPageNo} AND #{endPageNo}
+	</select>
+
+	<select id="selectCropFileDetail" parameterType="java.lang.String" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT
+			FILE_SEQ
+			,CROP_REPORT_SEQ
+			,ORIGINAL_FILE_NAME
+			,STORED_FILE_NAME
+			,FILE_SIZE
+			,CREA_DTM
+			,CREA_ID
+			,DEL_GB
+			,UPT_DT
+		FROM
+			T_CROP_DETAIL_FILE
+		WHERE
+			FILE_SEQ = #{fileSeq}
+			AND DEL_GB = 'N'
+	</select>
+	
+	<select id="selectCropMainChart" parameterType="java.lang.String" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+			   SELECT (CASE WHEN T1.STATUS = '4' THEN '매우좋음'
+                            WHEN T1.STATUS = '3' THEN '좋음' 
+                            WHEN T1.STATUS = '2' THEN '나쁨' 
+                            ELSE '매우나쁨' 
+                       END) AS STATUS
+                     , COUNT(STATUS) AS STATUS_CNT
+                     , SUBSTR(T1.REG_DATE,1,7) AS REG_DATE
+                FROM T_CROP_REPORT_DETAIL T1
+                WHERE 1=1 
+                AND T1.USE_YN = 'Y' 
+                AND SUBSTR(T1.REG_DATE,1,7) = SUBSTR((SELECT MAX(REG_DATE) FROM T_CROP_REPORT_DETAIL WHERE USE_YN = 'Y'),1,7)
+                GROUP BY STATUS, SUBSTR(T1.REG_DATE,1,7)
+                ORDER BY STATUS
+    </select>
+    
+    <!-- 작황정보 :: Excel -->
+    <select id="selectHca03Excel" resultMap="resultHca03ExcelMap" >
+		SELECT
+			TOTAL_COUNT
+			, RNUM
+			, REG_DATE
+			, SEQ_NO
+			, PUM_NAME
+			, GOOD_NAME
+			, CHUL_NO
+			, UNIQUE_COLOR
+			, STATUS
+			, STAT_SUN
+			, STAT_CLIMATE
+			, STAT_SIZE
+			, STAT_THICK
+			, STAT_DEFINITION
+			, STAT_LENGTH
+			, STAT_INSECT_YN
+			, STAT_INSECT_KIND
+			, BIGO
+			, FILE_SEQ
+			, ORIGINAL_FILE_NAME
+			, STORED_FILE_NAME
+			, FILE_SIZE
+			, REG_DT
+			, UPT_DT
+			, USE_YN
+			, SIDO
+		FROM
+		( 
+			SELECT
+  				COUNT(*) OVER() AS TOTAL_COUNT
+				, RNUM
+				, REG_DATE
+				, SEQ_NO
+				, PUM_NAME
+				, GOOD_NAME
+				, CHUL_NO
+				, UNIQUE_COLOR
+				, STATUS
+				, STAT_SUN
+				, STAT_CLIMATE
+				, STAT_SIZE
+				, STAT_THICK
+				, STAT_DEFINITION
+				, STAT_LENGTH
+				, STAT_INSECT_YN
+				, STAT_INSECT_KIND
+				, BIGO
+				, FILE_SEQ
+				, ORIGINAL_FILE_NAME
+				, STORED_FILE_NAME
+				, FILE_SIZE
+				, REG_DT
+				, UPT_DT
+				, USE_YN
+				, SIDO
+			FROM
+			(
+				SELECT
+					ROW_NUMBER() OVER (ORDER BY REG_DATE DESC, GOOD_NAME, STATUS) AS RNUM
+      				, T1.REG_DATE
+					, T1.SEQ_NO
+					, T1.PUM_NAME
+					, T1.GOOD_NAME
+					, T1.CHUL_NO
+					, (CASE WHEN T1.UNIQUE_COLOR = 'red' THEN '빨강' 
+              				WHEN T1.UNIQUE_COLOR = 'blue' THEN '파랑' 
+              				WHEN T1.UNIQUE_COLOR = 'yellow' THEN '노랑' 
+              				WHEN T1.UNIQUE_COLOR = 'white' THEN '하얀' 
+              				WHEN T1.UNIQUE_COLOR = 'pink' THEN '분홍' 
+              				WHEN T1.UNIQUE_COLOR = 'orange' THEN '주황' 
+              				WHEN T1.UNIQUE_COLOR = 'puple' THEN '보라' 
+              				WHEN T1.UNIQUE_COLOR = 'black' THEN '검정' 
+              				WHEN T1.UNIQUE_COLOR = 'etc' THEN '그외' 
+          				END) AS UNIQUE_COLOR
+					, (CASE WHEN T1.STATUS = '4' THEN '매우좋음'
+					        WHEN T1.STATUS = '3' THEN '좋음' 
+					        WHEN T1.STATUS = '2' THEN '나쁨' 
+					        ELSE '매우나쁨' 
+					   END) AS STATUS
+					, (CASE WHEN T1.STAT_SUN = '3' THEN '매우좋음'
+					        WHEN T1.STAT_SUN = '2' THEN '좋음' 
+					        WHEN T1.STAT_SUN = '1' THEN '나쁨'
+					        ELSE '매우나쁨'
+					    END) STAT_SUN
+					, (CASE WHEN T1.STAT_SIZE = '3' THEN '특상' 
+					        WHEN T1.STAT_SIZE = '2' THEN '상'
+					        WHEN T1.STAT_SIZE = '1' THEN '중'
+					        ELSE '하'
+					    END) AS STAT_SIZE
+					, (CASE WHEN T1.STAT_CLIMATE = '3' THEN '매우좋음'
+					        WHEN T1.STAT_CLIMATE = '2' THEN '좋음' 
+					        WHEN T1.STAT_CLIMATE = '1' THEN '나쁨'
+					        ELSE '매우나쁨'
+					    END) AS STAT_CLIMATE
+					, (CASE WHEN T1.STAT_DEFINITION = '3' THEN '매우선명' 
+					        WHEN T1.STAT_DEFINITION = '2' THEN '선명'
+					        WHEN T1.STAT_DEFINITION = '1' THEN '탁함'
+					        ELSE '매우탁함'
+					    END) AS STAT_DEFINITION
+						  , NVL(STAT_LENGTH,0) AS STAT_LENGTH
+					, (CASE WHEN T1.STAT_THICK = '4' THEN '특상' 
+					        WHEN T1.STAT_THICK = '3' THEN '상'
+					        WHEN T1.STAT_THICK = '2' THEN '증'
+					        ELSE '하'
+					    END) AS STAT_THICK
+					, (CASE WHEN STAT_INSECT_YN = 'Y' THEN '유' 
+					        ELSE '무'
+					    END) AS STAT_INSECT_YN
+						  , NVL(T1.STAT_INSECT_KIND, '없음') AS STAT_INSECT_KIND
+					, T1.BIGO
+					, T2.FILE_SEQ
+					, T2.ORIGINAL_FILE_NAME AS ORIGINAL_FILE_NAME
+					, T2.STORED_FILE_NAME AS STORED_FILE_NAME
+					, T2.FILE_SIZE AS FILE_SIZE
+					, T1.REG_DT
+					, T1.UPT_DT
+					, T1.USE_YN
+					, SUBSTR(T3.SAN_BIGO, 0, 2) AS SIDO
+				FROM T_CROP_REPORT_DETAIL T1
+				LEFT OUTER JOIN T_CROP_DETAIL_FILE T2
+				ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+				LEFT OUTER JOIN T_LOCAL T3
+				ON T1.SAN_CD = T3.SAN_CD
+				WHERE 1=1
+				<if test='initFlag!="T"'>
+				AND SUBSTR(T3.SAN_BIGO, 0, 2) IN
+					<if test='san_list==null'>
+						('')
+					</if>
+					<if test='san_list!=null'>
+						<foreach collection="san_list" item="item" index="index" separator="," open="(" close=")">
+							#{item}
+						</foreach>
+					</if>
+				</if>
+				AND T1.USE_YN = 'Y'
+				ORDER BY T1.REG_DATE DESC, T1.GOOD_NAME
+			)
+		)
+	</select>
+
+</mapper>

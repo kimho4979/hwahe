@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.send.mapper.SendMapper">
+
+	<!-- SMS 발송 :: INESERT -->
+	<insert id="insertSmsTranfer" parameterType="java.util.HashMap">
+		INSERT INTO BIZ_MSG(
+			CMID
+			, MSG_TYPE
+			, STATUS
+			, REQUEST_TIME
+			, SEND_TIME
+			, REPORT_TIME
+			, DEST_PHONE
+			, SEND_PHONE
+			, MSG_BODY
+			, NATION_CODE
+			, SENDER_KEY
+			, TEMPLATE_CODE
+			, RE_BODY
+			, COVER_FLAG
+			, SMS_FLAG
+			, REPLY_FLAG
+			, USE_PAGE
+			, USE_TIME
+			, SN_RESULT
+			, TEL_INFO
+		)VALUES(
+			BIZ_SEQ.NEXTVAL
+			, '5'
+			, '0'
+			, SYSDATE
+			, SYSDATE
+			, SYSDATE
+			, #{receiveNum}
+			, #{sendNumber}
+			, #{message}
+			, '82'
+			, ''
+			, ''
+			, #{message}
+			, '0'
+			, '0'
+			, '0'
+			, '0'
+			, '0'
+			, '0'
+			, '-'
+		)
+	</insert>
+	
+	<!-- SMS LOG 발송 :: INESERT -->
+	<insert id="insertSmsTranferLog" parameterType="java.util.HashMap">
+		INSERT INTO BIZ_LOG(
+			CMID
+			, MSG_TYPE
+			, STATUS
+			, REQUEST_TIME
+			, SEND_TIME
+			, REPORT_TIME
+			, DEST_PHONE
+			, SEND_PHONE
+			, MSG_BODY
+			, NATION_CODE
+			, SENDER_KEY
+			, TEMPLATE_CODE
+			, RE_BODY
+			, COVER_FLAG
+			, SMS_FLAG
+			, REPLY_FLAG
+			, USE_PAGE
+			, USE_TIME
+			, SN_RESULT
+			, TEL_INFO
+		)VALUES(
+			BIZ_SEQ.CURRVAL
+			, '5'
+			, '0'
+			, SYSDATE
+			, SYSDATE
+			, SYSDATE
+			, #{receiveNum}
+			, #{sendNumber}
+			, #{message}
+			, '82'
+			, ''
+			, ''
+			, #{message}
+			, '0'
+			, '0'
+			, '0'
+			, '0'
+			, '0'
+			, '0'
+			, '-'
+		)
+	</insert>
+	
+	<!-- Email 발송 :: INESERT -->
+	<insert id="insertEmailTranfer" parameterType="java.util.HashMap">
+		INSERT INTO BIZ_MAIL
+		(
+			SEQ
+			, USER_ID
+			, SUBJECT
+			, MSG_BODY
+			, SEND_TIME
+		)VALUES(
+			MAIL_SEQ.NEXTVAL
+			, #{address}
+			, #{title}
+			, #{cont}
+			, SYSDATE
+		)
+	</insert>
+	
+	<!-- Email Log :: INESERT -->
+	<insert id="insertEmailTranferLog" parameterType="java.util.HashMap">
+		INSERT INTO BIZ_MAIL_LOG
+		(
+			MAIL_LOG_SEQ
+			, SEQ
+			, USER_ID
+			, SUBJECT
+			, MSG_BODY
+			, SEND_TIME
+		)VALUES(
+			(SELECT MAX(MAIL_LOG_SEQ)+1 AS MAIL_LOG_SEQ FROM BIZ_MAIL_LOG)
+			, MAIL_SEQ.CURRVAL
+			, 'noreply@at.or.kr'
+			, #{title}
+			, #{cont}
+			, SYSDATE
+		)
+	</insert>
+	
+</mapper>

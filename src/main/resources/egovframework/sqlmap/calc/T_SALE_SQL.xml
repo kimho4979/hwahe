@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpditrans.trans.calc.mapper.TranTsaleMapper">
+<resultMap id="saleResultMap" type="com.fpditrans.trans.calc.domain.TsaleVO">
+	<result property="saleDate" column="SALE_DATE"/>
+    <result property="chDate" column="CH_DATE"/>
+    <result property="cmpCd" column="CMP_CD"/>
+    <result property="seq" column="SEQ"/>
+    <result property="no1" column="NO1"/>
+    <result property="no2" column="NO2"/>
+    <result property="mejang" column="MEJANG"/>
+    <result property="large" column="LARGE"/>
+    <result property="mid" column="MID"/>
+    <result property="small" column="SMALL"/>
+    <result property="stdCode" column="STD_CODE"/>
+    <result property="cmpGood" column="CMP_GOOD"/>
+    <result property="pumName" column="PUM_NAME"/>
+    <result property="goodName" column="GOOD_NAME"/>
+    <result property="mmCd" column="MM_CD"/>
+    <result property="danq" column="DANQ"/>
+    <result property="danCd" column="DAN_CD"/>
+    <result property="pojCd" column="POJ_CD"/>
+    <result property="sizeCd" column="SIZE_CD"/>
+    <result property="lvCd" column="LV_CD"/>
+    <result property="sanCd" column="SAN_CD"/>
+    <result property="cmpSan" column="CMP_SAN"/>
+    <result property="sanName" column="SAN_NAME"/>
+    <result property="qty" column="QTY"/>
+    <result property="cost" column="COST"/>
+    <result property="amerCd" column="AMER_CD"/>
+    <result property="chCd" column="CH_CD"/>
+    <result property="smanCd" column="SMAN_CD"/>
+    <result property="chulNo" column="CHUL_NO"/>
+    <result property="chulCd" column="CHUL_CD"/>
+    <result property="chulName" column="CHUL_NAME"/>
+    <result property="farmName" column="FARM_NAME"/>
+    <result property="nakTime" column="NAK_TIME"/>
+    <result property="totQty" column="TOT_QTY"/>
+    <result property="totAmt" column="TOT_AMT"/>
+    <result property="inTime" column="IN_TIME"/>
+    <result property="gubn" column="GUBN"/>   
+</resultMap>
+	
+<resultMap id="saleLogResultMap" type="com.fpditrans.trans.calc.domain.EpisTsaleSvcLog">
+	<result property="saleDate" column="SALE_DATE"/>
+    <result property="chDate" column="CH_DATE"/>
+    <result property="cmpCd" column="CMP_CD"/>
+    <result property="seq" column="SEQ"/>
+    <result property="no1" column="NO1"/>
+    <result property="no2" column="NO2"/>
+    <result property="mejang" column="MEJANG"/>
+    <result property="large" column="LARGE"/>
+    <result property="mid" column="MID"/>
+    <result property="small" column="SMALL"/>
+    <result property="stdCode" column="STD_CODE"/>
+    <result property="stdName" column="STD_NAME"/>
+    <result property="cmpGood" column="CMP_GOOD"/>
+    <result property="pumName" column="PUM_NAME"/>
+    <result property="goodName" column="GOOD_NAME"/>
+    <result property="mmCd" column="MM_CD"/>
+    <result property="danq" column="DANQ"/>
+    <result property="danCd" column="DAN_CD"/>
+    <result property="lvCd" column="LV_CD"/>
+	<result property="totQty" column="TOT_QTY"/>
+    <result property="totAmt" column="TOT_AMT"/>	
+	<result property="inDate" column="INDATE"/>	   
+	<result property="successYn" column="SUCCESS_YN"/>
+	<result property="successYn2" column="SUCCESS_YN2"/>
+	<result property="failMessage" column="FAIL_MESSAGE"/>
+	<result property="failMessage2" column="FAIL_MESSAGE2"/>
+	<result property="fileName" column="FILENAME"/>
+	<result property="recordText" column="RECORDTEXT"/>	   
+</resultMap>
+
+
+
+
+	<select id="selectTsaleListAll" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="saleResultMap">
+	 SELECT A.SALE_DATE,
+	       A.CH_DATE,
+	       A.CMP_CD,
+	       A.SEQ,
+	       A.NO1,
+	       A.NO2,
+	       A.MEJANG,
+	       A.LARGE,
+	       A.MID,
+	       A.SMALL,
+	       (A.LARGE || A.MID || A.SMALL) AS STD_CODE,  
+	       A.CMP_GOOD,
+	       A.PUM_NAME,
+	       A.GOOD_NAME,
+	       A.MM_CD,
+	       A.DANQ,
+	       A.DAN_CD,
+	       A.POJ_CD,
+	       A.SIZE_CD,
+	       A.LV_CD,
+	       A.SAN_CD,
+	       A.CMP_SAN,
+	       A.SAN_NAME,
+	       A.QTY,
+	       A.COST,
+	       A.AMER_CD,
+	       A.CH_CD,
+	       A.SMAN_CD,
+	       A.CHUL_NO,
+	       A.CHUL_CD,
+	       A.CHUL_NAME,
+	       A.FARM_NAME,
+	       A.NAK_TIME,
+	       A.TOT_QTY,
+	       A.TOT_AMT,
+	       A.IN_TIME,
+	       A.GUBN
+	  FROM T_SALE A
+	</select>
+	
+	
+	<select id="selectSearchTsaleList" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="saleResultMap">
+	  SELECT A.SALE_DATE,
+       A.CH_DATE,
+       A.CMP_CD,
+       A.SEQ,
+       A.NO1,
+       A.NO2,
+       A.MEJANG,
+       A.LARGE,
+       A.MID,
+       A.SMALL,
+       A.CMP_GOOD,
+       A.PUM_NAME,
+       A.GOOD_NAME,
+       A.MM_CD,
+       A.DANQ,
+       A.DAN_CD,
+       A.POJ_CD,
+       A.SIZE_CD,
+       A.LV_CD,
+       A.SAN_CD,
+       A.CMP_SAN,
+       A.SAN_NAME,
+       A.QTY,
+       A.COST,
+       A.AMER_CD,
+       A.CH_CD,
+       A.SMAN_CD,
+       A.CHUL_NO,
+       A.CHUL_CD,
+       A.CHUL_NAME,
+       A.FARM_NAME,
+       A.NAK_TIME,
+       A.TOT_QTY,
+       A.TOT_AMT,
+       A.IN_TIME,
+       A.GUBN
+  FROM T_SALE A
+	    
+	    
+	</select>
+	
+	<select id="selectSearchTsaleListPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="saleResultMap">
+	SELECT data.* 
+	  FROM 
+	       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+	              ROWNUM ROW_NUM, 
+	              ROWNUM LINENUM, 
+	              data.* 
+	         FROM 
+	              (
+	    
+						SELECT A.SALE_DATE,
+       A.CH_DATE,
+       A.CMP_CD,
+       A.SEQ,
+       A.NO1,
+       A.NO2,
+       A.MEJANG,
+       A.LARGE,
+       A.MID,
+       A.SMALL,
+       A.CMP_GOOD,
+       A.PUM_NAME,
+       A.GOOD_NAME,
+       A.MM_CD,
+       A.DANQ,
+       A.DAN_CD,
+       A.POJ_CD,
+       A.SIZE_CD,
+       A.LV_CD,
+       A.SAN_CD,
+       A.CMP_SAN,
+       A.SAN_NAME,
+       A.QTY,
+       A.COST,
+       A.AMER_CD,
+       A.CH_CD,
+       A.SMAN_CD,
+       A.CHUL_NO,
+       A.CHUL_CD,
+       A.CHUL_NAME,
+       A.FARM_NAME,
+       A.NAK_TIME,
+       A.TOT_QTY,
+       A.TOT_AMT,
+       A.IN_TIME,
+       A.GUBN
+  FROM T_SALE A
+					  
+				) data 
+       		) data 
+ 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+  
+	
+	</select>
+	<select id="selectTsaleOne" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="saleResultMap">
+		SELECT A.SALE_DATE,
+				       A.CH_DATE,
+				       A.CMP_CD,
+				       A.SEQ,
+				       A.NO1,
+				       A.NO2,
+				       A.MEJANG,
+				       A.LARGE,
+				       A.MID,
+				       A.SMALL,
+				       A.CMP_GOOD,
+				       A.PUM_NAME,
+				       A.GOOD_NAME,
+				       A.MM_CD,
+				       A.DANQ,
+				       A.DAN_CD,
+				       A.POJ_CD,
+				       A.SIZE_CD,
+				       A.LV_CD,
+				       A.SAN_CD,
+				       A.CMP_SAN,
+				       A.SAN_NAME,
+				       A.QTY,
+				       A.COST,
+				       A.AMER_CD,
+				       A.CH_CD,
+				       A.SMAN_CD,
+				       A.CHUL_NO,
+				       A.CHUL_CD,
+				       A.CHUL_NAME,
+				       A.FARM_NAME,
+				       A.NAK_TIME,
+				       A.TOT_QTY,
+				       A.TOT_AMT,
+				       A.IN_TIME,
+				       A.GUBN
+				  FROM T_SALE A
+					  WHERE A.SALE_DATE = #{saleDate     , jdbcType=VARCHAR}
+					  AND   A.CH_DATE =  #{chDate     , jdbcType=VARCHAR}
+					  AND   A.CMP_CD =  #{cmpCd     , jdbcType=VARCHAR}
+					  AND   A.SEQ = #{seq     , jdbcType=VARCHAR}
+				      AND  A.NO1 = #{no1     , jdbcType=VARCHAR}
+				      AND  A.NO2 = #{no2     , jdbcType=VARCHAR}
+					  
+		</select>   
+	   
+	<insert id="insertTsaleLogFirst"  parameterType="java.util.HashMap"> 
+	     INSERT INTO FLOWER.EPIS_TSALET_SVC_LOG(SALE_DATE
+                                       ,CH_DATE
+								       ,CMP_CD
+								       ,SEQ
+								       ,NO1
+								       ,NO2
+								       ,FILENAME
+								       ,RECORDTEXT
+								       ,INDATE
+								       ,SUCCESS_YN
+								       )
+		SELECT #{v_sale_date , jdbcType=VARCHAR }
+		 	  ,#{v_ch_date , jdbcType=VARCHAR }
+			  ,#{v_cmp_cd , jdbcType=VARCHAR }
+			  ,#{v_seq , jdbcType=VARCHAR }
+			  ,#{v_no1 , jdbcType=VARCHAR }
+			  ,#{v_no2 , jdbcType=VARCHAR }
+			  ,#{v_filename , jdbcType=VARCHAR }
+			  ,#{v_recordtext , jdbcType=VARCHAR }
+			  ,SYSDATE
+			  ,'N'
+	    FROM DUAL	    
+	</insert>	
+	
+	<update id="updateTsaleLogFirst"  parameterType="java.util.HashMap">
+	    	UPDATE FLOWER.EPIS_TSALET_SVC_LOG
+		   SET FILENAME = #{v_filename , jdbcType=VARCHAR }
+			  ,RECORDTEXT = #{v_recordtext , jdbcType=VARCHAR }
+			  ,INDATE = SYSDATE
+			  ,SUCCESS_YN = 'N'
+			  ,FAIL_MESSAGE = ''
+		 WHERE SALE_DATE = #{v_sale_date , jdbcType=VARCHAR }
+		    AND CH_DATE = #{v_ch_date , jdbcType=VARCHAR }
+		   AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }
+		   AND SEQ = #{v_seq , jdbcType=VARCHAR }
+		   AND NO1 = #{v_no1 , jdbcType=VARCHAR } 
+		   AND NO2 = #{v_no2 , jdbcType=VARCHAR }  	    
+	</update>    
+	
+	<select id="selectTsaleCnt" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.lang.Integer">
+	     SELECT COUNT(*) AS CNT
+    	FROM FLOWER.EPIS_TSALET_SVC_LOG
+    	WHERE SALE_DATE = #{v_sale_date , jdbcType=VARCHAR }
+    	<!-- AND CH_DATE = #{v_ch_date , jdbcType=VARCHAR } -->
+    	AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }
+    	AND SEQ = #{v_seq , jdbcType=VARCHAR }
+    	AND NO1 = #{v_no1 , jdbcType=VARCHAR } 
+    	<!-- AND NO2 = #{v_no2 , jdbcType=VARCHAR }    -->	    
+	</select> 
+	
+	
+	<delete id="deleteTsaleLog"  parameterType="java.util.HashMap"> 
+	DELETE FROM FLOWER.EPIS_TSALET_SVC_LOG
+	    WHERE SALE_DATE = #{v_sale_date , jdbcType=VARCHAR }
+	    <!-- AND CH_DATE = #{v_ch_date , jdbcType=VARCHAR } -->
+	    AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }
+	    AND SEQ = #{v_seq , jdbcType=VARCHAR }
+	    AND NO1 = #{v_no1 , jdbcType=VARCHAR }
+	    <!--  AND NO2 = #{v_no2 , jdbcType=VARCHAR }  -->
+	
+	</delete>
+	<insert id="insertTsaleDelLog"  parameterType="java.util.HashMap">
+	     INSERT INTO EPIS_TSALET_DEL_LOG 
+	   	( SALE_DATE,
+	   	CMP_CD,
+	   	IDX,
+	   	FILENAME,
+	   	TOT_QTY,
+	   	TOT_AMT,
+	   	RECORDCNT,
+	   	JOBDATE 
+	   	)
+		values
+			(SELECT SALE_DATE,
+			       CMP_CD,
+			       #{cnt , jdbcType=VARCHAR }+1,
+			       FILENAME,
+			       TOT_QTY,
+			       TOT_AMT,     
+			       RECORDTEXT,
+			      sysdate
+			  FROM EPIS_TSALET_SVC_LOG
+			 WHERE SALE_DATE = #{v_sale_date , jdbcType=VARCHAR }
+	    	 AND CH_DATE = #{v_ch_date , jdbcType=VARCHAR }
+	    	 AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }
+	    	 AND SEQ = #{v_seq , jdbcType=VARCHAR }
+	    	 AND NO1 = #{v_no1 , jdbcType=VARCHAR }
+	         AND NO2 = #{v_no2 , jdbcType=VARCHAR }
+	
+			)
+	    
+	</insert>
+	
+	
+	<delete id="deleteTsaleLogFirst"  parameterType="java.util.HashMap"> 
+	    DELETE FROM FLOWER.T_SALE
+	    WHERE SALE_DATE = #{v_sale_date , jdbcType=VARCHAR }
+	    AND CH_DATE = #{v_ch_date , jdbcType=VARCHAR }
+	    AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }
+	    AND SEQ = #{v_seq , jdbcType=VARCHAR }
+	    AND NO1 = #{v_no1 , jdbcType=VARCHAR }
+	    AND NO2 = #{v_no2 , jdbcType=VARCHAR }
+	</delete>
+	
+	<insert id="insertTsaleFirst" parameterType="com.fpditrans.trans.calc.domain.CSVBean">
+	    INSERT INTO FLOWER.T_SALE(SALE_DATE
+                              ,CMP_CD
+                              ,SEQ
+                              ,NO1
+                              ,NO2
+                              ,MEJANG
+                              ,MM_CD
+                              ,LARGE
+                              ,MID
+                              ,SMALL
+                              ,CMP_GOOD
+                              ,PUM_NAME
+                              ,GOOD_NAME
+                              ,DANQ
+                              ,DAN_CD
+                              ,POJ_CD
+                              ,SIZE_CD
+                              ,LV_CD
+                              ,SAN_CD
+                              ,CMP_SAN
+                              ,SAN_NAME
+                              ,QTY
+                              ,COST
+                              ,AMER_CD
+                              ,CH_CD
+                              ,SMAN_CD
+                              ,CHUL_NO
+                              ,CHUL_CD
+                              ,CHUL_NAME
+                              ,FARM_NAME
+                              ,IN_TIME
+                              ,NAK_TIME
+                              ,GUBN
+                              ,CH_DATE
+                              ,TOT_AMT
+                              ,TOT_QTY
+                              )
+	SELECT #{v_sale_date , jdbcType=VARCHAR }
+		  ,#{v_cmp_cd , jdbcType=VARCHAR }
+		  ,#{v_seq , jdbcType=VARCHAR }
+		  ,#{v_no1 , jdbcType=VARCHAR }
+		  ,#{v_no2 , jdbcType=VARCHAR }
+		  ,#{v_mejang , jdbcType=VARCHAR }
+		  ,#{v_mm , jdbcType=VARCHAR }
+		  ,SUBSTR(#{v_good , jdbcType=VARCHAR }, 1, 2) 
+		  ,SUBSTR(#{v_good , jdbcType=VARCHAR }, 3, 2) 
+		  ,SUBSTR(#{v_good , jdbcType=VARCHAR }, 5, 2) 
+		  ,#{v_cmp_good , jdbcType=VARCHAR }
+		  ,#{v_pum_name , jdbcType=VARCHAR }
+		  ,#{v_good_name , jdbcType=VARCHAR }
+		  ,#{v_danq , jdbcType=VARCHAR }
+		  ,#{v_dan_cd , jdbcType=VARCHAR }
+		  ,#{v_poj_cd , jdbcType=VARCHAR }
+		  ,#{v_size_cd , jdbcType=VARCHAR }
+		  ,#{v_lv_cd , jdbcType=VARCHAR }
+		  ,#{v_san_cd , jdbcType=VARCHAR }
+		  ,#{v_cmp_san , jdbcType=VARCHAR }
+		  ,#{v_san_name , jdbcType=VARCHAR }
+		  ,#{v_qty , jdbcType=VARCHAR }
+		  ,#{v_cost , jdbcType=VARCHAR }
+		  ,#{v_amer_cd , jdbcType=VARCHAR }
+		  ,#{v_ch_cd , jdbcType=VARCHAR }
+		  ,#{v_sman_cd , jdbcType=VARCHAR }
+		  ,#{v_chul_no , jdbcType=VARCHAR }
+		  ,#{v_chul_cd , jdbcType=VARCHAR }
+		  ,#{v_chul_name , jdbcType=VARCHAR }
+		  ,#{v_farm_name , jdbcType=VARCHAR }
+		  ,SYSDATE
+		  ,#{v_nak_time , jdbcType=VARCHAR }
+		  ,#{v_gubn , jdbcType=VARCHAR }
+		  ,#{v_ch_date, jdbcType=VARCHAR }
+		  ,#{v_tot_amt , jdbcType=VARCHAR }
+		  ,#{v_tot_qty , jdbcType=VARCHAR }
+		 FROM DUAL	    	    	   
+	</insert>
+	
+	<update id="updateTsaleLogLast" parameterType="com.fpditrans.trans.calc.domain.CSVBean">
+	     UPDATE FLOWER.EPIS_TSALET_SVC_LOG
+		SET FAIL_MESSAGE = ''
+		    ,SUCCESS_YN = 'Y'
+			,LARGE     = SUBSTR(#{v_good , jdbcType=VARCHAR }, 1, 2) 
+            ,MID       = SUBSTR(#{v_good , jdbcType=VARCHAR }, 3, 2) 
+            ,SMALL     = SUBSTR(#{v_good , jdbcType=VARCHAR }, 5, 2) 
+			,CMP_GOOD  = #{v_cmp_good , jdbcType=VARCHAR }
+            ,PUM_NAME  = #{v_pum_name , jdbcType=VARCHAR }
+            ,GOOD_NAME = #{v_good_name , jdbcType=VARCHAR }
+            ,DANQ      = #{v_danq , jdbcType=VARCHAR }
+            ,DAN_CD    = #{v_dan_cd , jdbcType=VARCHAR }
+            ,POJ_CD    = #{v_poj_cd , jdbcType=VARCHAR }
+            ,SIZE_CD   = #{v_size_cd , jdbcType=VARCHAR }
+            ,LV_CD     = #{v_lv_cd , jdbcType=VARCHAR }
+			,TOT_QTY   = #{v_tot_qty, jdbcType=VARCHAR }
+			,TOT_AMT   = #{v_tot_amt , jdbcType=VARCHAR }
+		WHERE SALE_DATE = #{v_sale_date , jdbcType=VARCHAR }
+		AND CH_DATE = #{v_ch_date , jdbcType=VARCHAR }
+		AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }
+		AND SEQ = #{v_seq , jdbcType=VARCHAR }
+		AND NO1 = #{v_no1 , jdbcType=VARCHAR }
+		AND NO2 = #{v_no2 , jdbcType=VARCHAR }
+	</update>
+	
+	<select id="selectEpisTsaleSvcLogAll" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="saleLogResultMap">
+	    SELECT A.SALE_DATE,
+       A.CMP_CD,
+       A.SEQ,
+       A.NO1,
+       A.LARGE,
+       A.MID,
+       A.SMALL,
+       (A.LARGE || A.MID || A.SMALL) AS STD_CODE,  
+       A.CMP_GOOD,
+       A.PUM_NAME,
+       A.GOOD_NAME,
+       A.DANQ,
+       A.DAN_CD,
+       A.POJ_CD,
+       A.SIZE_CD,
+       A.LV_CD,
+       A.TOT_QTY,
+       A.TOT_AMT,
+       A.SUCCESS_YN,
+       A.SUCCESS_YN2,
+       A.FAIL_MESSAGE,
+       A.FAIL_MESSAGE2,
+       A.FILENAME,
+       A.RECORDTEXT,
+       A.INDATE,
+       A.MM_CD
+  FROM EPIS_TSALET_SVC_LOG A
+   
+	</select>
+	<select id="selectEpisTsaleSvcLogSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="saleLogResultMap">
+	      SELECT A.SALE_DATE,
+       A.CMP_CD,
+       A.SEQ,
+       A.NO1,
+       A.LARGE,
+       (SELECT B.LARGE_NAME FROM T_GOODL B  WHERE B.LARGE =A.LARGE ) AS LAGE_NAME,
+       A.MID,
+       (SELECT C.MID_NAME FROM T_GOODM C  WHERE C.LARGE =A.LARGE AND C.MID = A.MID) AS MID_NAME,
+       A.SMALL,
+       (A.LARGE || A.MID || A.SMALL) AS STD_CODE,
+       (SELECT D.GOOD_NAME FROM T_GOODN D WHERE D.LARGE = A.LARGE AND D.MID = A.MID AND D.SMALL = A.SMALL) AS STD_NAME,  
+       A.CMP_GOOD,
+       A.PUM_NAME,
+       A.GOOD_NAME,
+       A.DANQ,
+       A.DAN_CD,
+       A.POJ_CD,
+       A.SIZE_CD,
+       A.LV_CD,
+       A.TOT_QTY,
+       A.TOT_AMT,
+       A.SUCCESS_YN,
+       A.SUCCESS_YN2,
+       A.FAIL_MESSAGE,
+       A.FAIL_MESSAGE2,
+       A.FILENAME,
+       A.RECORDTEXT,
+       A.INDATE,
+       A.MM_CD
+  FROM EPIS_TSALET_SVC_LOG A
+  WHERE 1=1
+   <if  test ="orginFileName!=null and orginFileName!='' " >
+   		AND A.FILENAME = #{orginFileName, jdbcType=VARCHAR}
+  </if>
+  <if  test ="searchCmpCode!=null and searchCmpCode!='' " >
+        AND  A.CMP_CD = #{searchCmpCode , jdbcType=VARCHAR }
+  </if>
+   <if  test ="searchSaleDate!=null and searchSaleDate!='' " >
+         AND A.SALE_DATE = #{searchSaleDate , jdbcType=VARCHAR }
+   </if>    
+  <if  test ="searchSuccessYn=='Y'" >
+   AND  A.SUCCESS_YN ='Y'
+   </if>
+   <if  test ="searchSuccessYn=='N'" >
+	 AND  A.SUCCESS_YN ='N'
+   </if>
+   
+   
+   
+   </select>
+   <select id="selectEpisTsaleSvcLogSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultMap="saleLogResultMap">
+    	SELECT data.* 
+		  FROM 
+		       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+		              ROWNUM ROW_NUM, 
+		              ROWNUM LINENUM, 
+		              data.* 
+		         FROM 
+		              (
+		                	      SELECT A.SALE_DATE,
+								        A.CMP_CD,
+								       A.SEQ,
+								       A.NO1,
+								       A.LARGE,
+								       (SELECT B.LARGE_NAME FROM T_GOODL B  WHERE B.LARGE =A.LARGE ) AS LAGE_NAME,
+								       A.MID,
+								       (SELECT C.MID_NAME FROM T_GOODM C  WHERE C.LARGE =A.LARGE AND C.MID = A.MID) AS MID_NAME,
+								       A.SMALL,
+								       (A.LARGE || A.MID || A.SMALL) AS STD_CODE,
+								       (SELECT D.GOOD_NAME FROM T_GOODN D WHERE D.LARGE = A.LARGE AND D.MID = A.MID AND D.SMALL = A.SMALL) AS STD_NAME,  
+								       A.CMP_GOOD,
+								       A.CMP_GOOD,
+								       A.PUM_NAME,
+								       A.GOOD_NAME,
+								       A.DANQ,
+								       A.DAN_CD,
+								       A.POJ_CD,
+								       A.SIZE_CD,
+								       A.LV_CD,
+								       A.TOT_QTY,
+								       A.TOT_AMT,
+								       A.SUCCESS_YN,
+								       A.SUCCESS_YN2,
+								       A.FAIL_MESSAGE,
+								       A.FAIL_MESSAGE2,
+								       A.FILENAME,
+								       A.RECORDTEXT,
+								       A.INDATE,
+								       A.MM_CD
+								  FROM EPIS_TSALET_SVC_LOG A
+								  WHERE 1=1
+								  <if  test ="orginFileName!=null and orginFileName!='' " >
+								   		AND A.FILENAME = #{orginFileName, jdbcType=VARCHAR}
+								  </if>
+								  <if  test ="searchCmpCode!=null and searchCmpCode!='' " >
+								         AND  A.CMP_CD = #{searchCmpCode , jdbcType=VARCHAR }
+								  </if>
+								   <if  test ="searchSaleDate!=null and searchSaleDate!='' " >
+								          AND A.SALE_DATE = #{searchSaleDate , jdbcType=VARCHAR }
+								   </if>    
+								  <if  test ="searchSuccessYn=='Y'" >
+								   		AND  A.SUCCESS_YN ='Y'
+								   </if>
+								   <if  test ="searchSuccessYn=='N'" >
+									 	AND  A.SUCCESS_YN ='N'
+								   </if>
+   
+		              
+		              ) data 
+	       		) data 
+	 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	  
+		       
+       
+   </select> 
+  
+   <select id="selectEpisTsaleSvcLogResult" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+       
+   		SELECT 
+   		  SALE_DATE As saleDate,
+   		  CMP_CD AS cmpCD,
+		  SUM (CASE WHEN SUCCESS_YN = 'Y' THEN 1 ELSE 0 END) AS Y_CNT,
+		  SUM (CASE WHEN SUCCESS_YN = 'N' THEN 1 ELSE 0 END) AS N_CNT,
+		  SUM (CASE WHEN SUCCESS_YN = 'Y' THEN TOT_QTY ELSE 0 END) AS Y_QTY,
+		  SUM (CASE WHEN SUCCESS_YN = 'N' THEN TOT_QTY ELSE 0 END) AS N_QTY,
+		  SUM (CASE WHEN SUCCESS_YN = 'Y' THEN TOT_AMT ELSE 0 END) AS Y_AMT,
+		  SUM (CASE WHEN SUCCESS_YN = 'N' THEN TOT_AMT ELSE 0 END) AS N_AMT
+		FROM FLOWER.EPIS_TSALET_SVC_LOG
+		WHERE 1=1
+		AND SALE_DATE =#{sale_date, jdbcType=VARCHAR}
+		AND FILENAME = #{orginFileName, jdbcType=VARCHAR}
+		GROUP BY SALE_DATE ,CMP_CD
+	</select>	
+	
+	<delete id="deleteSaleDate"  parameterType="java.util.HashMap"> 
+	    DELETE FROM FLOWER.T_SALE_DATE
+	    WHERE SALE_DATE = #{v_ch_date , jdbcType=VARCHAR }	    
+	    AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }	  
+	</delete>
+	
+	<insert id="insertSaleDate" parameterType="java.util.HashMap" >
+	INSERT INTO FLOWER.T_SALE_DATE(SALE_DATE
+                      ,CMP_CD
+                      ,FLOWER_GUBN
+                      ,PUM_NAME
+                      ,GOOD_NAME
+                      ,MM_CD
+                      ,DANQ
+                      ,DAN_CD
+                      ,POJ_CD
+                      ,SIZE_CD
+                      ,LV_CD
+                      ,SAN_CD
+                      , LV_ETC_NM
+                      ,TOT_QTY
+                      ,TOT_AMT
+                      ,MIN_AMT
+                      ,MAX_AMT
+                      ,AVG_AMT
+                      )
+    SELECT B.SALE_DATE
+          ,B.CMP_CD
+          ,B.MEJANG
+          ,B.PUM_NAME
+          ,B.GOOD_NAME
+          ,B.MM_CD
+          ,B.DANQ
+          ,B.DAN_CD
+          ,B.POJ_CD
+          ,B.SIZE_CD
+          ,B.LV_CD
+          ,B.SAN_CD
+          ,B.LV_ETC_NM
+          ,SUM(B.TOT_QTY)
+          ,SUM(B.TOT_AMT)
+          ,MIN(B.COST)
+          ,MAX(B.COST)
+          ,AVG(B.COST)
+    FROM FLOWER.T_SALE B
+    WHERE SALE_DATE = #{v_ch_date , jdbcType=VARCHAR }	  AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }
+    GROUP BY B.SALE_DATE
+             ,B.CMP_CD
+             ,B.MEJANG
+             ,B.PUM_NAME
+             ,B.GOOD_NAME
+             ,B.MM_CD
+             ,B.DANQ
+             ,B.DAN_CD
+             ,B.POJ_CD
+             ,B.SIZE_CD
+             ,B.LV_CD
+             ,B.SAN_CD
+             ,B.LV_ETC_NM
+	</insert>
+	
+	<delete id="deleteSaleWeek"  parameterType="java.util.HashMap"> 
+	    DELETE FROM FLOWER.T_SALE_WEEK 
+	    WHERE SALE_DATE = TO_CHAR(TRUNC(TO_DATE(#{v_ch_date , jdbcType=VARCHAR }, 'yyyy-MM-dd'), 'dy'), 'yyyy-MM-dd') 
+	    AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }	      
+	</delete>
+	    
+	<insert id="insertSaleWeek" parameterType="java.util.HashMap" >
+	<![CDATA[ 
+	 INSERT INTO FLOWER.T_SALE_WEEK(SALE_DATE
+                      ,CMP_CD
+                      ,FLOWER_GUBN
+                      ,PUM_NAME
+                      ,GOOD_NAME
+                      ,MM_CD
+                      ,DANQ
+                      ,DAN_CD
+                      ,POJ_CD
+                      ,SIZE_CD
+                      ,LV_CD
+                      ,SAN_CD
+                      ,TOT_QTY
+                      ,TOT_AMT
+                      ,MIN_AMT
+                      ,MAX_AMT
+                      ,AVG_AMT
+                      )
+    SELECT  C.SALE_DATE
+          ,C.CMP_CD
+          ,NVL(C.FLOWER_GUBN, 0) AS FLOWER_GUBN
+          ,C.PUM_NAME
+          ,C.GOOD_NAME
+          ,C.MM_CD
+          ,C.DANQ
+          ,C.DAN_CD
+          ,C.POJ_CD
+          ,C.SIZE_CD
+          ,C.LV_CD
+          ,C.SAN_CD
+          ,SUM(C.TOT_QTY)
+          ,SUM(C.TOT_AMT)
+          ,MIN(C.MIN_AMT)
+          ,MAX(C.MAX_AMT)
+          ,NVL(SUM(C.TOT_AMT), 0) / CASE NVL(SUM(C.TOT_QTY2), 1) WHEN 0 THEN 1 ELSE NVL(SUM(C.TOT_QTY2), 1) END
+      FROM (SELECT A.SALE_DATE
+                  , A.CMP_CD
+                  ,A.FLOWER_GUBN
+                  ,A.PUM_NAME
+                  ,A.GOOD_NAME
+                  ,A.MM_CD
+                  ,A.DANQ
+                  ,A.DAN_CD
+                  ,A.POJ_CD
+                  ,A.SIZE_CD
+                  ,A.LV_CD
+                  ,A.SAN_CD
+                  ,A.TOT_QTY
+                  ,A.TOT_AMT
+                  ,NVL(A.TOT_QTY, 0) * 1000 / CASE NVL(A.DANQ, 0) * NVL(D.DAN_X, 0) WHEN 0 THEN 1 ELSE NVL(A.DANQ, 0) * NVL(D.DAN_X, 0) END AS TOT_QTY2
+                  ,A.MIN_AMT
+                  ,A.MAX_AMT
+              FROM FLOWER.T_SALE_DATE A
+                   LEFT OUTER JOIN FLOWER.T_DANCD D
+                                ON A.DAN_CD = D.DAN_CD
+              WHERE A.SALE_DATE >= #{v_ch_date , jdbcType=VARCHAR }
+			   AND A.SALE_DATE <= TO_CHAR(TRUNC(TO_DATE(#{v_ch_date , jdbcType=VARCHAR }, 'yyyy-MM-dd'), 'dy')+6, 'yyyy-MM-dd')
+			   AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }
+           ) C
+    GROUP BY  C.SALE_DATE
+             , C.CMP_CD
+             ,C.FLOWER_GUBN
+             ,C.PUM_NAME
+             ,C.GOOD_NAME
+             ,C.MM_CD
+             ,C.DANQ
+             ,C.DAN_CD
+             ,C.POJ_CD
+             ,C.SIZE_CD
+             ,C.LV_CD
+             ,C.SAN_CD
+	]]>
+	</insert>    
+	
+	<delete id="deleteSaleMonth"  parameterType="java.util.HashMap"> 
+	    DELETE FROM FLOWER.T_SALE_MONTH 
+	    WHERE SALE_MONTH = SUBSTR(#{v_ch_date , jdbcType=VARCHAR }, 1, 7) 
+	    AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR }   
+	</delete>
+	
+	<insert id="insertSaleMonth" parameterType="java.util.HashMap" >
+	<![CDATA[
+	 INSERT INTO FLOWER.T_SALE_MONTH(SALE_MONTH
+	                   ,CMP_CD
+	                   ,FLOWER_GUBN
+                       ,PUM_NAME
+                       ,GOOD_NAME
+	                   ,MM_CD
+	                   ,DANQ
+	                   ,DAN_CD
+	                   ,POJ_CD
+	                   ,SIZE_CD
+	                   ,LV_CD
+	                   ,SAN_CD
+	                   ,TOT_QTY
+	                   ,TOT_AMT
+	                   ,MIN_AMT
+	                   ,MAX_AMT
+	                   ,AVG_AMT
+	                   )
+	SELECT SUBSTR(C.SALE_DATE, 1, 7)
+	      ,C.CMP_CD
+	      ,NVL(C.FLOWER_GUBN,0) AS FLOWER_GUBN
+          ,C.PUM_NAME
+          ,C.GOOD_NAME
+	      ,C.MM_CD
+	      ,C.DANQ
+	      ,C.DAN_CD
+	      ,C.POJ_CD
+	      ,C.SIZE_CD
+	      ,C.LV_CD
+	      ,C.SAN_CD
+	      ,SUM(C.TOT_QTY)
+	      ,SUM(C.TOT_AMT)
+	      ,MIN(C.MIN_AMT)
+	      ,MAX(C.MAX_AMT)
+	      ,NVL(SUM(C.TOT_AMT), 0) / CASE NVL(SUM(C.TOT_QTY2), 1) WHEN 0 THEN 1 ELSE NVL(SUM(C.TOT_QTY2), 1) END
+	  FROM (SELECT A.SALE_DATE
+                  ,A.CMP_CD
+				  ,A.FLOWER_GUBN
+                  ,A.PUM_NAME
+                  ,A.GOOD_NAME
+				  ,A.MM_CD
+				  ,A.DANQ
+				  ,A.DAN_CD
+				  ,A.POJ_CD
+				  ,A.SIZE_CD
+				  ,A.LV_CD
+				  ,A.SAN_CD
+				  ,A.TOT_QTY
+				  ,A.TOT_AMT
+				  ,NVL(A.TOT_QTY, 0) * 1000 / CASE NVL(A.DANQ, 0) * NVL(D.DAN_X, 0) WHEN 0 THEN 1 ELSE NVL(A.DANQ, 0) * NVL(D.DAN_X, 0) END AS TOT_QTY2
+				  ,A.MIN_AMT
+				  ,A.MAX_AMT
+			  FROM FLOWER.T_SALE_DATE A
+				   LEFT OUTER JOIN FLOWER.T_DANCD D
+								ON A.DAN_CD = D.DAN_CD
+			WHERE A.SALE_DATE >= SUBSTR(#{v_ch_date , jdbcType=VARCHAR }, 1, 7)||'-01'
+			   AND A.SALE_DATE <= SUBSTR(#{v_ch_date , jdbcType=VARCHAR }, 1, 7)||'-31'
+			   AND CMP_CD = #{v_cmp_cd , jdbcType=VARCHAR } 
+		   ) C
+	  GROUP BY SUBSTR(C.SALE_DATE, 1, 7)
+            ,C.CMP_CD
+	         ,C.FLOWER_GUBN
+             ,C.PUM_NAME
+             ,C.GOOD_NAME
+	         ,C.MM_CD
+	         ,C.DANQ
+	         ,C.DAN_CD
+	         ,C.POJ_CD
+	         ,C.SIZE_CD
+	         ,C.LV_CD
+	         ,C.SAN_CD
+	]]>
+	</insert>
+	
+	 <select id="selectEpisTsaleSvcLogResultListSearch" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+     SELECT SALE_DATE AS saleDate,
+      		CMP_CD AS cmpCd,      
+		  SUM (CASE WHEN SUCCESS_YN = 'Y' THEN 1 ELSE 0 END) AS Y_CNT,
+		  SUM (CASE WHEN SUCCESS_YN = 'N' THEN 1 ELSE 0 END) AS N_CNT,
+		  SUM (CASE WHEN SUCCESS_YN = 'Y' THEN TOT_QTY ELSE 0 END) AS Y_QTY,
+		  SUM (CASE WHEN SUCCESS_YN = 'N' THEN TOT_QTY ELSE 0 END) AS N_QTY,
+		  SUM (CASE WHEN SUCCESS_YN = 'Y' THEN TOT_AMT ELSE 0 END) AS Y_AMT,
+		  SUM (CASE WHEN SUCCESS_YN = 'N' THEN TOT_AMT ELSE 0 END) AS N_AMT,
+      COUNT(*) AS TOT_CNT,
+      SUM(TOT_QTY) AS TOT_QTY,
+      SUM(TOT_AMT) AS TOT_AMT
+		FROM FLOWER.EPIS_TSALET_SVC_LOG
+		WHERE 1=1
+		<if test="orginFileName!=null and orginFileName!=''">
+		    AND FILENAME = #{orginFileName, jdbcType=VARCHAR}
+										    
+		</if>
+		 <if  test ="searchCmpCode!=null and searchCmpCode!='' " >
+		      AND  CMP_CD = #{searchCmpCode , jdbcType=VARCHAR }
+		  </if>
+		    <if  test ="searchSaleDateStart!=null and searchSaleDateStart!=''" >
+			    AND SALE_DATE &gt;= #{searchSaleDateStart , jdbcType=VARCHAR }
+			 </if>
+		    <if  test ="serchSaleDateEnd!=null and serchSaleDateEnd!='' " >
+	          AND SALE_DATE &lt;= #{serchSaleDateEnd , jdbcType=VARCHAR }
+		   </if>       
+		
+    GROUP BY SALE_DATE ,CMP_CD
+     
+     </select>
+      <select id="selectEpisTsaleSvcLogResultListSearchPageAble" parameterType="java.util.HashMap" statementType="PREPARED" resultType="java.util.HashMap">
+    SELECT data.* 
+		  FROM 
+		       (SELECT '' || count(1) OVER() TOTAL_COUNT, 
+		              ROWNUM ROW_NUM, 
+		              ROWNUM LINENUM, 
+		              data.* 
+		         FROM 
+		              (
+          
+         					 SELECT SALE_DATE,
+								      CMP_CD,      
+										  SUM (CASE WHEN SUCCESS_YN = 'Y' THEN 1 ELSE 0 END) AS Y_CNT,
+										  SUM (CASE WHEN SUCCESS_YN = 'N' THEN 1 ELSE 0 END) AS N_CNT,
+										  SUM (CASE WHEN SUCCESS_YN = 'Y' THEN TOT_QTY ELSE 0 END) AS Y_QTY,
+										  SUM (CASE WHEN SUCCESS_YN = 'N' THEN TOT_QTY ELSE 0 END) AS N_QTY,
+										  SUM (CASE WHEN SUCCESS_YN = 'Y' THEN TOT_AMT ELSE 0 END) AS Y_AMT,
+										  SUM (CASE WHEN SUCCESS_YN = 'N' THEN TOT_AMT ELSE 0 END) AS N_AMT,
+								      COUNT(*) AS TOT_CNT,
+								      SUM(TOT_QTY) AS TOT_QTY,
+								      SUM(TOT_AMT) AS TOT_AMT
+										FROM FLOWER.EPIS_TSALET_SVC_LOG
+										WHERE 1=1
+										<if test="orginFileName!=null and orginFileName!=''">
+										    AND FILENAME = #{orginFileName, jdbcType=VARCHAR}
+										    
+										</if>
+										 <if  test ="searchCmpCode!=null and searchCmpCode!='' " >
+										      AND  CMP_CD = #{searchCmpCode , jdbcType=VARCHAR }
+										  </if>
+										   <if  test ="searchSaleDateStart!=null and searchSaleDateStart!=''" >
+									          AND SALE_DATE &gt;= #{searchSaleDateStart , jdbcType=VARCHAR }
+										   </if>
+										    <if  test ="serchSaleDateEnd!=null and serchSaleDateEnd!='' " >
+									          AND SALE_DATE &lt;= #{serchSaleDateEnd , jdbcType=VARCHAR }
+										   </if>       
+										
+								    GROUP BY SALE_DATE ,CMP_CD
+								               
+		              ) data 
+	       		) data 
+	 			<![CDATA[	where data.row_num > ( nvl(#{pageIndex , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)   and rownum <= nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+	  
+     
+     </select>
+       <select id="selectFlowerGubn" parameterType="java.lang.String" statementType="PREPARED" resultType="java.lang.String">
+          SELECT F_GET_FLOWER_GUBUN(#{cmpGood}) FROM dual 
+      
+      </select>
+      
+        <select id="selectFlowerGubnAt" parameterType="java.lang.String" statementType="PREPARED" resultType="java.lang.String">
+          SELECT F_GET_FLOWER_GUBUN_AT(#{cmpGood}) FROM dual 
+      
+      </select> 
+      <select id="selectKoreaLvCdChage" parameterType="java.lang.String" statementType="PREPARED" resultType="java.lang.String">
+        SELECT STRCODE 
+        FROM FLOWER.LEVELCHANGE_KR
+        WHERE KRCODE = #{lvCd , jdbcType=VARCHAR}      
+      </select>
+      
+       <select id="selectFlowerGubnNong" parameterType="java.util.HashMap"  statementType="PREPARED" resultType="java.lang.String">
+          SELECT F_GET_FLOWER_GUBUN_NONG(#{cmpGood},#{marketCd}) FROM dual       
+      </select>
+       
+       <delete id="deleteTsaleAllByDate"  parameterType="java.util.HashMap"> 
+	    DELETE FROM FLOWER.T_SALE
+	    WHERE SALE_DATE = #{v_sale_date , jdbcType=VARCHAR }
+	    AND CMP_CD = #{v_cmp_code , jdbcType=VARCHAR }
+
+	   </delete>
+	   
+	   	<update id="insertTranFlag" >
+	    	UPDATE FLOWER.TRAN_FLAG
+		   SET FLAG = 'N'	    
+		</update>  
+       
+       	<update id="deleteTranFlag" >
+	    	UPDATE FLOWER.TRAN_FLAG
+		   SET FLAG = 'Y'	    
+		</update> 
+		
+		<select id="selectTranFlag" resultType="java.lang.String">
+          SELECT FLAG FROM FLOWER.TRAN_FLAG      
+     	 </select>
+     	 
+    <select id="deleteTsaleAt" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+     		{ CALL SP_EPIS_MARKET_JUNG_PREPARE(#{originFileName , jdbcType=VARCHAR },#{v_sale_date , jdbcType=VARCHAR },#{v_cmp_code , jdbcType=VARCHAR },#{retMessage , jdbcType=VARCHAR },#{intprocesscnt , jdbcType=VARCHAR })}
+	</select>
+     	  
+
+
+    
+    <select id="insertTsaleAt" parameterType="java.util.HashMap">
+    
+     		{ CALL SP_EPIS_MARKET_JUNG_INSERT(#{originFileName , jdbcType=VARCHAR },#{recordText , jdbcType=VARCHAR },#{retMessage , jdbcType=VARCHAR },#{intprocesscnt , jdbcType=VARCHAR })}
+	</select>
+	
+	 <select id="insertMagam" parameterType="java.util.HashMap">
+    
+     		{ CALL SP_EPIS_MARKET_JUNG_MAGAM(#{saleDate, jdbcType=VARCHAR },#{cmpCd , jdbcType=VARCHAR },#{retMessage , jdbcType=VARCHAR },#{intprocesscnt , jdbcType=VARCHAR })}
+	</select>
+     	  
+     	  
+     	 
+</mapper>

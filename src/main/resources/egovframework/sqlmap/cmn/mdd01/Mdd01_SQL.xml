@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mdd01.mapper.Mdd01Mapper">
+
+	<!-- 발송이력관리 발송내역 정보 조회 -->
+	<select id="selectMdd01List" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT a.* FROM (
+			 SELECT COUNT (1) OVER (ORDER BY SEND_TIME DESC,SEQ DESC) TOTAL_COUNT, COUNT (1) OVER () TOTAL_COUNT1, ROWNUM AS rn, a.*
+			 FROM (
+					SELECT
+						SEQ
+						,DEST
+						,SUBJECT 
+						,CASE WHEN LENGTH(MSG_BODY) <![CDATA[>]]> 30 THEN SUBSTR(MSG_BODY,1,30) || '...'
+						        WHEN LENGTH(MSG_BODY) <![CDATA[<=]]> 30 THEN MSG_BODY
+						  END AS MSG_BODY
+						,TO_CHAR(SEND_TIME, 'YYYY-MM-DD HH24:MI:SS') AS SEND_TIME
+						,STATUS
+						,TYPE
+						,CASE WHEN TYPE = '1' THEN '메일'
+							 WHEN TYPE = '2' THEN '카카오'
+							END AS TYPE_NM
+					FROM (
+						SELECT
+							TO_CHAR(SEQ) AS SEQ
+							,USER_ID AS DEST
+							,SUBJECT
+							,MSG_BODY
+							,SEND_TIME
+							,'발송성공' AS STATUS
+							,'1' AS TYPE
+						FROM BIZ_MAIL_LOG
+						WHERE 1=1
+							AND TO_CHAR(SEND_TIME, 'YYYY-MM') = #{searchYear} || '-' || #{searchMonth}
+							<if test="searchWord != null and searchWord != ''">
+								AND UPPER(USER_ID) LIKE '%' || UPPER(#{searchWord}) || '%'
+							</if>
+						UNION
+						SELECT
+							CMID AS SEQ
+							,DEST_PHONE AS DEST
+							,SUBJECT
+							,MSG_BODY
+							,SEND_TIME
+							,CASE WHEN STATUS = 0 THEN '대기'
+							    WHEN STATUS = 1 THEN '발송중'
+							    WHEN STATUS = 2 THEN '발송완료'
+							    WHEN STATUS = 3 THEN '에러'
+							END AS STATUS
+							,'2' AS TYPE
+						FROM BIZ_LOG
+						WHERE 1=1
+							AND TO_CHAR(SEND_TIME, 'YYYY-MM') = #{searchYear} || '-' || #{searchMonth}
+							<if test="searchWord != null and searchWord != ''">
+								AND UPPER(DEST_PHONE) LIKE '%' || UPPER(#{searchWord}) || '%'
+							</if>
+					) a
+              ) A
+			ORDER BY SEND_TIME DESC
+		) a <![CDATA[	where TOTAL_COUNT > ( nvl(#{pageNumber , jdbcType=VARCHAR }, 1) -1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10) and TOTAL_COUNT <= nvl(#{pageNumber , jdbcType=VARCHAR }, 1) * nvl(#{pageSize , jdbcType=VARCHAR } ,10)		]]>
+		ORDER BY TOTAL_COUNT
+	</select>
+	
+	
+	<!-- 발송이력관리 발송이력 한건 상세 조회 -->
+	<select id="selectMdd01Detail"  parameterType="java.util.HashMap" resultType="HashMap">
+		<if test="TYPE == 1">
+			SELECT
+				TO_CHAR(SEQ) AS SEQ
+				,USER_ID AS DEST
+				,SUBJECT
+				,MSG_BODY
+				,TO_CHAR(SEND_TIME, 'YYYY-MM-DD HH24:MI:SS') AS SEND_TIME
+				,'발송성공' AS STATUS
+				,'1' AS TYPE
+			FROM BIZ_MAIL_LOG
+			WHERE SEQ = #{SEQ}
+		</if>
+		<if test="TYPE == 2">
+			SELECT
+				CMID AS SEQ
+				,DEST_PHONE AS DEST
+				,SUBJECT
+				,MSG_BODY
+				,TO_CHAR(SEND_TIME, 'YYYY-MM-DD HH24:MI:SS') AS SEND_TIME
+				,CASE WHEN STATUS = 0 THEN '대기'
+				    WHEN STATUS = 1 THEN '발송중'
+				    WHEN STATUS = 2 THEN '발송완료'
+				    WHEN STATUS = 3 THEN '에러'
+				END AS STATUS
+				,'2' AS TYPE
+			FROM BIZ_LOG
+			WHERE CMID = #{SEQ}
+		</if>
+	</select>
+	
+	
+	
+	
+</mapper>

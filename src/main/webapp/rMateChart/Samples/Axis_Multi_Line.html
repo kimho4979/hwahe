@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Script-Type" content="text/javascript"/>
+<meta http-equiv="Content-Style-Type" content="text/css"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>rMate Chart for HTML5 - Area chart</title>
+<!-- rMateChartH5 에서 사용하는 스타일 -->
+<link rel="stylesheet" type="text/css" href="../rMateChartH5/Assets/Css/rMateChartH5.css"/>
+
+<!-- IE7, 8 에서 차트 생성하고자 하는 경우 -->
+<!--[if IE]><script language="javascript" type="text/javascript" src="../rMateChartH5/JS/excanvas.js"></script><![endif]-->
+
+<!-- rMateChartH5 라이센스 -->
+<script language="javascript" type="text/javascript" src="../LicenseKey/rMateChartH5License.js"></script>
+
+<!-- 실제적인 rMateChartH5 라이브러리 -->
+<script language="javascript" type="text/javascript" src="../rMateChartH5/JS/rMateChartH5.js"></script>
+
+<!-- rMateChartH5 테마 js -->
+<script type="text/javascript" src="../rMateChartH5/Assets/Theme/theme.js"></script>
+
+<script type="text/javascript">
+
+// -----------------------차트 설정 시작-----------------------
+
+// rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.
+var chartVars = "rMateOnLoadCallFunction=chartReadyHandler";
+
+// rMateChart 를 생성합니다.
+// 파라메터 (순서대로) 
+//  1. 차트의 id ( 임의로 지정하십시오. ) 
+//  2. 차트가 위치할 div 의 id (즉, 차트의 부모 div 의 id 입니다.)
+//  3. 차트 생성 시 필요한 환경 변수들의 묶음인 chartVars
+//  4. 차트의 가로 사이즈 (생략 가능, 생략 시 100%)
+//  5. 차트의 세로 사이즈 (생략 가능, 생략 시 100%)
+rMateChartH5.create("chart1", "chartHolder", chartVars, "100%", "100%"); 
+
+// 차트의 속성인 rMateOnLoadCallFunction 으로 설정된 함수.
+// rMate 차트 준비가 완료된 경우 이 함수가 호출됩니다.
+// 이 함수를 통해 차트에 레이아웃과 데이터를 삽입합니다.
+// 파라메터 : id - rMateChartH5.create() 사용 시 사용자가 지정한 id 입니다.
+function chartReadyHandler(id) {
+	document.getElementById(id).setLayout(layoutStr);
+	document.getElementById(id).setData(chartData);
+}
+
+// 스트링 형식으로 레이아웃 정의.
+var layoutStr = 
+				'<rMateChart backgroundColor="#FFFFFF" borderStyle="none" >'
+					+'<NumberFormatter id="numFmt" useThousandsSeparator="true"/>' 
+					+'<Stroke id="stroke1" color="#969596" weight="1"/>'
+					+'<Line2DChart showDataTips="true" >'
+						+'<horizontalAxis>'
+							+'<CategoryAxis categoryField="Month"/>' 
+						+'</horizontalAxis>'
+						+'<verticalAxis>'
+							+'<LinearAxis formatter="{numFmt}"/>'
+						+'</verticalAxis>'
+						+'<series>'
+							+'<Line2DSeries labelPosition="up" yField="Profit" displayName="Revenue" showValueLabels="[8]">'
+								+'<showDataEffect>'
+									+'<SeriesInterpolate/>'
+								+'</showDataEffect>'
+							+'</Line2DSeries>'
+						+'</series>'
+						+'<backgroundElements>'
+							+'<GridLines/>'
+							+'<AxisMarker>'
+								+'<lines>'
+									+'<AxisLine value="1000" label="Label 01" stroke="{stroke1}" labelUpDown="up" color="#969596"/>'
+									+'<AxisLine value="1500" label="Label 02" stroke="{stroke1}" labelAlign="left" labelUpDown="down" color="#969596"/>'
+									+'<AxisLine value="2000" label="Label 03" stroke="{stroke1}" labelUpDown="up" labelAlign="left" labelRotation="90" color="#969596"/>'
+									+'<AxisLine value="Jan" label="January" stroke="{stroke1}" color="#969596" labelUpDown="down" labelAlign="right" linePosition="left" horizontal="false"/>'
+									+'<AxisLine value="Mar" label="March" stroke="{stroke1}" color="#969596" labelUpDown="down" labelRotation="90" labelAlign="left" linePosition="left" horizontal="false"/>'
+									+'<AxisLine value="May" label="May" stroke="{stroke1}" color="#969596" labelUpDown="down" labelAlign="left" linePosition="left" horizontal="false"/>'
+									+'<AxisLine value="Oct" label="October" stroke="{stroke1}" color="#969596" labelUpDown="up" labelRotation="90" linePosition="right" horizontal="false"/>'
+									+'<AxisLine startValue="1000" endValue="2000" label="From-To Line" color="#0099FF" labelAlign="right" labelUpDown="up">'
+										+'<stroke>'+'<Stroke color="#0099FF" weight="1"/>'+'</stroke>'
+									+'</AxisLine>'
+								+'</lines>'
+							+'</AxisMarker>'
+						+'</backgroundElements>'
+					+'</Line2DChart>'
+				+'</rMateChart>';
+
+// 차트 데이터
+var chartData = [{"Month":"Jan","Profit":1000,"Cost":1500,"Revenue":2300},
+				{"Month":"Feb","Profit":1400,"Cost":1400,"Revenue":1200},
+				{"Month":"Mar","Profit":1500,"Cost":1200,"Revenue":1600},
+				{"Month":"Apr","Profit":1900,"Cost":1300,"Revenue":1300},
+				{"Month":"May","Profit":1400,"Cost":900,"Revenue":1000},
+				{"Month":"Jun","Profit":2000,"Cost":500,"Revenue":1200},
+				{"Month":"Jul","Profit":1800,"Cost":1400,"Revenue":1000},
+				{"Month":"Aug","Profit":2500,"Cost":800,"Revenue":1600},
+				{"Month":"Sep","Profit":2850,"Cost":1900,"Revenue":1200},
+				{"Month":"Oct","Profit":2000,"Cost":2300,"Revenue":1000},
+				{"Month":"Nov","Profit":2100,"Cost":2400,"Revenue":1700},
+				{"Month":"Dec","Profit":1700,"Cost":1900,"Revenue":2300}];
+
+// -----------------------차트 설정 끝 -----------------------
+
+</script>
+<!-- 샘플 작동을 위한 css와 js -->
+<script type="text/javascript" src="./Web/JS/common.js"></script>
+<script type="text/javascript" src="./Web/JS/sample_util.js"></script>
+<link rel="stylesheet" type="text/css" href="./Web/sample.css"/>
+
+<!-- SyntaxHighlighter -->
+<script type="text/javascript" src="./Web/syntax/shCore.js"></script>
+<script type="text/javascript" src="./Web/syntax/shBrushJScript.js"></script>
+<link type="text/css" rel="stylesheet" href="./Web/syntax/shCoreDefault.css"/>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="header">	
+			<div class="headerTitle">축에 다수의 선 긋기</div>
+		</div>
+		<div id="content">
+			<!-- 차트가 삽입될 DIV -->
+			<div id="chartHolder"></div>
+		</div>
+		<div class="description">
+			<ul>
+				<li><span class="class">AxisLine</span></li>
+				<li><span class="prop">axis</span> : AxisLine이 참조하게 될 축 입니다.</li>
+				<li><span class="prop">endValue</span> : 표시하려는 선이 사선일 경우 라인이 끝나는 위치 값</li>
+				<li><span class="prop">horizontal</span> : 수평라인 여부. false이면 수직 라인을 그리게 됩니다.</li>
+				<li><span class="prop">label</span> : 표시하려는 선에 넣을 라벨.</li>
+				<li><span class="prop">labelAlign</span> : 라인에 표시할 라벨의 수평정렬.</li>
+				<li><span class="prop">labelRotation</span> : 표시할 라벨의 회전</li>
+				<li><span class="prop">labelUpDown</span> : 라벨을 라인의 위에 표시할지 아래에 표시할지 여부</li>
+				<li><span class="prop">linePosition</span> : 라인을 표시할 위치.(center,left,right)</li>
+				<li><span class="prop">startValue</span> : 표시하려는 선이 사선일 경우 라인이 시작되는 위치 값. </li>
+				<li><span class="prop">stroke</span> : 라인의 스타일을 설정합니다. </li>
+				<li><span class="prop">value</span> : 표시하려는 선이 사선이 아닌경우 라인이 표시될 값.</li>
+			</ul>
+			<span class="warn">자세한 내용은 하단 Layout의 backgroundElements 부분을 살펴 보시기 바랍니다.</span>
+		</div>
+		<div id="updater">
+			<div>Layout과 Data를 수정 후 적용 할 수 있습니다.</div>
+			<div id="updaterTab">
+				<ul id="updaterTabUl">
+					<li id="updaterTabUlSource" class="active_tab">Source</li>
+					<li id="updaterTabUlLayout" class="non_active_li">Layout</li>
+					<li id="updaterTabUlData" class="non_active_li">Data</li>
+					<li id="updaterTabUlBlank">
+						<span id="btn_update">수정적용</span>
+					</li>
+				</ul>
+			</div>
+			<div id="updaterTarea">
+				<pre id="updaterTareaSource" class="brush:js toolbar:false" name="updaterTareaSource"></pre>
+				<textarea id="updaterTareaLayout" class="updaterTextarea" spellcheck="false"></textarea>
+				<textarea id="updaterTareaData" class="updaterTextarea" spellcheck="false"></textarea>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

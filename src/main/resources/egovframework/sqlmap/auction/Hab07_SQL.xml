@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.hab07.mapper.Hab07Mapper">
+    <resultMap id="resultHab07Map" type="com.fpdisys.dist.hab07.domain.Hab07VO">
+	<result property="cmpCd" column="CMP_CD"/>
+	<result property="cmpCdNm" column="CMP_CD_NM"/>
+	<result property="saleMonth" column="SALE_MONTH"/>
+	<result property="flowerGubn" column="FLOWER_GUBN"/>
+	<result property="flowerGubnNm" column="FLOWER_GUBN_NM"/>	
+	<result property="pumName" column="PUM_NAME"/>
+	<result property="goodName" column="GOOD_NAME"/>
+	<result property="mmCd" column="MM_CD"/>
+	<result property="mmCdNm" column="MM_CD_NM"/>
+	<result property="danCd" column="DAN_CD"/>
+	<result property="danCdNm" column="DAN_CD_NM"/>
+	<result property="pojCd" column="POJ_CD"/>
+	<result property="pojCdNm" column="POJ_CD_NM"/>
+	<result property="lvCd" column="LV_CD"/>
+	<result property="lvCdNm" column="LV_CD_NM"/>
+    <result property="danQ" column="DANQ"/> 
+    <result property="sizeCd" column="SIZE_CD"/>
+	<result property="sizeCdNm" column="SIZE_CD_NM"/>
+	<result property="sanCd" column="SAN_CD"/>
+	<result property="sanCdNm" column="SAN_CD_NM"/>
+	<result property="chartX" column="CHART_X"/>		
+	<result property="maxAmt" column="MAX_AMT"/> 
+	<result property="minAmt" column="MIN_AMT"/>
+	<result property="avgAmt" column="AVG_AMT"/>  
+	<result property="totAmt" column="TOT_AMT"/>  
+	<result property="totQty" column="TOT_QTY"/>  
+	</resultMap>
+
+	<select id="selectHab07" parameterType="com.fpdisys.dist.hab07.domain.Hab07VO" resultMap="resultHab07Map">
+		SELECT CMP_CD
+			   ,FLOWER_GUBN
+			   ,PUM_NAME
+			   , SAN_BIGO AS  SAN_CD_NM
+			   , SAN_BIGO ||CHR(13)||CHR(10)||'('|| PUM_NAME||')' AS  CHART_X  
+			  , MAX_AMT
+			  , MIN_AMT
+			  , AVG_AMT
+			  , TOT_AMT
+			  , TOT_QTY
+			  , RNUM  
+		  FROM
+		  (
+			SELECT B.CMP_CD
+			   ,B.FLOWER_GUBN
+			   ,B.PUM_NAME
+			   , C.SAN_BIGO
+			  , MAX(B.MAX_AMT) AS MAX_AMT
+			  , MIN(B.MIN_AMT) AS MIN_AMT
+			  , TRUNC(SUM(B.TOT_AMT)/SUM(B.TOT_QTY)) AS AVG_AMT
+			  , SUM(B.TOT_AMT) AS  TOT_AMT
+			  , SUM(B.TOT_QTY) AS  TOT_QTY
+			  , RANK() OVER (ORDER BY SUM(B.TOT_AMT) DESC, SUM(B.TOT_QTY) DESC) AS RNUM  
+			FROM
+			(
+			    SELECT 
+			    TA.CMP_CD
+			   ,TA.FLOWER_GUBN
+			   , DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS PUM_NAME
+			   , SAN_CD
+			   ,TA.MAX_AMT
+			   ,TA.MIN_AMT
+			   ,TA.TOT_AMT
+			   ,TA.TOT_QTY
+			    FROM
+			    (
+			        SELECT 
+			            CMP_CD, SALE_MONTH, MM_CD, 
+			            DAN_CD, POJ_CD, LV_CD, 
+			            DANQ, MAX_AMT, MIN_AMT, 
+			            AVG_AMT, REG_DATE, UPD_DATE, 
+			            SIZE_CD, SAN_CD 
+			            , TOT_AMT, 
+			            TOT_QTY, FLOWER_GUBN, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME, 
+			            GOOD_NAME
+			          FROM T_SALE_MONTH A
+					  WHERE 1=1
+					  AND A.FLOWER_GUBN =#{flowerCd, jdbcType=VARCHAR}
+					  AND A.CMP_CD =#{cmpCd, jdbcType=VARCHAR}  
+					  AND A.SALE_MONTH BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR} 
+			          <if test ="cmpCd != null and cmpCd =='0000000001'" >
+							<if test="itemCd !=null and itemCd !='' ">
+								<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+					  				AND PUM_NAME IN('호접란', '팔레높시스')
+					  			</if>
+					  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+					  				AND PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+					  			</if>
+							</if>
+						</if>
+						AND A.TOT_AMT <![CDATA[ <>]]> 0
+			      )TA,
+			    (
+			        SELECT 
+			        MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+			        FROM FLOWER.TB_KIND_MAP
+			        WHERE CMP_CD_MAP=#{cmpCd, jdbcType=VARCHAR}  
+			        AND FLOWER_GUBN_MAP=#{flowerCd, jdbcType=VARCHAR}
+			        <if test="itemCd!=null and itemCd!='' ">
+						AND PUM_NM =#{itemCd, jdbcType=VARCHAR}
+					</if>
+			        GROUP BY PUM_NM_MAP
+			    ) TB
+			    WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+			    <if test="itemCd!=null and itemCd!='' ">
+					AND (PUM_NM=#{itemCd, jdbcType=VARCHAR} 
+					OR 
+					<if test ="cmpCd != null and cmpCd =='0000000001'" >
+							<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+				  				PUM_NAME IN('호접란', '팔레높시스')
+				  			</if>
+				  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+				  				PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+				  			</if>
+					</if>
+					<if test ="cmpCd != null and cmpCd !='0000000001'" >
+						PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+					</if>
+					)
+				</if>
+			)B, T_LOCAL C
+            WHERE 1=1
+            AND B.SAN_CD  = C.SAN_CD(+)
+			GROUP BY B.CMP_CD, B.FLOWER_GUBN, PUM_NAME, C.SAN_BIGO
+		)
+		WHERE 1=1
+		AND RNUM &lt;=6
+	</select>
+	
+	<!-- 지역별 월별출하실적 :: Excel -->
+	<select id="selectHab07Excel" parameterType="com.fpdisys.dist.hab07.domain.Hab07VO" resultMap="resultHab07Map">
+		SELECT CMP_CD
+			   ,FLOWER_GUBN
+			   ,PUM_NAME
+			   , SAN_BIGO AS  SAN_CD_NM 
+			  , MAX_AMT
+			  , MIN_AMT
+			  , AVG_AMT
+			  , TOT_AMT
+			  , TOT_QTY
+			  , RNUM  
+		  FROM
+		  (
+			SELECT B.CMP_CD
+			   ,B.FLOWER_GUBN
+			   ,B.PUM_NAME
+			   , C.SAN_BIGO
+			  , MAX(B.MAX_AMT) AS MAX_AMT
+			  , MIN(B.MIN_AMT) AS MIN_AMT
+			  , TRUNC(SUM(B.TOT_AMT)/SUM(B.TOT_QTY)) AS AVG_AMT
+			  , SUM(B.TOT_AMT) AS  TOT_AMT
+			  , SUM(B.TOT_QTY) AS  TOT_QTY
+			  , RANK() OVER (ORDER BY SUM(B.TOT_AMT) DESC, SUM(B.TOT_QTY) DESC) AS RNUM  
+			FROM
+			(
+			    SELECT 
+			    TA.CMP_CD
+			   ,TA.FLOWER_GUBN
+			   , DECODE(PUM_NM,NULL,PUM_NAME,PUM_NM) AS PUM_NAME
+			   , SAN_CD
+			   ,TA.MAX_AMT
+			   ,TA.MIN_AMT
+			   ,TA.TOT_AMT
+			   ,TA.TOT_QTY
+			    FROM
+			    (
+			        SELECT 
+			            CMP_CD, SALE_MONTH, MM_CD, 
+			            DAN_CD, POJ_CD, LV_CD, 
+			            DANQ, MAX_AMT, MIN_AMT, 
+			            AVG_AMT, REG_DATE, UPD_DATE, 
+			            SIZE_CD, SAN_CD 
+			            , TOT_AMT, 
+			            TOT_QTY, FLOWER_GUBN, DECODE(CMP_CD,'0000000001',DECODE(PUM_NAME,'팔레높시스','호접란',PUM_NAME),PUM_NAME) AS PUM_NAME, 
+			            GOOD_NAME
+			          FROM T_SALE_MONTH A
+					  WHERE 1=1
+					  AND A.FLOWER_GUBN =#{flowerCd, jdbcType=VARCHAR}
+					  AND A.CMP_CD =#{cmpCd, jdbcType=VARCHAR}  
+					  AND A.SALE_MONTH BETWEEN #{searchStrDate, jdbcType=VARCHAR} AND #{searchEndDate, jdbcType=VARCHAR} 
+			          <if test ="cmpCd != null and cmpCd =='0000000001'" >
+							<if test="itemCd !=null and itemCd !='' ">
+								<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+					  				AND PUM_NAME IN('호접란', '팔레높시스')
+					  			</if>
+					  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+					  				AND PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+					  			</if>
+							</if>
+						</if>
+						AND A.TOT_AMT <![CDATA[ <>]]> 0
+			      )TA,
+			    (
+			        SELECT 
+			        MAX(PUM_NM) PUM_NM, PUM_NM_MAP
+			        FROM FLOWER.TB_KIND_MAP
+			        WHERE CMP_CD_MAP=#{cmpCd, jdbcType=VARCHAR}  
+			        AND FLOWER_GUBN_MAP=#{flowerCd, jdbcType=VARCHAR}
+			        <if test="itemCd!=null and itemCd!='' ">
+						AND PUM_NM =#{itemCd, jdbcType=VARCHAR}
+					</if>
+			        GROUP BY PUM_NM_MAP
+			    ) TB
+			    WHERE TA.PUM_NAME=TB.PUM_NM_MAP(+)
+			    <if test="itemCd!=null and itemCd!='' ">
+					AND (PUM_NM=#{itemCd, jdbcType=VARCHAR} 
+					OR 
+					<if test ="cmpCd != null and cmpCd =='0000000001'" >
+							<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+				  				PUM_NAME IN('호접란', '팔레높시스')
+				  			</if>
+				  			<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+				  				PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+				  			</if>
+					</if>
+					<if test ="cmpCd != null and cmpCd !='0000000001'" >
+						PUM_NAME =#{itemCd, jdbcType=VARCHAR}
+					</if>
+					)
+				</if>
+			)B, T_LOCAL C
+            WHERE 1=1
+            AND B.SAN_CD  = C.SAN_CD(+)
+			GROUP BY B.CMP_CD, B.FLOWER_GUBN, PUM_NAME, C.SAN_BIGO
+		)
+		WHERE 1=1
+		<!-- AND RNUM &lt;=6 -->
+	</select>
+	
+</mapper>

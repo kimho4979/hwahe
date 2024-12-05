@@ -1,0 +1,11 @@
+﻿
+.wrap{width:1920px;; height:915px; margin:0 auto; 
+background-image:url(/images/back.jpg); background-repeat:no-repeat; }
+.logo{margin-left:30px; padding-top:30px;}
+
+.list{width:300px; height:500px; margin-top:30px; margin-left:30px;}
+.title{font-size:35px; color:white; font-weight:bold; margin-top:60px;}
+
+li{font-size:18px; color:white; font-weight:300; margin-top:16px;}
+li a{color:white;}
+li a:hover{background-color:white; display:block; color:#005953; height:24px; text-align:center; font-weight:300;}

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpminput.mntr.mab01.mapper.Mab01Mapper">
+	<resultMap id="Mab01ResultMap" type="com.fpminput.mntr.mab01.domain.Mab01VO">
+		<result property="seqNo"			column="SEQ_NO"/>
+		<result property="regDate"			column="REG_DATE"/>
+		<result property="pumName"			column="PUM_NAME"/>
+		<result property="goodName"			column="GOOD_NAME"/>
+		<result property="chulNo"			column="CHUL_NO"/>
+		<result property="status"			column="STATUS"/>
+		<result property="bigo"				column="BIGO"/>
+		<result property="useYn"			column="USE_YN"/>
+		<result property="sanCd"			column="SAN_CD"/>
+		<result property="regDt"			column="REG_DT"/>
+		<result property="uptDt"			column="UPT_DT"/>
+		<result property="fileSeq"			column="FILE_SEQ"/>
+		<result property="cropReportSeq"	column="CROP_REPORT_SEQ"/>
+		<result property="originalFileName"	column="ORIGINAL_FILE_NAME"/>
+		<result property="storedFileName"	column="STORED_FILE_NAME"/>
+		<result property="fileSize"			column="FILE_SIZE"/>
+		<result property="creaDtm"			column="CREA_DTM"/>
+		<result property="creaId"			column="CREA_ID"/>
+		<result property="delGb"			column="DEL_GB"/>
+		<result property="statusName"		column="STATUS_NAME"/>
+		<result property="fileName"			column="FILE_NAME"/>
+	</resultMap>
+	
+	<select id="selectCropInfoInput" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT T1.REG_DATE
+			,T1.SEQ_NO
+			,T1.PUM_NAME
+			,T1.GOOD_NAME
+			,T1.CHUL_NO
+			,T1.STATUS
+			,CASE WHEN T1.STATUS =1 THEN '좋음'
+			WHEN T1.STATUS =2 THEN '보통'
+			ELSE '나쁨' END AS STATUS_NAME
+			,T1.BIGO
+			,T2.ORIGINAL_FILE_NAME AS FILE_NAME
+			,T1.REG_DT
+      		,T1.UPT_DT
+      		,T1.USE_YN
+		FROM T_CROP_REPORT T1
+		LEFT OUTER JOIN
+		T_CROP_FILE T2
+		ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+		WHERE T1.USE_YN = 'Y'
+		<if test="CHUL_NO!=99999999 ">
+			AND T1.CHUL_NO=#{CHUL_NO, jdbcType=VARCHAR}
+		</if>
+		<if test="REG_DATE1 != null and REG_DATE1 != ''">
+			AND TO_DATE(REG_DATE, 'YYYY-MM-DD' ) <![CDATA[>=]]> TO_DATE(#{REG_DATE1} , 'yyyy-mm-dd')
+		</if>
+		<if test="REG_DATE2 != null and REG_DATE2 != ''">
+			AND TO_DATE(REG_DATE, 'YYYY-MM-DD' ) <![CDATA[<=]]> TO_DATE(#{REG_DATE2} , 'yyyy-mm-dd')
+		</if>
+		<if test="PUM_NAME != null and PUM_NAME != ''">
+			AND PUM_NAME = #{PUM_NAME}
+		</if>
+		<if test="GOOD_NAME != null and GOOD_NAME != ''">
+			AND GOOD_NAME = #{GOOD_NAME}
+		</if>
+		<if test="STATUS != null and STATUS != ''">
+			AND T1.STATUS = #{STATUS}
+		</if>
+		ORDER BY T1.REG_DATE DESC, T1.GOOD_NAME
+	</select>
+	
+	<select id="selectCropInfoInputAll" statementType="PREPARED" resultType="HashMap">
+		SELECT T1.REG_DATE
+			,T1.SEQ_NO
+			,T1.PUM_NAME
+			,T1.GOOD_NAME
+			,T1.CHUL_NO
+			,T1.STATUS
+			,CASE WHEN T1.STATUS =1 THEN '좋음'
+			WHEN T1.STATUS =2 THEN '보통'
+			ELSE '나쁨' END AS STATUS_NAME
+			,T1.BIGO
+			,T2.ORIGINAL_FILE_NAME AS FILE_NAME
+			,T1.REG_DT
+      		,T1.UPT_DT
+      		,T1.USE_YN
+		FROM T_CROP_REPORT T1
+		LEFT OUTER JOIN T_CROP_FILE T2
+		ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+		WHERE T1.USE_YN = 'Y'
+		ORDER BY T1.REG_DATE DESC, T1.GOOD_NAME
+	</select>
+	
+	<select id="selectCropInfoInputSeq" parameterType="com.fpminput.mntr.mab01.domain.Mab01VO" resultMap="Mab01ResultMap" >
+		SELECT T1.REG_DATE
+			,T1.SEQ_NO
+			,T1.PUM_NAME
+			,T1.GOOD_NAME
+			,T1.CHUL_NO
+			,T1.STATUS
+			,CASE WHEN T1.STATUS =1 THEN '좋음'
+			WHEN T1.STATUS =2 THEN '보통'
+			ELSE '나쁨' END AS STATUS_NAME
+			,T1.BIGO
+			,T2.ORIGINAL_FILE_NAME AS FILE_NAME
+			,T2.STORED_FILE_NAME
+      		,T2.FILE_SIZE
+			,T1.REG_DT
+      		,T1.UPT_DT
+      		,T1.USE_YN
+		FROM T_CROP_REPORT T1
+		LEFT OUTER JOIN
+		T_CROP_FILE T2
+		ON T1.SEQ_NO = T2.CROP_REPORT_SEQ
+		WHERE T1.USE_YN = 'Y'
+		AND T1.SEQ_NO = #{seqNo}
+		ORDER BY T1.REG_DATE DESC, T1.GOOD_NAME
+	</select>
+
+	<insert id="insertCropInfoInput" parameterType="java.util.HashMap" useGeneratedKeys="true" keyProperty="IDX">
+		<selectKey keyProperty="IDX" resultType="string" order="BEFORE">
+			SELECT CROP_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO T_CROP_REPORT
+		( 
+			SEQ_NO
+			,REG_DATE
+			,PUM_NAME
+			,GOOD_NAME
+			,CHUL_NO
+			,STATUS
+			,BIGO
+			,SAN_CD
+			,REG_DT
+			,UPT_DT
+		)
+		VALUES
+		( 
+			#{IDX}
+			,#{REG_DATE, jdbcType=VARCHAR}
+			,#{PUM_NAME, jdbcType=VARCHAR}
+			,#{GOOD_NAME, jdbcType=VARCHAR}
+			,#{CHUL_NO, jdbcType=VARCHAR}
+			,#{STATUS, jdbcType=VARCHAR}
+			,#{BIGO, jdbcType=VARCHAR}
+			,#{SAN_CD, jdbcType=VARCHAR}
+			,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+			,TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		)
+	</insert>
+
+	<insert id="insertCropFile" parameterType="java.util.HashMap">
+		INSERT INTO T_CROP_FILE
+		(
+			FILE_SEQ
+			,CROP_REPORT_SEQ
+			,ORIGINAL_FILE_NAME
+			,STORED_FILE_NAME
+			,FILE_SIZE
+			,CREA_ID
+		)
+		VALUES
+		(
+			CROP_FILE_SEQ.NEXTVAL
+			,#{CROP_IDX, jdbcType=VARCHAR}
+			,#{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}
+			,#{STORED_FILE_NAME, jdbcType=VARCHAR}
+			,#{FILE_SIZE, jdbcType=VARCHAR}
+			,'ADMIN'
+		)
+	</insert>
+	
+	<select id="selectSumNail" parameterType="java.util.HashMap" statementType="PREPARED" resultType="HashMap">
+		SELECT 
+		  FILE_SEQ,
+		  CROP_REPORT_SEQ,
+		  ORIGINAL_FILE_NAME,
+		  STORED_FILE_NAME,
+		  FILE_SIZE,
+		  CREA_DTM,
+		  CREA_ID,
+		  DEL_GB
+		FROM T_CROP_FILE a, T_CROP_REPORT b
+		WHERE a.CROP_REPORT_SEQ = b.SEQ_NO(+)
+		AND b.SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateCropInfoInput" parameterType="java.util.HashMap">
+		UPDATE T_CROP_REPORT SET
+			REG_DATE = #{REG_DATE, jdbcType=VARCHAR},
+			PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR},
+			GOOD_NAME = #{GOOD_NAME , jdbcType=VARCHAR},
+			STATUS = #{STATUS, jdbcType=VARCHAR},
+			BIGO = #{BIGO, jdbcType=VARCHAR},
+			UPT_DT = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		WHERE SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+		AND CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR} 
+		
+		<!-- UPDATE T_CROP_REPORT SET
+			STATUS = #{STATUS, jdbcType=VARCHAR}
+			,BIGO = #{BIGO, jdbcType=VARCHAR}
+			,UPT_DT = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+		AND CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR}
+		AND PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR}
+		AND GOOD_NAME = #{GOOD_NAME , jdbcType=VARCHAR}
+		AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR} -->
+	</update>
+
+	<update id="updateCropFile" parameterType="java.util.HashMap">
+		UPDATE T_CROP_FILE SET
+			ORIGINAL_FILE_NAME = #{ORIGINAL_FILE_NAME, jdbcType=VARCHAR}
+			,STORED_FILE_NAME = #{STORED_FILE_NAME, jdbcType=VARCHAR}
+			,FILE_SIZE = #{FILE_SIZE, jdbcType=VARCHAR}
+			,UPT_DT = TO_CHAR(SYSDATE,'YYYY-MM-DD')
+		WHERE CROP_REPORT_SEQ = #{SEQ_NO, jdbcType=VARCHAR}
+	</update>
+
+	<update id="deleteCropInfoInput" parameterType="java.util.HashMap">
+		<!-- UPDATE T_CROP_REPORT SET
+			USE_YN='N'
+		WHERE SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR} -->
+	
+		UPDATE T_CROP_REPORT SET
+			USE_YN = 'N'
+		WHERE REG_DATE = #{REG_DATE, jdbcType=VARCHAR}
+		AND CHUL_NO = #{CHUL_NO, jdbcType=VARCHAR}
+		AND PUM_NAME = #{PUM_NAME, jdbcType=VARCHAR}
+		AND GOOD_NAME = #{GOOD_NAME , jdbcType=VARCHAR}
+		AND SEQ_NO = #{SEQ_NO, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="deleteCropFile" parameterType="java.util.HashMap">
+		UPDATE T_CROP_FILE SET
+			DEL_GB = 'Y'
+		WHERE CROP_REPORT_SEQ = #{SEQ_NO, jdbcType=VARCHAR}
+	</update>
+
+</mapper>

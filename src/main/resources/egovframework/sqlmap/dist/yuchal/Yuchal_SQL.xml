@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fpdisys.dist.yuchal.mapper.YuchalMapper">
+
+	<resultMap id="resultYuChalMap" type="com.fpdisys.dist.yuchal.domain.YuChalVO">
+		<result property="bunChk" 		column="BUN_CHK"/>
+		<result property="saleDate" 	column="SALE_DATE"/>
+		<result property="pumCode" 		column="PUM_CODE"/>
+		<result property="mokName" 		column="MOK_NAME"/>
+		<result property="jongName" 	column="JONG_NAME"/>
+		<result property="totCnt" 		column="TOT_CNT"/>
+		<result property="yuchalCnt" 	column="YUCHAL_CNT"/>
+		<result property="yuchalPer" 	column="YUCHAL_PER"/>
+	</resultMap>
+
+	<insert id="deleteYuchal" parameterType="java.util.HashMap">
+		DELETE FROM TB_YUCHAL 
+		WHERE  SALE_DATE  BETWEEN #{strDate, jdbcType=VARCHAR } and #{saleDate, jdbcType=VARCHAR }
+	</insert>
+	
+	<insert id="insertYuchal" parameterType="com.at.domain.AtMarketVO">
+		INSERT INTO TB_YUCHAL (
+		   BUN_CHK
+		   , SALE_DATE
+		   , PUM_CODE
+		   , MOK_NAME
+		   , JONG_NAME
+		   , TOT_CNT
+		   , YUCHAL_CNT
+		   , YUCHAL_PER
+		) 
+		VALUES (
+		#{BUN_CHK, jdbcType=VARCHAR},
+		#{PAN_DAY, jdbcType=VARCHAR},
+		#{PUM_CODE, jdbcType=VARCHAR},
+		#{MOK_NAME, jdbcType=VARCHAR},
+		#{JONG_NAME, jdbcType=VARCHAR},
+		#{TOT_CNT, jdbcType=INTEGER},
+		#{YUCHAL_CNT, jdbcType=INTEGER},
+		#{YUCHAL_PER, jdbcType=INTEGER}
+		)
+	</insert>     
+	
+	<select id="getYuchalData" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+            SELECT BUN_CHK,
+			        MOK_NAME,
+			        TOT_CNT,
+			        YUCHAL_CNT,
+			         ROUND(YUCHAL_CNT/TOT_CNT*100) YUCHAL_PER
+			FROM
+			(
+			    SELECT 
+			        BUN_CHK,
+			        DECODE(MOK_NAME,'팔레높시스','호접란',MOK_NAME) MOK_NAME,
+			        SUM(TOT_CNT) TOT_CNT,
+			        SUM(YUCHAL_CNT) AS YUCHAL_CNT        
+			    FROM TB_YUCHAL
+			    WHERE     1 = 1
+	  			AND SALE_DATE BETWEEN REPLACE (#{searchStrDate, jdbcType=VARCHAR},'-','') AND REPLACE (#{searchEndDate, jdbcType=VARCHAR},'-','')
+		  		<if test="flowerCd != null and flowerCd != ''">
+		  			AND BUN_CHK = #{flowerCd, jdbcType=VARCHAR}
+		  			<if test="flowerCd=='Y'.toString()">
+		  				AND TO_CHAR(TO_DATE(SALE_DATE,'YYYYMMDD'), 'd')='2'
+		  			</if>
+		  		</if>
+		  		<if test="itemCd != null and itemCd != ''">
+		  			<if test="flowerCd=='Y'.toString()">
+		  				<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+		  					AND MOK_NAME IN('호접란', '팔레높시스')
+		  				</if>
+		  				<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+		  					AND MOK_NAME =#{itemCd, jdbcType=VARCHAR}
+		  				</if>
+		  			</if>
+		  			<if test="flowerCd!='Y'.toString()">
+		  				AND MOK_NAME =#{itemCd, jdbcType=VARCHAR}
+		  			</if>
+		  		</if>
+		  		<if test="itemCd2 != null and itemCd2 != ''">
+		  			AND JONG_NAME =#{itemCd2, jdbcType=VARCHAR}
+		  		</if>
+			    GROUP BY BUN_CHK,  DECODE(MOK_NAME,'팔레높시스','호접란',MOK_NAME) 
+			)
+			WHERE YUCHAL_CNT > 0
+			ORDER BY YUCHAL_CNT DESC
+ 	</select>
+ 	
+ 	<!-- 유찰정보 :: excel -->
+ 	<select id="getYuchalDataExcel" resultType="com.fpdisys.dist.yuchal.domain.YuChalVO" resultMap="resultYuChalMap">
+            SELECT BUN_CHK,
+			        MOK_NAME,
+			        TOT_CNT,
+			        YUCHAL_CNT,
+			         ROUND(YUCHAL_CNT/TOT_CNT*100) YUCHAL_PER
+			FROM
+			(
+			    SELECT 
+			        BUN_CHK,
+			        DECODE(MOK_NAME,'팔레높시스','호접란',MOK_NAME) MOK_NAME,
+			        SUM(TOT_CNT) TOT_CNT,
+			        SUM(YUCHAL_CNT) AS YUCHAL_CNT        
+			    FROM TB_YUCHAL
+			    WHERE     1 = 1
+	  			AND SALE_DATE BETWEEN REPLACE (#{searchStrDate, jdbcType=VARCHAR},'-','') AND REPLACE (#{searchEndDate, jdbcType=VARCHAR},'-','')
+		  		<if test="flowerCd != null and flowerCd != ''">
+		  			AND BUN_CHK = #{flowerCd, jdbcType=VARCHAR}
+		  			<if test="flowerCd=='Y'.toString()">
+		  				AND TO_CHAR(TO_DATE(SALE_DATE,'YYYYMMDD'), 'd')='2'
+		  			</if>
+		  		</if>
+		  		<if test="itemCd != null and itemCd != ''">
+		  			<if test="flowerCd=='Y'.toString()">
+		  				<if test="itemCd =='호접란' or itemCd =='팔레높시스'">
+		  					AND MOK_NAME IN('호접란', '팔레높시스')
+		  				</if>
+		  				<if test="itemCd !='호접란' and itemCd !='팔레높시스'">
+		  					AND MOK_NAME =#{itemCd, jdbcType=VARCHAR}
+		  				</if>
+		  			</if>
+		  			<if test="flowerCd!='Y'.toString()">
+		  				AND MOK_NAME =#{itemCd, jdbcType=VARCHAR}
+		  			</if>
+		  		</if>
+		  		<if test="itemCd2 != null and itemCd2 != ''">
+		  			AND JONG_NAME =#{itemCd2, jdbcType=VARCHAR}
+		  		</if>
+			    GROUP BY BUN_CHK,  DECODE(MOK_NAME,'팔레높시스','호접란',MOK_NAME) 
+			)
+			WHERE YUCHAL_CNT > 0
+			ORDER BY YUCHAL_CNT DESC
+ 	</select>
+ 	
+</mapper>
