@@ -425,8 +425,6 @@
 				item2: item2,
 				itemDtl2: itemDtl2
 			};
-			
-			console.log("param", param)
 
 			let url = "/hab11/selectList.json";
 			$.ajax({
