@@ -496,7 +496,7 @@
 				var offset;
 				const strDate = new Date(searchStrDate);
 				const endDate = new Date(searchEndDate);
-				if ((strDate.getFullYear()-1) % 4 == 0){// 전 년도가 윤년인 경우
+				if ((strDate.getFullYear()-1) % 4 == 0 || (strDate.getFullYear()) % 4 == 0){// 전 년도가 윤년인 경우
 					offset = 2;
 				}
 				else { // 전 년도가 평년인 경우
@@ -588,7 +588,7 @@
 				var offset;
 				const strDate = new Date(searchStrDate);
 				const endDate = new Date(searchEndDate);
-				if ((strDate.getFullYear()-1) % 4 == 0){// 전 년도가 윤년인 경우
+				if ((strDate.getFullYear()-1) % 4 == 0 || (strDate.getFullYear()) % 4 == 0){// 전 년도가 윤년인 경우
 					offset = 2;
 				}
 				else { // 전 년도가 평년인 경우
