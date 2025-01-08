@@ -173,7 +173,8 @@ public class CommController extends BaseController{
 					newMap.put("flowerGubn", map.get("FLOWER_GUBN"));
 					
 					newMap.put("cdNm", map.get("ITEM_NM"));
-					newMap.put("cdId", ((String)map.get("FLOWER_CODE"))+((String)map.get("ITEM_CD")));
+					//newMap.put("cdId", ((String)map.get("FLOWER_CODE"))+((String)map.get("ITEM_CD")));
+					newMap.put("cdId", map.get("ITEM_NM"));
 					newMap.put("cdSeq", i);
 					list.add(newMap);
 				}
@@ -224,7 +225,8 @@ public class CommController extends BaseController{
 				for(int i=0;i<list.size();i++){
 					EgovMap map = list.get(i);
 					map.put("cdNm", map.get("kindNm"));
-					map.put("cdId", ((String)map.get("flowerCode"))+((String)map.get("itemCd"))+((String)map.get("kindCd")));
+					//map.put("cdId", ((String)map.get("flowerCode"))+((String)map.get("itemCd"))+((String)map.get("kindCd")));
+					map.put("cdId", map.get("kindNm"));
 					map.put("cdSeq", i);
 				}
 			}

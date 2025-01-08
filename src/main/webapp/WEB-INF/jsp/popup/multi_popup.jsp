@@ -340,7 +340,7 @@ input[name="tab_item"] {
         },
         selectTab: function(tabId) {
 
-            tabId = tabId || 'tp__market';
+            tabId = tabId || 'tp__market'; //경매장으로 강제설정
 
             const radioBtn = document.getElementById(tabId);
             radioBtn.checked = true;
@@ -364,7 +364,7 @@ input[name="tab_item"] {
                 case "tp__market":
                     popObj = marketPopup;
                     break;
-                case "tp__item":
+                case "tp__item": //품목
                     popObj = itemPopup;
                     $('#error_msg2').text("");
                     var error_txt = "";
@@ -378,7 +378,7 @@ input[name="tab_item"] {
                    		$('#error_msg2').text(error_txt);
                     }
                     break;
-                case "tp__itemDtl":
+                case "tp__itemDtl": //품종
                     popObj = itemDtlPopup;
                     $('#error_msg3').text("");
                     var error_txt = "";
@@ -683,7 +683,7 @@ input[name="tab_item"] {
 					]
 				});
 			},
-			searchItem : function() {
+			searchItem : function() { //품목에서 데이터 받아오는 곳
 
 				let flower = [];
 				multiPopup.rsFlowerCtgr.forEach(function(item){

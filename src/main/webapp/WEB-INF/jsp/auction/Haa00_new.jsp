@@ -882,7 +882,8 @@
      			$('input:checkbox[name="tCmpCd"]:checked').each(function(){
            			cmpCd.push($(this).val());
            		})
-     			url = "/excel/excelDownLoadHaaTotal00_new.do";
+     			//url = "/excel/excelDownLoadHaaTotal00_new.do";
+     			url = "/excel/excelDownLoadHaa00_new.do";
      			if(isEmptyArr(cmpCd)){
 	        		alert("선택한 공판장이 없습니다.");
 	        		return false;
@@ -1016,7 +1017,14 @@
 					$("#chk22-02").prop("checked", false);
 					$("#chk33-02").prop("checked", false);
 					
+					//2024-12-16 추가내용 - 박대효
+					let itemSrch = $('#tb__itemSrch').DataTable();
+					itemSrch.search('').draw();
+					
+					let itemDtlSrch = $('#tb__itemDtlSrch').DataTable();
+					itemDtlSrch.search('').draw();
 				},
+				
 				setInfoText : function() {
 					let paramText = '';
 					fnObj.param.rsFlowerCtgr.forEach(function(item){
@@ -1164,7 +1172,8 @@
 						}
 		     			url = "/haa00_new/selectMultiAuctionList.json";
 		     		}else{
-		     			url = "/haa00_new/selectAuctionListTotal.json";
+		     			//url = "/haa00_new/selectAuctionListTotal.json";
+		     			url = "/haa00_new/selectMultiAuctionList.json";
 		     		}
 
 	        		$('input:checkbox[name="gubn"]:checked').each(function(){
@@ -1243,7 +1252,7 @@
 		                pager: "#jqGridPager",
 		                loadComplete	: function(data) {
 		                	
-		                	
+		                
 		                	/* CONFIG */
 		            		
 		            		var xOffset = 10;
@@ -1259,8 +1268,8 @@
 											$(v).hover(function(e){
 							            		this.t = $(vv)[0].title
 							            		//this.title = "";	
-							            		let jong = $(v).find("td:eq(3)").text()
-							            		let mok = $(v).find("td:eq(2)").text()
+							            		var jong = $(v).find("td:eq(3)").text()
+							            		var mok = $(v).find("td:eq(2)").text()
 							            		
 							            		var c = (this.t != "") ? "https://flower.at.or.kr" + this.t : "";
 							            		$('body').append("<p id='screenshot'  style='width:200px;border-radius:5px;text-align:center;'  ><img style='width:100%;height:180px;' src='"+ ""+c +"' alt='' />"+ mok + " / " +jong+  "</p>");								 
@@ -1419,7 +1428,6 @@
     		})
     	}*/
 
-
 		             		var rowData = $(this).getLocalRow(rowid);
 		             		//var type = $(":input:radio[name=rr]:checked").val();
 		             		var searchStrDate = "";
@@ -1450,7 +1458,8 @@
 	             				searchCmpCd = rowData.CMPCD;
 	             				itemCd = rowData.ITEMCD;
 	             				itemCd2 = rowData.ITEMCD2;
-	             				url = '/haa00_new/selectHaa00LvJsonTotal.json';
+	             				//url = '/haa00_new/selectHaa00LvJsonTotal.json';
+	             				//url = '/haa00_new/selectHaa00LvJson.json';
 	             				if(clickStatus == '2'){
 	             					$("#typeText").text("공판장비중("+rowData.PUMNAME.replace(' -계','')+"-전체)");
 	             				}else if(clickStatus =='3'){
@@ -1535,16 +1544,17 @@
 		    	if(auctionType == 'sCmp'){
 		    		url = '/haa00_new/selectHaa00LvJson.json';
 		    	}else{
-		    		url = '/haa00_new/selectHaa00LvJsonTotal.json';
-		    		pumName = itemCd;
+		    		//url = '/haa00_new/selectHaa00LvJsonTotal.json'; //박대효
+		    		//url = '/haa00_new/selectHaa00LvJson.json';
+		    		//pumName = itemCd;
 		    		/* 
 	     			$('input:checkbox[name="tCmpCd"]:checked').each(function(){
 	     				cmpCdList.push($(this).val());
 	           		})
 	           		 */
-		    		fnObj.param.rsMarket.forEach(function(item){
-		    			cmpCdList.push(item.cdId);
-					});
+		    		//fnObj.param.rsMarket.forEach(function(item){
+		    			//cmpCdList.push(item.cdId);
+					//});
 		    	}
 		    	
     			$("#jqGrid2").jqGrid({
@@ -1877,7 +1887,7 @@
     			if(auctionType =='sCmp'){
     				url = "/haa00_new/selectHaa00InfoJson.json";
     			}else{
-    				url = "/haa00_new/selectHaa00InfoJsonTotal.json";
+    				//url = "/haa00_new/selectHaa00InfoJsonTotal.json";
     			}
 
 
@@ -1941,7 +1951,7 @@
     	    	if(auctionType == 'sCmp'){
     	    		url = "/haa00_new/selectHaa00ChartJson.json";
     	    	}else{
-    	    		url = "/haa00_new/selectHaa00ChartJsonTotal.json";
+    	    		//url = "/haa00_new/selectHaa00ChartJsonTotal.json";
     	    	}
 
     			var searchStrDate = "";
@@ -2005,7 +2015,7 @@
     			if(auctionType == 'sCmp'){
     				url = "/haa00_new/selectHaa00QtyPerJson.json";
     			}else{
-    				url = "/haa00_new/selectHaa00QtyPerJsonTotal.json";
+    				//url = "/haa00_new/selectHaa00QtyPerJsonTotal.json";
     			}
 
     			var searchStrDate = "";
@@ -2104,7 +2114,7 @@
         	var searchStrDate = "";
      		var searchEndDate = "";
      		flowerCd = [];
-     		
+
      		if(auctionType == 'sCmp'){
      			cmpCd = $(":input:radio[name=sCmpCd]:checked").val();
      			url = "/search/selectPumNameCmpDate.json";
@@ -2193,7 +2203,6 @@
 		//품종검색(정산테이블-일자별)
 		function getSaleGoodList(){
 			//var auctionType = $(":input:radio[name=rr99]:checked").val();
-			
 			var itemCd = $('#itemCd option:selected').val();
 			flowerCd = [];
 			var searchStrDate = "";
@@ -2208,7 +2217,6 @@
      			$('input:checkbox[name="tCmpCd"]:checked').each(function(){
            			cmpCd.push($(this).val());
            		})
-           		console.log("asdasd")
      			url = "/search/selectGoodNameCmpTotal.json";
      		}
 
@@ -2363,7 +2371,7 @@
 						</li>
 						<li>
 							<input type="radio" id="rr77" name="rr99" value="tCmp">
-							<label for="rr77" class="title_box_chk"><em class="txt">통합</em><span></span></label>
+							<label for="rr77" class="title_box_chk"><em class="txt">통합(합산)</em><span></span></label>
 						</li>
 					</ul>
 					
@@ -2400,7 +2408,7 @@
 							<div class="calendar_new">
 								<input type="text" alt="켈린더" id="searchEndDateD" value="${searchEndDate}" readonly/>
 							</div>
-							<label style="color: red;">※ 기간 조회는 최대 3년까지 조회가 가능합니다.</label>
+							<label style="color: red;">※ 기간조회는 최대3년까지 가능합니다.</label>
 							
 						</div>
 						
@@ -2412,7 +2420,7 @@
 							<div class="calendar_new">
 								<input type="text" alt="켈린더" class="calendar_focus" id="searchEndDateM" value="${searchEndDateM}" onClick="calendarShow(this.id);"/>
 							</div>
-							<label style="color: red;">※ 기간 조회는 최대 3년까지 조회가 가능합니다.</label>
+							<label style="color: red;">※ 기간조회는 최대3년까찌 가능합니다.</label>
 						</div>
 						<div class="date-from-to" id="searchDateY">
 							<div class="calendar_new">
@@ -2422,7 +2430,7 @@
 							<div class="calendar_new">
 								<input type="text" alt="켈린더" class="calendar_focus" id="searchEndDateY" value="${searchEndDateY}" onClick="calendarShow(this.id);"/>
 							</div>
-							<label style="color: red;">※ 기간 조회는 최대 3년까지 조회가 가능합니다.</label>
+							<label style="color: red;">※ 기간조회는 최대3년까지 가능합니다.</label>
 							
 						</div>
 						
@@ -2451,7 +2459,7 @@
 				</div>
 
 				<div class="s-line">
-					<h4 class="sbn_tit_01">표시단위</h4>
+					<h4 class="sbn_tit_01">집계단위</h4>
 					<ul class="grow_check_box width_a ">
 						<li>
 							<input type="checkbox" id="chk00-02" name="gubn" value="1">

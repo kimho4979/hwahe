@@ -34,13 +34,18 @@ public class ChartStatisticsController extends BaseController {
 	@RequestMapping(value="/chart/getPumMokSaledate.json")
 	public String getPumMokSaledate(HttpServletRequest pRequest, HttpServletResponse pResponse, 
  			@RequestParam Map<String, Object> pRequestParamMap, ModelMap model){			  			  				
-
+		
+		List<EgovMap> searchFlowerGubunList  =  (List<EgovMap>)chartStatisticsService.selectSearchFlowerGubun(pRequestParamMap);
+		model.addAttribute("searchFlowerGubunList",searchFlowerGubunList);
+		
 		List<EgovMap> saleDateList  =  (List<EgovMap>)chartStatisticsService.selectSearchPumMokSaleDate(pRequestParamMap);
 		model.addAttribute("saleDateList",saleDateList);
 		
-		String searchDate = (String) saleDateList.get(0).get("saleDate");
-		
-		pRequestParamMap.put("searchSaleDate", searchDate);
+		//2014-12-17 박대효 수정
+		if (!saleDateList.isEmpty()) {
+		    String searchDate = (String) saleDateList.get(0).get("saleDate");
+		    pRequestParamMap.put("searchSaleDate", searchDate);
+		}
 		
 		List<EgovMap> list = chartStatisticsService.selectPumStats(pRequestParamMap);
 		model.addAttribute("list",list);

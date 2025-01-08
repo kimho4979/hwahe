@@ -465,6 +465,26 @@
 		 ORDER BY SALE_DATE DESC
  	</select>
  	
+ 	<select id="selectSearchFlowerGubun" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
+		SELECT COALESCE(ALL_GUBN.FLOWER_GUBN, NULL) AS FLOWER_GUBN
+			FROM (
+			    SELECT '1' AS FLOWER_GUBN FROM DUAL
+			    UNION ALL
+			    SELECT '2' FROM DUAL
+			    UNION ALL
+			    SELECT '3' FROM DUAL
+			) ALL_GUBN
+			LEFT JOIN (
+			    SELECT DISTINCT FLOWER_GUBN
+			    FROM TB_PUM_STATS
+			    WHERE SALE_DATE BETWEEN SYSDATE - 30 AND SYSDATE
+			      AND CMP_CD = #{searchCmpCd, jdbcType=VARCHAR}
+			) EXISTING_GUBN
+			ON ALL_GUBN.FLOWER_GUBN = EXISTING_GUBN.FLOWER_GUBN
+			WHERE EXISTING_GUBN.FLOWER_GUBN IS NOT NULL
+			ORDER BY ALL_GUBN.FLOWER_GUBN DESC
+ 	</select>
+ 	
  	<select id="selectSearchAreaSaleDate" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
  		SELECT TO_CHAR(ADD_MONTHS(MAX(SALE_DATE), '0'), 'YYYY-MM-DD') AS SALE_DATE
 		  FROM TB_CHART_AREA

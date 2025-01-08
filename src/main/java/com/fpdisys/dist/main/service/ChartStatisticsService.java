@@ -27,6 +27,11 @@ public class ChartStatisticsService extends BaseService {
 		return chartStatisticsMapper.selectSearchPumMokSaleDate(pRequestParamMap);
 	}
 	
+	//FlowerGubun 찾기
+	public List<EgovMap> selectSearchFlowerGubun(Map<String, Object> pRequestParamMap) {
+		return chartStatisticsMapper.selectSearchFlowerGubun(pRequestParamMap);
+	}
+	
 	// 메인 조회 지역별 날짜
 	public List<EgovMap> selectSearchAreaSaleDate(Map<String, Object> pRequestParamMap) {
 		return chartStatisticsMapper.selectSearchAreaSaleDate(pRequestParamMap);

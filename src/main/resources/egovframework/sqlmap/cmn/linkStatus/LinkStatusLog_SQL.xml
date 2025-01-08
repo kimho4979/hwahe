@@ -28,16 +28,17 @@
 	<!-- 연계현황 조회 -->
 	<select id="selectLogList" parameterType="java.util.HashMap" resultType="egovframework.rte.psl.dataaccess.util.EgovMap">
 	
-	   <if test="sysGp != null and sysGp != ''">
+ <if test="sysGp != null and sysGp != ''">
 	   		<if test="sysGp != '2'">
-	   		SELECT A.LOG_SEQ
-				, TO_CHAR(TO_DATE(A.START_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE
-				, A.SYS_GP
-				, C.CD_NM AS SYS_GP_NM
-				, A.RSLT_GP
-				, B.CD_NM AS RSLT_GP_NM
-				, TO_CHAR(TO_DATE(A.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE
-				, A.PROC_MSG
+	   		SELECT 
+	   		A.LOG_SEQ
+     , TO_CHAR(TO_DATE(SUBSTR(A.START_DATE, 1, 8) || '000000', 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE
+     , A.SYS_GP
+     , C.CD_NM AS SYS_GP_NM
+     , A.RSLT_GP
+     , B.CD_NM AS RSLT_GP_NM
+     , TO_CHAR(TO_DATE(SUBSTR(A.END_DATE, 1, 8) || '000000', 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE
+     , A.PROC_MSG
 			  FROM T_LOG_H A
 			     , TB_GEN_CODE B
 			     , TB_GEN_CODE C
@@ -82,14 +83,15 @@
 	   		
 	   </if>
 	   <if test="sysGp == null or sysGp == ''">
-			SELECT A.LOG_SEQ
-				, TO_CHAR(TO_DATE(A.START_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE
-				, A.SYS_GP
-				, C.CD_NM AS SYS_GP_NM
-				, A.RSLT_GP
-				, B.CD_NM AS RSLT_GP_NM
-				, TO_CHAR(TO_DATE(A.END_DATE, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE
-				, A.PROC_MSG
+			SELECT 
+			A.LOG_SEQ
+     , TO_CHAR(TO_DATE(SUBSTR(A.START_DATE, 1, 8) || '000000', 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS START_DATE
+     , A.SYS_GP
+     , C.CD_NM AS SYS_GP_NM
+     , A.RSLT_GP
+     , B.CD_NM AS RSLT_GP_NM
+     , TO_CHAR(TO_DATE(SUBSTR(A.END_DATE, 1, 8) || '000000', 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') AS END_DATE
+     , A.PROC_MSG
 			  FROM T_LOG_H A
 			     , TB_GEN_CODE B
 			     , TB_GEN_CODE C

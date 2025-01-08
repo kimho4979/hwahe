@@ -17,6 +17,9 @@ public interface ChartStatisticsMapper {
 	// 메인조회 날짜(지역)
 	List<EgovMap> selectSearchAreaSaleDate(Map<String, Object> pRequestParamMap);
 	
+	// FlowerGubun 찾기
+	List<EgovMap> selectSearchFlowerGubun(Map<String, Object> pRequestParamMap);
+	
 	// 품목별거래현황차트전체 스케쥴러 조회
 	List<EgovMap> selectPumStatsTotList(Map<String, Object> searchDateMap);
 	

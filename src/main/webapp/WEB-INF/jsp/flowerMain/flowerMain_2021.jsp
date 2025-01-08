@@ -45,14 +45,14 @@
 	
 	//Map Data 경로 정의
 	//var mapDataBaseURL = "/rMateMapChart/Samples/MapDataBaseXml/SouthKoreaDrillDownSeoulDong_scale.xml";
-	//var mapDataBaseURL = "/rMateMapChart/xml/MapDataBaseXml/SouthKoreaDrillDownSeoulDong_scale.xml";
+	var mapDataBaseURL = "/rMateMapChart/xml/MapDataBaseXml/SouthKoreaDrillDownSeoulDong_scale.xml";
 	// 개발 시 주석 해제
-	var mapDataBaseURL = "/rMateMapChartH5Web_v5.5_EN_Trial/Samples/MapDataBaseXml/SouthKoreaDrillDownSeoulDong_scale.xml";
+	//var mapDataBaseURL = "/rMateMapChartH5Web_v5.5_EN_Trial/Samples/MapDataBaseXml/SouthKoreaDrillDownSeoulDong_scale.xml";
 	
 	//MapChart Source 선택
-	//var sourceURL = "/rMateMapChart/Samples/MapSource/SouthKoreaDrillDownSeoulDong.svg";
+	var sourceURL = "/rMateMapChart/Samples/MapSource/SouthKoreaDrillDownSeoulDong.svg";
 	// 개발 시 주석 해제
-	var sourceURL = "/rMateMapChartH5Web_v5.5_EN_Trial/Samples/MapSource/SouthKoreaDrillDownSeoulDong.svg";
+	//var sourceURL = "/rMateMapChartH5Web_v5.5_EN_Trial/Samples/MapSource/SouthKoreaDrillDownSeoulDong.svg";
 
 	var codes = {
 		"100":true
@@ -147,6 +147,7 @@
 	//----------------------- 차트 설정 시작 -----------------------
 	//rMate 차트 생성 준비가 완료된 상태 시 호출할 함수를 지정합니다.
 	var dataListChk = 1;
+	//var chartVars1 = "rMateOnLoadCallFunction=chartReadyHandler1&noDataText=데이터가 준비되지 않았습니다.";
 	var chartVars1 = "rMateOnLoadCallFunction=chartReadyHandler1";
 	var chartVars2 = "rMateOnLoadCallFunction=chartReadyHandler2";
 	
@@ -385,20 +386,84 @@
 	function getPumMokSaledate(){
 		var cmpCd = $("#cmpCdPumMok").val();
 		var gubn = $("#gubnPumMok").val();
+		var gubnText = $("#gubnPumMok option:selected").text();
 		
 		$.ajax({
 			type : "post",
 			url : "/chart/getPumMokSaledate.json",
 			data : {
 				searchCmpCd : cmpCd,
-				searchGubn : gubn,
-				cmpCd : cmpCd
+				searchGubn : gubn, //자바 : html
+				cmpCd : cmpCd,
+				gubnText : gubnText,
 			},
 			dataType : '',
 			success : function(res){
 				
-				console.log("res", res)
+				console.log("res", res);
 				
+				//박대효
+				var flowerGubun = res.searchFlowerGubunList;
+
+				const selectElement = document.getElementById("gubnPumMok");
+
+				// 현재 선택된 값 저장
+				const selectedValue = selectElement.value;
+
+				// 기본 순서 정의 (1: 절화, 2: 관엽, 3: 난)
+				const defaultOrder = ['1', '2', '3'];
+
+				// 기본 순서에 맞는 꽃 데이터를 정렬, 없으면 빈 객체로 채움
+				const flowerOrder = [];
+				for (var i = 0; i < defaultOrder.length; i++) {
+				    for (var j = 0; j < flowerGubun.length; j++) {
+				        if (flowerGubun[j].flowerGubn === defaultOrder[i]) {
+				            flowerOrder.push(flowerGubun[j]);
+				            break; // 이미 찾았으므로 내부 루프 종료
+				        }
+				    }
+				}
+
+				// 모든 옵션 제거
+				selectElement.innerHTML = '';
+
+				// flowerOrder를 기반으로 새 옵션 추가
+				for (var i = 0; i < flowerOrder.length; i++) {
+				    const option = document.createElement('option');
+				    option.value = flowerOrder[i].flowerGubn; // flowerGubn 값으로 설정
+				    option.textContent = getFlowerName(flowerOrder[i].flowerGubn); // 이름 설정
+				    selectElement.appendChild(option);
+				}
+
+				// 콤보박스 값 채우기
+				// 기존 선택된 값이 유효하면 유지, 그렇지 않으면 첫 번째 값으로 설정
+				if (flowerOrder.length > 0) {
+				    const isValueValid = flowerOrder.some(function(item) {
+				        return item.flowerGubn === selectedValue;
+				    });
+				    selectElement.value = isValueValid ? selectedValue : flowerOrder[0].flowerGubn;
+				}
+
+				// flowerGubn에 맞는 이름을 반환하는 함수
+				function getFlowerName(flowerGubn) {
+				    switch (flowerGubn) {
+				        case '1': return '절화';
+				        case '2': return '관엽';
+				        case '3': return '난';
+				        default: return '알 수 없음';
+				    }
+				}
+
+				// 선택된 값 확인 후 로직 실행
+				var gubnText2 = $("#gubnPumMok option:selected").text();
+
+				if (gubnText !== gubnText2) {
+				    // gubnText와 gubnText2가 다르면 getPumMokSaledate() 다시 실행
+				    gubnText = gubnText2;
+				    getPumMokSaledate();
+				}
+				 /////////////////////////////////////////////////////
+				 
 				var saleDateList = res.saleDateList;
 				if(res.saleDateList!=null && res.saleDateList.length > 0){
 					// 품목별 거래현황
@@ -460,18 +525,24 @@
 					var saleDate = saleDateList[0].saleDate.replace(/-/gi, ".");
 					$("#pumMokSaleDate").text(saleDate);
 					
-				}else{
+					
+					
+					
+				}else{ //0건일 경우
 					// 차트 초기화
 					chartData1 = [];
 					$("#pumMokTotal").hide();
 					$("#pumMokBtn1").hide();
 					$("#pumMokSaleDate").text('');
-					
+						
+					//2024-12-17 수정 박대효
+					/*
 					if(!document.getElementById("chart1")){
 				    	rMateChartH5.create("chart1", "chartHolder1", chartVars1, "100%", "99%");
 					 } else{
 						 chartReadyHandler1("chart1");
 					}
+					*/
 				}
 			}
 		});
