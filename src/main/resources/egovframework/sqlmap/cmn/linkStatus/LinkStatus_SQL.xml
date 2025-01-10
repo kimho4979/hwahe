@@ -108,9 +108,6 @@
 		<if test="jobId != null and jobId != ''">
 			AND JOB_ID = #{jobId}
 		</if>
-		<if test="jobId == null or jobId == ''">
-			AND JOB_ID in ('4','5')
-		</if>
 		ORDER BY JOB_ID
 	</select>
 
