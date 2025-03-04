@@ -11,4 +11,7 @@ public interface DataGoCustMapper {
 
 	void dataType1Insert(Map<String, String> map);
 	
+	int getDataCount_TbImpExpRaw(Map<String, String> map);
+	
+	void logInsertCall(Map<String, String> map);
 }

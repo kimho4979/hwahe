@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.egovapi.mapper.CommonApiLogMapper;
 
@@ -52,6 +53,7 @@ public class CommonApiLogService {
 	 * @param jobId
 	 * @param logStat
 	 */
+	@Transactional
 	public void updateJobList(String jobId, String logStat) {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("jobId", jobId);

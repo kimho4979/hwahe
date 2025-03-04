@@ -47,5 +47,69 @@ public class AtMarketVO  extends BaseVo{
 	private String TOT_CNT;
 	private String YUCHAL_CNT;
 	private String YUCHAL_PER;
+	public String getPAN_DAY() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getPAN_NO() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getPAN_SERIAL() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getMEJANG() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getPUM_CODE() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getMOK_NAME() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getJONG_NAME() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getSTRCODE_LEVEL() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getSOK_CNT() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getKM_P_NEW() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getCHUL_CODE() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getSTRCODE_LOCAL() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getREGION_CODE() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getREGION_NAME() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getF_SONGE_CNT() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getPAN_PRICE() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

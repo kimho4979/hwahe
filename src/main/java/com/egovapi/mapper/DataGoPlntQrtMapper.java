@@ -10,7 +10,11 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 public interface DataGoPlntQrtMapper {
 	
 	void dataType3ImpBeforeDelete(Map<String, String> map);
-
+	
+	int getDataCount_Imp(Map<String, String> map);
+	
+	int getDataCount_Exp(Map<String, String> map);
+	
 	void dataType3ImpInsert(Map<String, String> map);
 
 	void dataType3ExpBeforeDelete(Map<String, String> map);
