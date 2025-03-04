@@ -75,7 +75,7 @@ public class atMartRealSchedule {
 				// 테스트 요망
 				String sFilename = "0000000001" + rs.getPAN_DAY() + ".txt";
 				String sRecode = ";";
-				sRecode += rs.getFIRST_IN_DATE().replaceAll(" ", "");
+				//sRecode += rs.getFIRST_IN_DATE().replaceAll(" ", "");
 				  sRecode += ";";
 				  sRecode += rs.getPAN_DAY() + ";";
 				  sRecode += ";";

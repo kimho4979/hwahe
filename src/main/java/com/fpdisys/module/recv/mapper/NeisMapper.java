@@ -19,4 +19,8 @@ public interface NeisMapper {
 	
 	void insertSchInfo(Map<String, Object> paramMap);
 	void deleteEventList(Map<String, Object> paramMap);
+	
+	int getDataCount_T_EVENT_SCH(String loadDtm);
+	
+	void logInsertCall(Map<String, String> map);
 }
