@@ -8,8 +8,8 @@
 		<!-- 개발DB -->
 		<!-- <property name="url" value="jdbc:oracle:thin:@106.241.33.158:1521:orcl" /> -->
 		<property name="url" value="jdbc:oracle:thin:@192.168.0.245:1521:ORCL" />
-		<property name="username" value="FLOWER"/>
-		<property name="password" value="flower"/>
+		<property name="username" value="flower"/>
+		<property name="password" value="vkdlsqmdlxl12#$"/>
 		
 		<!-- 실DB -->
 		<!-- <property name="url" value="jdbc:oracle:thin:@192.168.100.113:1521:FLOWERDB" />
@@ -21,8 +21,8 @@
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
 		<!-- <property name="url" value="jdbc:oracle:thin:@106.241.33.158:1521:orcl" /> -->
 		<property name="url" value="jdbc:oracle:thin:@192.168.0.245:1521:ORCL" /> 
-		<property name="username" value="FLOWER"/>
-		<property name="password" value="flower"/> 
+		<property name="username" value="flower"/>
+		<property name="password" value="vkdlsqmdlxl12#$"/> 
 		<!-- <property name="url" value="jdbc:oracle:thin:@192.168.12.12:1521:AMIS" />  
 		<property name="username" value="rflo"/>
 		<property name="password" value="dbxhd_1882"/>-->
@@ -31,8 +31,8 @@
 	<bean id="dataSource3" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
 		<property name="url" value="jdbc:oracle:thin:@192.168.0.245:1521:ORCL" /> 
-		<property name="username" value="FLOWER"/>
-		<property name="password" value="flower"/> 
+		<property name="username" value="flower"/>
+		<property name="password" value="vkdlsqmdlxl12#$"/> 
 		<!-- 
 		<property name="url" value="jdbc:oracle:thin:@192.168.10.201:1521:orcl" /> 
 		<property name="username" value="KATI"/>

@@ -8,6 +8,16 @@
 		WHERE YYYYMM = #{yyyymm}
 	</delete>
 	
+	<select id="getDataCount_Imp" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT COUNT(1) FROM TB_PLNT_QRT_IMP
+		WHERE YYYYMM = #{yyyymm}
+	</select>
+	
+	<select id="getDataCount_Exp" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT COUNT(1) FROM TB_PLNT_QRT_EXP
+		WHERE YYYYMM = #{yyyymm}
+	</select>
+	
 	<insert id="dataType3ImpInsert" parameterType="java.util.HashMap">
 		INSERT INTO TB_PLNT_QRT_IMP (
 		   YYYYMM
@@ -77,21 +87,7 @@
 			, SYSDATE 
 		 )
 	</insert>
-	
-	<select id="logInsertCall" parameterType="java.util.HashMap">
-		{ CALL SP_LOG_H(
-				  #{sysGp , jdbcType=VARCHAR }
-				, #{rsltGp, jdbcType=VARCHAR }
-				, #{startDate , jdbcType=VARCHAR }
-				, #{procMsg , jdbcType=VARCHAR }
-				, 'ADMIN'
-				, #{pgmId , jdbcType=VARCHAR }
-				, #{pgmNm , jdbcType=VARCHAR }
-			)
-		}
-			
-	</select>
-	
+		
 	<!-- <select id="execForecast" parameterType="java.util.HashMap" resultType="java.lang.Integer">
      		{ CALL PROC_WEATHER(#{yyyymmdd , jdbcType=VARCHAR })}
 	</select> -->
@@ -119,4 +115,19 @@
 		AND A.EVENT_YMD = B.AA_YMD
 		AND A.EVENT_PLS = B.SCHUL_NM
 	</select>
+	
+	<select id="logInsertCall" parameterType="java.util.HashMap">
+		{ CALL SP_LOG_H(
+				  #{sysGp , jdbcType=VARCHAR }
+				, #{rsltGp, jdbcType=VARCHAR }
+				, #{startDate , jdbcType=VARCHAR }
+				, #{procMsg , jdbcType=VARCHAR }
+				, 'ADMIN'
+				, #{pgmId , jdbcType=VARCHAR }
+				, #{pgmNm , jdbcType=VARCHAR }
+			)
+		}
+			
+	</select>
+	
 </mapper>

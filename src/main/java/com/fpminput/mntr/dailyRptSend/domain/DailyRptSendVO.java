@@ -37,4 +37,9 @@ public class DailyRptSendVO {
 	private String searchNm = "";
 	
 	private String idx = "";
+
+	public String getEmailAdrs() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

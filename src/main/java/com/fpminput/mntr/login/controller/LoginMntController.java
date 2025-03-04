@@ -104,340 +104,340 @@ public class LoginMntController extends BaseController {
 	 * @return
 	 */
 	
-	@RequestMapping(value = "/login/loginProc.do")
-	public String loginProc(HttpServletRequest pRequest, HttpServletResponse pResponse,
-			@RequestParam Map<String, Object> pRequestParamMap, ModelMap model) {
-
-		try {
-
-			// ---------------------------------------------------
-			// declare local variables
-			// ---------------------------------------------------
-			String lMsg = "";
-			String lUri = "";
-			String lLoginResult = "";
-			String lLoginYn = "";
-			String otp = "";
-
-			log.info("===========================================");
-			log.info(">>>>pRequestParamMap.toString() : "
-					+ pRequestParamMap.toString());
-			log.info("===========================================");
-			String lReqUri = StringUtils.defaultString(
-					(String) pRequestParamMap.get("reqUri"), "/maa01/maa01.do");
-
-			String base = pRequestParamMap.get("pwd").toString();
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			byte[] hash = digest.digest(base.getBytes("UTF-8"));
-			StringBuffer hexString = new StringBuffer();
-			for (int i = 0; i < hash.length; i++) {
-				String hex = Integer.toHexString(0xFF & hash[i]);
-				if (hex.length() == 1)
-					hexString.append('0');
-				hexString.append(hex);
-			}
-			String pwd = hexString.toString();
-
-			/* 사용자 정보 DB select */
-			UserVO user = loginService.selectLogin(pRequestParamMap);
-
-			if (user != null) {// USER_ID 있음
-				if (user.getUseYn().equals("Y")) { // 사용여부 Y
-
-					if (user.getUserType().equals("M")
-							|| user.getUserType().equals("A")) {
-						// 권한이 모니터요원, 관리자만 사용가능
-						if (user.getUserPasswd().equals(
-								pwd)) {
-							// 비밀번호 일치
-							
-							int userLimitCnt = loginService.checkLimitDate(pRequestParamMap);
-							
-							if(userLimitCnt>0){
-								
-								otp = (String)pRequestParamMap.get("otp");
-								String authKey = user.getAuthKey();
-								
-								try{
-									
-									long codeCheck = Integer.parseInt(otp);
-									String encodedKey = authKey;
-									long l = new Date().getTime();
-									long ll = l / 30000;
-
-									boolean check_code = false;
-									check_code = check_code(encodedKey, codeCheck, ll);
-									
-									logger.info("코드 비교 결과 : check_code:{} ",check_code);
-
-									if (!check_code) {
-										lMsg = "OTP가 틀렸습니다.";
-										lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "")+ "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
-										lLoginResult = "NO_AUTH";
-										lLoginYn = "N";
-									} else {
-										lLoginResult = "SUCCESS";
-										lLoginYn = "Y";
-										lUri = lReqUri;
-
-										// 최종 로그인 시간 UPDATE, 로그인 실패횟수 초기화
-										loginService.updateLastDate(pRequestParamMap);
-
-										HttpSession session = pRequest.getSession(true);
-										session.setAttribute("CONNECTION_USER_IDENTITY_ABCDEFGHIJKLMN",user.getUserId());
-										session.setAttribute("SESSION_USER_ID",user.getUserId());
-										session.setAttribute("SESSION_CMP_CODE",user.getCompCode());
-										session.setAttribute("SESSION_SAN_CD",user.getRemark());
-										session.setAttribute("SESSION_MONITOR_TYPE", user.getMonitorType());
-										session.setAttribute("SESSION_USER_TYPE",user.getUserType());
-										session.setAttribute("LOCALE", Locale.getDefault());
-										session.setAttribute("SESSION_GRP_AUTH_CODE",user.getGrpAuthCode());
-
-										
-										System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-										System.out.println(user.getUserId());
-										System.out.println(user.getCompCode());
-										System.out.println(user.getRemark());
-										System.out.println(user.getMonitorType());
-										System.out.println(user.getUserType());
-										System.out.println(Locale.getDefault());
-										System.out.println();
-										System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-										
-										
-										// int lSessionPeriodSeconds =
-										// Integer.parseInt(StringUtils.defaultString((String)propertyService.getString("sessionPeriodSeconds"),"3600"));
-										// session.setMaxInactiveInterval( lSessionPeriodSeconds );
-										//session.setMaxInactiveInterval(60*20);
-
-										model.addAttribute("user", user);
-									}
-
-								} catch (Exception e) {
-									throw new BadCredentialsException("OTP코드가 일치하지 않습니다." );
-								}
-								
-							}else{
-								// 비밀번호 불일치
-								lMsg = "로그인실패로 10분간 로그인이 제한됩니다.";
-								lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "")+ "/mnt/mem01/mem01Form.do?reqUri="+ lReqUri;
-								lLoginResult = "LIMIT_LOGIN";
-								lLoginYn = "N";
-							}
-							
-							
-
-						} else {
-							// 비밀번호 불일치
-							lMsg = "비밀번호가 틀립니다.";
-							lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "")+ "/mnt/mem01/mem01Form.do?reqUri="+ lReqUri;
-							lLoginResult = "WRONG_PASSWORD";
-							lLoginYn = "N";
-
-							// 로그인 실패횟수 cnt+1
-							if(user.getPassErrNum()>4){
-								loginService.updateLimitLogin(pRequestParamMap);
-							}
-							loginService.wrongPasswd(pRequestParamMap);
-						}
-
-					} else {
-						lMsg = "권한이 없습니다.";
-						lUri = pRequest.getRequestURI().replace(
-								pRequest.getServletPath(), "")
-								+ "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
-						lLoginResult = "NO_AUTH";
-						lLoginYn = "N";
-					}
-				} else {
-					// 사용여부 N
-					lMsg = "로그인 할 수 없는 계정입니다. 관리자에게 문의하세요.";
-					lUri = pRequest.getRequestURI().replace(
-							pRequest.getServletPath(), "")
-							+ "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
-					lLoginResult = "NO_USE_YN";
-					lLoginYn = "N";
-				}
-
-			} else {
-				// USER_ID 없음
-				lMsg = "입력하신 아이디가 없습니다.";
-				lUri = pRequest.getRequestURI().replace(
-						pRequest.getServletPath(), "")
-						+ "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
-				lLoginResult = "NO_USER_ID";
-				lLoginYn = "N";
-			}
-
-			model.addAttribute("msg", lMsg);
-			model.addAttribute("uri", lUri);
-			model.addAttribute("code", lLoginResult);
-
-
-		} catch (ArithmeticException e) {
-			log.error("오류발생 숫자를 0으로 나눌 수 없습니다!!");
-		} catch (NumberFormatException e) {
-			log.error("오류발생 숫자로 변환 할 수 없습니다!!");
-		} catch (ArrayIndexOutOfBoundsException e) {
-			log.error("오류발생 배열인텍스에서 벗어났습니다!!");
-		} catch (NegativeArraySizeException e) {
-			log.error("오류발생 배열을 음수로 지정 할 수 없습니다!!");
-		} catch (NullPointerException e) {
-			log.error("오류발생 특정 널 값을 가진 변수를 참조 할수 없습니다!!");
-		} catch (NoSuchMethodError e) {
-			log.error("오류발생 메서드를 찾을수 없습니다!!");
-		} catch (NoClassDefFoundError e) {
-			log.error("오류발생 클래스를 찾을 수 없습니다!!");
-		} catch (RuntimeException e) {
-			log.error("오류발생 런타임!!");
-		} catch (Exception e) {
-			log.error("오류발생!!");
-		}
-		
-		return "/mem01/loginProc";
-		
-	}
-	
-// 2025-01-07 OTP 없이 입장가능	
 //	@RequestMapping(value = "/login/loginProc.do")
 //	public String loginProc(HttpServletRequest pRequest, HttpServletResponse pResponse,
-//	                        @RequestParam Map<String, Object> pRequestParamMap, ModelMap model) {
+//			@RequestParam Map<String, Object> pRequestParamMap, ModelMap model) {
 //
-//	    try {
+//		try {
 //
-//	        // ---------------------------------------------------
-//	        // declare local variables
-//	        // ---------------------------------------------------
-//	        String lMsg = "";
-//	        String lUri = "";
-//	        String lLoginResult = "";
-//	        String lLoginYn = "";
+//			// ---------------------------------------------------
+//			// declare local variables
+//			// ---------------------------------------------------
+//			String lMsg = "";
+//			String lUri = "";
+//			String lLoginResult = "";
+//			String lLoginYn = "";
+//			String otp = "";
 //
-//	        log.info("===========================================");
-//	        log.info(">>>>pRequestParamMap.toString() : " + pRequestParamMap.toString());
-//	        log.info("===========================================");
-//	        
-//	        String lReqUri = StringUtils.defaultString((String) pRequestParamMap.get("reqUri"), "/maa01/maa01.do");
+//			log.info("===========================================");
+//			log.info(">>>>pRequestParamMap.toString() : "
+//					+ pRequestParamMap.toString());
+//			log.info("===========================================");
+//			String lReqUri = StringUtils.defaultString(
+//					(String) pRequestParamMap.get("reqUri"), "/maa01/maa01.do");
 //
-//	        String base = pRequestParamMap.get("pwd").toString();
-//	        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-//	        byte[] hash = digest.digest(base.getBytes("UTF-8"));
-//	        StringBuffer hexString = new StringBuffer();
-//	        for (int i = 0; i < hash.length; i++) {
-//	            String hex = Integer.toHexString(0xFF & hash[i]);
-//	            if (hex.length() == 1) hexString.append('0');
-//	            hexString.append(hex);
-//	        }
-//	        String pwd = hexString.toString();
+//			String base = pRequestParamMap.get("pwd").toString();
+//			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+//			byte[] hash = digest.digest(base.getBytes("UTF-8"));
+//			StringBuffer hexString = new StringBuffer();
+//			for (int i = 0; i < hash.length; i++) {
+//				String hex = Integer.toHexString(0xFF & hash[i]);
+//				if (hex.length() == 1)
+//					hexString.append('0');
+//				hexString.append(hex);
+//			}
+//			String pwd = hexString.toString();
 //
-//	        /* 사용자 정보 DB select */
-//	        UserVO user = loginService.selectLogin(pRequestParamMap);
+//			/* 사용자 정보 DB select */
+//			UserVO user = loginService.selectLogin(pRequestParamMap);
 //
-//	        if (user != null) { // USER_ID 있음
-//	            if (user.getUseYn().equals("Y")) { // 사용여부 Y
+//			if (user != null) {// USER_ID 있음
+//				if (user.getUseYn().equals("Y")) { // 사용여부 Y
 //
-//	                if (user.getUserType().equals("M") || user.getUserType().equals("A")) {
-//	                    // 권한이 모니터요원, 관리자만 사용 가능
-//	                    if (user.getUserPasswd().equals(pwd)) {
-//	                        // 비밀번호 일치
-//	                        int userLimitCnt = loginService.checkLimitDate(pRequestParamMap);
+//					if (user.getUserType().equals("M")
+//							|| user.getUserType().equals("A")) {
+//						// 권한이 모니터요원, 관리자만 사용가능
+//						if (user.getUserPasswd().equals(
+//								pwd)) {
+//							// 비밀번호 일치
+//							
+//							int userLimitCnt = loginService.checkLimitDate(pRequestParamMap);
+//							
+//							if(userLimitCnt>0){
+//								
+//								otp = (String)pRequestParamMap.get("otp");
+//								String authKey = user.getAuthKey();
+//								
+//								try{
+//									
+//									long codeCheck = Integer.parseInt(otp);
+//									String encodedKey = authKey;
+//									long l = new Date().getTime();
+//									long ll = l / 30000;
 //
-//	                        if (userLimitCnt > 0) {
-//	                            // OTP 검증을 무력화하고 로그인 성공으로 처리
-//	                            lLoginResult = "SUCCESS";
-//	                            lLoginYn = "Y";
-//	                            lUri = lReqUri;
+//									boolean check_code = false;
+//									check_code = check_code(encodedKey, codeCheck, ll);
+//									
+//									logger.info("코드 비교 결과 : check_code:{} ",check_code);
 //
-//	                            // 최종 로그인 시간 UPDATE, 로그인 실패횟수 초기화
-//	                            loginService.updateLastDate(pRequestParamMap);
+//									if (!check_code) {
+//										lMsg = "OTP가 틀렸습니다.";
+//										lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "")+ "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
+//										lLoginResult = "NO_AUTH";
+//										lLoginYn = "N";
+//									} else {
+//										lLoginResult = "SUCCESS";
+//										lLoginYn = "Y";
+//										lUri = lReqUri;
 //
-//	                            HttpSession session = pRequest.getSession(true);
-//	                            session.setAttribute("CONNECTION_USER_IDENTITY_ABCDEFGHIJKLMN", user.getUserId());
-//	                            session.setAttribute("SESSION_USER_ID", user.getUserId());
-//	                            session.setAttribute("SESSION_CMP_CODE", user.getCompCode());
-//	                            session.setAttribute("SESSION_SAN_CD", user.getRemark());
-//	                            session.setAttribute("SESSION_MONITOR_TYPE", user.getMonitorType());
-//	                            session.setAttribute("SESSION_USER_TYPE", user.getUserType());
-//	                            session.setAttribute("LOCALE", Locale.getDefault());
-//	                            session.setAttribute("SESSION_GRP_AUTH_CODE", user.getGrpAuthCode());
+//										// 최종 로그인 시간 UPDATE, 로그인 실패횟수 초기화
+//										loginService.updateLastDate(pRequestParamMap);
 //
-//	                            model.addAttribute("user", user);
-//	                        } else {
-//	                            // 로그인 제한
-//	                            lMsg = "로그인 실패로 10분간 로그인이 제한됩니다.";
-//	                            lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
-//	                                    + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
-//	                            lLoginResult = "LIMIT_LOGIN";
-//	                            lLoginYn = "N";
-//	                        }
+//										HttpSession session = pRequest.getSession(true);
+//										session.setAttribute("CONNECTION_USER_IDENTITY_ABCDEFGHIJKLMN",user.getUserId());
+//										session.setAttribute("SESSION_USER_ID",user.getUserId());
+//										session.setAttribute("SESSION_CMP_CODE",user.getCompCode());
+//										session.setAttribute("SESSION_SAN_CD",user.getRemark());
+//										session.setAttribute("SESSION_MONITOR_TYPE", user.getMonitorType());
+//										session.setAttribute("SESSION_USER_TYPE",user.getUserType());
+//										session.setAttribute("LOCALE", Locale.getDefault());
+//										session.setAttribute("SESSION_GRP_AUTH_CODE",user.getGrpAuthCode());
 //
-//	                    } else {
-//	                        // 비밀번호 불일치
-//	                        lMsg = "비밀번호가 틀립니다.";
-//	                        lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
-//	                                + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
-//	                        lLoginResult = "WRONG_PASSWORD";
-//	                        lLoginYn = "N";
+//										
+//										System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//										System.out.println(user.getUserId());
+//										System.out.println(user.getCompCode());
+//										System.out.println(user.getRemark());
+//										System.out.println(user.getMonitorType());
+//										System.out.println(user.getUserType());
+//										System.out.println(Locale.getDefault());
+//										System.out.println();
+//										System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//										
+//										
+//										// int lSessionPeriodSeconds =
+//										// Integer.parseInt(StringUtils.defaultString((String)propertyService.getString("sessionPeriodSeconds"),"3600"));
+//										// session.setMaxInactiveInterval( lSessionPeriodSeconds );
+//										//session.setMaxInactiveInterval(60*20);
 //
-//	                        // 로그인 실패횟수 증가
-//	                        if (user.getPassErrNum() > 4) {
-//	                            loginService.updateLimitLogin(pRequestParamMap);
-//	                        }
-//	                        loginService.wrongPasswd(pRequestParamMap);
-//	                    }
+//										model.addAttribute("user", user);
+//									}
 //
-//	                } else {
-//	                    // 권한 없음
-//	                    lMsg = "권한이 없습니다.";
-//	                    lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
-//	                            + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
-//	                    lLoginResult = "NO_AUTH";
-//	                    lLoginYn = "N";
-//	                }
-//	            } else {
-//	                // 사용여부 N
-//	                lMsg = "로그인 할 수 없는 계정입니다. 관리자에게 문의하세요.";
-//	                lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
-//	                        + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
-//	                lLoginResult = "NO_USE_YN";
-//	                lLoginYn = "N";
-//	            }
+//								} catch (Exception e) {
+//									throw new BadCredentialsException("OTP코드가 일치하지 않습니다." );
+//								}
+//								
+//							}else{
+//								// 비밀번호 불일치
+//								lMsg = "로그인실패로 10분간 로그인이 제한됩니다.";
+//								lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "")+ "/mnt/mem01/mem01Form.do?reqUri="+ lReqUri;
+//								lLoginResult = "LIMIT_LOGIN";
+//								lLoginYn = "N";
+//							}
+//							
+//							
 //
-//	        } else {
-//	            // USER_ID 없음
-//	            lMsg = "입력하신 아이디가 없습니다.";
-//	            lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
-//	                    + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
-//	            lLoginResult = "NO_USER_ID";
-//	            lLoginYn = "N";
-//	        }
+//						} else {
+//							// 비밀번호 불일치
+//							lMsg = "비밀번호가 틀립니다.";
+//							lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "")+ "/mnt/mem01/mem01Form.do?reqUri="+ lReqUri;
+//							lLoginResult = "WRONG_PASSWORD";
+//							lLoginYn = "N";
 //
-//	        model.addAttribute("msg", lMsg);
-//	        model.addAttribute("uri", lUri);
-//	        model.addAttribute("code", lLoginResult);
+//							// 로그인 실패횟수 cnt+1
+//							if(user.getPassErrNum()>4){
+//								loginService.updateLimitLogin(pRequestParamMap);
+//							}
+//							loginService.wrongPasswd(pRequestParamMap);
+//						}
 //
-//	    } catch (ArithmeticException e) {
-//	        log.error("오류발생 숫자를 0으로 나눌 수 없습니다!!");
-//	    } catch (NumberFormatException e) {
-//	        log.error("오류발생 숫자로 변환할 수 없습니다!!");
-//	    } catch (ArrayIndexOutOfBoundsException e) {
-//	        log.error("오류발생 배열 인덱스를 벗어났습니다!!");
-//	    } catch (NegativeArraySizeException e) {
-//	        log.error("오류발생 배열 크기를 음수로 지정할 수 없습니다!!");
-//	    } catch (NullPointerException e) {
-//	        log.error("오류발생 특정 널 값을 가진 변수를 참조할 수 없습니다!!");
-//	    } catch (NoSuchMethodError e) {
-//	        log.error("오류발생 메서드를 찾을 수 없습니다!!");
-//	    } catch (NoClassDefFoundError e) {
-//	        log.error("오류발생 클래스를 찾을 수 없습니다!!");
-//	    } catch (RuntimeException e) {
-//	        log.error("오류발생 런타임!!");
-//	    } catch (Exception e) {
-//	        log.error("오류발생!!");
-//	    }
+//					} else {
+//						lMsg = "권한이 없습니다.";
+//						lUri = pRequest.getRequestURI().replace(
+//								pRequest.getServletPath(), "")
+//								+ "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
+//						lLoginResult = "NO_AUTH";
+//						lLoginYn = "N";
+//					}
+//				} else {
+//					// 사용여부 N
+//					lMsg = "로그인 할 수 없는 계정입니다. 관리자에게 문의하세요.";
+//					lUri = pRequest.getRequestURI().replace(
+//							pRequest.getServletPath(), "")
+//							+ "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
+//					lLoginResult = "NO_USE_YN";
+//					lLoginYn = "N";
+//				}
 //
-//	    return "/mem01/loginProc";
+//			} else {
+//				// USER_ID 없음
+//				lMsg = "입력하신 아이디가 없습니다.";
+//				lUri = pRequest.getRequestURI().replace(
+//						pRequest.getServletPath(), "")
+//						+ "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
+//				lLoginResult = "NO_USER_ID";
+//				lLoginYn = "N";
+//			}
+//
+//			model.addAttribute("msg", lMsg);
+//			model.addAttribute("uri", lUri);
+//			model.addAttribute("code", lLoginResult);
+//
+//
+//		} catch (ArithmeticException e) {
+//			log.error("오류발생 숫자를 0으로 나눌 수 없습니다!!");
+//		} catch (NumberFormatException e) {
+//			log.error("오류발생 숫자로 변환 할 수 없습니다!!");
+//		} catch (ArrayIndexOutOfBoundsException e) {
+//			log.error("오류발생 배열인텍스에서 벗어났습니다!!");
+//		} catch (NegativeArraySizeException e) {
+//			log.error("오류발생 배열을 음수로 지정 할 수 없습니다!!");
+//		} catch (NullPointerException e) {
+//			log.error("오류발생 특정 널 값을 가진 변수를 참조 할수 없습니다!!");
+//		} catch (NoSuchMethodError e) {
+//			log.error("오류발생 메서드를 찾을수 없습니다!!");
+//		} catch (NoClassDefFoundError e) {
+//			log.error("오류발생 클래스를 찾을 수 없습니다!!");
+//		} catch (RuntimeException e) {
+//			log.error("오류발생 런타임!!");
+//		} catch (Exception e) {
+//			log.error("오류발생!!");
+//		}
+//		
+//		return "/mem01/loginProc";
+//		
 //	}
+	
+// 2025-01-07 OTP 없이 입장가능	
+	@RequestMapping(value = "/login/loginProc.do")
+	public String loginProc(HttpServletRequest pRequest, HttpServletResponse pResponse,
+	                        @RequestParam Map<String, Object> pRequestParamMap, ModelMap model) {
+
+	    try {
+
+	        // ---------------------------------------------------
+	        // declare local variables
+	        // ---------------------------------------------------
+	        String lMsg = "";
+	        String lUri = "";
+	        String lLoginResult = "";
+	        String lLoginYn = "";
+
+	        log.info("===========================================");
+	        log.info(">>>>pRequestParamMap.toString() : " + pRequestParamMap.toString());
+	        log.info("===========================================");
+	        
+	        String lReqUri = StringUtils.defaultString((String) pRequestParamMap.get("reqUri"), "/maa01/maa01.do");
+
+	        String base = pRequestParamMap.get("pwd").toString();
+	        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+	        byte[] hash = digest.digest(base.getBytes("UTF-8"));
+	        StringBuffer hexString = new StringBuffer();
+	        for (int i = 0; i < hash.length; i++) {
+	            String hex = Integer.toHexString(0xFF & hash[i]);
+	            if (hex.length() == 1) hexString.append('0');
+	            hexString.append(hex);
+	        }
+	        String pwd = hexString.toString();
+
+	        /* 사용자 정보 DB select */
+	        UserVO user = loginService.selectLogin(pRequestParamMap);
+
+	        if (user != null) { // USER_ID 있음
+	            if (user.getUseYn().equals("Y")) { // 사용여부 Y
+
+	                if (user.getUserType().equals("M") || user.getUserType().equals("A")) {
+	                    // 권한이 모니터요원, 관리자만 사용 가능
+	                    if (user.getUserPasswd().equals(pwd)) {
+	                        // 비밀번호 일치
+	                        int userLimitCnt = loginService.checkLimitDate(pRequestParamMap);
+
+	                        if (userLimitCnt > 0) {
+	                            // OTP 검증을 무력화하고 로그인 성공으로 처리
+	                            lLoginResult = "SUCCESS";
+	                            lLoginYn = "Y";
+	                            lUri = lReqUri;
+
+	                            // 최종 로그인 시간 UPDATE, 로그인 실패횟수 초기화
+	                            loginService.updateLastDate(pRequestParamMap);
+
+	                            HttpSession session = pRequest.getSession(true);
+	                            session.setAttribute("CONNECTION_USER_IDENTITY_ABCDEFGHIJKLMN", user.getUserId());
+	                            session.setAttribute("SESSION_USER_ID", user.getUserId());
+	                            session.setAttribute("SESSION_CMP_CODE", user.getCompCode());
+	                            session.setAttribute("SESSION_SAN_CD", user.getRemark());
+	                            session.setAttribute("SESSION_MONITOR_TYPE", user.getMonitorType());
+	                            session.setAttribute("SESSION_USER_TYPE", user.getUserType());
+	                            session.setAttribute("LOCALE", Locale.getDefault());
+	                            session.setAttribute("SESSION_GRP_AUTH_CODE", user.getGrpAuthCode());
+
+	                            model.addAttribute("user", user);
+	                        } else {
+	                            // 로그인 제한
+	                            lMsg = "로그인 실패로 10분간 로그인이 제한됩니다.";
+	                            lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
+	                                    + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
+	                            lLoginResult = "LIMIT_LOGIN";
+	                            lLoginYn = "N";
+	                        }
+
+	                    } else {
+	                        // 비밀번호 불일치
+	                        lMsg = "비밀번호가 틀립니다.";
+	                        lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
+	                                + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
+	                        lLoginResult = "WRONG_PASSWORD";
+	                        lLoginYn = "N";
+
+	                        // 로그인 실패횟수 증가
+	                        if (user.getPassErrNum() > 4) {
+	                            loginService.updateLimitLogin(pRequestParamMap);
+	                        }
+	                        loginService.wrongPasswd(pRequestParamMap);
+	                    }
+
+	                } else {
+	                    // 권한 없음
+	                    lMsg = "권한이 없습니다.";
+	                    lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
+	                            + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
+	                    lLoginResult = "NO_AUTH";
+	                    lLoginYn = "N";
+	                }
+	            } else {
+	                // 사용여부 N
+	                lMsg = "로그인 할 수 없는 계정입니다. 관리자에게 문의하세요.";
+	                lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
+	                        + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
+	                lLoginResult = "NO_USE_YN";
+	                lLoginYn = "N";
+	            }
+
+	        } else {
+	            // USER_ID 없음
+	            lMsg = "입력하신 아이디가 없습니다.";
+	            lUri = pRequest.getRequestURI().replace(pRequest.getServletPath(), "") 
+	                    + "/mnt/mem01/mem01Form.do?reqUri=" + lReqUri;
+	            lLoginResult = "NO_USER_ID";
+	            lLoginYn = "N";
+	        }
+
+	        model.addAttribute("msg", lMsg);
+	        model.addAttribute("uri", lUri);
+	        model.addAttribute("code", lLoginResult);
+
+	    } catch (ArithmeticException e) {
+	        log.error("오류발생 숫자를 0으로 나눌 수 없습니다!!");
+	    } catch (NumberFormatException e) {
+	        log.error("오류발생 숫자로 변환할 수 없습니다!!");
+	    } catch (ArrayIndexOutOfBoundsException e) {
+	        log.error("오류발생 배열 인덱스를 벗어났습니다!!");
+	    } catch (NegativeArraySizeException e) {
+	        log.error("오류발생 배열 크기를 음수로 지정할 수 없습니다!!");
+	    } catch (NullPointerException e) {
+	        log.error("오류발생 특정 널 값을 가진 변수를 참조할 수 없습니다!!");
+	    } catch (NoSuchMethodError e) {
+	        log.error("오류발생 메서드를 찾을 수 없습니다!!");
+	    } catch (NoClassDefFoundError e) {
+	        log.error("오류발생 클래스를 찾을 수 없습니다!!");
+	    } catch (RuntimeException e) {
+	        log.error("오류발생 런타임!!");
+	    } catch (Exception e) {
+	        log.error("오류발생!!");
+	    }
+
+	    return "/mem01/loginProc";
+	}
 
 	
 	

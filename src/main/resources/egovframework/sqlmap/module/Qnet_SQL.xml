@@ -176,4 +176,11 @@
 		]]>
 	</insert>
 	
+	<select id="getDataCount_T_SCH_INFO" parameterType="java.lang.String" resultType="java.lang.Integer">
+	    SELECT COUNT(1) 
+	    FROM T_EVENT_SCH
+	    WHERE LOAD_DTM = #{loadDtm}
+    </select>
+	
+	
 </mapper>

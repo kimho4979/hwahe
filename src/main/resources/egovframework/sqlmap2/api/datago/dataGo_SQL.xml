@@ -38,4 +38,49 @@
 		 )
 	</insert>
 	
+	<select id="getDataCount_TbImpExpRaw" parameterType="java.util.HashMap" resultType="Integer">
+		SELECT COUNT(1) FROM TB_IMPEXP_RAW
+		WHERE YYYYMM = #{yyyymm}
+	</select>
+	
+	<update id="logInsertCall" parameterType="java.util.HashMap">
+		{ CALL SP_LOG_H(
+				  #{sysGp , jdbcType=VARCHAR }
+				, #{rsltGp, jdbcType=VARCHAR }
+				, #{startDate , jdbcType=VARCHAR }
+				, #{procMsg , jdbcType=VARCHAR }
+				, 'ADMIN'
+				, #{pgmId , jdbcType=VARCHAR }
+				, #{pgmNm , jdbcType=VARCHAR }
+			)
+		}
+	</update>
+	
+	<insert id="T_LOG_H_Insert"  parameterType="java.util.HashMap">
+	INSERT INTO T_LOG_H
+	(     
+		LOG_SEQ                  
+        , SYS_GP            
+        , RSLT_GP    
+        , START_DATE
+        , END_DATE
+        , PROC_MSG
+        , USER_NM
+        , PGM_ID   
+        , PGM_NM
+   	) 
+    VALUES 
+    (    
+    	(SELECT MAX(LOG_SEQ)+1 FROM T_LOG_H)
+        , #{sysGp}
+        , #{rsltGp}
+        , #{startDate}
+        , #{endDate}
+        , #{procMsg}
+        , #{userNm}
+        , #{pgmId}
+        , #{pgmNm}
+   	)
+ 	</insert>
+
 </mapper>
