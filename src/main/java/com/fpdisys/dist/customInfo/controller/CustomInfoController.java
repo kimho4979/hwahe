@@ -72,11 +72,11 @@ public class CustomInfoController extends BaseController {
   
   @RequestMapping({"/customInfo/nextStep.json"})
   public String nextStep(HttpServletRequest pRequest, HttpServletResponse pResponse, @RequestParam Map<String, Object> pRequestParamMap, ModelMap model) {
-	if (pRequestParamMap.get("vaildation") == null || pRequestParamMap.get("vaildation").equals("")) {
-	    	return "jsonView";
-	    } 
+    if (pRequestParamMap.get("vaildation") == null || pRequestParamMap.get("vaildation").equals("")) {
+          return "jsonView";
+        } 
 
-	pRequest.getSession().setAttribute("vaildation", pRequestParamMap.get("vaildation").toString());
+    pRequest.getSession().setAttribute("vaildation", pRequestParamMap.get("vaildation").toString());
     return "jsonView";
   }
   
@@ -319,8 +319,15 @@ public class CustomInfoController extends BaseController {
       int result = this.customInfoService.compareAuthCode(pRequestParamMap);
       this.logger.debug(">>>>>>> result : {}", Integer.valueOf(result));
       if (result > 0) {
+        //25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+        request.getSession().setAttribute("auth_id", userId);
+        request.getSession().setAttribute("auth_result", Boolean.valueOf(true));
+
         model.addAttribute("result", Boolean.valueOf(true));
       } else {
+        //25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+        request.getSession().setAttribute("auth_result", Boolean.valueOf(false));
+
         model.addAttribute("result", Boolean.valueOf(false));
         pRequest.getSession().setAttribute("authCount", Integer.valueOf(authCount + 1));
       } 
@@ -373,18 +380,21 @@ public class CustomInfoController extends BaseController {
       this.log.info("======== PASSWORD : " + passwd + " =========");
       try {
         if (userId != null && passwd != null) {
-          String base = passwd;
-          MessageDigest digest = MessageDigest.getInstance("SHA-256");
-          byte[] hash = digest.digest(base.getBytes("UTF-8"));
-          StringBuffer hexString = new StringBuffer();
-          for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xFF & hash[i]);
-            if (hex.length() == 1)
-              hexString.append('0'); 
-            hexString.append(hex);
-          } 
-          String pwd = hexString.toString();
-          pRequestParamMap.put("passwd", pwd);
+          // 25.02 22.5 취약점 대응
+          // String base = passwd;
+          // MessageDigest digest = MessageDigest.getInstance("SHA-256");
+          // byte[] hash = digest.digest(base.getBytes("UTF-8"));
+          // StringBuffer hexString = new StringBuffer();
+          // for (int i = 0; i < hash.length; i++) {
+          //   String hex = Integer.toHexString(0xFF & hash[i]);
+          //   if (hex.length() == 1)
+          //     hexString.append('0'); 
+          //   hexString.append(hex);
+          // } 
+          // String pwd = hexString.toString();
+          // pRequestParamMap.put("passwd", pwd);
+          pRequestParamMap.put("passwd", passwd);
+
           CustomInfoVO user = this.customInfoService.loginCustomInfo(pRequestParamMap);
           List<CustomInfoVO> list = this.customInfoService.getCustomInfoMs(pRequestParamMap);
           if (user == null)

@@ -24,8 +24,17 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     	if (URL.contains("customInfo/customInfoRegForm2.do") && vaildation.equals("2"))
     		sessionChk = true;
     	if (URL.contains("customInfo/customInfoRegForm3.do") && vaildation.equals("3")){
-    		sessionChk = true;
-    		request.getSession().removeAttribute("vaildation");
+
+        	//25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+			if(!((boolean)request.getSession().getAttribute("auth_result")) ||
+				!(request.getAttribute("userId").equals(request.getSession().getAttribute("auth_id")))) {
+					sessionChk = false;
+			}else {
+				sessionChk = true;
+				request.getSession().removeAttribute("vaildation");
+			}
+			request.getSession().removeAttribute("auth_result");
+			request.getSession().removeAttribute("auth_id");
     	}
     	if(!sessionChk){
     		request.getSession().removeAttribute("vaildation");

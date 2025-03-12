@@ -25,7 +25,15 @@
 	<title>로그인</title>	
 	<%@include file="../common/2020/commonJs.jsp" %>
 	<%@include file="../common/2020/commonCss.jsp" %>
+
 	
+
+	<!-- 25.02 22.5 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/core.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/sha256.js"></script>
+
+
+	<script />
 	<script type="text/javascript">
 	$(document).ready(function(){
 		var paramMsg = $("#paramMsg").val(); 
@@ -53,6 +61,9 @@
 	function loginCheck(){
 		var userId = $("#userId").val();
 		var userPw = $("#passwd").val();
+
+		//25.02 22.5
+		userPw = CryptoJS.SHA256(userPw).toString();
 		
 		if(userId == null || userId == ""){
 			alert("아이디를 입력하여 주십시오.");

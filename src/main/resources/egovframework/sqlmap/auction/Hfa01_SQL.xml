@@ -113,7 +113,8 @@
         AA.SEQ ,
         FN_ENCRYPT(AA.SEQ) AS ENCRPT_SEQ,
         AA.TITLE ,
-        AA.INS_ID ,
+        -- 25.02 취약점 보고서 22.3
+        -- AA.INS_ID ,
         AA.INS_DT ,
         REPLACE(AA.CONTENT,CHR(13),'<![CDATA[<]]>BR<![CDATA[>]]>') AS CONTENT,
         AA.ORIGIN_FILE_NAME,

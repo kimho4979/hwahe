@@ -183,6 +183,10 @@
 						chkRslt = true;
 						console.log("chkRslt true : "+chkRslt);
 						alert('인증되었습니다.');
+
+						//25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+						$("#userId").attr('readonly', true);
+
 					}else{
 						chkRslt = false;
 						console.log("chkRslt false : "+chkRslt);
