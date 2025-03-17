@@ -58,6 +58,9 @@
 		function sendCode(){
 			var userId = $("#userId").val();
 			var radioChk = $("input:radio[name='radioGubun']:checked").val();
+
+			//25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+			$("#userId").attr('readonly', true);
 			
 			if(radioChk=='email'){
 				if(!chkEmail()){

@@ -6,6 +6,20 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<%@page import="org.apache.commons.logging.Log" %>
+<%@page import="org.apache.commons.logging.LogFactory" %>
+
+<%  
+
+	//25.03.14 / 22.4
+	Log log = LogFactory.getLog("customInfoRegForm3.jsp");
+	log.info("------------------>>> auth_id 1 " + request.getSession().getAttribute("auth_id"));
+	String auth_id = (String)request.getSession().getAttribute("auth_id");
+	log.info("------------------>>> auth_id 2 " + auth_id);
+	request.getSession().removeAttribute("auth_id");
+	log.info("------------------>>> auth_id 3 " + request.getSession().getAttribute("auth_id"));
+%>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -379,7 +393,9 @@
 						<tr>
 							<th>아이디</th>
 							<td>
-								<input type="text" class="ip_text id" id="userId" name="userId" placeholder="예/01012345678"/>
+								<!-- 25.03.14 / 22.4 -->
+								<!-- <input type="text" class="ip_text id" id="userId" name="userId" placeholder="예/01012345678" /> -->
+								<input type="text" class="ip_text id" id="userId" name="userId" value="<%= auth_id %>" readonly/>
 								<div class="btn_box_02">
 									<button type="button" class="btn_type_03" onclick="chkCustomInfo();" id="buttonCheck1">중복체크</button>
 									

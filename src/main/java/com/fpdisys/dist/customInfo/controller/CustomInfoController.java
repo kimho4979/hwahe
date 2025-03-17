@@ -29,6 +29,7 @@ import com.fpdisys.dist.customInfo.service.CustomInfoService;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import oracle.net.aso.a;
  
 @Controller
 public class CustomInfoController extends BaseController {
@@ -278,64 +279,100 @@ public class CustomInfoController extends BaseController {
     } 
     return "jsonView";
   }
+ 
   
+
+  //25.03.14 오류 로그 현행화 
   @RequestMapping({"/customInfo/sendAuthCodeKakao.json"})
   public String sendAuthCodeKakao(HttpServletRequest pRequest, HttpServletResponse pResponse, @RequestParam Map<String, Object> pRequestParamMap, ModelMap model) {
-    String genNum = (new StringBuilder(String.valueOf(generateNumber(6)))).toString();
-    pRequestParamMap.put("msgType", "6");
-    pRequestParamMap.put("sms", "SMS");
-    pRequestParamMap.put("template", "bizp_2017081816055818404313871");
-	pRequestParamMap.put("title", "맞춤알림 설정 인증번호");
-	pRequestParamMap.put("subject", "화훼유통정보시스템 인증번호는 "+genNum+"입니다.");
-    pRequestParamMap.put("authCode", genNum);
-    int result = this.customInfoService.sendKakao(pRequestParamMap);
-    this.customInfoService.deleteAuthCode(pRequestParamMap);
-    this.customInfoService.insertAuthCode(pRequestParamMap);
-    if (result > 0) {
-      model.addAttribute("result", Boolean.valueOf(true));
-    } else {
-      model.addAttribute("result", Boolean.valueOf(false));
-    } 
-    return "jsonView";
+
+			log.info("========== sendAuthCodeKakao ============="+pRequestParamMap.toString());
+			
+			try{
+          String genNum = (new StringBuilder(String.valueOf(generateNumber(6)))).toString();
+          pRequestParamMap.put("msgType", "6");
+          pRequestParamMap.put("sms", "SMS");
+          pRequestParamMap.put("template", "bizp_2017081816055818404313871");
+        pRequestParamMap.put("title", "맞춤알림 설정 인증번호");
+        pRequestParamMap.put("subject", "화훼유통정보시스템 인증번호는 "+genNum+"입니다.");
+          pRequestParamMap.put("authCode", genNum);
+
+          int result = this.customInfoService.sendKakao(pRequestParamMap);
+          this.customInfoService.deleteAuthCode(pRequestParamMap);
+          this.customInfoService.insertAuthCode(pRequestParamMap);
+
+          //25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+          // testing 용
+          // int result = 1234;
+
+          if (result > 0) {
+            model.addAttribute("result", Boolean.valueOf(true));
+          } else {
+            model.addAttribute("result", Boolean.valueOf(false));
+          } 
+          return "jsonView";
+			} catch (Exception Ex) {
+				log.error("send Kakao error " ,Ex);
+        throw Ex;
+			}									
+			// return "jsonView";
+
   }
   
   @RequestMapping({"/customInfo/compareAuthCode.json"})
   public String compareAuthCode(HttpServletRequest pRequest, HttpServletResponse pResponse, @RequestParam("userId") String userId, @RequestParam("authCode") String authCode, ModelMap model) {
-    int authCount;
-    Map<String, Object> pRequestParamMap = new HashMap<>();
-    pRequestParamMap.put("userId", userId);
-    pRequestParamMap.put("authCode", authCode);
-    this.logger.debug(">>>>>>> user id : {}", userId);
-    this.logger.debug(">>>>>>> auth code : {}", authCode);
-    String sessionAuthCount = String.valueOf(pRequest.getSession().getAttribute("authCount"));
-    this.logger.debug(">>>>>>> sessionAuthCount : {}", sessionAuthCount);
-    if (sessionAuthCount.equals("null")) {
-      authCount = 0;
-    } else {
-      authCount = Integer.parseInt(sessionAuthCount);
-    } 
-    this.logger.debug("authCount : {}", Integer.valueOf(authCount));
-    if (authCount < 5) {
-      int result = this.customInfoService.compareAuthCode(pRequestParamMap);
-      this.logger.debug(">>>>>>> result : {}", Integer.valueOf(result));
-      if (result > 0) {
-        //25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
-        request.getSession().setAttribute("auth_id", userId);
-        request.getSession().setAttribute("auth_result", Boolean.valueOf(true));
 
-        model.addAttribute("result", Boolean.valueOf(true));
-      } else {
-        //25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
-        request.getSession().setAttribute("auth_result", Boolean.valueOf(false));
+			log.info("========== compareAutuCode ============= "+authCode +", " + userId);
+			try{
+            int authCount;
+            Map<String, Object> pRequestParamMap = new HashMap<>();
+            pRequestParamMap.put("userId", userId);
+            pRequestParamMap.put("authCode", authCode);
+            this.logger.debug(">>>>>>> user id : {}", userId);
+            this.logger.debug(">>>>>>> auth code : {}", authCode);
+            String sessionAuthCount = String.valueOf(pRequest.getSession().getAttribute("authCount"));
+            this.logger.debug(">>>>>>> sessionAuthCount : {}", sessionAuthCount);
+            if (sessionAuthCount.equals("null")) {
+              authCount = 0;
+            } else {
+              authCount = Integer.parseInt(sessionAuthCount);
+            } 
+            this.logger.debug("authCount : {}", Integer.valueOf(authCount));
+            if (authCount < 5) {
+              int result = this.customInfoService.compareAuthCode(pRequestParamMap);
 
-        model.addAttribute("result", Boolean.valueOf(false));
-        pRequest.getSession().setAttribute("authCount", Integer.valueOf(authCount + 1));
-      } 
-    } else {
-      model.addAttribute("result", Boolean.valueOf(false));
-      model.addAttribute("msg", "countOver");
-    } 
-    return "jsonView";
+              //25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+              // testing 용
+              // result = 1;
+
+              this.logger.debug(">>>>>>> result : {}", Integer.valueOf(result));
+              if (result > 0) {
+                //25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+                pRequest.getSession().setAttribute("auth_id", userId);
+                pRequest.getSession().setAttribute("auth_result", Boolean.valueOf(true));
+
+                //25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+                // testing 용
+                // pRequest.getSession().setAttribute("auth_result", Boolean.valueOf(false));
+
+                model.addAttribute("result", Boolean.valueOf(true));
+              } else {
+                //25.03. 22.4 프로세스 검증 누락 – 취약(1) 반영 
+                pRequest.getSession().setAttribute("auth_result", Boolean.valueOf(false));
+
+                model.addAttribute("result", Boolean.valueOf(false));
+                pRequest.getSession().setAttribute("authCount", Integer.valueOf(authCount + 1));
+              } 
+            } else {
+              model.addAttribute("result", Boolean.valueOf(false));
+              model.addAttribute("msg", "countOver");
+            } 
+            return "jsonView";
+			} catch (Exception Ex) {
+				log.error("compare code error " ,Ex);
+        throw Ex;
+				// log.error("Exception!! " + Ex.getStackTrace());
+			}									
   }
   
   @RequestMapping({"/customInfo/getPumName.json"})
@@ -369,6 +406,9 @@ public class CustomInfoController extends BaseController {
   
   @RequestMapping({"/customInfo/loginCustomInfo.do"})
   public String loginCustomInfo(HttpServletRequest pRequest, HttpServletResponse pResponse, @RequestParam Map<String, Object> pRequestParamMap, HttpSession session, ModelMap model) {
+
+			log.info("========== loginCustomInfo ============= " + pRequestParamMap);
+
     if (pRequest.getSession().getAttribute("userId") != null && !pRequest.getSession().getAttribute("userId").equals("")) {
       pRequestParamMap.put("userId", pRequest.getSession().getAttribute("userId").toString());
       List<CustomInfoVO> list = this.customInfoService.getCustomInfoMs(pRequestParamMap);
@@ -376,58 +416,57 @@ public class CustomInfoController extends BaseController {
     } else {
       String userId = (String)pRequestParamMap.get("userId");
       String passwd = (String)pRequestParamMap.get("passwd");
-      this.log.info("======== USER_ID  : " + userId + " =========");
-      this.log.info("======== PASSWORD : " + passwd + " =========");
-      try {
-        if (userId != null && passwd != null) {
-          // 25.02 22.5 취약점 대응
-          // String base = passwd;
-          // MessageDigest digest = MessageDigest.getInstance("SHA-256");
-          // byte[] hash = digest.digest(base.getBytes("UTF-8"));
-          // StringBuffer hexString = new StringBuffer();
-          // for (int i = 0; i < hash.length; i++) {
-          //   String hex = Integer.toHexString(0xFF & hash[i]);
-          //   if (hex.length() == 1)
-          //     hexString.append('0'); 
-          //   hexString.append(hex);
-          // } 
-          // String pwd = hexString.toString();
-          // pRequestParamMap.put("passwd", pwd);
-          pRequestParamMap.put("passwd", passwd);
+        try {
+          if (userId != null && passwd != null) {
+            String base = passwd;
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(base.getBytes("UTF-8"));
+            StringBuffer hexString = new StringBuffer();
+            for (int i = 0; i < hash.length; i++) {
+              String hex = Integer.toHexString(0xFF & hash[i]);
+              if (hex.length() == 1)
+                hexString.append('0'); 
+              hexString.append(hex);
+            } 
+            String pwd = hexString.toString();
+            pRequestParamMap.put("passwd", pwd);
+            // 25.02 22.5 취약점 대응
+            // pRequestParamMap.put("passwd", passwd);
 
-          CustomInfoVO user = this.customInfoService.loginCustomInfo(pRequestParamMap);
-          List<CustomInfoVO> list = this.customInfoService.getCustomInfoMs(pRequestParamMap);
-          if (user == null)
-            return "redirect:/customInfo/customInfoForm.do"; 
-          pRequest.getSession().setAttribute("user", user);
-          pRequest.getSession().setAttribute("userId", user.getUserId());
-          pRequest.getSession().setAttribute("userGubun", user.getUserGubun());
-          pRequestParamMap.put("userId", user.getUserId());
-          EgovMap searchList = this.customInfoService.getUserSearch(pRequestParamMap);
-          pRequest.getSession().setAttribute("searchList", searchList);
-          model.addAttribute("list", list);
-        } else {
-          return "redirect:/customInfo/customInfoForm.do";
-        } 
-      }  catch (ArithmeticException e) {
-			log.error("오류발생 숫자를 0으로 나눌 수 없습니다!!");
-		} catch (NumberFormatException e) {
-			log.error("오류발생 숫자로 변환 할 수 없습니다!!");
-		} catch (ArrayIndexOutOfBoundsException e) {
-			log.error("오류발생 배열인텍스에서 벗어났습니다!!");
-		} catch (NegativeArraySizeException e) {
-			log.error("오류발생 배열을 음수로 지정 할 수 없습니다!!");
-		} catch (NullPointerException e) {
-			log.error("오류발생 특정 널 값을 가진 변수를 참조 할수 없습니다!!");
-		} catch (NoSuchMethodError e) {
-			log.error("오류발생 메서드를 찾을수 없습니다!!");
-		} catch (NoClassDefFoundError e) {
-			log.error("오류발생 클래스를 찾을 수 없습니다!!");
-		} catch (RuntimeException e) {
-			log.error("오류발생 런타임!!");
-		} catch (Exception e) {
-			log.error("오류발생!!");
-		}
+            CustomInfoVO user = this.customInfoService.loginCustomInfo(pRequestParamMap);
+            List<CustomInfoVO> list = this.customInfoService.getCustomInfoMs(pRequestParamMap);
+            if (user == null)
+              return "redirect:/customInfo/customInfoForm.do"; 
+            pRequest.getSession().setAttribute("user", user);
+            pRequest.getSession().setAttribute("userId", user.getUserId());
+            pRequest.getSession().setAttribute("userGubun", user.getUserGubun());
+            pRequestParamMap.put("userId", user.getUserId());
+            EgovMap searchList = this.customInfoService.getUserSearch(pRequestParamMap);
+            pRequest.getSession().setAttribute("searchList", searchList);
+            model.addAttribute("list", list);
+          } else {
+            return "redirect:/customInfo/customInfoForm.do";
+          } 
+          //   }  catch (ArithmeticException e) {
+          // 	log.error("오류발생 숫자를 0으로 나눌 수 없습니다!!");
+          // } catch (NumberFormatException e) {
+          // 	log.error("오류발생 숫자로 변환 할 수 없습니다!!");
+          // } catch (ArrayIndexOutOfBoundsException e) {
+          // 	log.error("오류발생 배열인텍스에서 벗어났습니다!!");
+          // } catch (NegativeArraySizeException e) {
+          // 	log.error("오류발생 배열을 음수로 지정 할 수 없습니다!!");
+          // } catch (NullPointerException e) {
+          // 	log.error("오류발생 특정 널 값을 가진 변수를 참조 할수 없습니다!!");
+          // } catch (NoSuchMethodError e) {
+          // 	log.error("오류발생 메서드를 찾을수 없습니다!!");
+          // } catch (NoClassDefFoundError e) {
+          // 	log.error("오류발생 클래스를 찾을 수 없습니다!!");
+          // } catch (RuntimeException e) {
+          // 	log.error("오류발생 런타임!!");
+          } catch (Exception e) {
+              log.error("loginCustom err" ,e);
+              // throw e;
+          }
     } 
     return "/customInfo/customInfoRegFormStep2";
   }
@@ -548,65 +587,75 @@ public class CustomInfoController extends BaseController {
   
   @RequestMapping({"/customInfo/loginCustom.do"})
   public String loginCustom(HttpServletRequest pRequest, HttpServletResponse pResponse, @RequestParam Map<String, Object> pRequestParamMap, HttpSession session, ModelMap model) {
-    pRequest.getSession().invalidate();
-    pRequest.getSession().removeAttribute("userId");
-    pRequest.getSession().removeAttribute("userGubun");
-    pRequest.getSession().removeAttribute("acsYn");
-    String userId = (String)pRequestParamMap.get("userId");
-    String passwd = (String)pRequestParamMap.get("passwd");
-    try {
-      if (userId != null && passwd != null) {
-        String base = passwd;
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest(base.getBytes("UTF-8"));
-        StringBuffer hexString = new StringBuffer();
-        for (int i = 0; i < hash.length; i++) {
-          String hex = Integer.toHexString(0xFF & hash[i]);
-          if (hex.length() == 1)
-            hexString.append('0'); 
-          hexString.append(hex);
-        } 
-        String pwd = hexString.toString();
-        System.out.println("#####pwd####");
-        System.out.println(pwd);
-        pRequestParamMap.put("passwd", pwd);
-        CustomInfoVO user = this.customInfoService.loginCustomInfo(pRequestParamMap);
-        List<CustomInfoVO> list = this.customInfoService.getCustomInfoMs(pRequestParamMap);
-        if (user != null) {
-          pRequest.getSession().setAttribute("userId", user.getUserId());
-          pRequest.getSession().setAttribute("userGubun", user.getUserGubun());
-          pRequest.getSession().setAttribute("acsYn",user.getAcsYn());
-          System.out.println("#####################");
-          System.out.println(user.getAcsYn());
-          System.out.println("#####################");
-          pRequestParamMap.put("userId", user.getUserId());
-          EgovMap searchList = this.customInfoService.getUserSearch(pRequestParamMap);
-          pRequest.getSession().setAttribute("searchList", searchList);
-          return "/customInfo/mainInfoModForm";
-        } 
-        model.addAttribute("msg", "로그인 정보가 올바르지 않습니다");
-        model.addAttribute("user", user);
-        model.addAttribute("list", list);
-      } 
-    } catch (ArithmeticException e) {
-		log.error("오류발생 숫자를 0으로 나눌 수 없습니다!!");
-	} catch (NumberFormatException e) {
-		log.error("오류발생 숫자로 변환 할 수 없습니다!!");
-	} catch (ArrayIndexOutOfBoundsException e) {
-		log.error("오류발생 배열인텍스에서 벗어났습니다!!");
-	} catch (NegativeArraySizeException e) {
-		log.error("오류발생 배열을 음수로 지정 할 수 없습니다!!");
-	} catch (NullPointerException e) {
-		log.error("오류발생 특정 널 값을 가진 변수를 참조 할수 없습니다!!");
-	} catch (NoSuchMethodError e) {
-		log.error("오류발생 메서드를 찾을수 없습니다!!");
-	} catch (NoClassDefFoundError e) {
-		log.error("오류발생 클래스를 찾을 수 없습니다!!");
-	} catch (Exception e) {
-		e.printStackTrace();
-		log.error("오류발생!!");
-	}
-    return "/customInfo/mainLoginForm";
+
+
+    			log.info("========== loginCustom ============= " + pRequestParamMap);
+          pRequest.getSession().invalidate();
+          pRequest.getSession().removeAttribute("userId");
+          pRequest.getSession().removeAttribute("userGubun");
+          pRequest.getSession().removeAttribute("acsYn");
+          String userId = (String)pRequestParamMap.get("userId");
+          String passwd = (String)pRequestParamMap.get("passwd");
+          try {
+            if (userId != null && passwd != null) {
+
+            // 25.02 22.5 취약점 대응
+    			    // log.info("-------------->>> " + passwd);
+              // String base = passwd;
+              // MessageDigest digest = MessageDigest.getInstance("SHA-256");
+              // byte[] hash = digest.digest(base.getBytes("UTF-8"));
+              // StringBuffer hexString = new StringBuffer();
+              // for (int i = 0; i < hash.length; i++) {
+              //   String hex = Integer.toHexString(0xFF & hash[i]);
+              //   if (hex.length() == 1)
+              //     hexString.append('0'); 
+              //   hexString.append(hex);
+              // } 
+              // String pwd = hexString.toString();
+              String pwd = passwd;
+    			    log.info("-------------->>> " + pwd);
+
+
+              // System.out.println("#####pwd####");
+              // System.out.println(pwd);
+              pRequestParamMap.put("passwd", pwd);
+              CustomInfoVO user = this.customInfoService.loginCustomInfo(pRequestParamMap);
+              List<CustomInfoVO> list = this.customInfoService.getCustomInfoMs(pRequestParamMap);
+              if (user != null) {
+                pRequest.getSession().setAttribute("userId", user.getUserId());
+                pRequest.getSession().setAttribute("userGubun", user.getUserGubun());
+                pRequest.getSession().setAttribute("acsYn",user.getAcsYn());
+                System.out.println("#####################");
+                System.out.println(user.getAcsYn());
+                System.out.println("#####################");
+                pRequestParamMap.put("userId", user.getUserId());
+                EgovMap searchList = this.customInfoService.getUserSearch(pRequestParamMap);
+                pRequest.getSession().setAttribute("searchList", searchList);
+                return "/customInfo/mainInfoModForm";
+              } 
+              model.addAttribute("msg", "로그인 정보가 올바르지 않습니다");
+              model.addAttribute("user", user);
+              model.addAttribute("list", list);
+            } 
+          } catch (ArithmeticException e) {
+          log.error("오류발생 숫자를 0으로 나눌 수 없습니다!!");
+        } catch (NumberFormatException e) {
+          log.error("오류발생 숫자로 변환 할 수 없습니다!!");
+        } catch (ArrayIndexOutOfBoundsException e) {
+          log.error("오류발생 배열인텍스에서 벗어났습니다!!");
+        } catch (NegativeArraySizeException e) {
+          log.error("오류발생 배열을 음수로 지정 할 수 없습니다!!");
+        } catch (NullPointerException e) {
+          log.error("오류발생 특정 널 값을 가진 변수를 참조 할수 없습니다!!");
+        } catch (NoSuchMethodError e) {
+          log.error("오류발생 메서드를 찾을수 없습니다!!");
+        } catch (NoClassDefFoundError e) {
+          log.error("오류발생 클래스를 찾을 수 없습니다!!");
+        } catch (Exception e) {
+          e.printStackTrace();
+          log.error("오류발생!!");
+        }
+          return "/customInfo/mainLoginForm";
   }
   
   @RequestMapping({"/customInfo/logOut.do"})

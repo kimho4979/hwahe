@@ -32,8 +32,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/core.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/sha256.js"></script>
 
-
-	<script />
 	<script type="text/javascript">
 	$(document).ready(function(){
 		var paramMsg = $("#paramMsg").val(); 
@@ -62,8 +60,6 @@
 		var userId = $("#userId").val();
 		var userPw = $("#passwd").val();
 
-		//25.02 22.5
-		userPw = CryptoJS.SHA256(userPw).toString();
 		
 		if(userId == null || userId == ""){
 			alert("아이디를 입력하여 주십시오.");
@@ -71,7 +67,11 @@
 			alert("비밀번호를 입력하여 주십시오");
 		}else{
 			var frm = $("#actionForm");
-			console.log(userId,userPw);
+
+			//25.02 22.5
+			userPw = CryptoJS.SHA256(userPw).toString();
+			$("#passwd").val(userPw)
+			// alert(userPw);
     		$(frm).attr("action","/customInfo/loginCustom.do").submit();
 		}
 	}

@@ -130,10 +130,13 @@ public class Hfa01Controller extends BaseController{
 				Hfa01VO list = (Hfa01VO)hfa01Service.selectMainGongiSeq(pRequestParamMap.get("seq").toString());												
 				
 				model.addAttribute("list", list);
+			//25.03.14 오류로그 현행화
 			} catch (ArithmeticException | NumberFormatException | ArrayIndexOutOfBoundsException | NegativeArraySizeException | NullPointerException | NoSuchMethodError | NoClassDefFoundError Ex) {
-				log.error("Exception!! " + Ex.getStackTrace());
+				log.error("Exception " ,Ex);
+				// log.error("Exception!! " + Ex.getStackTrace());
 			} catch (RuntimeException runEx) {
-				log.error("RuntimeException!! " + runEx.getStackTrace());
+				log.error("RuntimeException ",runEx);
+				// log.error("RuntimeException!! " + runEx.getStackTrace());
 			}									
 			return "jsonView";
 		}
